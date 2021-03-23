@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Pharmacy {
 	private Long id;
 	private String name,description;
-	private Address address;
+	private Address address; 
 	private double income;
 	private HashMap<String,Dermatologist>dermatologists;
 	private HashMap<String,Pharmacist> pharmacists;
