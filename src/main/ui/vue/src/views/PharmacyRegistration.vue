@@ -48,10 +48,13 @@
                                             <input type="number" min="1" id="number" class="form-control" name="number" v-model="number" >
                                         </div>
                                     </div>
+                                    <div class = "col-md-6 offset-md-4"><p class="show_error">{{error_message}}</p></div>
                                     <div class="col-md-6 offset-md-4">
                                         <button class="btn btn-success">Submit</button>
                                     </div>
+                                    
                                 </form>
+                                
                             </div>
                         </div>
                 </div>
@@ -75,13 +78,23 @@ export default {
       street: "",
       number: 0,
       output: "",
+      error_message: "",
     };
   },
   methods: {
     formSubmit(e) {
       e.preventDefault();
       let currentObj = this;
-      this.axios
+      let errorFound = false;
+
+      if(!this.name || isNaN(this.number) || !this.description || !this.country || !this.city || !this.street){
+        errorFound = true;
+        this.error_message = "Niste uneli validne podatke!";
+
+
+      }
+      if(errorFound==false){
+         this.axios
         .post("api/pharmacy", {
           name: this.name,
           description: this.description,
@@ -98,6 +111,7 @@ export default {
         .catch(function (error) {
           currentObj.output = error;
         });
+      }
     },
   },
 };
@@ -121,5 +135,9 @@ body {
 .my-form .row {
   margin-left: 0;
   margin-right: 0;
+}
+.show_error{
+  color: red;
+  text-align: center;
 }
 </style>

@@ -49,20 +49,20 @@ insert into dermatologist (email, deleted, last_name, name, password, phone_numb
 insert into dermatologist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id ) values ('lazarpopovic@gmail.com','false','Popović','Lazar','dermatolog3','0614523981', 16, null)
 
 
-insert into e_prescription (date, patient_email) values ('02-04-2021 10:00','anasimic@gmail.com')
-insert into e_prescription (date, patient_email) values ('06-04-2021 10:00','teodorabozic@gmail.com')
-insert into e_prescription (date, patient_email) values ('07-04-2021 10:00','lukamarkovic@gmail.com')
+insert into e_prescription (date, patient_email) values ('2021-04-02 10:00','anasimic@gmail.com')
+insert into e_prescription (date, patient_email) values ('2021-04-06 10:00','teodorabozic@gmail.com')
+insert into e_prescription (date, patient_email) values ('2021-04-07 10:00','lukamarkovic@gmail.com')
 
 
-insert into medical_report (date, deleted, description, eprescription_id) values ('01-04-2021 14:28', 'false','Izvestaj..' ,1)
-insert into medical_report (date, deleted, description, eprescription_id) values ('05-04-2021 10:35','false','Izvestaj.. ', 2)
-insert into medical_report (date, deleted, description, eprescription_id) values ('06-04-2021 19:40','false','Izvestaj...' ,3)
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-01 14:28', 'false','Izvestaj..' ,1)
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-05 10:35','false','Izvestaj.. ', 2)
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:40','false','Izvestaj...' ,3)
 
 
 
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('01-04-2021','false','14:00','14:30', 0, 1)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('05-04-2021','false','10:00','10:30', 1, 2)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('06-04-2021','false','19:00','19:45', 0, 3)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-01','false','14:00','14:30', 0, 1)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-05','false','10:00','10:30', 1, 2)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-06','false','19:00','19:45', 0, 3)
 
 
 

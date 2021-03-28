@@ -22,16 +22,16 @@ public class PharmacyServiceImpl implements PharmacyService{
 
 	@Override
 	public Pharmacy findOne(Long id) {
-		Pharmacy pharmacy = pharmacyRepository.findOne(id);
+		Pharmacy pharmacy = pharmacyRepository.findById(id).orElseGet(null);
 		return pharmacy;
 	}
 
 	@Override
 	public Pharmacy create(Pharmacy pharmacy) throws Exception {
 		if(pharmacy.getId() != null) {
-			throw new Exception("Id mora biti null!");
+			return null;
 		}
-		Pharmacy savedPharmacy = pharmacyRepository.create(pharmacy);
+		Pharmacy savedPharmacy = pharmacyRepository.save(pharmacy);
 		return savedPharmacy;
 	}
 
@@ -39,15 +39,15 @@ public class PharmacyServiceImpl implements PharmacyService{
 	public Pharmacy update(Pharmacy pharmacy) throws Exception {
 		Pharmacy pharmacyToUpdate = findOne(pharmacy.getId());
 		if (pharmacyToUpdate == null) {
-			throw new Exception("Trazeni entitet nije pronadjen.");
+			return null;
 		}
-		pharmacyRepository.update(pharmacy);
+		pharmacyRepository.save(pharmacy);
 		return pharmacy;
 	}
 
 	@Override
 	public void delete(Long id) {
-		pharmacyRepository.delete(id);
+		pharmacyRepository.deleteById(id);
 		
 	}
 
