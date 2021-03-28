@@ -1,34 +1,63 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Patient extends User {
-	private int points;
+	
+	@Column(name = "loyaltyPoints", unique = false, nullable = false)
+	private Integer loyaltyPoints;
+	
+	@Column(name = "penaltyPoints", unique = false, nullable = false)
+	private Integer penaltyPoints;
+	
+	@Column(name = "category", unique = false, nullable = false)
 	private Category category;
-	private HashMap<Long,PrescriptionMedicament> prescriptionMedicaments;
-	private HashMap<Long,Appointment> appointments;
-	private HashMap<Long,Complaint>complaints;
-	private HashMap<Long,Medicament> allergies;
-	private HashMap<Long,ePrescription> ePrescriptions;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Appointment> appointments;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Complaint> complaints;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	private Set<Medicament> allergies;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<ePrescription> ePrescriptions;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	private Set<Pharmacy> subscribedPharmacies;
 	
 	public Patient() {}
-
 	
 
-	public int getPoints() {
-		return points;
+	public Integer getLoyaltyPoints() {
+		return loyaltyPoints;
 	}
 
 
-
-	public void setPoints(int points) {
-		this.points = points;
+	public void setLoyaltyPoints(Integer loyaltyPoints) {
+		this.loyaltyPoints = loyaltyPoints;
 	}
 
 
+	public Integer getPenaltyPoints() {
+		return penaltyPoints;
+	}
 
-	
-	
+
+	public void setPenaltyPoints(Integer penaltyPoints) {
+		this.penaltyPoints = penaltyPoints;
+	}
+
 
 	public Category getCategory() {
 		return category;
@@ -41,58 +70,53 @@ public class Patient extends User {
 	}
 
 
-
-	public HashMap<Long, PrescriptionMedicament> getPrescriptionMedicaments() {
-		return prescriptionMedicaments;
-	}
-
-
-
-	public void setPrescriptionMedicaments(HashMap<Long, PrescriptionMedicament> prescriptionMedicaments) {
-		this.prescriptionMedicaments = prescriptionMedicaments;
-	}
-
-
-
-	public HashMap<Long, Appointment> getAppointments() {
+	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
 
 
-
-	public void setAppointments(HashMap<Long, Appointment> appointments) {
+	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
 	}
 
 
-
-	public HashMap<Long, Complaint> getComplaints() {
+	public Set<Complaint> getComplaints() {
 		return complaints;
 	}
 
-	public void setComplaints(HashMap<Long, Complaint> complaints) {
+
+	public void setComplaints(Set<Complaint> complaints) {
 		this.complaints = complaints;
 	}
 
 
-	public HashMap<Long, Medicament> getAllergies() {
+	public Set<Medicament> getAllergies() {
 		return allergies;
 	}
 
-	public void setAllergies(HashMap<Long, Medicament> allergies) {
+
+	public void setAllergies(Set<Medicament> allergies) {
 		this.allergies = allergies;
 	}
 
 
-
-	public HashMap<Long, ePrescription> getePrescriptions() {
+	public Set<ePrescription> getePrescriptions() {
 		return ePrescriptions;
 	}
 
 
-
-	public void setePrescriptions(HashMap<Long, ePrescription> ePrescriptions) {
+	public void setePrescriptions(Set<ePrescription> ePrescriptions) {
 		this.ePrescriptions = ePrescriptions;
+	}
+
+
+	public Set<Pharmacy> getSubscribedPharmacies() {
+		return subscribedPharmacies;
+	}
+
+
+	public void setSubscribedPharmacies(Set<Pharmacy> subscribedPharmacies) {
+		this.subscribedPharmacies = subscribedPharmacies;
 	}
 
 

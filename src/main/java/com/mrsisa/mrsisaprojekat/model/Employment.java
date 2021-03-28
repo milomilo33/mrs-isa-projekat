@@ -2,15 +2,44 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Employment {
 	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Column(name = "workHourFrom", unique = false, nullable = false)
 	private LocalTime workHourFrom;
+	
+	@Column(name = "workHourTo", unique = false, nullable = false)
 	private LocalTime workHourTo;
-	private String emailDermatologa;
-	private Long idPharmacy;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Dermatologist dermatologist;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Pharmacy pharmacy;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
 	public Employment() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public LocalTime getWorkHourFrom() {
 		return workHourFrom;
@@ -28,20 +57,20 @@ public class Employment {
 		this.workHourTo = workHourTo;
 	}
 
-	public String getEmailDermatologa() {
-		return emailDermatologa;
+	public Dermatologist getDermatologist() {
+		return dermatologist;
 	}
 
-	public void setEmailDermatologa(String emailDermatologa) {
-		this.emailDermatologa = emailDermatologa;
+	public void setDermatologist(Dermatologist dermatologist) {
+		this.dermatologist = dermatologist;
 	}
 
-	public Long getIdPharmacy() {
-		return idPharmacy;
+	public Pharmacy getPharmacy() {
+		return pharmacy;
 	}
 
-	public void setIdPharmacy(Long idPharmacy) {
-		this.idPharmacy = idPharmacy;
+	public void setPharmacy(Pharmacy pharmacy) {
+		this.pharmacy = pharmacy;
 	}
 
 	public boolean isDeleted() {

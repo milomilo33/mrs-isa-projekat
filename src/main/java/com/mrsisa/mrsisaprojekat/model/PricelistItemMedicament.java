@@ -1,19 +1,23 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class PricelistItemMedicament extends PricelistItem {
 	
-	private Long idMedicament;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Medicament medicament;
 	
 	public PricelistItemMedicament() {}
 
-	public Long getIdMedicament() {
-		return idMedicament;
+	public Medicament getMedicament() {
+		return medicament;
 	}
 
-	public void setIdMedicament(Long idMedicament) {
-		this.idMedicament = idMedicament;
+	public void setMedicament(Medicament medicament) {
+		this.medicament = medicament;
 	}
-	
-
 
 }

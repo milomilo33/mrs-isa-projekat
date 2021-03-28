@@ -2,12 +2,31 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Price {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "value", unique = false, nullable = false)
 	private double value;
+	
+	@Column(name = "dateFrom", unique = false, nullable = false)
 	private LocalDate dateFrom;
+	
+	@Column(name = "dateTo", unique = false, nullable = false)
 	private LocalDate dateTo;
+	
+	@Column(name = "points", unique = false, nullable = false)
 	private int points;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
 	public Price() {}

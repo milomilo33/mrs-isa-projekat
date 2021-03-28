@@ -1,11 +1,35 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class PrescriptionMedicament {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "purchased", unique = false, nullable = false)
 	private boolean purchased;
-	private boolean reserved;
+	
+	@Column(name = "expiryDate", unique = false, nullable = false)
+	private LocalDate expiryDate;
+	
+	@Column(name = "quantity", unique = false, nullable = false)
 	private int quantity;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private Medicament medicament;
 	
 	public PrescriptionMedicament() {}
 
@@ -25,12 +49,12 @@ public class PrescriptionMedicament {
 		this.purchased = purchased;
 	}
 
-	public boolean isReserved() {
-		return reserved;
+	public LocalDate getExpiryDate() {
+		return expiryDate;
 	}
 
-	public void setReserved(boolean reserved) {
-		this.reserved = reserved;
+	public void setExpiryDate(LocalDate expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
 	public int getQuantity() {
@@ -47,6 +71,14 @@ public class PrescriptionMedicament {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public Medicament getMedicament() {
+		return medicament;
+	}
+
+	public void setMedicament(Medicament medicament) {
+		this.medicament = medicament;
 	}
 
 	

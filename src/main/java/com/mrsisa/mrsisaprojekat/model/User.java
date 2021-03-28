@@ -1,8 +1,38 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.ManyToOne;
+
+@Entity
+@Inheritance(strategy=TABLE_PER_CLASS)
 public abstract class User {
-	private String email,password,name,lastName,phoneNumber;
+	
+	@Id
+	@Column(name="email", unique=true, nullable=false)
+	private String email;
+	
+	@Column(name="password", unique=false, nullable=false)
+	private String password;
+	
+	@Column(name="name", unique=false, nullable=false)
+	private String name;
+	
+	@Column(name="lastName", unique=false, nullable=false)
+	private String lastName;
+	
+	@Column(name="phoneNumber", unique=false, nullable=false)
+	private String phoneNumber;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Address address;
+	
+	@Column(name="deleted", unique=false, nullable=false)
 	private boolean deleted;
 	
 	public User() {}

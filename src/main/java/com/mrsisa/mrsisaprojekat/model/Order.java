@@ -1,17 +1,44 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "order_t")
 public class Order {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "status", unique = false, nullable = false)
 	private OrderStatus status;
+	
+	@Column(name = "deadline", unique = false, nullable = false)
 	private LocalDateTime deadline;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private AdminPharmacy admin;
-	private HashMap<Long,Offer> offers;
-	private HashMap<Long,MedicamentItem> medicaments;
+	
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+	private Set<Offer> offers;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<MedicamentItem> medicamentItems;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Supplier supplier;
-	private HashMap<Long,Pharmacy> pharmacy;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
 	public Order() {}
@@ -51,21 +78,20 @@ public class Order {
 	}
 
 	
-
-	public HashMap<Long, Offer> getOffers() {
+	public Set<Offer> getOffers() {
 		return offers;
 	}
 
-	public void setOffers(HashMap<Long, Offer> offers) {
+	public void setOffers(Set<Offer> offers) {
 		this.offers = offers;
 	}
 
-	public HashMap<Long, MedicamentItem> getMedicaments() {
-		return medicaments;
+	public Set<MedicamentItem> getMedicamentItems() {
+		return medicamentItems;
 	}
 
-	public void setMedicaments(HashMap<Long, MedicamentItem> medicaments) {
-		this.medicaments = medicaments;
+	public void setMedicamentItems(Set<MedicamentItem> medicamentItems) {
+		this.medicamentItems = medicamentItems;
 	}
 
 	public Supplier getSupplier() {
@@ -74,16 +100,6 @@ public class Order {
 
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
-	}
-
-
-
-	public HashMap<Long, Pharmacy> getPharmacy() {
-		return pharmacy;
-	}
-
-	public void setPharmacy(HashMap<Long, Pharmacy> pharmacy) {
-		this.pharmacy = pharmacy;
 	}
 
 	public boolean isDeleted() {

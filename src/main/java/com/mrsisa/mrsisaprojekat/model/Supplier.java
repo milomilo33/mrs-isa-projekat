@@ -1,53 +1,48 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Supplier extends User {
-	private HashMap<Long,Offer> offers;
-	private HashMap<Long,Request> requests;
-	private HashMap<Long,Order> orders;
-	private HashMap<Long,MedicamentItem> medicaments;
+	
+	// potencijalno kaskadiranje
+	@OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+	private Set<Offer> offers;
+	
+	@OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+	private Set<Order> orders;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<MedicamentItem> medicamentItems;
 	
 	public Supplier() {}
-	
-	
-	public HashMap<Long, Offer> getOffers() {
+
+	public Set<Offer> getOffers() {
 		return offers;
 	}
 
-
-	public void setOffers(HashMap<Long, Offer> offers) {
+	public void setOffers(Set<Offer> offers) {
 		this.offers = offers;
 	}
 
-
-	public HashMap<Long, Request> getRequests() {
-		return requests;
-	}
-
-	public void setRequests(HashMap<Long, Request> requests) {
-		this.requests = requests;
-	}
-	
-
-	public HashMap<Long, Order> getOrders() {
+	public Set<Order> getOrders() {
 		return orders;
 	}
 
-
-	public void setOrders(HashMap<Long, Order> orders) {
+	public void setOrders(Set<Order> orders) {
 		this.orders = orders;
 	}
 
-
-	public HashMap<Long, MedicamentItem> getMedicaments() {
-		return medicaments;
+	public Set<MedicamentItem> getMedicaments() {
+		return medicamentItems;
 	}
 
-	public void setMedicaments(HashMap<Long, MedicamentItem> medicaments) {
-		this.medicaments = medicaments;
-	}
-	
-	
+	public void setMedicaments(Set<MedicamentItem> medicaments) {
+		this.medicamentItems = medicaments;
+	}	
 
 }

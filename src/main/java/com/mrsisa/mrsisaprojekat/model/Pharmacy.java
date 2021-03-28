@@ -1,23 +1,71 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Pharmacy {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
-	private String name,description;
+	
+	@Column(name = "name", unique = false, nullable = false)
+	private String name;
+	
+	@Column(name = "description", unique = false, nullable = false)
+	private String description;
+	
+	@OneToOne(fetch = FetchType.LAZY)
 	private Address address; 
+	
+	@Column(name = "income", unique = false, nullable = false)
 	private double income;
-	private HashMap<String,Dermatologist>dermatologists;
-	private HashMap<String,Pharmacist> pharmacists;
-	private HashMap<Long,Order> orders;
-	private HashMap<Long,MedicamentItem> medicaments;
-	private Pricelist pricelist;
-	private ArrayList<Evaluation> evaluations;
-	private HashMap<Long,Promotion>promotions;
-	private HashMap<String,AdminPharmacy> admins;
-	private HashMap<Long,Appointment> appointments;
+	
+	@ManyToMany(mappedBy = "pharmacies")
+	private Set<Dermatologist> dermatologists;
+	
+	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)
+	private Set<Pharmacist> pharmacists;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Order> orders;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<MedicamentItem> medicamentItems;
+	
+	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<PricelistItem> pricelist;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Rating> ratings;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Promotion> promotions;
+	
+	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)
+	private Set<AdminPharmacy> admins;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Appointment> appointments;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Vacation> vacations;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Request> requests;
 	
 	public Pharmacy() {}
 	
@@ -65,90 +113,113 @@ public class Pharmacy {
 	}
 
 
-	public HashMap<String, Dermatologist> getDermatologists() {
+	public Set<Dermatologist> getDermatologists() {
 		return dermatologists;
 	}
 
-	public void setDermatologists(HashMap<String, Dermatologist> dermatologists) {
+
+	public void setDermatologists(Set<Dermatologist> dermatologists) {
 		this.dermatologists = dermatologists;
 	}
 
-	public HashMap<String, Pharmacist> getPharmacists() {
+
+	public Set<Pharmacist> getPharmacists() {
 		return pharmacists;
 	}
 
-	public void setPharmacists(HashMap<String, Pharmacist> pharmacists) {
+
+	public void setPharmacists(Set<Pharmacist> pharmacists) {
 		this.pharmacists = pharmacists;
 	}
 
-	
 
-	public HashMap<Long, Order> getOrders() {
+	public Set<Order> getOrders() {
 		return orders;
 	}
 
 
-	public void setOrders(HashMap<Long, Order> orders) {
+	public void setOrders(Set<Order> orders) {
 		this.orders = orders;
 	}
 
 
-	public HashMap<Long, MedicamentItem> getMedicaments() {
-		return medicaments;
+	public Set<MedicamentItem> getMedicaments() {
+		return medicamentItems;
 	}
 
-	public void setMedicaments(HashMap<Long, MedicamentItem> medicaments) {
-		this.medicaments = medicaments;
+
+	public void setMedicaments(Set<MedicamentItem> medicaments) {
+		this.medicamentItems = medicaments;
 	}
 
-	
 
-	public Pricelist getPricelist() {
+	public Set<PricelistItem> getPricelist() {
 		return pricelist;
 	}
 
 
-	public void setPricelist(Pricelist pricelist) {
+	public void setPricelist(Set<PricelistItem> pricelist) {
 		this.pricelist = pricelist;
 	}
 
 
-	public ArrayList<Evaluation> getEvaluations() {
-		return evaluations;
+	public Set<Rating> getRatings() {
+		return ratings;
 	}
 
 
-	public void setEvaluations(ArrayList<Evaluation> evaluations) {
-		this.evaluations = evaluations;
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
 	}
 
 
-	public HashMap<Long, Promotion> getPromotions() {
+	public Set<Promotion> getPromotions() {
 		return promotions;
 	}
 
-	public void setPromotions(HashMap<Long, Promotion> promotions) {
+
+	public void setPromotions(Set<Promotion> promotions) {
 		this.promotions = promotions;
 	}
 
 
-	public HashMap<String, AdminPharmacy> getAdmins() {
+	public Set<AdminPharmacy> getAdmins() {
 		return admins;
 	}
 
 
-	public void setAdmins(HashMap<String, AdminPharmacy> admins) {
+	public void setAdmins(Set<AdminPharmacy> admins) {
 		this.admins = admins;
 	}
 
 
-	public HashMap<Long, Appointment> getAppointments() {
+	public Set<Appointment> getAppointments() {
 		return appointments;
 	}
 
 
-	public void setAppointments(HashMap<Long, Appointment> appointments) {
+	public void setAppointments(Set<Appointment> appointments) {
 		this.appointments = appointments;
+	}
+
+
+	public Set<Vacation> getVacations() {
+		return vacations;
+	}
+
+
+	public void setVacations(Set<Vacation> vacations) {
+		this.vacations = vacations;
+	}
+
+
+	public Set<Request> getRequests() {
+		return requests;
+	}
+
+
+	public void setRequests(Set<Request> requests) {
+		this.requests = requests;
 	}
 
 

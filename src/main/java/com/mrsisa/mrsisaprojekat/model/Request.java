@@ -2,13 +2,40 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Request {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "description", unique = false, nullable = false)
 	private String description;
+	
+	@Column(name = "dateFrom", unique = false, nullable = false)
 	private LocalDate dateFrom;
+	
+	@Column(name = "dateTo", unique = false, nullable = false)
 	private LocalDate dateTo;
+	
+	@Column(name = "accepted", unique = false, nullable = false)
 	private boolean accepted;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
+	
+	@Column(name = "rejectionReason", unique = false, nullable = true)
+	private String rejectionReason;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Employee employee;
 	
 	public Request() {}
 	
@@ -70,6 +97,22 @@ public class Request {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 	
 	

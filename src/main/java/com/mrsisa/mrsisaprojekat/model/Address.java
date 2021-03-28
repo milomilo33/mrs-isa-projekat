@@ -1,7 +1,27 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Address {
-	private String street, city,country;
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Column(name = "street", unique = false, nullable = false)
+	private String street;
+	
+	@Column(name = "city", unique = false, nullable = false)
+	private String city;
+	
+	@Column(name = "country", unique = false, nullable = false)
+	private String country;
+	
+	@Column(name = "number", unique = false, nullable = false)
 	private int number;
 	
 	public Address() {}
@@ -14,6 +34,14 @@ public class Address {
 		this.number = number;
 	}
 
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getStreet() {
 		return street;

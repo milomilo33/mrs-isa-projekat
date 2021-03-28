@@ -3,13 +3,42 @@ package com.mrsisa.mrsisaprojekat.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public abstract class Appointment {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
+public class Appointment {
+	
+	public enum AppointmentType {
+		COUNSELING,
+		EXAMINATION
+	}
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "date", unique = false, nullable = false)
 	private LocalDate date;
+	
+	@Column(name = "termFrom", unique = false, nullable = false)
 	private LocalTime termFrom;
+	
+	@Column(name = "termTo", unique = false, nullable = false)
 	private LocalTime termTo;
+	
+	@OneToOne(fetch = FetchType.LAZY, optional = true)
 	private MedicalReport medicalReport;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
+	
+	@Column(name = "type", unique = false, nullable = false)
+	private AppointmentType type;
 	
 	public Appointment() {}
 	
@@ -67,6 +96,14 @@ public abstract class Appointment {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public AppointmentType getType() {
+		return type;
+	}
+
+	public void setType(AppointmentType type) {
+		this.type = type;
 	}
 	
 	

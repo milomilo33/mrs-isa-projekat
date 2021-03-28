@@ -1,26 +1,45 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class MedicalReport {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "description", unique = false, nullable = false)
 	private String description;
+	
+	@Column(name = "date", unique = false, nullable = false)
 	private LocalDateTime date;
-	private HashMap<Long,PrescriptionMedicament> prescriptionMedicaments;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private ePrescription eprescription;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
 	public MedicalReport() {}
 	
-	public MedicalReport(Long id, String description, LocalDateTime date,
-			HashMap<Long, PrescriptionMedicament> prescriptionMedicaments, boolean deleted) {
+	public MedicalReport(Long id, String description, LocalDateTime date, ePrescription eprescription,
+			boolean deleted) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.date = date;
-		this.prescriptionMedicaments = prescriptionMedicaments;
+		this.eprescription = eprescription;
 		this.deleted = deleted;
 	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -39,12 +58,14 @@ public class MedicalReport {
 	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
-	public HashMap<Long, PrescriptionMedicament> getPrescriptionMedicaments() {
-		return prescriptionMedicaments;
+	public ePrescription getEprescription() {
+		return eprescription;
 	}
-	public void setPrescriptionMedicaments(HashMap<Long, PrescriptionMedicament> prescriptionMedicaments) {
-		this.prescriptionMedicaments = prescriptionMedicaments;
+
+	public void setEprescription(ePrescription eprescription) {
+		this.eprescription = eprescription;
 	}
+
 	public boolean isDeleted() {
 		return deleted;
 	}

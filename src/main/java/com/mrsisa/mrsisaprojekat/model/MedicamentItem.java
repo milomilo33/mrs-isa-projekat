@@ -1,9 +1,26 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class MedicamentItem {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@OneToOne(fetch = FetchType.LAZY)
 	private Medicament medicament;
+	
+	@Column(name = "quantity", unique = false, nullable = false)
 	private int quantity;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
 	public MedicamentItem() {}

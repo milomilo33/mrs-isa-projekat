@@ -1,13 +1,28 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Pharmacist extends Employee {
 	
+	@Column(name = "workHourFrom", unique = false, nullable = false)
 	private LocalTime workHourFrom;
+	
+	@Column(name = "workHourTo", unique = false, nullable = false)
 	private LocalTime workHourTo;
-	private HashMap<Long,Counseling>counselings;
+	
+	// potencijalno kaskadiranje
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Appointment> counselings;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Pharmacy pharmacy;
 	
 	public Pharmacist() {}
@@ -36,17 +51,13 @@ public class Pharmacist extends Employee {
 
 
 
-	public HashMap<Long, Counseling> getCounselings() {
+	public Set<Appointment> getCounselings() {
 		return counselings;
 	}
 
-
-
-	public void setCounselings(HashMap<Long, Counseling> counselings) {
+	public void setCounselings(Set<Appointment> counselings) {
 		this.counselings = counselings;
 	}
-
-
 
 	public Pharmacy getPharmacy() {
 		return pharmacy;

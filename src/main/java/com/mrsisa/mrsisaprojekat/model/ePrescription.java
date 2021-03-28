@@ -1,13 +1,33 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+@Entity
 public class ePrescription {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
-	private String patientEmail;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Patient patient;
+	
+	@Column(name = "date", unique = false, nullable = false)
 	private LocalDate date;
-	private HashMap<Long,PrescriptionMedicament>prescirpionMedicaments;
+	
+	// mozda treba kaskadiranje
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<PrescriptionMedicament> prescriptionMedicaments;
 	
 	public ePrescription() {}
 
@@ -19,12 +39,12 @@ public class ePrescription {
 		this.id = id;
 	}
 
-	public String getPatientEmail() {
-		return patientEmail;
+	public Patient getPatient() {
+		return patient;
 	}
 
-	public void setPatientEmail(String patientEmail) {
-		this.patientEmail = patientEmail;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 	public LocalDate getDate() {
@@ -35,12 +55,12 @@ public class ePrescription {
 		this.date = date;
 	}
 
-	public HashMap<Long, PrescriptionMedicament> getPrescirpionMedicaments() {
-		return prescirpionMedicaments;
+	public Set<PrescriptionMedicament> getPrescriptionMedicaments() {
+		return prescriptionMedicaments;
 	}
 
-	public void setPrescirpionMedicaments(HashMap<Long, PrescriptionMedicament> prescirpionMedicaments) {
-		this.prescirpionMedicaments = prescirpionMedicaments;
+	public void setPrescriptionMedicaments(Set<PrescriptionMedicament> prescriptionMedicaments) {
+		this.prescriptionMedicaments = prescriptionMedicaments;
 	}
 
 	

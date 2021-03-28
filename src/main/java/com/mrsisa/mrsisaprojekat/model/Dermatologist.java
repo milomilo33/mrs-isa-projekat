@@ -1,35 +1,45 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Dermatologist extends Employee {
-	private HashMap<Long,MedicalExamination>medicalExaminations;
-	private HashMap<Long,Pharmacy>pharmacy;
+	
+	// potencijalno kaskadiranje
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Appointment> medicalExaminations;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "dermatologists_pharmacies",
+			   joinColumns = @JoinColumn(name = "dermatologist_id", 
+			   							 referencedColumnName = "email"), 
+			   inverseJoinColumns = @JoinColumn(name = "pharmacy_id", referencedColumnName = "id"))
+	private Set<Pharmacy> pharmacies;
 	
 	public Dermatologist() {}
 
-	
-
-	public HashMap<Long, MedicalExamination> getMedicalExaminations() {
+	public Set<Appointment> getMedicalExaminations() {
 		return medicalExaminations;
 	}
 
-
-
-	public void setMedicalExaminations(HashMap<Long, MedicalExamination> medicalExaminations) {
+	public void setMedicalExaminations(Set<Appointment> medicalExaminations) {
 		this.medicalExaminations = medicalExaminations;
 	}
 
-
-
-	public HashMap<Long, Pharmacy> getPharmacy() {
-		return pharmacy;
+	public Set<Pharmacy> getPharmacy() {
+		return pharmacies;
 	}
 
-	public void setPharmacy(HashMap<Long, Pharmacy> pharmacy) {
-		this.pharmacy = pharmacy;
+	public void setPharmacy(Set<Pharmacy> pharmacies) {
+		this.pharmacies = pharmacies;
 	}
-
 	
 
 }

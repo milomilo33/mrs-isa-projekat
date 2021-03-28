@@ -2,12 +2,33 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Offer {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name = "status", unique = false, nullable = false)
 	private OfferStatus status;
+	
+	@Column(name = "totalPrice", unique = false, nullable = false)
 	private double totalPrice;
+	
+	@Column(name = "deadline", unique = false, nullable = false)
 	private LocalDateTime deadline;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Supplier supplier;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Order order;
 	
 	public Offer() {}

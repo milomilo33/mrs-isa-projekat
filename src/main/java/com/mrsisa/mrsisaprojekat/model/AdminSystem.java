@@ -1,47 +1,27 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@Entity
 public class AdminSystem extends User {
 	
-	private HashMap<Employee,ArrayList<Vacation>> vacations;
-	private HashMap<Long,Medicament> medicamentDatabase;
-	private HashMap<Long,Complaint> complaints;
+	@OneToMany(mappedBy = "responder", fetch = FetchType.LAZY)
+	private Set<Complaint> respondedComplaints;
 	
 	public AdminSystem() {}
-
 	
-	public HashMap<Employee, ArrayList<Vacation>> getVacations() {
-		return vacations;
+
+	public Set<Complaint> getRespondedComplaints() {
+		return respondedComplaints;
 	}
 
 
-	public void setVacations(HashMap<Employee, ArrayList<Vacation>> vacations) {
-		this.vacations = vacations;
+	public void setRespondedComplaints(Set<Complaint> respondedComplaints) {
+		this.respondedComplaints = respondedComplaints;
 	}
-
-
-	public HashMap<Long, Complaint> getComplaints() {
-		return complaints;
-	}
-	public void setComplaints(HashMap<Long, Complaint> complaints) {
-		this.complaints = complaints;
-	}
-
-
-	public HashMap<Long, Medicament> getMedicamentDatabase() {
-		return medicamentDatabase;
-	}
-
-
-	public void setMedicamentDatabase(HashMap<Long, Medicament> medicamentDatabase) {
-		this.medicamentDatabase = medicamentDatabase;
-	}
-	
-	
-	
-	
-	
 
 }

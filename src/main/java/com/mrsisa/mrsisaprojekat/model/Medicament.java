@@ -1,19 +1,56 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import java.util.HashMap;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Medicament {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
-	private String name,type,structure,manufacturer,annotations;
+	
+	@Column(name = "name", unique = false, nullable = false)
+	private String name;
+	
+	@Column(name = "type", unique = false, nullable = false)
+	private String type;
+	
+	@Column(name = "structure", unique = false, nullable = false)
+	private String structure;
+	
+	@Column(name = "manufacturer", unique = false, nullable = false)
+	private String manufacturer;
+	
+	@Column(name = "annotations", unique = false, nullable = true)
+	private String annotations;
+	
+	@Column(name = "medicamentForm", unique = false, nullable = false)
 	private MedicamentForm medicamentForm;
+	
+	@Column(name = "issuanceMode", unique = false, nullable = false)
 	private IssuanceMode issuanceMode;
-	private HashMap<Long,Medicament> substituteMedicaments;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Medicament> substituteMedicaments;
+	
+	@Column(name = "date", unique = false, nullable = false)
 	private boolean deleted;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Rating> ratings;
 	
 	public Medicament() {}
 
 	public Medicament(Long id, String name, String type, String structure, String manufacturer, String annotations,
-			MedicamentForm medicamentForm, IssuanceMode issuanceMode, HashMap<Long, Medicament> substituteMedicaments,
+			MedicamentForm medicamentForm, IssuanceMode issuanceMode, Set<Medicament> substituteMedicaments,
 			boolean deleted) {
 		super();
 		this.id = id;
@@ -92,11 +129,11 @@ public class Medicament {
 		this.issuanceMode = issuanceMode;
 	}
 
-	public HashMap<Long, Medicament> getSubstituteMedicaments() {
+	public Set<Medicament> getSubstituteMedicaments() {
 		return substituteMedicaments;
 	}
 
-	public void setSubstituteMedicaments(HashMap<Long, Medicament> substituteMedicaments) {
+	public void setSubstituteMedicaments(Set<Medicament> substituteMedicaments) {
 		this.substituteMedicaments = substituteMedicaments;
 	}
 
@@ -106,6 +143,14 @@ public class Medicament {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
 	}
 
 	

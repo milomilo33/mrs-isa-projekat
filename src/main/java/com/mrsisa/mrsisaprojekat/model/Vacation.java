@@ -2,11 +2,31 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+
+@Entity
 public class Vacation {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
+	
+	@Column(name="dateFrom", unique=false, nullable=false)
 	private LocalDate dateFrom;
+	
+	@Column(name="dateTo", unique=false, nullable=false)
 	private LocalDate dateTo;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Employee employee;
+	
+	@Column(name="deleted", unique=false, nullable=false)
 	private boolean deleted;
 	
 	public Vacation() {}
