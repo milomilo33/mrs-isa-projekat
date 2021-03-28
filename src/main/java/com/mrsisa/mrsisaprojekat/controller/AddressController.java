@@ -14,44 +14,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
-@RequestMapping("/api/pharmacy")
-public class PharmacyController {
-
-	@Autowired
-	private PharmacyService pharmacyService;
-	
+@RequestMapping("/api/address")
+public class AddressController {
 	@Autowired
 	private AddressService addressService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Pharmacy>> getPharmacies(){
+	public ResponseEntity<Collection<Address>> getAddress(){
 		
-		Collection<Pharmacy> pharmacies = pharmacyService.findAll();
+		Collection<Address> address = addressService.findAll();
 		
-		return new ResponseEntity<Collection<Pharmacy>>(pharmacies, HttpStatus.OK);
+		return new ResponseEntity<Collection<Address>>(address, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pharmacy> getPharmacy(@PathVariable("id") Long id) {
-		Pharmacy pharmacy = pharmacyService.findOne(id);
+	public ResponseEntity<Address> getAddress(@PathVariable("id") Long id) {
+		Address address = addressService.findOne(id);
 
-		if (pharmacy == null) {
-			return new ResponseEntity<Pharmacy>(HttpStatus.NOT_FOUND);
+		if (address == null) {
+			return new ResponseEntity<Address>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Pharmacy>(pharmacy, HttpStatus.OK);
+		return new ResponseEntity<Address>(address, HttpStatus.OK);
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
-		Address a = addressService.create(pharmacy.getAddress());
-		pharmacy.setAddress(a);
-		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
-		return new ResponseEntity<Pharmacy>(savedPharmacy, HttpStatus.CREATED);
+	public ResponseEntity<Address> createAddress(@RequestBody Address address) throws Exception {
+		Address savedAddress = addressService.create(address);
+		return new ResponseEntity<Address>(savedAddress, HttpStatus.CREATED);
 	}
+
 }
