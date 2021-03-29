@@ -8,14 +8,14 @@
                 <hr class="light">
                 <p>Dragana Filipovic</p>
                 <p>Nikolina Tosic</p>
-                <p>Milovan Milovan</p>
+                <p>Milovan Milovanovic</p>
                 <p>Marko Suljak</p>
             </div>
             <div class=col-md-6>
                 <hr class="light">
                 <h5>Contact</h5>
                 <hr class="light">
-                <p>filipovic.gaga@gmail.com</p>
+                <p>filipovic.dada@gmail.com</p>
                 <p>nikolinatosic999@gmail.com</p>
                 <p>milovanmilovanovic@gmail.com</p>
                 <p>marko.suljak80@gmail.com</p>

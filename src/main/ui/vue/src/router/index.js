@@ -1,20 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import PharmacyRegistration from '../views/PharmacyRegistration'
 import PharmacyPreview from '../views/PharmacyPreview'
+import SystemAdminPage from '../views/SystemAdminPage'
+import PharmacyRegistration from '../components/PharmacyRegistration'
 
 Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "/registerPharmacy",
-		name: 'PharmacyRegistration',
-		component: PharmacyRegistration
-	},
-	{
 		path: "/PharmacyPreview",
 		name: "PharmacyPreview",
 		component: PharmacyPreview
+	},
+	{
+		path: "/SystemAdminPage",
+		name: "SystemAdminPage",
+		component: SystemAdminPage,
+		children: [
+			{
+				path: "pharmacyRegistration",
+				component: PharmacyRegistration
+			}
+	]
 	}
 ]
 

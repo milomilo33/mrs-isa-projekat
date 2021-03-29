@@ -95,7 +95,7 @@ export default {
       }
       if(errorFound==false){
          this.axios
-        .post("api/pharmacy", {
+        .post("http://localhost:8081/api/pharmacy", {
           name: this.name,
           description: this.description,
           address: {
