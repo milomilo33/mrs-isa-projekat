@@ -1,16 +1,17 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class PricelistItemAppointment extends PricelistItem {
-	
+
+
+
 	@OneToOne(fetch = FetchType.LAZY)
 	private Appointment appointment;
 	
 	public PricelistItemAppointment() {}
+
 
 	public Appointment getAppointment() {
 		return appointment;

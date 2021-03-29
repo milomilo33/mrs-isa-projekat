@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.Collection;
 
+import com.mrsisa.mrsisaprojekat.service.PharmacyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 public class PharmacyController {
 
 	@Autowired
-	private PharmacyService pharmacyService;
+	private PharmacyService pharmacyService = new PharmacyServiceImpl();
 	
 	@Autowired
 	private AddressService addressService;

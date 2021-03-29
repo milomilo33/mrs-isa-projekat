@@ -19,6 +19,10 @@ insert into address (city, country, number, street) values('Novi Sad','Srbija','
 insert into address (city, country, number, street) values('Novi Sad','Srbija','1','Sutjeska')
 insert into address (city, country, number, street) values('Beograd','Srbija','3','Bore Stankovića')
 insert into address (city, country, number, street) values('Novi Sad','Srbija','43','Balzakova')
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '22', 'Balzakova')
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '25', 'Seljačkih buna')
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Bulevar Vojvode Stepe')
+
 
 insert into category_thresholds (category, threshold) values (0, 50)
 insert into category_thresholds (category, threshold) values (1, 100)
@@ -43,6 +47,18 @@ insert into patient (email, deleted, last_name, name, password, phone_number, ad
 insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','Božić','Teodora','patient2','0658563255',20 , 0, 0, 0)
 insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','Marković','Luka','patient3','0636258776', 21, 0, 0, 0)
 
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','Milev','Darko','patient4','0606258776', 22, 0, 0, 0)
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','Milošević','Miloš','patient5','0616258776', 23, 0, 0, 0)
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','Markov','Ivica','patient6','0626258776', 10, 0, 0, 0)
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','Perić','Pera','patient7','0646258776', 15, 0, 0, 0)
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','Batinica','Teodora','patient8','0633434343', 16, 0, 0, 0)
+insert into patient (email, deleted, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','Stupar','Anja','patient9','0637676767', 17, 0, 0, 0)
+
+insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('darkomilev@gmail.com', 1)
+insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('lukamarkovic@gmail.com', 2)
+insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('peraperic@gmail.com', 1)
+insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('teodorabatinica@gmail.com', 3)
+insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('anjastupar@gmail.com', 3)
 
 insert into dermatologist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id ) values ('janatot@gmail.com','false','Tot','Jana','dermatolog1','0665135793', 11, null)
 insert into dermatologist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id ) values ('aleksandarstevanovic@gmail.com','false','Stevanović','Aleksandar','dermatolog2','0605239833', 6, null)
@@ -53,16 +69,28 @@ insert into e_prescription (date, patient_email) values ('2021-04-02 10:00','ana
 insert into e_prescription (date, patient_email) values ('2021-04-06 10:00','teodorabozic@gmail.com')
 insert into e_prescription (date, patient_email) values ('2021-04-07 10:00','lukamarkovic@gmail.com')
 
+insert into e_prescription (date, patient_email) values ('2021-04-08 10:00','anjastupar@gmail.com')
+insert into e_prescription (date, patient_email) values ('2021-04-09 10:00','teodorabatinica@gmail.com')
+insert into e_prescription (date, patient_email) values ('2021-04-10 10:00','peraperic@gmail.com')
+
+
 
 insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-01 14:28', 'false','Izvestaj..' ,1)
 insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-05 10:35','false','Izvestaj.. ', 2)
 insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:40','false','Izvestaj...' ,3)
 
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:50','false','Izvestaj...' ,4)
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:10','false','Izvestaj...' ,5)
+insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:20','false','Izvestaj...' ,6)
 
 
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-01','false','14:00','14:30', 0, 1)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-05','false','10:00','10:30', 1, 2)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-06','false','19:00','19:45', 0, 3)
+
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-06','false','20:00','20:45', 1, 4)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-07','false','16:00','16:45', 0, 5)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id) values ('2021-04-08','false','17:00','17:45', 0, 6)
 
 
 
@@ -123,33 +151,151 @@ insert into patient_complaints (patient_email, complaints_id) values ('teodorabo
 insert into patient_complaints (patient_email, complaints_id) values ('lukamarkovic@gmail.com', 3)
 
 
+insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('anasimic@gmail.com', 1)
+insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('teodorabatinica@gmail.com', 3)
+insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('lukamarkovic@gmail.com', 5)
+
+insert into vacation (date_from, date_to, deleted, employee_email) values ('2021-04-04', '2021-04-20', false, 'janatot@gmail.com')
+insert into vacation (date_from, date_to, deleted, employee_email) values ('2021-05-04', '2021-05-20', false, 'svetozartodorovic@gmail.com')
+insert into vacation (date_from, date_to, deleted, employee_email) values ('2021-05-10', '2021-05-24', false, 'micicmilica@gmail.com')
 
 
-/*insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (1, )
-insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (2, )
-insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (3, )
+insert into work_calendar (id) values (1)
+insert into work_calendar (id) values (2)
+insert into work_calendar (id) values (3)
 
-insert into employee_ratings (employee_email, ratings_id ) values ('janatot@gmail.com', )
-insert into employee_ratings (employee_email, ratings_id ) values ('lazarpopovic@gmail.com',)
-insert into employee_ratings (employee_email, ratings_id ) values ('milamilic@gmail.com', )
+insert into work_calendar_vacations (work_calendar_id, vacations_id) values (1, 1)
+insert into work_calendar_vacations (work_calendar_id, vacations_id) values (2, 2)
+insert into work_calendar_vacations (work_calendar_id, vacations_id) values (3, 3)
 
-insert into medicament_ratings (medicament_id, ratings_id) values (1,)
-insert into medicament_ratings (medicament_id, ratings_id) values (2,)
-insert into medicament_ratings (medicament_id, ratings_id) values (3,)
-insert into medicament_ratings (medicament_id, ratings_id) values (4,)
-insert into medicament_ratings (medicament_id, ratings_id) values (4,)
+insert into work_calendar_appointments (work_calendar_id, appointments_id) values (1, 1)
+insert into work_calendar_appointments (work_calendar_id, appointments_id) values (2, 2)
+insert into work_calendar_appointments (work_calendar_id, appointments_id) values (3, 3)
+
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('svetozartodorovic@gmail.com', false, 'Todorović', 'Svetozar', 'farmaceut1', '0645556464', 22, 1, '08:00', '16:00', 1)
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('milanm@gmail.com', false, 'Milanović', 'Milan', 'farmaceut2', '0621234123', 23, 2, '16:00', '22:00', 2)
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('micicmilica@gmail.com', false, 'Micić', 'Milica', 'farmaceut3', '0609879879', 24, 3, '07:00', '15:00', 3)
+
+insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 1)
+insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 3)
+insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('milanm@gmail.com', 6)
+
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (1, 1)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (1, 2)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 3)
+
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 1)
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 2)
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (2, 3)
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (2, 4)
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (3, 5)
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (3, 6)
 
 
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-05', 2, 10000, 1, supplier_email)
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-07', 2, 50000, 2, supplier_email)
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, supplier_email)
 
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-06','false', 1,'jovanpetrovic@gmail.com' , supplier_email)
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-08','false', 1,'sarajovic@gmail.com',supplier_email)
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-11','false', 1,'markoperic@gmail.com', supplier_email)
+insert into supplier (email, deleted, last_name, name, password, phone_number, address_id) values ('mikaantic@gmail.com', 'false', 'Antic', 'Mika', 'supplier1', '0624354231', 21)
+insert into supplier (email, deleted, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'Raznatovic', 'Svetlana', 'supplier2', '0604354231', 20)
+insert into supplier (email, deleted, last_name, name, password, phone_number, address_id) values ('lupulovb@gmail.com', 'false', 'Lupulov', 'Bojan', 'supplier3', '0614354231', 19)
+
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-06','false', 1,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-11','false', 1,'markoperic@gmail.com', 'lupulovb@gmail.com')
+
+insert into pharmacy_orders (pharmacy_id, orders_id) values (1, 1)
+insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
+insert into pharmacy_orders (pharmacy_id, orders_id) values (3, 3)
+
+insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-06', '2021-04-06', false, 'Promocija leka...', true)
+insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-10', '2021-04-12', false, 'Akcija leka...', false)
+insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-11', '2021-04-22', false, 'Promocija leka...', true)
+
+insert into pharmacy_promotions (pharmacy_id, promotions_id) values (1, 1)
+insert into pharmacy_promotions (pharmacy_id, promotions_id) values (1, 2)
+insert into pharmacy_promotions (pharmacy_id, promotions_id) values (3, 3)
+
+insert into rating (value, patient_email) values (2, 'anasimic@gmail.com')
+insert into rating (value, patient_email) values (4, 'teodorabozic@gmail.com')
+insert into rating (value, patient_email) values (5, 'anjastupar@gmail.com')
+insert into rating (value, patient_email) values (4, 'anjastupar@gmail.com')
+insert into rating (value, patient_email) values (3, 'teodorabozic@gmail.com')
+insert into rating (value, patient_email) values (5, 'ivicamarkov@gmail.com')
+insert into rating (value, patient_email) values (5, 'ivicamarkov@gmail.com')
+insert into rating (value, patient_email) values (4, 'darkomilev@gmail.com')
+insert into rating (value, patient_email) values (1, 'peraperic@gmail.com')
+insert into rating (value, patient_email) values (2, 'ivicamarkov@gmail.com')
+insert into rating (value, patient_email) values (4, 'teodorabatinica@gmail.com')
+
+insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 1)
+insert into pharmacy_ratings (pharmacy_id, ratings_id) values (2, 2)
+insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 3)
+
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-03-03', '2021-04-03', false, 'Zahtev za godisnji odmor', '', 'janatot@gmail.com')
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (false, '2021-04-03', '2021-05-04', false, 'Zahtev za odsustvo', '', 'svetozartodorovic@gmail.com')
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-04-03', '2021-05-04', false, 'Zahtev za bolovanje', '', 'micicmilica@gmail.com')
+
+insert into pharmacy_requests (pharmacy_id, requests_id) values (1, 1)
+insert into pharmacy_requests (pharmacy_id, requests_id) values (2, 2)
+insert into pharmacy_requests (pharmacy_id, requests_id) values (3, 3)
+
+
+insert into pharmacy_vacations (pharmacy_id, vacations_id) values (1, 1)
+insert into pharmacy_vacations (pharmacy_id, vacations_id) values (2, 2)
+insert into pharmacy_vacations (pharmacy_id, vacations_id) values (3, 3)
+
+insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2022-02-02', true, 200, 1)
+insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2023-02-02', true, 300, 2)
+insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2022-06-12', true, 130, 3)
+
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 5, 899.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 6, 1199.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 7, 999.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 2, 199.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 1, 99.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 1, 129.99)
+
+
+insert into pricelist_item (pharmacy_id, price_id) values (1,1)
+insert into pricelist_item (pharmacy_id, price_id) values (2,2)
+insert into pricelist_item (pharmacy_id, price_id) values (3,3)
+insert into pricelist_item (pharmacy_id, price_id) values (1,4)
+insert into pricelist_item (pharmacy_id, price_id) values (2,5)
+insert into pricelist_item (pharmacy_id, price_id) values (3,6)
+
+insert into pricelist_item_appointment (id, appointment_id) values (1, 1)
+insert into pricelist_item_appointment (id, appointment_id) values (2, 2)
+insert into pricelist_item_appointment (id, appointment_id) values (3, 3)
+
+insert into pricelist_item_medicament (id, medicament_id) values (4, 1)
+insert into pricelist_item_medicament (id, medicament_id) values (5, 2)
+insert into pricelist_item_medicament (id, medicament_id) values (6, 3)
+
+insert into supplier_medicament_items (supplier_email, medicament_items_id) values ('mikaantic@gmail.com', 1)
+insert into supplier_medicament_items (supplier_email, medicament_items_id) values ('svetlanaraznatovic@gmail.com', 2)
+insert into supplier_medicament_items (supplier_email, medicament_items_id) values ('lupulovb@gmail.com', 3)
+
+
+
+insert into medicament_ratings (medicament_id, ratings_id) values (1, 4)
+insert into medicament_ratings (medicament_id, ratings_id) values (2, 5)
+insert into medicament_ratings (medicament_id, ratings_id) values (3, 6)
+insert into medicament_ratings (medicament_id, ratings_id) values (4, 7)
+insert into medicament_ratings (medicament_id, ratings_id) values (4, 8)
+
+
+insert into employee_ratings (employee_email, ratings_id ) values ('janatot@gmail.com', 9)
+insert into employee_ratings (employee_email, ratings_id ) values ('lazarpopovic@gmail.com', 10)
+insert into employee_ratings (employee_email, ratings_id ) values ('milamilic@gmail.com', 11)
+
+insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (1, 1)
+insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (2, 2)
+insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (3, 3)
+
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-07', 2, 50000, 2, 'svetlanaraznatovic@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com')
 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 7)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (3, 8)
-*/
+
 
