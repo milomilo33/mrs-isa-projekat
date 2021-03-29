@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.Collection;
 
+import com.mrsisa.mrsisaprojekat.service.PharmacyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
@@ -21,7 +24,10 @@ import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 public class PharmacyController {
 
 	@Autowired
-	private PharmacyService pharmacyService;
+	private PharmacyService pharmacyService = new PharmacyServiceImpl();
+	
+	@Autowired
+	private AddressService addressService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Pharmacy>> getPharmacies(){
@@ -44,6 +50,8 @@ public class PharmacyController {
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
+		Address a = addressService.create(pharmacy.getAddress());
+		pharmacy.setAddress(a);
 		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
 		return new ResponseEntity<Pharmacy>(savedPharmacy, HttpStatus.CREATED);
 	}

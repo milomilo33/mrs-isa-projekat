@@ -54,7 +54,7 @@
                                     </div>
                                     
                                 </form>
-                                
+                                <div class = "col-md-6 offset-md-4"><p class="show_success">{{success_message}}</p></div>
                             </div>
                         </div>
                 </div>
@@ -79,6 +79,7 @@ export default {
       number: 0,
       output: "",
       error_message: "",
+      success_message: "",
     };
   },
   methods: {
@@ -90,9 +91,8 @@ export default {
       if(!this.name || isNaN(this.number) || !this.description || !this.country || !this.city || !this.street){
         errorFound = true;
         this.error_message = "Niste uneli validne podatke!";
-
-
       }
+
       if(errorFound==false){
          this.axios
         .post("http://localhost:8081/api/pharmacy", {
@@ -111,6 +111,7 @@ export default {
         .catch(function (error) {
           currentObj.output = error;
         });
+        this.success_message = "Uspesno ste registrovali apoteku."
       }
     },
   },
@@ -139,5 +140,9 @@ body {
 .show_error{
   color: red;
   text-align: center;
+}
+.show_success{
+  color: #009933;
+  text-align: center; 
 }
 </style>
