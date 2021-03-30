@@ -92,19 +92,8 @@ export default defineComponent({
   
   data() {
     return {
-      pharmacy: []
     }
   },
-
-  methods: {
-    getPharmacy(id) {
-      
-      this.axios.get(`/api/pharmacy/${id}`)
-      .then((response) => this.pharmacy[0] = response.data)
-
-      console.log(this.pharmacy[0])
-    }
-  }
 })
 
 

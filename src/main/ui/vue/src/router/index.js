@@ -5,12 +5,14 @@ import SystemAdminPage from '../views/SystemAdminPage'
 import PharmacyRegistration from '../components/PharmacyRegistration'
 import UserRegistration from '../components/UserRegistration'
 import PharmacistPage from '../views/PharmacistPage'
+import PharmacyListPreview from '../views/PharmacyListPreview'
 import PharmacistRegistration from '../views/PharmacistRegistration'
 
 Vue.use(VueRouter)
 
 const routes = [
 	{
+		path: "/PharmacyPreview/:id",
 		path: "/PharmacistRegistration",
 		name: "PharmacistRegistration",
 		component: PharmacistRegistration
@@ -18,7 +20,8 @@ const routes = [
 	{
 		path: "/PharmacyPreview",
 		name: "PharmacyPreview",
-		component: PharmacyPreview
+		component: PharmacyPreview,
+		props: true
 	},
 
 	{
@@ -46,7 +49,13 @@ const routes = [
 				component: //ime home page komponente
 			}
 		]*/
+	},
+	{
+		path: "/PharmacyList",
+		name: "PharmacistListPreview",
+		component: PharmacyListPreview,
 	}
+
 ]
 
 const router = new VueRouter({

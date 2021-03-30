@@ -8,15 +8,14 @@
 
       <b-col cols="8" align-v="start">
         <b-container>
-            <b-row align-v="start">
-            <h1>Moja Apoteka</h1>
+            <b-row>
+            <h1>{{ pharmacy.name }}</h1>
             </b-row>
-            
-            <b-row class="h-50 mh-50" cols="8" align-h="start">
-            <p class="text-left">Pharmacy No.1</p>
+            <b-row class="h-75" cols="8" align-h="start" style="min-height:150px; max-height:150px;">
+              <p class="text-left"> {{ pharmacy.description }}</p>
             </b-row>
-            <b-row class="h-25" align-v="end">
-            <h5>Address of a Pharmacy</h5>
+            <b-row class="">
+              <h5>{{ this.addressToString(pharmacy.adress) }}</h5>
             </b-row>
     </b-container>
       </b-col>
@@ -32,7 +31,30 @@ export default {
     name: 'PharmacyBasicInfo',
    
     props: {
+      
+    },
+
+    data() {
+      return {
+        pharmacy: ''
+      }
+    },
+
+    created() {
+    this.axios.get(`/api/pharmacy/${this.$route.params.id}`)
+      .then(response => {
+        this.pharmacy = response.data;
+        console.log(this.pharmacy);
+        })
+      .catch(error => console.log(error));
+  },
+
+  methods: {
+    addressToString: function(address) {
+      return address.street + " " + address.number 
+        + ", " + address.city + " " + address.country;
     }
+  }
 }
 </script>
 
