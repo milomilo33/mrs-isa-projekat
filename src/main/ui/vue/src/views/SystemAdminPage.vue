@@ -9,10 +9,10 @@
            <template #button-content>
             User Registration
           </template>
-          <b-dropdown-item href="#">Pharmacy Admin</b-dropdown-item>
-          <b-dropdown-item href="#">System Admin</b-dropdown-item>
-          <b-dropdown-item href="#">Pharmacist</b-dropdown-item>
-          <b-dropdown-item href="#">Supplier</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/PharmacyAdmin">Pharmacy Admin</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/SystemAdmin">System Admin</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/Dermatologist">Dermatologist</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
         <b-nav-item href="#">Medicament Registration</b-nav-item>
