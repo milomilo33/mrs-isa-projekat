@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import PharmacyPreview from '../views/PharmacyPreview'
 import SystemAdminPage from '../views/SystemAdminPage'
 import PharmacyRegistration from '../components/PharmacyRegistration'
+import PharmacistPage from '../views/PharmacistPage'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,18 @@ const routes = [
 				path: "pharmacyRegistration",
 				component: PharmacyRegistration
 			}
-	]
+		]
+	},
+	{
+		path: "/Pharmacistpage",
+		name: "PharmacistPage",
+		component: PharmacistPage/*,
+		children: [
+			{
+				path: "*"
+				component: //ime home page komponente
+			}
+		]*/
 	}
 ]
 

@@ -17,7 +17,7 @@
                 <hr class="light">
                 <p>filipovic.dada@gmail.com</p>
                 <p>nikolinatosic999@gmail.com</p>
-                <p>milovanmilovanovic@gmail.com</p>
+                <p>milovanovicm309@gmail.com</p>
                 <p>marko.suljak80@gmail.com</p>
             </div>
         </div>
