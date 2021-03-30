@@ -19,7 +19,7 @@
                         </b-row>
                         <b-row>
                             
-                            <h5 class="text-left h5"> {{ addressToString(p.adress) }} </h5>
+                            <h5 class="text-left h5"> {{ addressToString(p.address) }} </h5>
                         </b-row>
                     </b-col>
             </b-row>

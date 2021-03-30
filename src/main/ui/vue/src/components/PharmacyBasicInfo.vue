@@ -15,7 +15,7 @@
               <p class="text-left"> {{ pharmacy.description }}</p>
             </b-row>
             <b-row class="">
-              <h5>{{ this.addressToString(pharmacy.adress) }}</h5>
+              <h5>{{ this.addressToString(pharmacy.address) }}</h5>
             </b-row>
     </b-container>
       </b-col>

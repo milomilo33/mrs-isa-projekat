@@ -12,13 +12,12 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "/PharmacyPreview/:id",
 		path: "/PharmacistRegistration",
 		name: "PharmacistRegistration",
 		component: PharmacistRegistration
 	},
 	{
-		path: "/PharmacyPreview",
+		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
 		component: PharmacyPreview,
 		props: true
