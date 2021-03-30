@@ -1,6 +1,8 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
-@RequestMapping("/api/pharmacy")
+@RequestMapping(value="/api/pharmacy")
 public class PharmacyController {
 
 	@Autowired
@@ -29,21 +32,26 @@ public class PharmacyController {
 	private AddressService addressService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Pharmacy>> getPharmacies(){
+	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
 		
 		Collection<Pharmacy> pharmacies = pharmacyService.findAll();
+		List<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
+		for(Pharmacy p : pharmacies) {
+			pharmaciesDTO.add(new PharmacyDTO(p));
+			
+		}
 		
-		return new ResponseEntity<Collection<Pharmacy>>(pharmacies, HttpStatus.OK);
+		return new ResponseEntity<Collection<PharmacyDTO>>(pharmaciesDTO, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pharmacy> getPharmacy(@PathVariable("id") Long id) {
+	public ResponseEntity<PharmacyDTO> getPharmacy(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOne(id);
 
 		if (pharmacy == null) {
-			return new ResponseEntity<Pharmacy>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<PharmacyDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Pharmacy>(pharmacy, HttpStatus.OK);
+		return new ResponseEntity<PharmacyDTO>(new PharmacyDTO(pharmacy), HttpStatus.OK);
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

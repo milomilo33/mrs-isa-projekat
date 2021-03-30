@@ -17,7 +17,7 @@ import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 
 @RestController
-@RequestMapping("/api/address")
+@RequestMapping(value= "/api/address")
 public class AddressController {
 	@Autowired
 	private AddressService addressService;

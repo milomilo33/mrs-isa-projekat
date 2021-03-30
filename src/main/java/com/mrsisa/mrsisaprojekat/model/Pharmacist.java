@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.model;
 import java.time.LocalTime;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ public class Pharmacist extends Employee {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Appointment> counselings;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade =CascadeType.MERGE)
 	private Pharmacy pharmacy;
 	
 	public Pharmacist() {}

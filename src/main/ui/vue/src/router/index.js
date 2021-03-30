@@ -5,15 +5,22 @@ import SystemAdminPage from '../views/SystemAdminPage'
 import PharmacyRegistration from '../components/PharmacyRegistration'
 import UserRegistration from '../components/UserRegistration'
 import PharmacistPage from '../views/PharmacistPage'
+import PharmacistRegistration from '../views/PharmacistRegistration'
 
 Vue.use(VueRouter)
 
 const routes = [
 	{
+		path: "/PharmacistRegistration",
+		name: "PharmacistRegistration",
+		component: PharmacistRegistration
+	},
+	{
 		path: "/PharmacyPreview",
 		name: "PharmacyPreview",
 		component: PharmacyPreview
 	},
+
 	{
 		path: "/SystemAdminPage",
 		name: "SystemAdminPage",

@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,14 @@ public class PharmacyServiceImpl implements PharmacyService{
 	private PharmacyRepositoryDB pharmacyRepository;
 	
 	@Override
-	public Collection<Pharmacy> findAll() {
-		Collection<Pharmacy> pharmacies = pharmacyRepository.findAll();
+	public List<Pharmacy> findAll() {
+		List<Pharmacy> pharmacies = pharmacyRepository.getAllWithAddress();
 		return pharmacies;
 	}
 
 	@Override
 	public Pharmacy findOne(Long id) {
-		Pharmacy pharmacy = pharmacyRepository.findById(id).orElseGet(null);
+		Pharmacy pharmacy = pharmacyRepository.getOnePharmacy(id);
 		return pharmacy;
 	}
 
