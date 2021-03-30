@@ -5,14 +5,16 @@ import SystemAdminPage from '../views/SystemAdminPage'
 import PharmacyRegistration from '../components/PharmacyRegistration'
 import UserRegistration from '../components/UserRegistration'
 import PharmacistPage from '../views/PharmacistPage'
+import PharmacyListPreview from '../views/PharmacyListPreview'
 
 Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "/PharmacyPreview",
+		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
-		component: PharmacyPreview
+		component: PharmacyPreview,
+		props: true
 	},
 	{
 		path: "/SystemAdminPage",
@@ -39,7 +41,13 @@ const routes = [
 				component: //ime home page komponente
 			}
 		]*/
+	},
+	{
+		path: "/PharmacyList",
+		name: "PharmacistListPreview",
+		component: PharmacyListPreview,
 	}
+	
 ]
 
 const router = new VueRouter({
