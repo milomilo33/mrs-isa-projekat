@@ -37,7 +37,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 
 	@Override
 	public Pharmacy update(Pharmacy pharmacy) throws Exception {
-		Pharmacy pharmacyToUpdate = findOne(pharmacy.getId());
+		Pharmacy pharmacyToUpdate = pharmacyRepository.findById(pharmacy.getId()).orElseGet(null);
 		if (pharmacyToUpdate == null) {
 			return null;
 		}
