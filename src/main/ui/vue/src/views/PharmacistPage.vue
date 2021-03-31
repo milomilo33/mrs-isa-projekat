@@ -19,10 +19,7 @@
         
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-            <b-nav-form>
-                <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-                <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-            </b-nav-form>
+            <Search :path="'/PharmacistPage'"/>
 
             <b-nav-item href="#" style="margin-left: 10px;">
                 <b-icon-calendar-2-week></b-icon-calendar-2-week>
@@ -43,10 +40,12 @@
 
 <script>
 import { BIconCalendar2Week } from 'bootstrap-vue'
+import Search from '../components/Search'
 
 export default {
   components: {
-    BIconCalendar2Week
+    BIconCalendar2Week,
+    Search
   },
   props: {
     // ...

@@ -36,15 +36,40 @@ const routes = [
 			{
 				path: "userRegister/:userRole",
 				component: UserRegistration
+			},
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
 			}
 		]
 	},
 	{
-		path: "/Pharmacistpage",
+		path: "/PharmacistPage",
 		name: "PharmacistPage",
-		component: PharmacistPage/*,
+		component: PharmacistPage,
 		children: [
 			{
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			}
+		]
+	},
+	{
+		path: "/PharmacyList/:query",
+		name: "PharmacyList",
+		component: PharmacyListPreview,
+		props: true
+	},
 				path: "*"
 				component: //ime home page komponente
 			}
