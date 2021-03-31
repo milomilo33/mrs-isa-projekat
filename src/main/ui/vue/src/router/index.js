@@ -9,6 +9,7 @@ import PharmacyListPreview from '../views/PharmacyListPreview'
 import PharmacistRegistration from '../components/PharmacistRegistration'
 import PharmacyAdminPage from '../views/PharmacyAdminPage'
 import EmployeeTable from '../components/EmployeeTable'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,6 +30,10 @@ const routes = [
 		name: "SystemAdminPage",
 		component: SystemAdminPage,
 		children: [
+			{
+				path: "/",
+				component: PharmacyListPreview
+			},
 			{
 				path: "pharmacyRegistration",
 				component: PharmacyRegistration
@@ -54,6 +59,10 @@ const routes = [
 		component: PharmacistPage,
 		children: [
 			{
+				path: "/",
+				component: PharmacyListPreview
+			},
+			{
 				path: "PharmacyList",
 				component: PharmacyListPreview,
 			},
@@ -70,11 +79,6 @@ const routes = [
 		component: PharmacyListPreview,
 		props: true
 	},
-				path: "*"
-				component: //ime home page komponente
-			}
-		]*/
-	},
 	{
 		path: "/PharmacyList",
 		name: "PharmacistListPreview",
@@ -85,6 +89,10 @@ const routes = [
 		name: "PharmacyAdminPage",
 		component: PharmacyAdminPage,
 		children:[
+			{
+				path: "/",
+				component: PharmacyListPreview
+			},
 			{
 				path: "EmployeeTable",
 				component:EmployeeTable
