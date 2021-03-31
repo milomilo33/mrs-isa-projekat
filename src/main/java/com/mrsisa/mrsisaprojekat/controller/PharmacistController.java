@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
@@ -127,12 +128,14 @@ public class PharmacistController {
 		return new ResponseEntity<Pharmacist>(pharmacistUpdate, HttpStatus.OK);
 	}*/
 
+	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletePharmacist(@PathVariable("id") String email) {
 
 		Pharmacist pharmacist = pharmacistService.findOne(email);
-
+		
 		if (pharmacist != null) {
+			System.out.println("Yes");
 			pharmacistService.delete(email);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {

@@ -26,7 +26,8 @@ public class Pharmacy {
 	@Column(name = "description", unique = false, nullable = false)
 	private String description;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.MERGE)
+
 	private Address address; 
 	
 	@Column(name = "income", unique = false, nullable = false)

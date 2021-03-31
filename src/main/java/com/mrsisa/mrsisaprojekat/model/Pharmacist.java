@@ -23,7 +23,7 @@ public class Pharmacist extends Employee {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Appointment> counselings;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade =CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.EAGER,cascade =CascadeType.MERGE)
 	private Pharmacy pharmacy;
 	
 	public Pharmacist() {}
