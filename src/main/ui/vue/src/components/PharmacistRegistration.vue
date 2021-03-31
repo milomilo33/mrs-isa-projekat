@@ -151,7 +151,7 @@ export default {
       }
       if(errorFound==false){
        this.axios
-        .post("api/address", {
+        .post("http://localhost:8081/api/address", {
           country: this.country,
             city: this.city,
             street: this.street,
@@ -170,33 +170,33 @@ export default {
     GetAdress(posts){
         var self = this;
         self.axios
-            .get("api/address/"+parseInt(posts.data.id))
+            .get("http://localhost:8081/api/address/"+parseInt(posts.data.id))
             .then(function(response){
                 self.addressId= response.data;
                 self.GetFarmacy(response);
 
             })
             .catch(function (error){ 
-                self.error_message = error;
+                console.log(error);
             
             });
     },
     GetFarmacy(addressP){
         var self = this;
         self.axios
-         .get("api/pharmacy/1")
+         .get("http://localhost:8081/api/pharmacy/1")
          .then(function(response) {
              self.pharmacyId = response.data;
              self.GetPharmacist(addressP,response);
         })
          .catch(function (error){ 
-            self.error_message = error;
+             console.log(error);
         });
         
     },
     GetPharmacist(addressP,posts){
         var self = this;
-        self.axios.post("api/pharmacist/",{
+        self.axios.post("http://localhost:8081/api/pharmacist/",{
             email: this.email,
             password:this.password, 
             name: this.name,
@@ -205,15 +205,15 @@ export default {
             workHourFrom:this.workHourFrom,
             workHourTo:this.workHourTo,
             pharmacy: {
-                name: posts.data[0].name,
-                description: posts.data[0].description,
-                id: posts.data[0].id,
+                name: posts.data.name,
+                description: posts.data.description,
+                id: posts.data.id,
                 address: 
                     {
-                        country: posts.data[0].address.country,
-                        city: posts.data[0].address.city,
-                        street: posts.data[0].address.street,
-                        number:posts.data[0].address.number
+                        country: posts.data.address.country,
+                        city: posts.data.address.city,
+                        street: posts.data.address.street,
+                        number:posts.data.address.number
                     }
             },
             address:{
@@ -229,7 +229,7 @@ export default {
             console.log(response);
         })
         .catch(function (error) {
-           self.error_message = error;
+           console.log(error);
         });
     }
     }
