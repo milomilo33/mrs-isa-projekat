@@ -35,25 +35,40 @@ const routes = [
 			{
 				path: "userRegister/:userRole",
 				component: UserRegistration
+			},
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
 			}
 		]
 	},
 	{
-		path: "/Pharmacistpage",
+		path: "/PharmacistPage",
 		name: "PharmacistPage",
-		component: PharmacistPage/*,
+		component: PharmacistPage,
 		children: [
 			{
-				path: "*"
-				component: //ime home page komponente
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
 			}
-		]*/
+		]
 	},
 	{
-		path: "/PharmacyList",
-		name: "PharmacistListPreview",
+		path: "/PharmacyList/:query",
+		name: "PharmacyList",
 		component: PharmacyListPreview,
-	}
+		props: true
+	},
 
 ]
 
