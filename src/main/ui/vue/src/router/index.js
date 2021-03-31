@@ -100,6 +100,15 @@ const routes = [
 			{
 				path:"PharmacistRegistration",
 				component:PharmacistRegistration
+			},
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
 			}
 		]
 	}
