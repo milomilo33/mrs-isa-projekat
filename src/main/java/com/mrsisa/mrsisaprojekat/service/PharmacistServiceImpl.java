@@ -25,7 +25,7 @@ public class PharmacistServiceImpl  implements PharmacistService {
 	@Override
 	@Transactional
 	public Pharmacist findOne(String email) {
-		Pharmacist pharmacist = pharmacistRepository.findById(email).orElseGet(null);
+		Pharmacist pharmacist = pharmacistRepository.getOnePharmacist(email);
 		return pharmacist;
 	}
 

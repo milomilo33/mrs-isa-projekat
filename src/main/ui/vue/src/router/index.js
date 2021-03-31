@@ -6,7 +6,8 @@ import PharmacyRegistration from '../components/PharmacyRegistration'
 import UserRegistration from '../components/UserRegistration'
 import PharmacistPage from '../views/PharmacistPage'
 import PharmacistRegistration from '../views/PharmacistRegistration'
-
+import PharmacyAdminPage from '../views/PharmacyAdminPage'
+import EmployeeTable from '../components/EmployeeTable'
 Vue.use(VueRouter)
 
 const routes = [
@@ -46,6 +47,17 @@ const routes = [
 				component: //ime home page komponente
 			}
 		]*/
+	},
+	{
+		path: "/PharmacyAdminPage",
+		name: "PharmacyAdminPage",
+		component: PharmacyAdminPage,
+		children:[
+			{
+				path:"EmployeeTable",
+				component:EmployeeTable
+			}
+		]
 	}
 ]
 

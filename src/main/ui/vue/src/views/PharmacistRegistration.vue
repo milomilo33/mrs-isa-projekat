@@ -206,15 +206,15 @@ export default {
             workHourFrom:this.workHourFrom,
             workHourTo:this.workHourTo,
             pharmacy: {
-                name: posts.data[0].name,
-                description: posts.data[0].description,
-                id: posts.data[0].id,
+                name: posts.data.name,
+                description: posts.data.description,
+                id: posts.data.id,
                 address: 
                     {
-                        country: posts.data[0].address.country,
-                        city: posts.data[0].address.city,
-                        street: posts.data[0].address.street,
-                        number:posts.data[0].address.number
+                        country: posts.data.address.country,
+                        city: posts.data.address.city,
+                        street: posts.data.address.street,
+                        number:posts.data.address.number
                     }
             },
             address:{
