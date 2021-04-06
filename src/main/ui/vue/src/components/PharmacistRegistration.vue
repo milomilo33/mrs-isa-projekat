@@ -6,7 +6,7 @@
                        <div class="card">
                            <div class="card-header">Register Pharmacist</div>
                            <div class="card-body">
-                               <form name="my-form" @submit="formSubmit">
+                               <form name="myform" @submit="formSubmit">
                                    <div class="form-group row">
                                        <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
                                        <div class="col-md-6">
@@ -37,20 +37,7 @@
                                        <div class="col-md-6">
                                            <input type="text" id="lastName" class="form-control" name="lastName" v-model="lastName" >
                                        </div>
-                                   </div>
-                                   <div class="form-group row">
-                                       <label for="workHourFrom" class="col-md-4 col-form-label text-md-right">Work hour from</label>
-                                       <div class="col-md-6">
-                                        <b-form-timepicker v-model="workHourFrom" locale="en"></b-form-timepicker>
-                                        </div>
-                                   </div>
-                                   <div class="form-group row">
-                                       <label for="workHourTo" class="col-md-4 col-form-label text-md-right">Work hour to</label>
-                                       <div class="col-md-6">
-                                        <b-form-timepicker v-model="workHourTo" locale="en"></b-form-timepicker>
-                                        </div>
-                                   </div>
-                                   
+                                   </div>    
                                    <div class="form-group row">
                                         <label for="phoneNumber" class="col-md-4 col-form-label text-md-right">Phone number</label>
                                         <div class="col-md-6">
@@ -84,6 +71,23 @@
                                             <input type="number" min="1" id="number" class="form-control" name="number" v-model="number" >
                                         </div>
                                     </div>
+                                     <div class="card1">
+                                    <div class="card1-header">Work hours</div>
+                                        <b-table 
+                                            :items="items" 
+                                            :fields="fields"
+                                            :head-variant="headVariant" 
+                                            responsive="sm" 
+                                            bordered
+                                            small>
+                                        <template v-slot:cell(workhourfrom)="data">
+                                            <b-form-timepicker v-model="data.item.workHourFrom"  locale="en"></b-form-timepicker>
+                                        </template>
+                                         <template v-slot:cell(workhourto)="data">
+                                            <b-form-timepicker v-model="data.item.workHourTo"  locale="en"></b-form-timepicker>
+                                        </template>        
+                                        </b-table>
+                                    </div>
                                    <div class="buttons col-md-1 offset-md-4">
                                         <button class="btn btn-success" style="margin:1px;">Submit</button>
                                    </div>
@@ -105,14 +109,17 @@ export default {
   },
   data() {
     return {
+        fields: [{key:'day', label:'Day'}, {key:'workHourFrom',label:'Work hour from'},{key: 'workHourTo',label:'Work hour to'}],
+        items: [
+            {day:'Monday'},{day: 'Tuesday'},{day:'Wednesday'},{day:'Thursday'},{day:'Friday'},{day:'Saturday'},{day:'Sunday'}
+        ],
+      headVariant: "danger",
       email: "",
       password:"",
       password_confirmation:"", 
       name: "",
       lastName: "",
       phoneNumber: "",
-      workHourFrom:"",
-      workHourTo:"",
       country: "",
       city: "",
       street: "",
@@ -122,6 +129,7 @@ export default {
       pharmacyId: {},
       output3: {},
       addressId:{},
+      pharmacyW :{},
     };
   },
    methods: {
@@ -222,7 +230,66 @@ export default {
                 city: addressP.data.city,
                 street:addressP.data.street,
                 number:addressP.data.number
-            }
+            },
+            workHours :[
+                {
+                    day: this.items[0].day,
+                    workHourFrom: this.items[0].workHourFrom,
+                    workHourTo: this.items[0].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[1].day,
+                    workHourFrom: this.items[1].workHourFrom,
+                    workHourTo:this.items[1].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[2].day,
+                    workHourFrom: this.items[2].workHourFrom,
+                    workHourTo:this.items[2].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[3].day,
+                    workHourFrom: this.items[3].workHourFrom,
+                    workHourTo:this.items[3].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[4].day,
+                    workHourFrom: this.items[4].workHourFrom,
+                    workHourTo:this.items[4].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[5].day,
+                    workHourFrom: this.items[5].workHourFrom,
+                    workHourTo:this.items[5].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[6].day,
+                    workHourFrom: this.items[6].workHourFrom,
+                    workHourTo:this.items[6].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+
+            ],
         })
         .then((response) => {
             

@@ -33,7 +33,7 @@ public class Pharmacy {
 	@Column(name = "income", unique = false, nullable = false)
 	private double income;
 	
-	@ManyToMany(mappedBy = "pharmacies")
+	@ManyToMany(mappedBy = "pharmacies", fetch = FetchType.LAZY)
 	private Set<Dermatologist> dermatologists;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)

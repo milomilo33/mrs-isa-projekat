@@ -6,8 +6,10 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#">All Products</b-nav-item>
-        <b-nav-item href="#">Contact</b-nav-item>
+        <b-nav-item href="#">Medicaments</b-nav-item>
+        <b-nav-item href="#">Appointments</b-nav-item>
+        <b-nav-item href="#">Employees</b-nav-item>
+         <b-nav-item href="#">Promotions</b-nav-item>
       </b-navbar-nav>
       
       <!-- Right aligned nav items -->
@@ -31,7 +33,7 @@
 
   <hr>
 
-  <b-container> 
+  <!--<b-container> 
     <b-row align-h="start" class="pl-2 pb-1">
       <b-button size="lg" variant="light" href="#">
         All medicaments
@@ -59,7 +61,7 @@
         <EmployeeCard />
         <EmployeeCard />
     </b-row>  
-  </b-container>
+  </b-container>-->
 
   <br>
 
@@ -73,7 +75,6 @@ import PharmacyBasicInfo from '../components/PharmacyBasicInfo.vue'
 import MedicamentCard from '../components/MedicamentCard.vue'
 import EmployeeCard from '../components/EmployeeCard.vue'
 import Footer from '../components/Footer.vue'
-
 export default defineComponent({
   name: 'PharmacyPreview',
   components: {

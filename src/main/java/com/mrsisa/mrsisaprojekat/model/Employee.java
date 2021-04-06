@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,6 +22,9 @@ public abstract class Employee extends User {
 	
 	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Request> requests;
+	
+	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+	private Set<WorkHour> workHour;
 	
 	public Employee() {}
 
@@ -57,6 +57,16 @@ public abstract class Employee extends User {
 
 	public void setRequests(Set<Request> requests) {
 		this.requests = requests;
+	}
+
+
+	public Set<WorkHour> getWorkHour() {
+		return workHour;
+	}
+
+
+	public void setWorkHour(Set<WorkHour> workHour) {
+		this.workHour = workHour;
 	}
 
 	

@@ -172,9 +172,9 @@ insert into work_calendar_appointments (work_calendar_id, appointments_id) value
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (2, 2)
 insert into work_calendar_appointments (work_calendar_id, appointments_id) values (3, 3)
 
-insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('svetozartodorovic@gmail.com', false, 'Todorović', 'Svetozar', 'farmaceut1', '0645556464', 22, 1, '08:00', '16:00', 1)
-insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('milanm@gmail.com', false, 'Milanović', 'Milan', 'farmaceut2', '0621234123', 23, 2, '16:00', '22:00', 2)
-insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, work_hour_from, work_hour_to, pharmacy_id) values ('micicmilica@gmail.com', false, 'Micić', 'Milica', 'farmaceut3', '0609879879', 24, 3, '07:00', '15:00', 3)
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('svetozartodorovic@gmail.com', false, 'Todorović', 'Svetozar', 'farmaceut1', '0645556464', 22, 1, 1)
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('milanm@gmail.com', false, 'Milanović', 'Milan', 'farmaceut2', '0621234123', 23, 2,  2)
+insert into pharmacist (email, deleted, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false, 'Micić', 'Milica', 'farmaceut3', '0609879879', 24, 3, 3)
 
 insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 1)
 insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 3)

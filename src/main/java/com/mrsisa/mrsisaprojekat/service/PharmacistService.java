@@ -14,6 +14,6 @@ public interface PharmacistService {
 	
 	Pharmacist update(Pharmacist pharmacist) throws Exception;
 	
-	void delete(String email);
+	boolean delete(String email);
 
 }

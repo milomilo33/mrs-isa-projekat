@@ -7,7 +7,6 @@
             <div class="card-header">Pharmacists</div>
             <b-col lg="4" class="my-1">
               <b-form-group
-                label="Filter"
                 label-for="filter-input"
                 label-cols-sm="3"
                 label-align-sm="right"
@@ -42,13 +41,13 @@
               </b-button>
             </template>
             <template v-slot:cell(delete)="data">
-              <b-button size="sm" @click="DeleteOne(data.item)" class="mr-1" variant="danger">
+              <b-button size="sm" @click="DeleteOne(data.item, $event.target)" class="mr-1" variant="danger">
                 Delete
               </b-button>
             </template>
             <template v-slot:cell(update)="data">
               <b-button size="sm" @click="UpdateOne(data.item)" class="mr-1" variant="info">
-                Update
+                Edit
               </b-button>
             </template>
            <!-- <b-table
@@ -63,6 +62,9 @@
             <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @ended="resetInfoModal">
               <pre>{{ infoModal.content }}</pre>
             </b-modal>
+            <b-modal :id="errorModal.id" :title="errorModal.title" ok-only @ended="errModal">
+              <pre>{{ errorModal.content }}</pre>
+            </b-modal>
          </div>
         </div>
       </div>
@@ -75,7 +77,7 @@
   export default {
     data() {
       return {
-        fields: [{key:'name',sortable:true}, {key:'lastName',sortable:true},{key: 'email',sortable:true}, {key:'phoneNumber',sortable:true},'info','update','delete'],
+        fields: [{key:'name',sortable:true, label:'Name'}, {key:'lastName',sortable:true, label:'Last name'},{key: 'email',sortable:true, label:'Email'}, {key:'phoneNumber',sortable:true, label:'Phone number'},'info',{key:'update', label:'Edit'},'delete'],
         items: [
         ],
         selectMode: 'single',
@@ -89,6 +91,11 @@
           id: 'info-modal',
           title: '',
           content: ''
+        },
+        errorModal:{
+          id: 'error-modal',
+          title:'',
+          content:''
         },
         all:[]
       }
@@ -105,12 +112,10 @@
           item.email = response.data[i].email;
           item.phoneNumber = response.data[i].phoneNumber;
           self.items.push(item);
-          item.workHourFrom = response.data[i].workHourFrom;
-          item.workHourTo = response.data[i].workHourTo;
+          item.hours = response.data[i].workHours;
           item.address = response.data[i].address.street + ", "+response.data[i].address.number+", "+response.data[i].address.city;
           self.all.push(item);
         }
-
          self.totalRows = self.items.length;
       });
   },
@@ -118,15 +123,23 @@
       onRowSelected(items) {
         this.selected = items
       },
-      DeleteOne(item){
-         /* this.axios.delete("http://localhost:8081/api/pharmacist/"+item.email)
+      DeleteOne(item,button){
+        var self = this;
+          self.axios.delete("http://localhost:8081/api/pharmacist/"+item.email)
       .then(function(response){
-         const idx = this.items.indexOf(item);
-         this.items.splice(idx,1);
+         const idx = self.items.indexOf(item);
+         self.items.splice(idx,1);
          console.log(response);
-         console.log(idx);
-      });*/
-      console.log(item);
+         self.errorModal.title = 'Success',
+         self.errorModal.content = "Successfuly deleted!";
+        self.$root.$emit('bv::show::modal', self.errorModal.id, button)
+      }
+      ).catch(function (error) {
+        self.errorModal.title = 'Error',
+        self.errorModal.content = "You cannot delete!";
+        self.$root.$emit('bv::show::modal', self.errorModal.id, button)
+           console.log(error);
+        });
       },
       UpdateOne(item){
         console.log(item);
@@ -139,17 +152,36 @@
        infoP(i, button) {
         var item ={};
         for(var j =0;j<this.all.length;j++){
-          console.log(i.email);
           if(this.all[j].email == i.email){
             item.email =this.all[j].email;
             item.name = this.all[j].name;
             item.lastName = this.all[j].lastName;
             item.phoneNumber = this.all[j].phoneNumber;
-            item.workHourFrom = this.all[j].workHourFrom;
+            item.hours = this.all[j].hours;
             item.address = this.all[j].address;
-            item.workHourTo = this.all[j].workHourTo;
           }
         }
+        /*var r = '';
+        for(var k =0;k<item.hours.length;k++){
+          var from = '';
+          var to ='';
+            if(item.hours[k].workHourFrom == null && item.hours[k].workHourTo == null){
+              from = '/';
+              to = '/';
+            }else if(item.hours[k].workHourFrom == null && item.hours[k].workHourTo != null){
+                from = '/';
+                to = item.hours[k].workHourTo;
+            }else if(item.hours[k].workHourFrom != null && item.hours[k].workHourTo == null){
+             from =item.hours[k].workHourFrom ;
+             to = '/';
+            }else{
+              from =item.hours[k].workHourFrom ;
+              to = item.hours[k].workHourTo;
+            }
+            r += "\n"+item.hours[k].day + ": " + from +"-"+ to;
+            
+
+        }*/
         this.infoModal.title = 'Info',
         this.infoModal.content = "Name: "+ item.name +"\nLast name: "+item.lastName+"\nEmail: "+item.email+
         "\nPhone number: "+item.phoneNumber+"\nAddress: "+item.address;
@@ -158,6 +190,11 @@
        resetInfoModal() {
         this.infoModal.title = ''
         this.infoModal.content = ''
+      },
+
+      errModal(){
+        this.errorModal.title = ''
+        this.errorModal.content = ''
       },
     }
   }
