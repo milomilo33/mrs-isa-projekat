@@ -1,7 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +29,7 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 import com.mrsisa.mrsisaprojekat.service.WorkHourService;
@@ -50,6 +50,9 @@ public class PharmacistController {
 	
 	@Autowired
 	private WorkHourService workHourService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@GetMapping(value="/all")
 	public ResponseEntity<List<PharmacistDTO>> getPharmacists(){
@@ -143,6 +146,13 @@ public class PharmacistController {
 		pharmacist.setPharmacy(pharmacy);
 		pharmacist.setAddress(saved);
 		pharmacist = pharmacistService.create(pharmacist);
+		
+		try {
+			emailService.sendTestMail(pharmacist);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
 		return new ResponseEntity<>(new PharmacistDTO(pharmacist), HttpStatus.CREATED); 
 		
 		

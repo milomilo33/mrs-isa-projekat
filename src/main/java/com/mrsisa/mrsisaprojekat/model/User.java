@@ -37,6 +37,9 @@ public abstract class User {
 	@Column(name="deleted", unique=false, nullable=false)
 	private boolean deleted;
 	
+	@Column(name="active", unique=false, nullable=false)
+	private boolean active;
+	
 	public User() {}
 
 	public String getEmail() {

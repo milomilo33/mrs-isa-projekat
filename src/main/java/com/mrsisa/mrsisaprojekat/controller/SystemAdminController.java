@@ -15,6 +15,7 @@ import com.mrsisa.mrsisaprojekat.dto.AdminSystemDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminSystem;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 
 @RestController
@@ -26,6 +27,9 @@ public class SystemAdminController {
 	
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<AdminSystemDTO> saveAdmin(@RequestBody AdminSystemDTO adminDTO) throws Exception{
@@ -46,6 +50,14 @@ public class SystemAdminController {
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
 		admin.setAddress(saved);
 		admin = adminService.create(admin);
+		
+		try {
+			emailService.sendTestMail(admin);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
 		return new ResponseEntity<>(new AdminSystemDTO(admin), HttpStatus.CREATED); 
 		
 		
