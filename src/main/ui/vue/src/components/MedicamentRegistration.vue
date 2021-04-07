@@ -155,7 +155,7 @@ export default {
           item.id = response.data[i].id;
           item.name = response.data[i].name;
           item.type = response.data[i].type;
-          item.annotations = response.data[i].annotations;
+          item.annotation = response.data[i].annotations;
           item.structure = response.data[i].structure;
           item.manufacturer = response.data[i].manufacturer;
           _this.medicaments.push(item);
@@ -184,7 +184,7 @@ export default {
           manufacturer: this.manufacturer,
           issuanceMode: this.issuanceMode,
           medicamentForm: this.medicamentForm,
-          annotation: this.annotations,
+          annotations: this.annotations,
           substituteMedicaments: this.substitute
         })
         .then(function (response) {
@@ -210,6 +210,6 @@ export default {
 </style>
 <style scoped>
 .card-header{
-  background-color: #fecdcd;
+  background-color: #ccffbc;
 }
 </style>

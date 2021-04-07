@@ -1,10 +1,12 @@
 <template>
   <div>
-    <b-navbar fixed="top" toggleable="lg" type="dark" variant="dark">
+    <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
     <b-navbar-brand href="/SystemAdminPage">Home Page</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
+        <b-nav-item href="/SystemAdminPage/MedicamentList">Medicaments</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/PharmacyList"> Pharmacies</b-nav-item>
         <b-nav-item-dropdown right>
            <template #button-content>
             User Registration

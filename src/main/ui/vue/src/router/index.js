@@ -10,6 +10,7 @@ import PharmacistRegistration from '../components/PharmacistRegistration'
 import PharmacyAdminPage from '../views/PharmacyAdminPage'
 import EmployeeTable from '../components/EmployeeTable'
 import MedicamentRegistration from '../components/MedicamentRegistration'
+import MedicamentListPreview from '../components/MedicamentListPreview'
 
 Vue.use(VueRouter)
 
@@ -25,15 +26,19 @@ const routes = [
 		component: PharmacyPreview,
 		props: true
 	},
-
+	{
+		path: "/MedicamentList",
+		name: "MedicamentListPreview",
+		component: MedicamentListPreview
+	},
 	{
 		path: "/SystemAdminPage",
 		name: "SystemAdminPage",
 		component: SystemAdminPage,
 		children: [
 			{
-				path: "/",
-				component: PharmacyListPreview
+				path: "MedicamentList",
+				component: MedicamentListPreview
 			},
 			{
 				path: "pharmacyRegistration",
@@ -64,12 +69,12 @@ const routes = [
 		component: PharmacistPage,
 		children: [
 			{
-				path: "/",
+				path: "PharmacyList",
 				component: PharmacyListPreview
 			},
 			{
-				path: "PharmacyList",
-				component: PharmacyListPreview,
+				path: "MedicamentList",
+				component: MedicamentListPreview
 			},
 			{
 				path: "PharmacyList/:query",
@@ -79,24 +84,17 @@ const routes = [
 		]
 	},
 	{
-		path: "/PharmacyList/:query",
-		name: "PharmacyList",
-		component: PharmacyListPreview,
-		props: true
-	},
-	{
-		path: "/PharmacyList",
-		name: "PharmacistListPreview",
-		component: PharmacyListPreview,
-	},
-	{
 		path : "/PharmacyAdminPage",
 		name: "PharmacyAdminPage",
 		component: PharmacyAdminPage,
 		children:[
 			{
-				path: "/",
+				path: "pharmacyList",
 				component: PharmacyListPreview
+			},
+			{
+				path: "medicamentList",
+				component: MedicamentListPreview
 			},
 			{
 				path: "EmployeeTable",
@@ -107,11 +105,11 @@ const routes = [
 				component:PharmacistRegistration
 			},
 			{
-				path: "PharmacyList",
+				path: "pharmacyList",
 				component: PharmacyListPreview,
 			},
 			{
-				path: "PharmacyList/:query",
+				path: "pharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
 			}

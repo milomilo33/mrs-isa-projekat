@@ -1,5 +1,4 @@
 <template>
-    <main class="my-form">
         <div class="cotainer">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -84,8 +83,7 @@
                         </div>
                 </div>
             </div>
-        </div>
-    </main>   
+        </div>   
 </template>
 
 <script>
@@ -166,7 +164,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 body {
   margin: 0;
   font-size: 0.9rem;
@@ -177,15 +175,11 @@ body {
   background-color: #f5f8fa;
 }
 
-.my-form {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+.card-header{
+  background-color: #ccffbc;
 }
 
-.my-form .row {
-  margin-left: 0;
-  margin-right: 0;
-}
+
 .show_error{
   color: red;
   text-align: center;
