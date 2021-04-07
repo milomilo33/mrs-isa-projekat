@@ -15,7 +15,7 @@
           <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
-        <b-nav-item href="#">Medicament Registration</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
       </b-navbar-nav>
       
       <!-- Right aligned nav items -->

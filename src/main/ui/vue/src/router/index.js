@@ -9,6 +9,7 @@ import PharmacyListPreview from '../views/PharmacyListPreview'
 import PharmacistRegistration from '../components/PharmacistRegistration'
 import PharmacyAdminPage from '../views/PharmacyAdminPage'
 import EmployeeTable from '../components/EmployeeTable'
+import MedicamentRegistration from '../components/MedicamentRegistration'
 
 Vue.use(VueRouter)
 
@@ -50,6 +51,10 @@ const routes = [
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
+			},
+			{
+				path: "MedicamentRegistration",
+				component: MedicamentRegistration
 			}
 		]
 	},
