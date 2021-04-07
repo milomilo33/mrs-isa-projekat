@@ -42,6 +42,14 @@ public abstract class User {
 	
 	public User() {}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	public String getEmail() {
 		return email;
 	}
