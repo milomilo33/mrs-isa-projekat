@@ -13,7 +13,7 @@
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#">Appointments</b-dropdown-item>
-          <b-dropdown-item href="#">Medicaments</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
           <b-dropdown-item href="#">Pricelist</b-dropdown-item>
           <b-dropdown-item href="#">Orders</b-dropdown-item>
           <b-dropdown-item href="#">Offers</b-dropdown-item>

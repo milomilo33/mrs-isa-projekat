@@ -42,7 +42,7 @@ public class Pharmacy {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Order> orders;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY,cascade= CascadeType.MERGE)
 	private Set<MedicamentItem> medicamentItems;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
@@ -50,6 +51,15 @@ public class PharmacyServiceImpl implements PharmacyService{
 	public void delete(Long id) {
 		pharmacyRepository.deleteById(id);
 		
+	}
+
+	@Override
+	public List<MedicamentItem> getAllMedicaments(Long id) {
+		List<MedicamentItem> items = pharmacyRepository.getAllMedicaments(id);
+		if(items == null) {
+			return null;
+		}
+		return items;
 	}
 
 }

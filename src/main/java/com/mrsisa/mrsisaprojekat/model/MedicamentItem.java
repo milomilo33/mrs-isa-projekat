@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,7 @@ public class MedicamentItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
 	private Medicament medicament;
 	
 	@Column(name = "quantity", unique = false, nullable = false)
