@@ -11,6 +11,7 @@ import PharmacyAdminPage from '../views/PharmacyAdminPage'
 import EmployeeTable from '../components/EmployeeTable'
 import MedicamentRegistration from '../components/MedicamentRegistration'
 import MedicamentListPreview from '../components/MedicamentListPreview'
+import MedicamentTable from '../components/MedicamentTable'
 
 Vue.use(VueRouter)
 
@@ -96,6 +97,11 @@ const routes = [
 				path: "medicamentList",
 				component: MedicamentListPreview
 			},
+			{
+				path: "MedicamentTable",
+				component: MedicamentTable
+			}
+			,
 			{
 				path: "EmployeeTable",
 				component:EmployeeTable

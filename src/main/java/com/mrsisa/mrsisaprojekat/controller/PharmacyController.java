@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
-import com.mrsisa.mrsisaprojekat.service.PharmacyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
@@ -76,5 +78,34 @@ public class PharmacyController {
 		pharmacy.setAddress(address);
 		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
 		return new ResponseEntity<>(savedPharmacy, HttpStatus.CREATED);
+	}
+	
+	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<MedicamentItemDTO>> getPharmacyMedicamentItems(@PathVariable("id") Long id) {
+		Collection<MedicamentItem> items = pharmacyService.getAllMedicaments(id);
+		List<MedicamentItemDTO> returns =new ArrayList<>();
+		for(MedicamentItem m: items) {
+			returns.add(new MedicamentItemDTO(m));
+			
+		}
+		if (items == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
+	@PutMapping(value= "/updateMedicaments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Pharmacy> updatePharmacy(@RequestBody Pharmacy pharmacy,@PathVariable("id") Long id) throws Exception {
+		Pharmacy pharmacyUpdate = pharmacyService.findOne(id);
+		for(MedicamentItem m : pharmacy.getMedicaments()) {
+			System.out.println(m.getMedicament().getName() +"/"+ m.getQuantity());
+		}
+
+		if (pharmacyUpdate == null) {
+			return new ResponseEntity<Pharmacy>(HttpStatus.NOT_FOUND);
+		}
+		pharmacyUpdate.setMedicaments(pharmacy.getMedicaments());
+
+		//pharmacyUpdate = pharmacyService.update(pharmacyUpdate);
+		return new ResponseEntity<Pharmacy>(pharmacyUpdate, HttpStatus.OK);
 	}
 }
