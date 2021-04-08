@@ -11,6 +11,8 @@ import PharmacyAdminPage from '../views/PharmacyAdminPage'
 import EmployeeTable from '../components/EmployeeTable'
 import MedicamentRegistration from '../components/MedicamentRegistration'
 import MedicamentListPreview from '../components/MedicamentListPreview'
+import UnregisteredPage from '../views/UnregisteredPage'
+import PatientRegistration from '../components/PatientRegistration'
 
 Vue.use(VueRouter)
 
@@ -60,6 +62,29 @@ const routes = [
 			{
 				path: "MedicamentRegistration",
 				component: MedicamentRegistration
+			}
+		]
+	},
+	{
+		path: "/UnregisteredPage",
+		component: UnregisteredPage,
+		children: [
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			},
+			{
+				path: "PatientRegistration",
+				component: PatientRegistration
 			}
 		]
 	},

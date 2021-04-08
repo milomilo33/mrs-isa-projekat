@@ -40,6 +40,9 @@ public abstract class User {
 	@Column(name="active", unique=false, nullable=false)
 	private boolean active;
 	
+	@Column(name="token", unique=false, nullable=true)
+	private String token;
+	
 	public User() {}
 
 	public boolean isActive() {
