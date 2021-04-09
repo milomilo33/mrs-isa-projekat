@@ -9,6 +9,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
 public class Dermatologist extends Employee {
 	

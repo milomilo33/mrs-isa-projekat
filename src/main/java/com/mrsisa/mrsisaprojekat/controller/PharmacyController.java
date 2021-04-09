@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
@@ -34,6 +37,8 @@ public class PharmacyController {
 	
 	@Autowired
 	private AddressService addressService;
+	@Autowired
+	private MedicamentItemService medicamentItemService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
@@ -83,29 +88,32 @@ public class PharmacyController {
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MedicamentItemDTO>> getPharmacyMedicamentItems(@PathVariable("id") Long id) {
 		Collection<MedicamentItem> items = pharmacyService.getAllMedicaments(id);
-		List<MedicamentItemDTO> returns =new ArrayList<>();
+		List<MedicamentItemDTO> returns = new ArrayList<>();
 		for(MedicamentItem m: items) {
-			returns.add(new MedicamentItemDTO(m));
-			
+			if(!m.isDeleted()) {
+				returns.add(new MedicamentItemDTO(m));
+			}
 		}
 		if (items == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(returns,HttpStatus.OK);
 	}
+	
 	@PutMapping(value= "/updateMedicaments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pharmacy> updatePharmacy(@RequestBody Pharmacy pharmacy,@PathVariable("id") Long id) throws Exception {
-		Pharmacy pharmacyUpdate = pharmacyService.findOne(id);
+	public ResponseEntity<PharmacyDTO> updatePharmacy(@RequestBody Pharmacy pharmacy,@PathVariable("id") Long id) throws Exception {
+		Pharmacy pharmacyUpdate = pharmacyService.findOneWithMedicaments(id);
 		for(MedicamentItem m : pharmacy.getMedicaments()) {
-			System.out.println(m.getMedicament().getName() +"/"+ m.getQuantity());
+			pharmacyUpdate.getMedicaments().add(m);
+			
 		}
-
 		if (pharmacyUpdate == null) {
-			return new ResponseEntity<Pharmacy>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		pharmacyUpdate.setMedicaments(pharmacy.getMedicaments());
-
-		//pharmacyUpdate = pharmacyService.update(pharmacyUpdate);
-		return new ResponseEntity<Pharmacy>(pharmacyUpdate, HttpStatus.OK);
+		
+		pharmacyUpdate = pharmacyService.update(pharmacyUpdate);
+		return new ResponseEntity<PharmacyDTO>(new PharmacyDTO(pharmacyUpdate), HttpStatus.OK);
 	}
+	
+	
 }

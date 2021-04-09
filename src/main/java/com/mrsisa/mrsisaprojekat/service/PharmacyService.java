@@ -19,4 +19,7 @@ public interface PharmacyService {
 	void delete(Long id);
 	
 	List<MedicamentItem> getAllMedicaments(Long id);
+	
+	
+	Pharmacy findOneWithMedicaments(Long id);
 }
