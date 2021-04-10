@@ -8,7 +8,7 @@ import PharmacistPage from '../views/PharmacistPage'
 import PharmacyListPreview from '../views/PharmacyListPreview'
 import PharmacistRegistration from '../components/PharmacistRegistration'
 import PharmacyAdminPage from '../views/PharmacyAdminPage'
-import EmployeeTable from '../components/EmployeeTable'
+import PharmacistTable from '../components/PharmacistTable'
 import MedicamentRegistration from '../components/MedicamentRegistration'
 import MedicamentListPreview from '../components/MedicamentListPreview'
 import UnregisteredPage from '../views/UnregisteredPage'
@@ -128,8 +128,8 @@ const routes = [
 			}
 			,
 			{
-				path: "EmployeeTable",
-				component:EmployeeTable
+				path: "PharmacistTable",
+				component:PharmacistTable
 			},
 			{
 				path:"PharmacistRegistration",

@@ -1,87 +1,19 @@
 <template>
-  <main class="my-form">
-    <div class="cotainer">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
-            <div class="card-header">Pharmacists</div>
-            <b-col lg="4" class="my-1">
-              <b-form-group
-                label-for="filter-input"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-size="sm"
-                class="mb-0">
-                <b-input-group size="sm">
-                  <b-form-input
-                    id="filter-input"
-                    v-model="filter"
-                    type="search"
-                    placeholder="Search">
-                  </b-form-input>
-                  <b-input-group-append>
-                    <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-            </b-col>
-            <b-table 
-             :items="items" 
-             :fields="fields" 
-              responsive="sm" 
-             :sort-by.sync="sortBy"
-             :sort-desc.sync="sortDesc"
-             :filter="filter"
-             :filter-included-fields="filterOn"
-             small
-             @filtered="onFiltered">
-            <template v-slot:cell(info)="data"> 
-              <b-button size="sm" @click="infoP(data.item, $event.target)" class="mr-1" variant="light">
-                Show details 
-              </b-button>
-            </template>
-            <template v-slot:cell(delete)="data">
-              <b-button size="sm" @click="DeleteOne(data.item, $event.target)" class="mr-1" variant="danger">
-                Delete
-              </b-button>
-            </template>
-            <template v-slot:cell(update)="data">
-              <b-button size="sm" @click="UpdateOne(data.item)" class="mr-1" variant="info">
-                Edit
-              </b-button>
-            </template>
-           <!-- <b-table
-      :items="items"
-      :fields="fields"
-      :select-mode="selectMode"
-      responsive="sm"
-      ref="selectableTable"
-      selectable
-      @row-selected="onRowSelected"
-    > -->   </b-table>
-            <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @ended="resetInfoModal">
-              <pre>{{ infoModal.content }}</pre>
-            </b-modal>
-            <b-modal :id="errorModal.id" :title="errorModal.title" ok-only @ended="errModal">
-              <pre>{{ errorModal.content }}</pre>
-            </b-modal>
-         </div>
-        </div>
-      </div>
-    </div>
-  </main>
+  <Table  title="Pharmacists" :items="items" :fields="fields" :infoModal="infoModal" :errorModal="errorModal" @DeleteOne ="DeleteOne" @InfoP ="InfoP"></Table>
 </template>
-
-
 <script>
-  export default {
-    data() {
-      return {
-        fields: [{key:'name',sortable:true, label:'Name'}, {key:'lastName',sortable:true, label:'Last name'},{key: 'email',sortable:true, label:'Email'}, {key:'phoneNumber',sortable:true, label:'Phone number'},'info',{key:'update', label:'Edit'},'delete'],
-        items: [
-        ],
-        selectMode: 'single',
-        selected: [],
+import { defineComponent } from '@vue/composition-api'
+import Table from '../components/Table'
+export default defineComponent({
+  name: 'PharmacistTable',
+  components: {
+    Table,
+  },
+  data() {
+    return {
+      items:[],
+      all:[],
+      fields: [{key:'name',sortable:true, label:'Name'}, {key:'lastName',sortable:true, label:'Last name'},{key: 'email',sortable:true, label:'Email'}, {key:'phoneNumber',sortable:true, label:'Phone number'},'info',{key:'update', label:'Edit'},'delete'],
         sortBy:'name',
         sortDesc :false,
         filter: null,
@@ -97,10 +29,9 @@
           title:'',
           content:''
         },
-        all:[]
-      }
-    },
-    mounted() {
+   }
+  },
+  mounted(){
     var self = this;
     self.axios
       .get("http://localhost:8081/api/pharmacist/all")
@@ -116,13 +47,10 @@
           item.address = response.data[i].address.street + ", "+response.data[i].address.number+", "+response.data[i].address.city;
           self.all.push(item);
         }
-         self.totalRows = self.items.length;
+         //self.totalRows = self.items.length;
       });
-  },
-    methods: {
-      onRowSelected(items) {
-        this.selected = items
-      },
+  }, methods: {
+
       DeleteOne(item,button){
         var self = this;
           self.axios.delete("http://localhost:8081/api/pharmacist/"+item.email)
@@ -141,15 +69,7 @@
            console.log(error);
         });
       },
-      UpdateOne(item){
-        console.log(item);
-        
-      },
-      onFiltered(filteredItems) {
-        self.totalRows = filteredItems.length
-
-      },
-       infoP(i, button) {
+         InfoP(i, button) {
         var item ={};
         for(var j =0;j<this.all.length;j++){
           if(this.all[j].email == i.email){
@@ -196,6 +116,8 @@
         this.errorModal.title = ''
         this.errorModal.content = ''
       },
-    }
-  }
+        
+        }
+  
+})
 </script>

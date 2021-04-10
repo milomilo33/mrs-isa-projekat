@@ -25,7 +25,7 @@
           </template>
           <b-dropdown-item href="/PharmacyAdminPage/PharmacistRegistration">Registration Pharmacists</b-dropdown-item>
           <b-dropdown-item href="#">Dermatologists</b-dropdown-item>
-          <b-dropdown-item href="/PharmacyAdminPage/EmployeeTable">Pharmacists</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/PharmacistTable">Pharmacists</b-dropdown-item>
           <b-dropdown-item href="#">Requests</b-dropdown-item>
           <b-dropdown-item href="#">Vacations</b-dropdown-item>
         </b-nav-item-dropdown>
