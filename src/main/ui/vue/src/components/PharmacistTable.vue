@@ -1,5 +1,5 @@
 <template>
-  <Table  title="Pharmacists" :items="items" :fields="fields" :infoModal="infoModal" :errorModal="errorModal" @DeleteOne ="DeleteOne" @InfoP ="InfoP"></Table>
+  <Table  title="Pharmacists" :addModal="addModal" :isHidden="isHidden" :items="items" :fields="fields" :infoModal="infoModal" :errorModal="errorModal" @DeleteOne ="DeleteOne" @InfoP ="InfoP"></Table>
 </template>
 <script>
 import { defineComponent } from '@vue/composition-api'
@@ -27,16 +27,30 @@ export default defineComponent({
         errorModal:{
           id: 'error-modal',
           title:'',
-          content:''
+          content:'',
+          varning :'',
         },
+        isHidden: true,
+         addModal: {
+        id: "add-modal",
+        title: "",
+        content: "",
+      },
    }
   },
   mounted(){
     var self = this;
     self.axios
-      .get("http://localhost:8081/api/pharmacist/all")
+      .get("http://localhost:8081/api/pharmacy/pharmacists/1")
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
+           var count = 0;
+            for(var j=0;j<response.data[i].workHours.length;j++){
+                if(response.data[i].workHours[j].deleted){
+                        count++;
+                }
+            }
+        if(count != 7){
           var item = {};
           item.name = response.data[i].name;
           item.lastName = response.data[i].lastName;
@@ -44,8 +58,9 @@ export default defineComponent({
           item.phoneNumber = response.data[i].phoneNumber;
           self.items.push(item);
           item.hours = response.data[i].workHours;
-          item.address = response.data[i].address.street + ", "+response.data[i].address.number+", "+response.data[i].address.city;
+          item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
           self.all.push(item);
+        }
         }
          //self.totalRows = self.items.length;
       });
@@ -60,11 +75,13 @@ export default defineComponent({
          console.log(response);
          self.errorModal.title = 'Success',
          self.errorModal.content = "Successfuly deleted!";
+         self.errorModal.varning ="success"; 
         self.$root.$emit('bv::show::modal', self.errorModal.id, button)
       }
       ).catch(function (error) {
         self.errorModal.title = 'Error',
         self.errorModal.content = "You cannot delete!";
+        self.errorModal.varning ="warning"; 
         self.$root.$emit('bv::show::modal', self.errorModal.id, button)
            console.log(error);
         });

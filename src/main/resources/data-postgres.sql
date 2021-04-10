@@ -299,3 +299,18 @@ insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (3, 8)
 
 
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (0, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (1, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (3, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (4, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (5, false, '08:00', '12:00', 1)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (6, false, '08:00', '12:00', 1)
+
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 1)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 2)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 3)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 4)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 5)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 6)
+insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 7)

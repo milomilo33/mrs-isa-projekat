@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
@@ -115,5 +122,48 @@ public class PharmacyController {
 		return new ResponseEntity<PharmacyDTO>(new PharmacyDTO(pharmacyUpdate), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/dermatologists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<DermatologistDTO>> getPharmacyDermatologists(@PathVariable("id") Long id) {
+		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(id);
+		List<DermatologistDTO> returns = new ArrayList<>();
+		for(Dermatologist m: pharmacy.getDermatologists()) {
+			if(!m.isDeleted()) {
+				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
+				for(WorkHour h : m.getWorkHour()) {
+					WorkHourDTO wd = new WorkHourDTO(h);
+					hours.add(wd);
+				}
+				DermatologistDTO d = new DermatologistDTO(m);
+				d.setWorkHours(hours);
+				returns.add(d);
+			}
+		}
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/pharmacists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<PharmacistDTO>> getPharmacyPharmacists(@PathVariable("id") Long id) {
+		Pharmacy pharmacy = pharmacyService.findOneWithPharmacists(id);
+		List<PharmacistDTO> returns = new ArrayList<>();
+		for(Pharmacist m: pharmacy.getPharmacists()) {
+			if(!m.isDeleted()) {
+				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
+				for(WorkHour h : m.getWorkHour()) {
+					WorkHourDTO wd = new WorkHourDTO(h);
+					hours.add(wd);
+				}
+				PharmacistDTO d = new PharmacistDTO(m);
+				d.setWorkHours(hours);
+				returns.add(d);
+			}
+		}
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
 	
 }

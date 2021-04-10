@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.repository.WorkHourRepositoryDB;
@@ -47,8 +48,11 @@ public class WorkHourServiceImpl implements WorkHourService {
 	}
 
 	@Override
+	@Transactional(readOnly =  false)
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
+		workHourRepository.deleteOne(id);
+		
+		
 		
 	}
 

@@ -31,7 +31,7 @@ public abstract class User {
 	@Column(name="phoneNumber", unique=false, nullable=false)
 	private String phoneNumber;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
 	private Address address;
 	
 	@Column(name="deleted", unique=false, nullable=false)

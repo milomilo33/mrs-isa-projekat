@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
@@ -44,16 +45,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Override
 	public boolean delete(String email) {
-		Dermatologist dermatologist = dermatologistRepository.getOneDermatologist(email);
-		try {
-			if(dermatologist.getMedicalExaminations().size()== 0) {	
-				dermatologistRepository.deleteOne(email);
-				return true;
-			}
-			return false;
-		}catch(NullPointerException e) {
-			return false;
-		}
+		// TODO Auto-generated method stub
+		return false;
 	}
+
 
 }

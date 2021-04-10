@@ -14,6 +14,7 @@ import MedicamentListPreview from '../components/MedicamentListPreview'
 import UnregisteredPage from '../views/UnregisteredPage'
 import PatientRegistration from '../components/PatientRegistration'
 import MedicamentTable from '../components/MedicamentTable'
+import DermatologistTable from '../components/DermatologistTable'
 
 Vue.use(VueRouter)
 
@@ -130,6 +131,10 @@ const routes = [
 			{
 				path: "PharmacistTable",
 				component:PharmacistTable
+			},
+			{	
+				path : "DermatologistTable",
+				component: DermatologistTable
 			},
 			{
 				path:"PharmacistRegistration",

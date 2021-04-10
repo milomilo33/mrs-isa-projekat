@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
@@ -182,21 +185,32 @@ public class PharmacistController {
 		return new ResponseEntity<Pharmacist>(pharmacistUpdate, HttpStatus.OK);
 	}*/
 
-	
+	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<PharmacistDTO> deletePharmacist(@PathVariable("id") String email) {
 
 		Pharmacist pharmacist = pharmacistService.findOne(email);
-		
 		if (pharmacist != null) {
-			if(pharmacistService.delete(email)) {
-				return new ResponseEntity<>(new PharmacistDTO(pharmacist),HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
+			try {
+				if(pharmacist.getCounselings().size()== 0) {	
+					for(WorkHour w : pharmacist.getWorkHour()) {
+						workHourService.delete(w.getId());
+							
+					}
+					return new ResponseEntity<>(new PharmacistDTO(pharmacist),HttpStatus.OK);
+				}else {
+					return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+				}
+			
+				
+			}catch(NullPointerException e) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
-		} else {
-			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+			
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
 
 }

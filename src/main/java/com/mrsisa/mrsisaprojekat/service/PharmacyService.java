@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.Collection;
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 
@@ -22,4 +23,7 @@ public interface PharmacyService {
 	
 	
 	Pharmacy findOneWithMedicaments(Long id);
+	
+	Pharmacy findOneWithDermatologists(Long id);
+	Pharmacy findOneWithPharmacists(Long id);
 }
