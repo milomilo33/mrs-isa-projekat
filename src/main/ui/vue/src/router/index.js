@@ -6,7 +6,15 @@ import PharmacyRegistration from '../components/PharmacyRegistration'
 import UserRegistration from '../components/UserRegistration'
 import PharmacistPage from '../views/PharmacistPage'
 import PharmacyListPreview from '../views/PharmacyListPreview'
-import PharmacistRegistration from '../views/PharmacistRegistration'
+import PharmacistRegistration from '../components/PharmacistRegistration'
+import PharmacyAdminPage from '../views/PharmacyAdminPage'
+import PharmacistTable from '../components/PharmacistTable'
+import MedicamentRegistration from '../components/MedicamentRegistration'
+import MedicamentListPreview from '../components/MedicamentListPreview'
+import UnregisteredPage from '../views/UnregisteredPage'
+import PatientRegistration from '../components/PatientRegistration'
+import MedicamentTable from '../components/MedicamentTable'
+import DermatologistTable from '../components/DermatologistTable'
 
 Vue.use(VueRouter)
 
@@ -22,12 +30,20 @@ const routes = [
 		component: PharmacyPreview,
 		props: true
 	},
-
+	{
+		path: "/MedicamentList",
+		name: "MedicamentListPreview",
+		component: MedicamentListPreview
+	},
 	{
 		path: "/SystemAdminPage",
 		name: "SystemAdminPage",
 		component: SystemAdminPage,
 		children: [
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
 			{
 				path: "pharmacyRegistration",
 				component: PharmacyRegistration
@@ -35,24 +51,105 @@ const routes = [
 			{
 				path: "userRegister/:userRole",
 				component: UserRegistration
+			},
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			},
+			{
+				path: "MedicamentRegistration",
+				component: MedicamentRegistration
 			}
 		]
 	},
 	{
-		path: "/Pharmacistpage",
-		name: "PharmacistPage",
-		component: PharmacistPage/*,
+		path: "/UnregisteredPage",
+		component: UnregisteredPage,
 		children: [
 			{
-				path: "*"
-				component: //ime home page komponente
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			},
+			{
+				path: "PatientRegistration",
+				component: PatientRegistration
 			}
-		]*/
+		]
 	},
 	{
-		path: "/PharmacyList",
-		name: "PharmacistListPreview",
-		component: PharmacyListPreview,
+		path: "/PharmacistPage",
+		name: "PharmacistPage",
+		component: PharmacistPage,
+		children: [
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			}
+		]
+	},
+	{
+		path : "/PharmacyAdminPage",
+		name: "PharmacyAdminPage",
+		component: PharmacyAdminPage,
+		children:[
+			{
+				path: "pharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "medicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "MedicamentTable",
+				component: MedicamentTable
+			}
+			,
+			{
+				path: "PharmacistTable",
+				component:PharmacistTable
+			},
+			{	
+				path : "DermatologistTable",
+				component: DermatologistTable
+			},
+			{
+				path:"PharmacistRegistration",
+				component:PharmacistRegistration
+			},
+			{
+				path: "pharmacyList",
+				component: PharmacyListPreview,
+			},
+			{
+				path: "pharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			}
+		]
 	}
 
 ]

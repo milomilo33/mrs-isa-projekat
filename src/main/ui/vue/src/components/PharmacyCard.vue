@@ -31,28 +31,20 @@
 
 <script>
 
-const apiURL = "http://localhost:8080/api/pharmacy";
+//const apiURL = "http://localhost:8080/api/pharmacy";
 
 export default {
+    name: 'PharmacyCard',
     components: {
         
     },
-    data() {
-      return {
-        pharmacies: ''
-      }
+    props: {
+        pharmacies: Array,
     },
-    created() {
-    this.axios.get(apiURL).then(response => {
-
-      this.pharmacies = response.data;
-      console.log(this.pharmacies[0])
-    }).catch(error => console.log(error));
-  },
 
   methods: {
       addressToString: function(address) {
-          return address.street + " " + address.number + ", " + address.city + " " + address.country;
+        return address.street + " " + address.number + ", " + address.city + " " + address.country;
       }
   } 
 }

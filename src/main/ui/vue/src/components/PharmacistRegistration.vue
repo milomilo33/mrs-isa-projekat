@@ -6,7 +6,7 @@
                        <div class="card">
                            <div class="card-header">Register Pharmacist</div>
                            <div class="card-body">
-                               <form name="my-form" @submit="formSubmit">
+                               <form name="myform" @submit="formSubmit">
                                    <div class="form-group row">
                                        <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
                                        <div class="col-md-6">
@@ -32,26 +32,12 @@
                                            <input type="text" id="name" class="form-control" name="name" v-model="name" >
                                        </div>
                                    </div>
-                                   <div class="form-group row">
-                                       <label for="workHourFrom" class="col-md-4 col-form-label text-md-right">Work hour from</label>
-                                       <div class="col-md-6">
-                                        <b-form-timepicker v-model="workHourFrom" locale="en"></b-form-timepicker>
-                                        </div>
-                                   </div>
-                                   <div class="form-group row">
-                                       <label for="workHourTo" class="col-md-4 col-form-label text-md-right">Work hour to</label>
-                                       <div class="col-md-6">
-                                        <b-form-timepicker v-model="workHourTo" locale="en"></b-form-timepicker>
-                                        </div>
-                                   </div>
-                                   
-                                   
-                                   <div class="form-group row">
+                                    <div class="form-group row">
                                        <label for="lastName" class="col-md-4 col-form-label text-md-right">Last name</label>
                                        <div class="col-md-6">
                                            <input type="text" id="lastName" class="form-control" name="lastName" v-model="lastName" >
                                        </div>
-                                   </div>
+                                   </div>    
                                    <div class="form-group row">
                                         <label for="phoneNumber" class="col-md-4 col-form-label text-md-right">Phone number</label>
                                         <div class="col-md-6">
@@ -85,6 +71,23 @@
                                             <input type="number" min="1" id="number" class="form-control" name="number" v-model="number" >
                                         </div>
                                     </div>
+                                     <div class="card1">
+                                    <div class="card1-header">Work hours</div>
+                                        <b-table 
+                                            :items="items" 
+                                            :fields="fields"
+                                            :head-variant="headVariant" 
+                                            responsive="sm" 
+                                            bordered
+                                            small>
+                                        <template v-slot:cell(workhourfrom)="data">
+                                            <b-form-timepicker v-model="data.item.workHourFrom"  locale="en"></b-form-timepicker>
+                                        </template>
+                                         <template v-slot:cell(workhourto)="data">
+                                            <b-form-timepicker v-model="data.item.workHourTo"  locale="en"></b-form-timepicker>
+                                        </template>        
+                                        </b-table>
+                                    </div>
                                    <div class="buttons col-md-1 offset-md-4">
                                         <button class="btn btn-success" style="margin:1px;">Submit</button>
                                    </div>
@@ -106,14 +109,17 @@ export default {
   },
   data() {
     return {
+        fields: [{key:'day', label:'Day'}, {key:'workHourFrom',label:'Work hour from'},{key: 'workHourTo',label:'Work hour to'}],
+        items: [
+            {day:'Monday'},{day: 'Tuesday'},{day:'Wednesday'},{day:'Thursday'},{day:'Friday'},{day:'Saturday'},{day:'Sunday'}
+        ],
+      headVariant: "danger",
       email: "",
       password:"",
       password_confirmation:"", 
       name: "",
       lastName: "",
       phoneNumber: "",
-      workHourFrom:"",
-      workHourTo:"",
       country: "",
       city: "",
       street: "",
@@ -123,6 +129,7 @@ export default {
       pharmacyId: {},
       output3: {},
       addressId:{},
+      pharmacyW :{},
     };
   },
    methods: {
@@ -152,7 +159,7 @@ export default {
       }
       if(errorFound==false){
        this.axios
-        .post("api/address", {
+        .post("http://localhost:8081/api/address", {
           country: this.country,
             city: this.city,
             street: this.street,
@@ -171,33 +178,33 @@ export default {
     GetAdress(posts){
         var self = this;
         self.axios
-            .get("api/address/"+parseInt(posts.data.id))
+            .get("http://localhost:8081/api/address/"+parseInt(posts.data.id))
             .then(function(response){
                 self.addressId= response.data;
                 self.GetFarmacy(response);
 
             })
             .catch(function (error){ 
-                self.error_message = error;
+                console.log(error);
             
             });
     },
     GetFarmacy(addressP){
         var self = this;
         self.axios
-         .get("api/pharmacy/1")
+         .get("http://localhost:8081/api/pharmacy/1")
          .then(function(response) {
              self.pharmacyId = response.data;
              self.GetPharmacist(addressP,response);
         })
          .catch(function (error){ 
-            self.error_message = error;
+             console.log(error);
         });
         
     },
     GetPharmacist(addressP,posts){
         var self = this;
-        self.axios.post("api/pharmacist/",{
+        self.axios.post("http://localhost:8081/api/pharmacist/",{
             email: this.email,
             password:this.password, 
             name: this.name,
@@ -206,15 +213,15 @@ export default {
             workHourFrom:this.workHourFrom,
             workHourTo:this.workHourTo,
             pharmacy: {
-                name: posts.data[0].name,
-                description: posts.data[0].description,
-                id: posts.data[0].id,
+                name: posts.data.name,
+                description: posts.data.description,
+                id: posts.data.id,
                 address: 
                     {
-                        country: posts.data[0].address.country,
-                        city: posts.data[0].address.city,
-                        street: posts.data[0].address.street,
-                        number:posts.data[0].address.number
+                        country: posts.data.address.country,
+                        city: posts.data.address.city,
+                        street: posts.data.address.street,
+                        number:posts.data.address.number
                     }
             },
             address:{
@@ -223,14 +230,73 @@ export default {
                 city: addressP.data.city,
                 street:addressP.data.street,
                 number:addressP.data.number
-            }
+            },
+            workHours :[
+                {
+                    day: this.items[0].day,
+                    workHourFrom: this.items[0].workHourFrom,
+                    workHourTo: this.items[0].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[1].day,
+                    workHourFrom: this.items[1].workHourFrom,
+                    workHourTo:this.items[1].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[2].day,
+                    workHourFrom: this.items[2].workHourFrom,
+                    workHourTo:this.items[2].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[3].day,
+                    workHourFrom: this.items[3].workHourFrom,
+                    workHourTo:this.items[3].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[4].day,
+                    workHourFrom: this.items[4].workHourFrom,
+                    workHourTo:this.items[4].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[5].day,
+                    workHourFrom: this.items[5].workHourFrom,
+                    workHourTo:this.items[5].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+                {
+                    day: this.items[6].day,
+                    workHourFrom: this.items[6].workHourFrom,
+                    workHourTo:this.items[6].workHourTo,
+                    deleted : false,
+                    pharmacy: null
+
+                },
+
+            ],
         })
         .then((response) => {
             
             console.log(response);
         })
         .catch(function (error) {
-           self.error_message = error;
+           console.log(error);
         });
     }
     }
@@ -255,7 +321,7 @@ body{
 }
 .my-form .card-header
 {
-    background-color:powderblue;
+    background-color:#ccffbc;
     text-align: center;
 }
 .my-form .row

@@ -1,10 +1,12 @@
 <template>
   <div>
-    <b-navbar fixed="top" toggleable="lg" type="dark" variant="dark">
+    <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
     <b-navbar-brand href="/SystemAdminPage">Home Page</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
+        <b-nav-item href="/SystemAdminPage/MedicamentList">Medicaments</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/PharmacyList"> Pharmacies</b-nav-item>
         <b-nav-item-dropdown right>
            <template #button-content>
             User Registration
@@ -15,15 +17,12 @@
           <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
-        <b-nav-item href="#">Medicament Registration</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
       </b-navbar-nav>
       
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-form>
-          <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-          <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-        </b-nav-form>
+        <Search :path="'/SystemAdminPage'" />
 
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
@@ -41,3 +40,13 @@
     </router-view>
   </div>
 </template>
+
+<script>
+import Search from '../components/Search'
+
+export default {
+  components: {
+    Search
+  }
+}
+</script>

@@ -31,13 +31,27 @@ public abstract class User {
 	@Column(name="phoneNumber", unique=false, nullable=false)
 	private String phoneNumber;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
 	private Address address;
 	
 	@Column(name="deleted", unique=false, nullable=false)
 	private boolean deleted;
 	
+	@Column(name="active", unique=false, nullable=false)
+	private boolean active;
+	
+	@Column(name="token", unique=false, nullable=true)
+	private String token;
+	
 	public User() {}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 	public String getEmail() {
 		return email;

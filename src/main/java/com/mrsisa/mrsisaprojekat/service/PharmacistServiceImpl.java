@@ -25,12 +25,11 @@ public class PharmacistServiceImpl  implements PharmacistService {
 	@Override
 	@Transactional
 	public Pharmacist findOne(String email) {
-		Pharmacist pharmacist = pharmacistRepository.findById(email).orElseGet(null);
+		Pharmacist pharmacist = pharmacistRepository.getOnePharmacist(email);
 		return pharmacist;
 	}
 
 	@Override
-	@Transactional
 	public Pharmacist create(Pharmacist pharmacist) throws Exception {
 		/*if(findOne(pharmacist.getEmail()) != null) {
 			return null;
@@ -50,9 +49,19 @@ public class PharmacistServiceImpl  implements PharmacistService {
 	}
 
 	@Override
-	public void delete(String email) {
+	@Transactional(readOnly = false)
+	public boolean delete(String email) {
 		// potrebno je proveriti da li ima zakazana savetovanja, ukoliko ih ima ne moze da se obrise
-		pharmacistRepository.deleteById(email);
+		Pharmacist pharmacist = pharmacistRepository.getOnePharmacist(email);
+		try {
+			if(pharmacist.getCounselings().size()== 0) {	
+				pharmacistRepository.deleteOne(email);
+				return true;
+			}
+			return false;
+		}catch(NullPointerException e) {
+			return false;
+		}
 		
 	}
 

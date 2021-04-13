@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 @Entity
 public class MedicamentItem {
 	
@@ -15,7 +19,7 @@ public class MedicamentItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
 	private Medicament medicament;
 	
 	@Column(name = "quantity", unique = false, nullable = false)

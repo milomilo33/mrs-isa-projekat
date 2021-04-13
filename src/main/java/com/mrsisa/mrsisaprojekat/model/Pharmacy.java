@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
 public class Pharmacy {
 	
@@ -26,13 +28,14 @@ public class Pharmacy {
 	@Column(name = "description", unique = false, nullable = false)
 	private String description;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.MERGE)
+
 	private Address address; 
 	
 	@Column(name = "income", unique = false, nullable = false)
 	private double income;
 	
-	@ManyToMany(mappedBy = "pharmacies")
+	@ManyToMany(mappedBy = "pharmacies", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	private Set<Dermatologist> dermatologists;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)
@@ -41,7 +44,7 @@ public class Pharmacy {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Order> orders;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY,cascade= CascadeType.ALL)
 	private Set<MedicamentItem> medicamentItems;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

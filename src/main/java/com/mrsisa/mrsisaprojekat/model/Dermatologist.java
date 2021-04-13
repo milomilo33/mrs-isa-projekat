@@ -9,6 +9,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Entity
 public class Dermatologist extends Employee {
 	
@@ -16,7 +18,7 @@ public class Dermatologist extends Employee {
 	@OneToMany(fetch = FetchType.LAZY)
 	private Set<Appointment> medicalExaminations;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "dermatologists_pharmacies",
 			   joinColumns = @JoinColumn(name = "dermatologist_id", 
 			   							 referencedColumnName = "email"), 

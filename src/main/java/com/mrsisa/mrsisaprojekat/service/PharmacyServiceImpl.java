@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
 @Service
+
 public class PharmacyServiceImpl implements PharmacyService{
 
 	@Autowired
@@ -35,7 +39,6 @@ public class PharmacyServiceImpl implements PharmacyService{
 		Pharmacy savedPharmacy = pharmacyRepository.save(pharmacy);
 		return savedPharmacy;
 	}
-
 	@Override
 	public Pharmacy update(Pharmacy pharmacy) throws Exception {
 		Pharmacy pharmacyToUpdate = pharmacyRepository.findById(pharmacy.getId()).orElseGet(null);
@@ -50,6 +53,45 @@ public class PharmacyServiceImpl implements PharmacyService{
 	public void delete(Long id) {
 		pharmacyRepository.deleteById(id);
 		
+	}
+
+	@Override
+	public List<MedicamentItem> getAllMedicaments(Long id) {
+		List<MedicamentItem> items = pharmacyRepository.getAllMedicaments(id);
+		if(items == null) {
+			return null;
+		}
+		return items;
+	}
+
+	@Override
+	public Pharmacy findOneWithMedicaments(Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithMedicaments(id);
+		if (pharmacy == null) {
+			return null;
+		}
+	
+		return pharmacy;
+	}
+	
+	@Override
+	public Pharmacy findOneWithDermatologists(Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithDermatologists(id);
+		if (pharmacy == null) {
+			return null;
+		}
+	
+		return pharmacy;
+	}
+
+	@Override
+	public Pharmacy findOneWithPharmacists(Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithPharmacists(id);
+		if (pharmacy == null) {
+			return null;
+		}
+	
+		return pharmacy;
 	}
 
 }

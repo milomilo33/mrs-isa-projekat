@@ -17,6 +17,7 @@ import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
 
 @RestController
@@ -29,18 +30,19 @@ public class PharmacyAdminController {
 	@Autowired
 	private AddressService addressService;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	@GetMapping(value="/all")
 	public ResponseEntity<List<AdminPharmacyDTO>> getAdmins(){
 		
 		List<AdminPharmacy> admins = adminService.findAll();
 		
-		System.out.println("hhhhhh");
 		List<AdminPharmacyDTO> adminsDTO = new ArrayList<>();
 		for(AdminPharmacy a : admins) {
 			adminsDTO.add(new AdminPharmacyDTO(a));
 			
 		}
-		System.out.println("aaaaaaaa");
 		return new ResponseEntity<>(adminsDTO, HttpStatus.OK);
 	}
 	
@@ -75,8 +77,15 @@ public class PharmacyAdminController {
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
 		admin.setPharmacy(null);
 		admin.setAddress(saved);
-		System.out.println(saved.getId());
 		admin = adminService.create(admin);
+		
+		try {
+			emailService.sendTestMail(admin);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
 		return new ResponseEntity<>(new AdminPharmacyDTO(admin), HttpStatus.CREATED); 
 		
 		

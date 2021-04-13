@@ -6,16 +6,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Medicament {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id", unique = true, nullable=false)
 	private Long id;
 	
 	@Column(name = "name", unique = false, nullable = false)
@@ -39,7 +38,7 @@ public class Medicament {
 	@Column(name = "issuanceMode", unique = false, nullable = false)
 	private IssuanceMode issuanceMode;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Medicament> substituteMedicaments;
 	
 	@Column(name = "deleted", unique = false, nullable = false)
