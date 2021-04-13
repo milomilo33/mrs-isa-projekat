@@ -20,11 +20,6 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: "/PharmacistRegistration",
-		name: "PharmacistRegistration",
-		component: PharmacistRegistration
-	},
-	{
 		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
 		component: PharmacyPreview,

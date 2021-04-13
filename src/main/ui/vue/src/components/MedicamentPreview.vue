@@ -8,14 +8,14 @@
         <b-col md="6">
           <b-card-body :title="this.medicament.name">
             <b-card-text class="colorIt1">
-              Tip: {{ this.medicament.type }}
+              Type: {{ this.medicament.type }}
             </b-card-text>
             <b-card-text class="colorIt1">
-              Ocena: {{ this.ratings }}
+              Rating: {{ this.ratings }}
             </b-card-text>
             <div>
               <b-button v-b-modal="'id' + medicament.id"
-                >Specifikacija</b-button
+                >Specification</b-button
               >
 
               <b-modal
@@ -32,26 +32,26 @@
                 <b-container fluid>
                   <b-row class="mb-1 text-center colorIt">
                     <p>
-                      <b class="colorHeaders">Naziv :</b> &nbsp; #{{this.medicament.id}}
+                      <b class="colorHeaders">Name :</b> &nbsp; #{{this.medicament.id}}
                       {{ this.medicament.name }} 
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders"> Proizvodjac: </b>&nbsp;
+                      <b class="colorHeaders"> Manufacturer: </b>&nbsp;
                       {{ this.medicament.manufacturer }}
                     </p>
                   </b-row>
 
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Sastav:</b>
+                      <b class="colorHeaders">Structure:</b>
                       {{ this.medicament.structure }}
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Napomene:</b>
+                      <b class="colorHeaders">Annotation:</b>
                       {{ this.medicament.annotation }}
                     </p>
                   </b-row>
