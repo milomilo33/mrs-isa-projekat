@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="navbar-div" style="margin-bottom: 100px;">
     <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
         <b-navbar-brand href="/PharmacistPage/PharmacyList">Home Page</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -14,6 +15,7 @@
                 <b-dropdown-item href="#">Start a counseling session</b-dropdown-item>
                 <b-dropdown-item href="#">Schedule a counseling session for a client</b-dropdown-item>
                 <b-dropdown-item href="#">Counseling history</b-dropdown-item>
+                <b-dropdown-item href="/PharmacistPage/SearchPatients">Search patients</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item href="#">Dispense medication</b-nav-item>
             <b-nav-item href="#">Request days off</b-nav-item>
@@ -36,6 +38,7 @@
         </b-navbar-nav>
         </b-collapse>
     </b-navbar>
+    </div>
     <router-view></router-view>
   </div>
 </template>

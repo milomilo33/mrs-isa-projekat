@@ -52,4 +52,5 @@ public class PatientDTO {
 	public AddressDTO getAddress() {
 		return address;
 	}
+
 }
