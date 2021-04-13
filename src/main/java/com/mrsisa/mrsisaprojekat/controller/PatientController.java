@@ -1,8 +1,16 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
+import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,25 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.mrsisa.mrsisaprojekat.dto.AdminSystemDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.AdminSystem;
-import com.mrsisa.mrsisaprojekat.model.Category;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -42,6 +39,9 @@ public class PatientController {
 	
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private PrescriptionMedicamentService prescriptionMedicamentService;
 	
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
@@ -90,5 +90,32 @@ public class PatientController {
 		if (foundPatients == null || foundPatients.isEmpty())
 			return new ResponseEntity<Collection<Patient>>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<Collection<Patient>>(foundPatients, HttpStatus.OK);
+	}
+
+	@PostMapping(path = "/reserve", consumes = "application/json")
+	public ResponseEntity<PrescriptionMedicamentDTO> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
+
+		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
+
+		medicamentToReserve.setDeleted(false);
+		medicamentToReserve.setPurchased(false);
+		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
+		medicamentToReserve.setQuantity(medicament.getQuantity());
+		medicamentToReserve.setMedicament(medicament.getMedicament());
+		Patient p = patientService.findOne(medicament.getPatientEmail());
+		p.getReservedMedicaments().add(medicamentToReserve);
+		patientService.update(p);
+
+
+
+		try {
+			emailService.ReservationConfirmationMail(p);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
+
 	}
 }

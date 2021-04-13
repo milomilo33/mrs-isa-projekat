@@ -8,14 +8,14 @@
         <b-col md="6">
           <b-card-body :title="this.medicament.name">
             <b-card-text class="colorIt1">
-              Type: {{ this.medicament.type }}
+              Tip: {{ this.medicament.type }}
             </b-card-text>
             <b-card-text class="colorIt1">
-              Rating: {{ this.ratings }}
+              Ocena: {{ this.ratings }}
             </b-card-text>
             <div>
               <b-button v-b-modal="'id' + medicament.id"
-                >Specification</b-button
+                >Specifikacija</b-button
               >
 
               <b-modal
@@ -32,26 +32,26 @@
                 <b-container fluid>
                   <b-row class="mb-1 text-center colorIt">
                     <p>
-                      <b class="colorHeaders">Name :</b> &nbsp; #{{this.medicament.id}}
+                      <b class="colorHeaders">Naziv :</b> &nbsp; #{{this.medicament.id}}
                       {{ this.medicament.name }} 
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders"> Manufacturer: </b>&nbsp;
+                      <b class="colorHeaders"> Proizvodjac: </b>&nbsp;
                       {{ this.medicament.manufacturer }}
                     </p>
                   </b-row>
 
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Structure:</b>
+                      <b class="colorHeaders">Sastav:</b>
                       {{ this.medicament.structure }}
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Annotation:</b>
+                      <b class="colorHeaders">Napomene:</b>
                       {{ this.medicament.annotation }}
                     </p>
                   </b-row>
@@ -65,8 +65,18 @@
                       Close
                     </b-button>
                   </template>
+                <b-row>
+                  <input type="number" placeholder="Količina" class="m-2" :value="amount" @input="amount = $event.target.value">
+                  <b-button class="m-2" @click="reserveMedicament()"> Rezerviši lek </b-button>
+                </b-row>
+                <b-row>
+                  <datepicker class="m-2" v-model="date" @selected="date = $event.target.value"></datepicker>
+                  <div class="m-2"> Datum preuzimanja </div>
+                  
+                </b-row>
               </b-modal>
             </div>
+            
           </b-card-body>
         </b-col>
       </b-row>
@@ -76,10 +86,16 @@
 
 
 <script>
+import Datepicker from 'vuejs-datepicker';
+
+
 export default {
   name: "MedicamentPreview",
   props: {
     medicament: Object,
+  },
+  components: {
+    Datepicker
   },
   mounted() {
     this.nameM = this.medicament.name;
@@ -99,7 +115,10 @@ export default {
       ratings: 0,
       modal: "",
       show: false,
-      nameM: ""
+      nameM: "",
+      amount: null,
+      date: "",
+      success: false
     };
   },
   methods: {
@@ -110,6 +129,21 @@ export default {
       }
 
       return total / ratings.lenght;
+    },
+
+    reserveMedicament() {
+      console.log(this.amount);
+      if(this.amount !== null && this.date !== null) {
+        this.axios.post(`http://localhost:8080/api/patients/reserve/`, {
+          patientEmail: "anasimic@gmail.com",
+          medicament: this.medicament,
+          expiryDate: this.date,
+          quantity: this.amount
+        });
+        console.log(this.medicament.id);
+        console.log(this.date)
+        alert("Rezervacija izvršena!");
+      }
     },
   },
 };
