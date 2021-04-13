@@ -15,6 +15,7 @@ import UnregisteredPage from '../views/UnregisteredPage'
 import PatientRegistration from '../components/PatientRegistration'
 import MedicamentTable from '../components/MedicamentTable'
 import DermatologistTable from '../components/DermatologistTable'
+import SearchPatients from '../components/SearchPatients'
 
 Vue.use(VueRouter)
 
@@ -107,6 +108,10 @@ const routes = [
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
+			},
+			{
+				path: "SearchPatients",
+				component: SearchPatients
 			}
 		]
 	},
