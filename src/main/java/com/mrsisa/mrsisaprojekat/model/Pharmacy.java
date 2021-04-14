@@ -137,6 +137,16 @@ public class Pharmacy {
 	}
 
 
+	public Set<MedicamentItem> getMedicamentItems() {
+		return medicamentItems;
+	}
+
+
+	public void setMedicamentItems(Set<MedicamentItem> medicamentItems) {
+		this.medicamentItems = medicamentItems;
+	}
+
+
 	public Set<Order> getOrders() {
 		return orders;
 	}

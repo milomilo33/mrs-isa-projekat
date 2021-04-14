@@ -11,6 +11,7 @@ public class PrescriptionMedicament {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	// da li ovo i deleted treba u ePrescription umesto ovde?
 	@Column(name = "purchased", unique = false, nullable = false)
 	private boolean purchased;
 	
