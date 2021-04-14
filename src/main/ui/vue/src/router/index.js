@@ -16,6 +16,7 @@ import PatientRegistration from '../components/PatientRegistration'
 import MedicamentTable from '../components/MedicamentTable'
 import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
+import DispenseMedication from '../components/DispenseMedication'
 
 Vue.use(VueRouter)
 
@@ -107,6 +108,10 @@ const routes = [
 			{
 				path: "SearchPatients",
 				component: SearchPatients
+			},
+			{
+				path: "DispenseMedication",
+				component: DispenseMedication
 			}
 		]
 	},

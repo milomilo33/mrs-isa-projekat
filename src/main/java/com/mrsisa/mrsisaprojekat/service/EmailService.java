@@ -67,9 +67,9 @@ public class EmailService {
 		}
 		mail.setText(text);
 		System.out.println(text);
-    javaMailSender.send(mail);
+		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
-  }
+	}
     
 	@Async
 	public void ReservationConfirmationMail(Patient patient) throws MailException, InterruptedException {
