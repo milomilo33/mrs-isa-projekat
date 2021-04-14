@@ -42,6 +42,9 @@ public class PrescriptionMedicamentServiceImpl implements PrescriptionMedicament
 
     @Override
     public void delete(Long id) {
-        prescriptionRepository.deleteById(id);
+        PrescriptionMedicament medicament = prescriptionRepository.findById(id).orElseGet(null);
+        medicament.setDeleted(true);
+
+        prescriptionRepository.save(medicament);
     }
 }

@@ -14,14 +14,9 @@ import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mrsisa.mrsisaprojekat.service.PatientService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.model.Patient;
@@ -117,5 +112,17 @@ public class PatientController {
 
 		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
+		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
+
+		if(medicament != null) {
+			prescriptionMedicamentService.delete(id);
+			return new ResponseEntity<>(id, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
 	}
 }
