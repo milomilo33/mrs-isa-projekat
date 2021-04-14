@@ -26,4 +26,6 @@ public interface PharmacyService {
 	
 	Pharmacy findOneWithDermatologists(Long id);
 	Pharmacy findOneWithPharmacists(Long id);
+
+	int getRating(Long id);
 }

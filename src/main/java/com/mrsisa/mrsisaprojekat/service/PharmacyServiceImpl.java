@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.Collection;
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,5 +94,21 @@ public class PharmacyServiceImpl implements PharmacyService{
 	
 		return pharmacy;
 	}
+
+	@Override
+	public int getRating(Long id) {
+		List<Rating> ratings = pharmacyRepository.getRatings(id);
+		int i = 0;
+		int sum = 0;
+
+		for(Rating r : ratings) {
+			sum += r.getValue();
+			i++;
+		}
+		if(i == 0) return 0;
+
+		return Math.round(sum / i);
+	}
+
 
 }
