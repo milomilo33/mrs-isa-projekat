@@ -9,7 +9,7 @@
                             <img class="pharmacy_img" src="../slika.jpg" alt="">
                         </router-link>
                     </b-col>
-                    <b-col lg="8" md="6" sm="4">
+                    <b-col lg="6" md="4" sm="4">
                         <b-row>
                             <h1 class="text-left"> {{p.name}} </h1>
                         </b-row>

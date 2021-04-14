@@ -165,5 +165,24 @@ public class PharmacyController {
 		}
 		return new ResponseEntity<>(returns,HttpStatus.OK);
 	}
+
+	@GetMapping(value = "filter/distance={minDistance},{maxDistance}&rating={rating}")
+	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("minDistance") int minDistance,
+																	@PathVariable("maxDistance") int maxDistance,
+																	@PathVariable("rating") int rating) {
+		Collection<Pharmacy> pharmacies = pharmacyService.findAll();
+		List<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
+
+		if(rating != -1) {
+			for (Pharmacy p : pharmacies) {
+
+				if (pharmacyService.getRating(p.getId()) == rating)
+					pharmaciesDTO.add(new PharmacyDTO(p));
+			}
+		}
+		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
+	}
+
+
 	
 }

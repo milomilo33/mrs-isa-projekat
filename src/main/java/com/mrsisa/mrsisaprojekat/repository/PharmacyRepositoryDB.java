@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.repository;
 
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,4 +30,9 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 
 	@Query("select p from Pharmacy p join fetch p.pharmacists where p.id=?1")
 	Pharmacy getOneWithPharmacists(Long id);
+
+	@Query("select p.ratings from Pharmacy p where p.id=?1")
+	List<Rating> getRatings(Long id);
+
+
 }

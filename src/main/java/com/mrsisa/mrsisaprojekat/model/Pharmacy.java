@@ -72,7 +72,6 @@ public class Pharmacy {
 	private Set<Request> requests;
 	
 	public Pharmacy() {}
-	
 
 	public Long getId() {
 		return id;
