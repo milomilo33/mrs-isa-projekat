@@ -65,8 +65,18 @@
                       Close
                     </b-button>
                   </template>
+                <b-row>
+                  <input type="number" placeholder="Količina" class="m-2" :value="amount" @input="amount = $event.target.value">
+                  <b-button class="m-2" @click="reserveMedicament()"> Rezerviši lek </b-button>
+                </b-row>
+                <b-row>
+                  <datepicker class="m-2" v-model="date" @selected="date = $event.target.value"></datepicker>
+                  <div class="m-2"> Datum preuzimanja </div>
+                  
+                </b-row>
               </b-modal>
             </div>
+            
           </b-card-body>
         </b-col>
       </b-row>
@@ -76,10 +86,16 @@
 
 
 <script>
+import Datepicker from 'vuejs-datepicker';
+
+
 export default {
   name: "MedicamentPreview",
   props: {
     medicament: Object,
+  },
+  components: {
+    Datepicker
   },
   mounted() {
     this.nameM = this.medicament.name;
@@ -99,7 +115,10 @@ export default {
       ratings: 0,
       modal: "",
       show: false,
-      nameM: ""
+      nameM: "",
+      amount: null,
+      date: "",
+      success: false
     };
   },
   methods: {
@@ -110,6 +129,21 @@ export default {
       }
 
       return total / ratings.lenght;
+    },
+
+    reserveMedicament() {
+      console.log(this.amount);
+      if(this.amount !== null && this.date !== null) {
+        this.axios.post(`http://localhost:8080/api/patients/reserve/`, {
+          patientEmail: "anasimic@gmail.com",
+          medicament: this.medicament,
+          expiryDate: this.date,
+          quantity: this.amount
+        });
+        console.log(this.medicament.id);
+        console.log(this.date)
+        alert("Rezervacija izvršena!");
+      }
     },
   },
 };

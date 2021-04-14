@@ -35,7 +35,10 @@ public class Patient extends User {
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Pharmacy> subscribedPharmacies;
-	
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<PrescriptionMedicament> reservedMedicaments;
+
 	public Patient() {}
 	
 
@@ -120,6 +123,11 @@ public class Patient extends User {
 	}
 
 
-	
-	
+	public Set<PrescriptionMedicament> getReservedMedicaments() {
+		return reservedMedicaments;
+	}
+
+	public void setReservedMedicaments(Set<PrescriptionMedicament> reservedMedicaments) {
+		this.reservedMedicaments = reservedMedicaments;
+	}
 }

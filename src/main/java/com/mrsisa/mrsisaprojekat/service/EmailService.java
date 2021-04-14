@@ -67,6 +67,19 @@ public class EmailService {
 		}
 		mail.setText(text);
 		System.out.println(text);
+    javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+  }
+    
+	@Async
+	public void ReservationConfirmationMail(Patient patient) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo("marko.suljak80@gmail.com");
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Potvrda rezervacije leka");
+		mail.setText("Uspesno ste izvrsili rezervaciju leka. Kod rezervacije: ");
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}
