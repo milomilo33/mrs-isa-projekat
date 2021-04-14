@@ -30,6 +30,16 @@ public class ePrescription {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PrescriptionMedicament> prescriptionMedicaments;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Pharmacy pharmacy;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
+	private boolean deleted;
+	
+	// purchased/taken/dispensed
+	@Column(name = "done", unique = false, nullable = false)
+	private boolean done;
+	
 	public ePrescription() {}
 
 	public Long getId() {
@@ -62,6 +72,30 @@ public class ePrescription {
 
 	public void setPrescriptionMedicaments(Set<PrescriptionMedicament> prescriptionMedicaments) {
 		this.prescriptionMedicaments = prescriptionMedicaments;
+	}
+
+	public Pharmacy getPharmacy() {
+		return pharmacy;
+	}
+
+	public void setPharmacy(Pharmacy pharmacy) {
+		this.pharmacy = pharmacy;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
 	}
 
 	

@@ -8,8 +8,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.User;
+import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 @Service
 public class EmailService {
@@ -43,6 +46,27 @@ public class EmailService {
 		mail.setTo(patient.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Aktivacioni link");
+		javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+	}
+	
+	@Async
+	public void sendMedicineTakenConfirmationMail(ePrescription ePrescription) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+		
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(ePrescription.getPatient().getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Potvrda preuzimanja leka");
+		String text = "Preuzeti lekovi:\n";
+		for (PrescriptionMedicament pm : ePrescription.getPrescriptionMedicaments()) {
+			int quantity = pm.getQuantity();
+			String med = pm.getMedicament().getName();
+			text += med + " x" + quantity;
+			text += "\n";
+		}
+		mail.setText(text);
+		System.out.println(text);
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}

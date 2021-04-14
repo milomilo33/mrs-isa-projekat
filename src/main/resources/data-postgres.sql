@@ -65,13 +65,13 @@ insert into dermatologist (email, deleted, active, last_name, name, password, ph
 insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('lazarpopovic@gmail.com','false','true','Popović','Lazar','dermatolog3','0614523981', 16, null)
 
 
-insert into e_prescription (date, patient_email) values ('2021-04-02 10:00','anasimic@gmail.com')
-insert into e_prescription (date, patient_email) values ('2021-04-06 10:00','teodorabozic@gmail.com')
-insert into e_prescription (date, patient_email) values ('2021-04-07 10:00','lukamarkovic@gmail.com')
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-17 10:00','anasimic@gmail.com', false, false, 1)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-06 10:00','teodorabozic@gmail.com', false, false, 1)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-07 10:00','lukamarkovic@gmail.com', false, false, 2)
 
-insert into e_prescription (date, patient_email) values ('2021-04-08 10:00','anjastupar@gmail.com')
-insert into e_prescription (date, patient_email) values ('2021-04-09 10:00','teodorabatinica@gmail.com')
-insert into e_prescription (date, patient_email) values ('2021-04-10 10:00','peraperic@gmail.com')
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-08 10:00','anjastupar@gmail.com', false, false, 3)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-09 10:00','teodorabatinica@gmail.com', false, false, 3)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-10 10:00','peraperic@gmail.com', false, false, 3)
 
 
 

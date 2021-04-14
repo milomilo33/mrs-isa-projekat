@@ -107,4 +107,12 @@ public abstract class User {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

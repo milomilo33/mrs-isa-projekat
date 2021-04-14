@@ -42,6 +42,14 @@ public class Dermatologist extends Employee {
 	public void setPharmacy(Set<Pharmacy> pharmacies) {
 		this.pharmacies = pharmacies;
 	}
+
+	public Set<Pharmacy> getPharmacies() {
+		return pharmacies;
+	}
+
+	public void setPharmacies(Set<Pharmacy> pharmacies) {
+		this.pharmacies = pharmacies;
+	}
 	
 
 }
