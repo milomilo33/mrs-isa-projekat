@@ -17,6 +17,7 @@ import MedicamentTable from '../components/MedicamentTable'
 import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
 import DispenseMedication from '../components/DispenseMedication'
+import PricelistTable from '../components/PricelistTable'
 
 Vue.use(VueRouter)
 
@@ -153,7 +154,12 @@ const routes = [
 				path: "pharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
+			},
+			{
+				path: "PricelistTable",
+				component: PricelistTable,
 			}
+
 		]
 	}
 

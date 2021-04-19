@@ -33,6 +33,6 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 
 	@Query("select p.ratings from Pharmacy p where p.id=?1")
 	List<Rating> getRatings(Long id);
-
+	
 
 }
