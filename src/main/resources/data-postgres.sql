@@ -290,6 +290,8 @@ insert into price (date_from, date_to, deleted, points, value) values ('2021-01-
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 2, 199.99)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 1, 99.99)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 1, 129.99)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 1, 800.00)
+
 
 
 insert into pricelist_item (pharmacy_id, price_id) values (1,1)
@@ -298,6 +300,7 @@ insert into pricelist_item (pharmacy_id, price_id) values (3,3)
 insert into pricelist_item (pharmacy_id, price_id) values (1,4)
 insert into pricelist_item (pharmacy_id, price_id) values (2,5)
 insert into pricelist_item (pharmacy_id, price_id) values (3,6)
+insert into pricelist_item (pharmacy_id, price_id) values (1,7)
 
 insert into pricelist_item_appointment (id, appointment_id) values (1, 1)
 insert into pricelist_item_appointment (id, appointment_id) values (2, 2)
@@ -306,6 +309,7 @@ insert into pricelist_item_appointment (id, appointment_id) values (3, 3)
 insert into pricelist_item_medicament (id, medicament_id) values (4, 1)
 insert into pricelist_item_medicament (id, medicament_id) values (5, 2)
 insert into pricelist_item_medicament (id, medicament_id) values (6, 3)
+insert into pricelist_item_medicament (id, medicament_id) values (7, 2)
 
 insert into supplier_medicament_items (supplier_email, medicament_items_id) values ('mikaantic@gmail.com', 1)
 insert into supplier_medicament_items (supplier_email, medicament_items_id) values ('svetlanaraznatovic@gmail.com', 2)

@@ -17,7 +17,7 @@ public class Price {
 	@Column(name = "dateFrom", unique = false, nullable = false)
 	private LocalDate dateFrom;
 	
-	@Column(name = "dateTo", unique = false, nullable = false)
+	@Column(name = "dateTo", unique = false, nullable = true)
 	private LocalDate dateTo;
 	
 	@Column(name = "points", unique = false, nullable = false)

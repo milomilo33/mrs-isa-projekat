@@ -106,19 +106,44 @@
               ok-only
               @ended="resetInfoModal"
               :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant"
-            >
+              :footer-bg-variant="headerBgVariant">
               <pre> 
-                   <b-table
-                    :items="medicamentss" 
-                    :fields="fields2" 
-                    responsive="sm" 
-                    small
-                    :select-mode="selectMode"
+                  <b-table
+                  :items="medicamentss" 
+                  :fields="fields2" 
+                  responsive="sm" 
+                  small
+                  :select-mode="selectMode"
                     ref="selectableTable"
                     selectable
-                    @row-selected="onRowSelected">  
-            ></b-table>
+                    @row-selected="onRowSelected"></b-table>
+              <b-form inline>
+              <label> Price:     </label>
+              <b-form-input
+              id="inline-form-input-price"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="price"
+              ></b-form-input>
+              <label> Points: </label>
+              <b-form-input
+              id="inline-form-input-points"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="points"
+              ></b-form-input>
+              </b-form>
+              <b-form inline>
+              <label for="example-datepicker"> Date from: </label>
+              <b-form-datepicker :date-disabled-fn="dateDisabled" v-model="datefrom"  locale="en" class="mb-2"></b-form-datepicker>
+              </b-form>
+              <b-button
+                  size="sm"
+                  @click="AddOne()"
+                  variant="success"
+                >   Add
+                </b-button>
+              
             </pre>
             </b-modal>
           </div>
@@ -183,9 +208,14 @@ export default {
       pharmacy: {},
       selected: [],
       medicamentItems: [],
+      price:0,
+      datefrom :"",
+      points: 0,
+      pItems: [],
+
     };
   },
-  mounted() {
+  created() {
     var self = this;
     self.axios
       .get("http://localhost:8081/api/pharmacy/medicamentItems/1")
@@ -209,8 +239,23 @@ export default {
         }
         self.totalRows = self.items.length;
         self.GetAllRatings();
+        self.GetAll();
       });
+    
     self.axios
+      .get("http://localhost:8081/api/pharmacy/1")
+      .then(function (response) {
+        self.pharmacy.id = response.data.id;
+        self.pharmacy.name = response.data.name;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  },
+  methods: {
+    GetAll(){
+      var self = this;
+      self.axios
       .get("http://localhost:8080/api/medicaments/all")
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
@@ -231,17 +276,7 @@ export default {
         }
         //self.totalRows1 = self.medicamentss.length;
       });
-    self.axios
-      .get("http://localhost:8081/api/pharmacy/1")
-      .then(function (response) {
-        self.pharmacy.id = response.data.id;
-        self.pharmacy.name = response.data.name;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  },
-  methods: {
+    },
     GetAllRatings() {
       var self = this;
       self.items.forEach((item) => {
@@ -305,7 +340,18 @@ export default {
     },
     onRowSelected(item) {
       this.selected = item;
-      const idx = this.medicamentss.indexOf(item[0]);
+    },
+    dateDisabled(ymd, date) {
+        const today = new Date();
+        const m = today.getMonth();
+        const d = today.getDate();
+        const day1 = date.getDate();
+        const month1 = date.getMonth();
+        return  day1  <= d && month1 <=m || day1  >= d && month1<m;
+    },
+    AddOne(){
+      var d = this.selected[0];
+      const idx = this.medicamentss.indexOf(d);
       if (idx != -1) {
         this.medicamentss.splice(idx, 1);
         var i = {};
@@ -335,6 +381,7 @@ export default {
           medicament.manufacturer = this.items[k].manufacturer;
           medicamentItem.medicament = medicament;
           this.medicamentItems.push(medicamentItem);
+          
         }
         this.selected = [];
         this.GetAllRatings();
@@ -342,6 +389,27 @@ export default {
            if (this.old.filter((e) => e.id === this.medicamentItems[l].medicament.id).length == 0){
                 this.new.push(this.medicamentItems[l]);
            }
+        }
+        for(var o=0; o<this.new.length;o++){
+          this.axios.post("http://localhost:8081/api/pricelistItems/",
+          {
+            price: {
+              value: this.price,
+              dateTo : this.datefrom,
+              points : this.points,
+            },
+            pharmacy :{
+              id : this.pharmacy.id
+            },
+            medicament: {
+              id : this.new[o].medicament.id
+            }
+
+          });
+          this.datefrom ="";
+          this.dateTo= "";
+          this.price = 0;
+          this.points = 0;
         }
         this.axios.put(
           "http://localhost:8081/api/pharmacy/updateMedicaments/1",
