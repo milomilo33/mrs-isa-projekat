@@ -1,7 +1,14 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
+import com.mrsisa.mrsisaprojekat.dto.JwtAuthenticationRequest;
+import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
+import com.mrsisa.mrsisaprojekat.dto.UserTokenState;
+import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.Category;
+import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.User;
+import com.mrsisa.mrsisaprojekat.service.*;
+import com.mrsisa.mrsisaprojekat.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,25 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.mrsisa.mrsisaprojekat.dto.JwtAuthenticationRequest;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.UserTokenState;
-import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.Category;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.User;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.DermatologistService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-import com.mrsisa.mrsisaprojekat.service.PharmacistService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
-import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
-import com.mrsisa.mrsisaprojekat.util.TokenUtils;
+import javax.servlet.http.HttpServletResponse;
 
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
-@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
 	@Autowired
