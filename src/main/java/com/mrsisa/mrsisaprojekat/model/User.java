@@ -2,19 +2,37 @@ package com.mrsisa.mrsisaprojekat.model;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Inheritance(strategy=TABLE_PER_CLASS)
-public abstract class User {
+public abstract class User implements UserDetails {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name="email", unique=true, nullable=false)
 	private String email;
@@ -40,10 +58,22 @@ public abstract class User {
 	@Column(name="active", unique=false, nullable=false)
 	private boolean active;
 	
-	@Column(name="token", unique=false, nullable=true)
-	private String token;
+	@Column(name = "last_password_reset_date")
+    private Timestamp lastPasswordResetDate;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 	
 	public User() {}
+	
+	@JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
 
 	public boolean isActive() {
 		return active;
@@ -108,11 +138,20 @@ public abstract class User {
 		this.deleted = deleted;
 	}
 
-	public String getToken() {
-		return token;
+	public Date getLastPasswordResetDate() {
+		return lastPasswordResetDate;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public List<Role> getRoles() {
+		return roles;
 	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
+
 }

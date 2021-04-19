@@ -1,14 +1,22 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 public class Supplier extends User {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// potencijalno kaskadiranje
 	@OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
 	private Set<Offer> offers;
@@ -44,5 +52,40 @@ public class Supplier extends User {
 	public void setMedicaments(Set<MedicamentItem> medicaments) {
 		this.medicamentItems = medicaments;
 	}	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		System.out.println(getRoles());
+		return getRoles();
+	}
 
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return getEmail();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
 }

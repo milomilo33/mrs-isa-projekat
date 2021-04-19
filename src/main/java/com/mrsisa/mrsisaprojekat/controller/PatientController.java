@@ -1,19 +1,15 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Optional;
 
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
-import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.mrsisa.mrsisaprojekat.service.PatientService;
@@ -39,6 +35,7 @@ public class PatientController {
 	private PrescriptionMedicamentService prescriptionMedicamentService;
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
 		
 		Address address = new Address();
@@ -72,6 +69,7 @@ public class PatientController {
 	}
 	
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Collection<Patient>> searchPatients(@RequestParam String name, @RequestParam String lastName) {
 		Collection<Patient> foundPatients = patientService.findByNameAndLastName(name, lastName);
 		for (Patient p : foundPatients) {
@@ -88,6 +86,7 @@ public class PatientController {
 	}
 
 	@PostMapping(path = "/reserve", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PrescriptionMedicamentDTO> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
 
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
@@ -115,6 +114,7 @@ public class PatientController {
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
 

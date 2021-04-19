@@ -23,6 +23,12 @@ insert into address (city, country, number, street) values('Novi Sad', 'Srbija',
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '25', 'Seljačkih buna')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Bulevar Vojvode Stepe')
 
+insert into roles (name) values ('ROLE_SYSTEM_ADMIN')
+insert into roles (name) values ('ROLE_PHARMACY_ADMIN')
+insert into roles (name) values ('ROLE_DERMATOLOGIST')
+insert into roles (name) values ('ROLE_PHARMACIST')
+insert into roles (name) values ('ROLE_SUPPLIER')
+insert into roles (name) values ('ROLE_PATIENT')
 
 insert into category_thresholds (category, threshold) values (0, 50)
 insert into category_thresholds (category, threshold) values (1, 100)
@@ -33,26 +39,42 @@ insert into pharmacy (deleted, description, income, name, address_id) values('fa
 insert into pharmacy (deleted, description, income, name, address_id) values('false','Dr.Max apoteka...', 0, 'Dr.Max', 2)
 insert into pharmacy (deleted, description, income, name, address_id) values('false','Laurus apoteka...', 0, 'Laurus', 3)
 
-insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('jovanpetrovic@gmail.com','false','true','Petrović','Jovan','admin1','060915893', 9, 1)
-insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('sarajovic@gmail.com','false','true','Jović','Sara','admin2','0645515823', 4, 2)
-insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('markoperic@gmail.com','false','true','Perić','Marko','admin3','0654123692', 14, 3)
+insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('jovanpetrovic@gmail.com','false','true','Petrović','Jovan','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','060915893', 9, 1)
+insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('sarajovic@gmail.com','false','true','Jović','Sara','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0645515823', 4, 2)
+insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('markoperic@gmail.com','false','true','Perić','Marko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0654123692', 14, 3)
 
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('jovanpetrovic@gmail.com', 2) 
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('sarajovic@gmail.com', 2) 
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('markoperic@gmail.com', 2)
 
-insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('milicamaric@gmail.com','false','true','Marić','Milica','admin1','0635124793', 10)
-insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('petarsavic@gmail.com','false','true','Savić','Petar','admin2','0693206589', 5)
-insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('kristinamisic@gmail.com','false','true','Mišić','Kristina','admin3','062153269', 15)
+insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('milicamaric@gmail.com','false','true','Marić','Milica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0635124793', 10)
+insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('petarsavic@gmail.com','false','true','Savić','Petar','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0693206589', 5)
+insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('kristinamisic@gmail.com','false','true','Mišić','Kristina','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','062153269', 15)
 
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('milicamaric@gmail.com', 1)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('petarsavic@gmail.com', 1)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('kristinamisic@gmail.com', 1)
 
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anasimic@gmail.com','false','true','Simič','Ana','patient1','0603258476', 19 , 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','patient2','0658563255',20 , 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','patient3','0636258776', 21, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anasimic@gmail.com','false','true','Simič','Ana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0603258476', 19 , 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0658563255',20 , 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 21, 0, 0, 0)
 
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','patient4','0606258776', 22, 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','patient5','0616258776', 23, 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','true','Markov','Ivica','patient6','0626258776', 10, 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','true','Perić','Pera','patient7','0646258776', 15, 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','true','Batinica','Teodora','patient8','0633434343', 16, 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','true','Stupar','Anja','patient9','0637676767', 17, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0616258776', 23, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','true','Markov','Ivica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0626258776', 10, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','true','Perić','Pera','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0646258776', 15, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','true','Batinica','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0633434343', 16, 0, 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','true','Stupar','Anja','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0637676767', 17, 0, 0, 0)
+
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('anjastupar@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('teodorabatinica@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('peraperic@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('ivicamarkov@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('milosmilosevic@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('darkomilev@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('lukamarkovic@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('teodorabozic@gmail.com', 6)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('anasimic@gmail.com', 6)
 
 insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('darkomilev@gmail.com', 1)
 insert into patient_subscribed_pharmacies (patient_email, subscribed_pharmacies_id) values ('lukamarkovic@gmail.com', 2)
@@ -64,6 +86,9 @@ insert into dermatologist (email, deleted, active, last_name, name, password, ph
 insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('aleksandarstevanovic@gmail.com','false','true','Stevanović','Aleksandar','dermatolog2','0605239833', 6, null)
 insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('lazarpopovic@gmail.com','false','true','Popović','Lazar','dermatolog3','0614523981', 16, null)
 
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('janatot@gmail.com', 3)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('aleksandarstevanovic@gmail.com', 3)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('lazarpopovic@gmail.com', 3)
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-17 10:00','anasimic@gmail.com', false, false, 1)
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-06 10:00','teodorabozic@gmail.com', false, false, 1)
@@ -176,6 +201,10 @@ insert into pharmacist (email, deleted, active, last_name, name, password, phone
 insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('milanm@gmail.com', false,'true','Milanović', 'Milan', 'farmaceut2', '0621234123', 23, 2,  2)
 insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false,'true', 'Micić', 'Milica', 'farmaceut3', '0609879879', 24, 3, 3)
 
+insert into user_role(user_id, role_id) values ('svetozartodorovic@gmail.com', 4)
+insert into user_role(user_id, role_id) values ('milanm@gmail.com', 4)
+insert into user_role(user_id, role_id) values ('micicmilica@gmail.com', 4)
+
 insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 1)
 insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('svetozartodorovic@gmail.com', 3)
 insert into pharmacist_counselings (pharmacist_email, counselings_id) values ('milanm@gmail.com', 6)
@@ -196,6 +225,10 @@ insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values 
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('mikaantic@gmail.com', 'false','true', 'Antic', 'Mika', 'supplier1', '0624354231', 21)
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'true', 'Raznatovic', 'Svetlana', 'supplier2', '0604354231', 20)
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('lupulovb@gmail.com', 'false','true', 'Lupulov', 'Bojan', 'supplier3', '0614354231', 19)
+
+insert into user_role(user_id, role_id) values ('mikaantic@gmail.com', 5)
+insert into user_role(user_id, role_id) values ('svetlanaraznatovic@gmail.com', 5)
+insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
 
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-06','false', 1,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')

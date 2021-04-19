@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import com.mrsisa.mrsisaprojekat.model.AdminSystem;
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.PatientService;
+import com.mrsisa.mrsisaprojekat.service.PharmacistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
+import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 
 @RestController
 @RequestMapping(value = "api/pharmacyAdmin")
@@ -33,7 +42,20 @@ public class PharmacyAdminController {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	@Autowired
+	private DermatologistService dermatologistService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private PatientService patientService;
+	
 	@GetMapping(value="/all")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<List<AdminPharmacyDTO>> getAdmins(){
 		
 		List<AdminPharmacy> admins = adminService.findAll();
@@ -47,6 +69,7 @@ public class PharmacyAdminController {
 	}
 	
 	@GetMapping(value="/{id}")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> getAdmin(@PathVariable String email){
 		
 		AdminPharmacy admin = adminService.findOne(email);
@@ -59,7 +82,38 @@ public class PharmacyAdminController {
 	} 
 	
 	@PostMapping(consumes = "application/json")
+	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> saveAdmin(@RequestBody AdminPharmacyDTO adminDTO) throws Exception{
+		
+		
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(adminDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(adminDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(adminDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(adminDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(adminDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		
 		Address address = new Address();
 		address.setCountry(adminDTO.getAddress().getCountry());

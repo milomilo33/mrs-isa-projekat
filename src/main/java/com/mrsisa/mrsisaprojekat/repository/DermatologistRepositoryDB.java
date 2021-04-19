@@ -20,4 +20,7 @@ public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, 
 	@Modifying
 	@Query("update Dermatologist d set d.deleted = true where d.email=?1")
 	void deleteOne(String email);
+	
+	@Query("select d from Dermatologist d join fetch d.roles where d.email=?1")
+	Dermatologist getOneLogin(String id);
 }
