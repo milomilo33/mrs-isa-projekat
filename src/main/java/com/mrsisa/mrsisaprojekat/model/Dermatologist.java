@@ -1,21 +1,13 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.*;
 import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 public class Dermatologist extends Employee {
 	
 	// potencijalno kaskadiranje
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY)
 	private Set<Appointment> medicalExaminations;
 	
 	@ManyToMany(fetch = FetchType.EAGER)

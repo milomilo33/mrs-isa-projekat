@@ -1,8 +1,10 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface DermatologistService {
 	List<Dermatologist> findAll();
@@ -14,4 +16,6 @@ public interface DermatologistService {
 	Dermatologist update(Dermatologist dermatologist) throws Exception;
 	
 	boolean delete(String email);
+
+	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
 }

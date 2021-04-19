@@ -1,20 +1,15 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
-
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 
 @Service
 public class PatientServiceImpl implements PatientService{
@@ -60,5 +55,24 @@ public class PatientServiceImpl implements PatientService{
 	public Collection<Patient> findByNameAndLastName(String name, String lastName) {
 		return patientRepository.findByNameAndLastName(name, lastName);
 	}
-	
+
+	@Override
+	public Collection<Appointment> getUpcomingAppointmentsForUser(String userEmail, Appointment.AppointmentType type) {
+		List<Appointment> appointments = patientRepository.getAppointmentsForUser(userEmail);
+
+		List<Appointment> upcomingAppointments = new ArrayList<Appointment>();
+		for (Appointment a : appointments) {
+			LocalDate appointmentDate = a.getDate();
+			LocalDate today = LocalDate.now();
+			if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
+				if (a.getType() == type) {
+					a.setMedicalReport(null);
+					upcomingAppointments.add(a);
+				}
+			}
+		}
+
+		return upcomingAppointments;
+	}
+
 }

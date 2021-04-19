@@ -1,15 +1,8 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Appointment {
@@ -40,7 +33,16 @@ public class Appointment {
 	
 	@Column(name = "type", unique = false, nullable = false)
 	private AppointmentType type;
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Employee chosenEmployee;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Patient patient;
+
+	@Column(name = "done", nullable = false, columnDefinition = "boolean default false")
+	private boolean done;
+
 	public Appointment() {}
 	
 	public Long getId() {
@@ -106,8 +108,28 @@ public class Appointment {
 	public void setType(AppointmentType type) {
 		this.type = type;
 	}
-	
-	
-	
 
+	public void setChosenEmployee(Employee chosenEmployee) {
+		this.chosenEmployee = chosenEmployee;
+	}
+
+	public Employee getChosenEmployee() {
+		return chosenEmployee;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
+	}
 }
