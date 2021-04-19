@@ -1,10 +1,9 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Collection;
+import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Patient;
 
-import com.mrsisa.mrsisaprojekat.model.Patient;
-	
-import com.mrsisa.mrsisaprojekat.model.Patient;
+import java.util.Collection;
 
 public interface PatientService {
 	Collection<Patient> findAll();
@@ -18,4 +17,6 @@ public interface PatientService {
 	void delete(String id);
 	
 	Collection<Patient> findByNameAndLastName(String name, String lastName);
+
+	Collection<Appointment> getUpcomingAppointmentsForUser(String email, Appointment.AppointmentType type);
 }
