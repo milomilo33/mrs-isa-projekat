@@ -172,6 +172,7 @@ public class DermatologistController {
 	}
 
 	@GetMapping(value = "/{id}/examinations")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist(@PathVariable("id") String email) {
 		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(email);
 

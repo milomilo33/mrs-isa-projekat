@@ -88,5 +88,23 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return upcomingAppointments;
 	}
 
+	@Override
+	@Transactional
+	public boolean dermatologistHasAppointment(String email, Long appointmentId) {
+		Dermatologist dermatologist = this.findOne(email);
+
+		if (dermatologist == null) {
+			return false;
+		}
+
+		for (Appointment a : dermatologist.getMedicalExaminations()) {
+			if (a.getId().equals(appointmentId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 }

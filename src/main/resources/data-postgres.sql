@@ -86,9 +86,9 @@ insert into work_calendar (id) values (1)
 insert into work_calendar (id) values (2)
 insert into work_calendar (id) values (3)
 
-insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('janatot@gmail.com','false','true','Tot','Jana','dermatolog1','0665135793', 11, null)
-insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('aleksandarstevanovic@gmail.com','false','true','Stevanović','Aleksandar','dermatolog2','0605239833', 6, null)
-insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('lazarpopovic@gmail.com','false','true','Popović','Lazar','dermatolog3','0614523981', 16, null)
+insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('janatot@gmail.com','false','true','Tot','Jana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0665135793', 11, null)
+insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('aleksandarstevanovic@gmail.com','false','true','Stevanović','Aleksandar','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0605239833', 6, null)
+insert into dermatologist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id ) values ('lazarpopovic@gmail.com','false','true','Popović','Lazar','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0614523981', 16, null)
 
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('janatot@gmail.com', 3)
@@ -96,9 +96,9 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES ('aleksandarstevanovic@gmail.com
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('lazarpopovic@gmail.com', 3)
 
 
-insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('svetozartodorovic@gmail.com', false, 'true','Todorović', 'Svetozar', 'farmaceut1', '0645556464', 22, 1, 1)
-insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('milanm@gmail.com', false,'true','Milanović', 'Milan', 'farmaceut2', '0621234123', 23, 2,  2)
-insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false,'true', 'Micić', 'Milica', 'farmaceut3', '0609879879', 24, 3, 3)
+insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('svetozartodorovic@gmail.com', false, 'true','Todorović', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'farmaceut1', '0645556464', 22, 1, 1)
+insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('milanm@gmail.com', false,'true','Milanović', 'Milan', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0621234123', 23, 2,  2)
+insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false,'true', 'Micić', 'Milica', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0609879879', 24, 3, 3)
 
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-25 10:00','anasimic@gmail.com', false, false, 1)
