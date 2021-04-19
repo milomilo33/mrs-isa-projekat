@@ -12,6 +12,9 @@ import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 public class Patient extends User {
 	
@@ -29,7 +32,7 @@ public class Patient extends User {
 	@Column(name = "category", unique = false, nullable = false)
 	private Category category;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

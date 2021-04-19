@@ -1,12 +1,14 @@
 package com.mrsisa.mrsisaprojekat.repository;
 
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+
+import java.util.List;
 
 public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 
@@ -21,5 +23,7 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 	
 	@Query("select p from Patient p join fetch p.roles where p.email=?1")
 	Patient getOneLogin(String id);
-	
+
+	@Query("select p from Patient p join fetch p.appointments where p.deleted = false and p.email = ?1")
+	List<Appointment> getAppointmentsForUser(String email);
 }

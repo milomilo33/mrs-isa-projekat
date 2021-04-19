@@ -13,11 +13,14 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 public class Dermatologist extends Employee {
 	
 	// potencijalno kaskadiranje
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY)
 	private Set<Appointment> medicalExaminations;
 	
 	@ManyToMany(fetch = FetchType.EAGER)

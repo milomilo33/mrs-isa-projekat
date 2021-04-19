@@ -2,8 +2,12 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.Collection;
 
+import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.PatientService;
 import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,12 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -125,4 +124,24 @@ public class PatientController {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 	}
+
+//	@GetMapping(value = "/{id}/appointments")
+//	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
+//		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)
+//
+//		Appointment.AppointmentType apType = null;
+//		if (type.equals("examination")) {
+//			apType = Appointment.AppointmentType.EXAMINATION;
+//		}
+//		else if (type.equals("counseling")) {
+//			apType = Appointment.AppointmentType.COUNSELING;
+//		}
+//		else {
+//			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+//		}
+//
+//		Collection<Appointment> upcomingAppointments = patientService.getUpcomingAppointmentsForUser(id, apType);
+//
+//		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
+//	}
 }

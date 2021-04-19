@@ -11,6 +11,9 @@ import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 public class Pharmacist extends Employee {
 	
@@ -20,7 +23,7 @@ public class Pharmacist extends Employee {
 	private static final long serialVersionUID = 1L;
 
 	// potencijalno kaskadiranje
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY)
 	private Set<Appointment> counselings;
 	
 	@ManyToOne(fetch = FetchType.EAGER,cascade =CascadeType.MERGE)
