@@ -17,6 +17,7 @@ import MedicamentTable from '../components/MedicamentTable'
 import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
 import DispenseMedication from '../components/DispenseMedication'
+import DermatologistPage from '../views/DermatologistPage'
 
 Vue.use(VueRouter)
 
@@ -91,6 +92,34 @@ const routes = [
 		path: "/PharmacistPage",
 		name: "PharmacistPage",
 		component: PharmacistPage,
+		children: [
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			},
+			{
+				path: "SearchPatients",
+				component: SearchPatients
+			},
+			{
+				path: "DispenseMedication",
+				component: DispenseMedication
+			}
+		]
+	},
+	{
+		path: "/DermatologistPage",
+		name: "DermatologistPage",
+		component: DermatologistPage,
 		children: [
 			{
 				path: "PharmacyList",
