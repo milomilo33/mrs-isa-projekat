@@ -1,6 +1,5 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
-import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 
 public class PatientDTO {

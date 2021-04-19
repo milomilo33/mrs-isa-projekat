@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class DermatologistController {
 	
 
 	@GetMapping(value="/all")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<List<DermatologistDTO>> getDermatologist(){
 		
 		List<Dermatologist> dermatologist = dermatologistService.findAll();
@@ -52,6 +54,7 @@ public class DermatologistController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<DermatologistDTO> getDermatologist(@PathVariable("id") String email) {
 		Dermatologist dermatologist = dermatologistService.findOne(email);
 
@@ -63,6 +66,7 @@ public class DermatologistController {
 	}
 
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<DermatologistDTO> saveDermatologist(@RequestBody DermatologistDTO dermatologistDTO) throws Exception{
 		
 		Address address = new Address();
@@ -102,6 +106,7 @@ public class DermatologistController {
 	}
 	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}/{i}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<DermatologistDTO> deleteDermatologist(@PathVariable("id") String email, @PathVariable("i") Long i) {
 		Dermatologist dermatologist = dermatologistService.findOne(email);	
 		if (dermatologist != null) {
@@ -127,6 +132,7 @@ public class DermatologistController {
 		}
 	}
 	@PutMapping(value= "/updateDermatologist/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<DermatologistDTO> updateDermatologist(@RequestBody DermatologistDTO dermatologist,@PathVariable("id") String email) throws Exception {
 		Dermatologist dermatologistUpdate = dermatologistService.findOne(email);
 		Pharmacy p = pharmacyService.findOne(dermatologist.getPharmacies().get(0).getId());

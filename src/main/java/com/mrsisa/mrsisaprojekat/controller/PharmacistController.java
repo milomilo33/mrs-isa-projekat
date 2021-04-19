@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
-import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
@@ -82,6 +77,7 @@ public class PharmacistController {
 	
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'PATIENT')")
 	public ResponseEntity<PharmacistDTO> getPharmacist(@PathVariable("id") String email) {
 		Pharmacist pharmacist = pharmacistService.findOne(email);
 
@@ -93,6 +89,7 @@ public class PharmacistController {
 	}
 
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<PharmacistDTO> savePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception{
 		
 		Address address = new Address();
@@ -187,6 +184,7 @@ public class PharmacistController {
 
 	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'PHARMACIST')")
 	public ResponseEntity<PharmacistDTO> deletePharmacist(@PathVariable("id") String email) {
 
 		Pharmacist pharmacist = pharmacistService.findOne(email);
