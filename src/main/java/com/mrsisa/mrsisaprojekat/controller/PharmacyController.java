@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class PharmacyController {
 	
 	@Autowired
 	private AddressService addressService;
+	
 	@Autowired
 	private MedicamentItemService medicamentItemService;
 	
@@ -84,7 +86,9 @@ public class PharmacyController {
 		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
 	}
 
+	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
 		Address address = addressService.create(pharmacy.getAddress());
 		pharmacy.setAddress(address);
@@ -108,6 +112,7 @@ public class PharmacyController {
 	}
 	
 	@PutMapping(value= "/updateMedicaments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'PHARMACIST')")
 	public ResponseEntity<PharmacyDTO> updatePharmacy(@RequestBody Pharmacy pharmacy,@PathVariable("id") Long id) throws Exception {
 		Pharmacy pharmacyUpdate = pharmacyService.findOneWithMedicaments(id);
 		for(MedicamentItem m : pharmacy.getMedicaments()) {
@@ -123,6 +128,7 @@ public class PharmacyController {
 	}
 	
 	@GetMapping(value = "/dermatologists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<Collection<DermatologistDTO>> getPharmacyDermatologists(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(id);
 		List<DermatologistDTO> returns = new ArrayList<>();
@@ -145,6 +151,7 @@ public class PharmacyController {
 	}
 	
 	@GetMapping(value = "/pharmacists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'PHARMACIST')")
 	public ResponseEntity<Collection<PharmacistDTO>> getPharmacyPharmacists(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithPharmacists(id);
 		List<PharmacistDTO> returns = new ArrayList<>();

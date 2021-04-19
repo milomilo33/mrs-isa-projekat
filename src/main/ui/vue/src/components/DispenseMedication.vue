@@ -59,7 +59,7 @@
             onSearch(e) {
                 e.preventDefault();
 
-                this.axios.get(`/api/eprescriptions/` + this.reservationId)
+                this.axios.get(`/api/eprescriptions/` + this.reservationId + `/dispensable`)
                           .then(response => {
                             this.ePrescription = response.data;
                             this.medicineQuantity = Object.keys(this.ePrescription.medicineQuantity)

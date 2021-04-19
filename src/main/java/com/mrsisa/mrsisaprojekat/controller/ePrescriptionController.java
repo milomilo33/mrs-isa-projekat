@@ -1,22 +1,22 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.mrsisa.mrsisaprojekat.dto.ePrescriptionDispenseDTO;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.ePrescription;
+import com.mrsisa.mrsisaprojekat.service.ePrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrsisa.mrsisaprojekat.dto.ePrescriptionDispenseDTO;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
-import com.mrsisa.mrsisaprojekat.model.ePrescription;
-import com.mrsisa.mrsisaprojekat.service.ePrescriptionService;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/eprescriptions")
@@ -26,6 +26,7 @@ public class ePrescriptionController {
 	private ePrescriptionService ePrescriptionService;
 	
 	@GetMapping(value="/{id}/dispense")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
 	public ResponseEntity<String> dispensePrescription(@PathVariable("id") Long id) {
 		// dobaviti trenutnog farmaceuta pomocu jwt
 		// zasad ce se prosledjivati null i nece se u servisu proveravati da li je farmaceut iz te apoteke
@@ -37,8 +38,9 @@ public class ePrescriptionController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@GetMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ePrescriptionDispenseDTO> getPrescription(@PathVariable("id") Long id) {
+	@GetMapping(value="/{id}/dispensable", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<ePrescriptionDispenseDTO> getPrescriptionForDispensation(@PathVariable("id") Long id) {
 		// dobaviti trenutnog farmaceuta pomocu jwt
 		// zasad null kao parametar servisne metode
 		ePrescription ePrescription = ePrescriptionService.findPrescriptionForPharmacist(id, null);
@@ -67,7 +69,7 @@ public class ePrescriptionController {
 //		}
 //		ePrescription.setPrescriptionMedicaments(newSet);
 //		return new ResponseEntity<ePrescription>(ePrescription, HttpStatus.OK);
-		
+
 		String patientEmail = ePrescription.getPatient().getEmail();
 		LocalDate expiryDate = ePrescription.getDate();
 		Map<String, Integer> medicineQuantity = new HashMap<String, Integer>();
