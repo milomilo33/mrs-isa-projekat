@@ -18,4 +18,6 @@ public interface DermatologistService {
 	boolean delete(String email);
 
 	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
+
+	boolean dermatologistHasAppointment(String email, Long appointmentId);
 }
