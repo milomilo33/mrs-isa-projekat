@@ -1,18 +1,27 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.net.URI;
 import java.util.Collection;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
+import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.PatientService;
+import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -29,6 +38,9 @@ public class PatientController {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+    private ConfirmationTokenRepositoryDB confirmationTokenRepository;
 
 	@Autowired
 	private PrescriptionMedicamentService prescriptionMedicamentService;
@@ -36,9 +48,12 @@ public class PatientController {
 	@Autowired
 	private AppointmentService appointmentService;
 	
+	
+	
 	@PostMapping(consumes = "application/json")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
+		
 		
 		Address address = new Address();
 		address.setCountry(patientDTO.getAddress().getCountry());
@@ -55,13 +70,17 @@ public class PatientController {
 		patient.setLastName(patientDTO.getLastName());
 		patient.setPhoneNumber(patientDTO.getPhoneNumber());
 		patient.setAddress(saved);
+		patient.setActive(false);
 		patient.setCategory(Category.REGULAR);
 		patient.setLoyaltyPoints(0);
 		patient.setPenaltyPoints(0);
 		patient = patientService.create(patient);
 		
+		ConfirmationToken token = new ConfirmationToken(patient);
+
+        confirmationTokenRepository.save(token);
 		try {
-			emailService.sendTestMail(patient);
+			emailService.activationTokenMail(token, patient.getEmail());
 		}
 		catch( Exception e) {
 			System.out.println(e.getMessage());
@@ -70,8 +89,25 @@ public class PatientController {
 		return new ResponseEntity<>(new PatientDTO(patient), HttpStatus.CREATED); 
 	}
 	
+	@GetMapping(value="/confirm-account")
+    public ResponseEntity<Void> confirmUserAccount(@RequestParam("token")String confirmationToken) throws Exception
+    {
+        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        
+        if(token != null)
+        {
+        	Patient user = patientService.findOne(token.getUserEntity().getEmail());
+            user.setActive(true);
+            patientService.create(user);
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://localhost:8081/SuccessActivation")).build();
+        }
+        else
+        {
+        	return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://localhost:8081/SuccessActivation")).build();
+        }
+    }
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Collection<Patient>> searchPatients(@RequestParam String name, @RequestParam String lastName) {
 		Collection<Patient> foundPatients = patientService.findByNameAndLastName(name, lastName);
 		for (Patient p : foundPatients) {
@@ -88,7 +124,7 @@ public class PatientController {
 	}
 
 	@PostMapping(path = "/reserve", consumes = "application/json")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PrescriptionMedicamentDTO> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
 
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
@@ -114,7 +150,7 @@ public class PatientController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
 

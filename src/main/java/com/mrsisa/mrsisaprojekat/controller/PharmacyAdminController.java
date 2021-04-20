@@ -130,6 +130,7 @@ public class PharmacyAdminController {
 		admin.setLastName(adminDTO.getLastName());
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
 		admin.setPharmacy(null);
+		admin.setActive(true);
 		admin.setAddress(saved);
 		admin = adminService.create(admin);
 		

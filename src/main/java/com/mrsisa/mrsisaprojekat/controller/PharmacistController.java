@@ -145,6 +145,7 @@ public class PharmacistController {
 		pharmacist.setDeleted(false);
 		pharmacist.setRatings(null);
 		pharmacist.setRequests(null);
+		pharmacist.setActive(true);
 		pharmacist.setPharmacy(pharmacy);
 		pharmacist.setAddress(saved);
 		pharmacist = pharmacistService.create(pharmacist);

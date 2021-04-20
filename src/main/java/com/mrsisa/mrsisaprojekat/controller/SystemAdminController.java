@@ -51,6 +51,7 @@ public class SystemAdminController {
 		admin.setLastName(adminDTO.getLastName());
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
 		admin.setAddress(saved);
+		admin.setActive(true);
 		admin = adminService.create(admin);
 		
 		try {
