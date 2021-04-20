@@ -234,7 +234,7 @@ export default {
      
       if (errorFound == false) {
         this.axios
-          .post("http://localhost:8080/api/patients", {
+          .post(`/api/patients`, {
             name: this.name,
             lastName: this.lastName,
             email: this.email,
@@ -246,7 +246,10 @@ export default {
               street: this.street,
               number: this.number,
             },
-          })
+          }, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token')
+        }})
           .then(function (response) {
             currentObj.output = response.data;
              _this.showSuccessAlert = true;

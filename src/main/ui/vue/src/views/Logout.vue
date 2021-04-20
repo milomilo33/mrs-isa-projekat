@@ -10,6 +10,8 @@ export default defineComponent({
   mounted(){
     localStorage.removeItem("token");
     this.$router.push("/Login");
+    localStorage.removeItem('token');
+    this.$router.push("/MedicamentList");
     }
 })
 </script>

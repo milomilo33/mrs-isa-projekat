@@ -106,7 +106,8 @@
               ok-only
               @ended="resetInfoModal"
               :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant">
+              :footer-bg-variant="headerBgVariant"
+            >
               <pre> 
                   <b-table
                   :items="medicamentss" 
@@ -208,82 +209,118 @@ export default {
       pharmacy: {},
       selected: [],
       medicamentItems: [],
-      price:0,
-      datefrom :"",
+      price: 0,
+      datefrom: "",
       points: 0,
       pItems: [],
-
+      pharmacyId: 0,
     };
   },
-  created() {
+  mounted() {
+    var AdminUsername = JSON.parse(
+      atob(localStorage.getItem("token").split(".")[1])
+    ).sub;
     var self = this;
     self.axios
-      .get("http://localhost:8081/api/pharmacy/medicamentItems/1")
+      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
       .then(function (response) {
-        for (var i = 0; i < response.data.length; i++) {
-          var item = {};
-          item.id = response.data[i].medicament.id;
-          item.name = response.data[i].medicament.name;
-          item.type = response.data[i].medicament.type;
-          item.medicamentForm = response.data[i].medicament.form;
-          item.manufacturer = response.data[i].medicament.manufacturer;
-          item.quantity = response.data[i].quantity;
-          item.medicamentItemId = response.data[i].id;
-          item.structure = response.data[i].medicament.structure;
-          item.issuanceMode = response.data[i].medicament.mode;
-          item.annotation = response.data[i].medicament.annotation;
-          item.rating = 0;
-          self.items.push(item);
-          self.old.push(item);
-          //self.all.push(item);
-        }
-        self.totalRows = self.items.length;
-        self.GetAllRatings();
-        self.GetAll();
-      });
-    
-    self.axios
-      .get("http://localhost:8081/api/pharmacy/1")
-      .then(function (response) {
-        self.pharmacy.id = response.data.id;
-        self.pharmacy.name = response.data.name;
+        self.pharmacyId = response.data.pharmacy.id;
+        self.GetAllMedicamentItems();
       })
       .catch(function (error) {
         console.log(error);
       });
   },
   methods: {
-    GetAll(){
+    GetAllMedicamentItems() {
       var self = this;
       self.axios
-      .get("http://localhost:8080/api/medicaments/all")
-      .then(function (response) {
-        for (var i = 0; i < response.data.length; i++) {
-          if (
-            self.items.filter((e) => e.id === response.data[i].id).length == 0
-          ) {
+        .get(`/api/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
             var item = {};
-            item.id = response.data[i].id;
-            item.name = response.data[i].name;
-            item.type = response.data[i].type;
-            item.annotation = response.data[i].annotation;
-            item.structure = response.data[i].structure;
-            item.manufacturer = response.data[i].manufacturer;
-            item.medicamentForm = response.data[i].form;
-            item.issuanceMode = response.data[i].mode;
-            self.medicamentss.push(item);
+            item.id = response.data[i].medicament.id;
+            item.name = response.data[i].medicament.name;
+            item.type = response.data[i].medicament.type;
+            item.medicamentForm = response.data[i].medicament.form;
+            item.manufacturer = response.data[i].medicament.manufacturer;
+            item.quantity = response.data[i].quantity;
+            item.medicamentItemId = response.data[i].id;
+            item.structure = response.data[i].medicament.structure;
+            item.issuanceMode = response.data[i].medicament.mode;
+            item.annotation = response.data[i].medicament.annotation;
+            item.rating = 0;
+            self.items.push(item);
+            self.old.push(item);
+            //self.all.push(item);
           }
-        }
-        //self.totalRows1 = self.medicamentss.length;
-      });
+          self.totalRows = self.items.length;
+          self.GetAllRatings();
+          self.GetAll();
+        });
+
+      self.axios
+        .get(
+          `/api/pharmacy/` + parseInt(self.pharmacyId),
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          }
+        )
+        .then(function (response) {
+          self.pharmacy.id = response.data.id;
+          self.pharmacy.name = response.data.name;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    GetAll() {
+      var self = this;
+      self.axios
+        .get(`/api/medicaments/all`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+            if (
+              self.items.filter((e) => e.id === response.data[i].id).length == 0
+            ) {
+              var item = {};
+              item.id = response.data[i].id;
+              item.name = response.data[i].name;
+              item.type = response.data[i].type;
+              item.annotation = response.data[i].annotation;
+              item.structure = response.data[i].structure;
+              item.manufacturer = response.data[i].manufacturer;
+              item.medicamentForm = response.data[i].form;
+              item.issuanceMode = response.data[i].mode;
+              self.medicamentss.push(item);
+            }
+          }
+          //self.totalRows1 = self.medicamentss.length;
+        });
     },
     GetAllRatings() {
       var self = this;
       self.items.forEach((item) => {
         self.axios
-          .get(
-            "http://localhost:8081/api/medicaments/ratings/" + parseInt(item.id)
-          )
+          .get(`/api/medicaments/ratings/` + parseInt(item.id), {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          })
           .then(function (response) {
             item.rating = response.data;
           })
@@ -342,14 +379,14 @@ export default {
       this.selected = item;
     },
     dateDisabled(ymd, date) {
-        const today = new Date();
-        const m = today.getMonth();
-        const d = today.getDate();
-        const day1 = date.getDate();
-        const month1 = date.getMonth();
-        return  day1  <= d && month1 <=m || day1  >= d && month1<m;
+      const today = new Date();
+      const m = today.getMonth();
+      const d = today.getDate();
+      const day1 = date.getDate();
+      const month1 = date.getMonth();
+      return (day1 <= d && month1 <= m) || (day1 >= d && month1 < m);
     },
-    AddOne(){
+    AddOne() {
       var d = this.selected[0];
       const idx = this.medicamentss.indexOf(d);
       if (idx != -1) {
@@ -381,42 +418,56 @@ export default {
           medicament.manufacturer = this.items[k].manufacturer;
           medicamentItem.medicament = medicament;
           this.medicamentItems.push(medicamentItem);
-          
         }
         this.selected = [];
         this.GetAllRatings();
-        for(var l =0;l<this.medicamentItems.length;l++){
-           if (this.old.filter((e) => e.id === this.medicamentItems[l].medicament.id).length == 0){
-                this.new.push(this.medicamentItems[l]);
-           }
+        for (var l = 0; l < this.medicamentItems.length; l++) {
+          if (
+            this.old.filter(
+              (e) => e.id === this.medicamentItems[l].medicament.id
+            ).length == 0
+          ) {
+            this.new.push(this.medicamentItems[l]);
+          }
         }
-        for(var o=0; o<this.new.length;o++){
-          this.axios.post("http://localhost:8081/api/pricelistItems/",
-          {
-            price: {
-              value: this.price,
-              dateTo : this.datefrom,
-              points : this.points,
+        for (var o = 0; o < this.new.length; o++) {
+          this.axios.post(
+            `/api/pricelistItems/`,
+            {
+              price: {
+                value: this.price,
+                dateTo: this.datefrom,
+                points: this.points,
+              },
+              pharmacy: {
+                id: this.pharmacy.id,
+              },
+              medicament: {
+                id: this.new[o].medicament.id,
+              },
             },
-            pharmacy :{
-              id : this.pharmacy.id
-            },
-            medicament: {
-              id : this.new[o].medicament.id
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+              },
             }
-
-          });
-          this.datefrom ="";
-          this.dateTo= "";
+          );
+          this.datefrom = "";
+          this.dateTo = "";
           this.price = 0;
           this.points = 0;
         }
         this.axios.put(
-          "http://localhost:8081/api/pharmacy/updateMedicaments/1",
+          `/api/pharmacy/updateMedicaments/` + parseInt(this.pharmacy.id),
           {
             name: this.pharmacy.name,
             id: this.pharmacy.id,
             medicaments: this.new,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
           }
         );
         this.medicamentItems = [];
@@ -438,7 +489,11 @@ export default {
       var self = this;
       console.log(item.medicamentItemId);
       self.axios
-        .delete("http://localhost:8081/api/medicamentItems/" + item.medicamentItemId)
+        .delete(`/api/medicamentItems/` + item.medicamentItemId, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
         .then(function (response) {
           const idx = self.items.indexOf(item);
           self.items.splice(idx, 1);

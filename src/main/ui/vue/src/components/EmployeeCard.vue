@@ -23,7 +23,7 @@
       header-text-variant="light"
       body-bg-variant="light"
       body-text-variant="dark"
-      hide-footer="true"
+      :hide-footer="true"
     >
       <b-container fluid>
         <b-row class="mb-1 text-center colorIt">
@@ -46,6 +46,12 @@
             {{ this.employee.email }}
           </p>
         </b-row>
+        <b-row>
+          <select id="mySelect" name="available_appointments" v-model="app" @change="setAppointment(app)">
+              <option class="med" v-for="a in this.employee.appointments" :key="a.id" :value="a">{{parseAppointment(a)}}</option>
+          </select>
+          <b-button class="ml-2" @click="reserveExamination()">Rezerviši izabrani termin</b-button>
+        </b-row>
       </b-container>
       <template #modal-header="{ close }">
         <b-button size="sm" @click="close()"> Close </b-button>
@@ -67,9 +73,59 @@ export default {
       ratings: 0,
       modal: "",
       show: false,
+      appointment: null
     };
   },
-  methods: {},
+  methods: {
+    parseAppointment(a) {
+      let retval = "";
+      let date = new Date(a.date[0], a.date[1], a.date[2]);
+
+      let from = new Date();
+      from.setHours(a.termFrom[0]);
+      from.setMinutes(a.termFrom[1]);
+      from.setSeconds(0);
+
+      from = from.toLocaleTimeString('en-GB').split(':').slice(0, 2).join(":")
+
+      let to = new Date();
+      to.setHours(a.termTo[0]);
+      to.setMinutes(a.termTo[1]);
+      to.setSeconds(0);
+
+      to = to.toLocaleTimeString('en-GB').split(':').slice(0, 2).join(":")
+
+
+      if(a.termTo[1] === Number(0)) {
+        a.termTo[1] == "00";
+      }
+      if(a.termFrom[1] === "0") {
+        a.termFrom[1] == "00";
+      }
+      retval = date.toDateString() + " " + from + "-" + to; 
+      return retval;
+    },
+
+    reserveExamination() {
+      this.axios.post('http://localhost:8080/api/patients/reserve_appointment', {
+        patientEmail: "teodorabozic@gmail.com",
+        appointmentId: this.appointment.id
+      })
+      .then(response => {
+        console.log(response);
+        var x = document.getElementById("mySelect");
+        x.remove(x.selectedIndex);
+        this.employee.appointments = this.employee.appointments.filter(el => el.id !== this.appointment.id);
+        x.selectedIndex = -1;
+      });
+    },
+
+    setAppointment(a) {
+      this.appointment = a;
+      console.log(this.appointment);
+      
+    }
+  },
 };
 </script>
 <style scoped>

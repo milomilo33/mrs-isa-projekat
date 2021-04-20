@@ -59,7 +59,11 @@
             onSearch(e) {
                 e.preventDefault();
 
-                this.axios.get(`/api/eprescriptions/` + this.reservationId + `/dispensable`)
+                this.axios.get(`/api/eprescriptions/` + this.reservationId + `/dispensable`,  {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem('token'),
+                            },
+                        })
                           .then(response => {
                             this.ePrescription = response.data;
                             this.medicineQuantity = Object.keys(this.ePrescription.medicineQuantity)
@@ -75,7 +79,11 @@
             onDispense(e) {
                 e.preventDefault();
 
-                this.axios.get(`/api/eprescriptions/` + this.ePrescription.id + `/dispense`)
+                this.axios.get(`/api/eprescriptions/` + this.ePrescription.id + `/dispense`,  {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem('token'),
+                        },
+                        })
                           .then(response => {
                             this.showSuccessModal();
                             this.ePrescription = {};

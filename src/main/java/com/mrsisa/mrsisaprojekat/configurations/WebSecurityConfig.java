@@ -75,6 +75,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 			.antMatchers("/api/medicaments/all").permitAll()
 			.antMatchers("/api/patients/**").permitAll()
+
+			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /auth/**
+			//.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
+
+
+			.antMatchers("/api/medicaments/all").permitAll()
+				.antMatchers("/api/pharmacy").permitAll().antMatchers("/api/pharmacy/**").permitAll()
+				.antMatchers("/api/patients/**").permitAll()
+				.antMatchers("/api/pharmacy/dermatologists/**").permitAll()
+				.antMatchers("/api/pharmacy/pharmacists/**").permitAll()
 				//.antMatchers("/api/dermatologist/examinations").permitAll() // OBRISATI!
 				//.antMatchers("/api/appointments/**").permitAll() // OBRISATI!
 				//.antMatchers("/api/dermatologist").hasAnyRole("DERMATOLOGIST", "PHARMACY_ADMIN", "SYSTEM_ADMIN")

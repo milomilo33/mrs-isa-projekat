@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value="/api/dermatologist")
 public class DermatologistController {
 
@@ -178,7 +179,6 @@ public class DermatologistController {
 	// pregledi za trenutno ulogovanog dermatologa
 	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist() {
 		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
 		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(currentDermatologist.getEmail());
 		//Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist("aleksandarstevanovic@gmail.com");
 

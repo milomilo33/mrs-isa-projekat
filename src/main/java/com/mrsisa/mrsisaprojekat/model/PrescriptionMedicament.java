@@ -24,7 +24,7 @@ public class PrescriptionMedicament {
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	private Medicament medicament;
 	
 	public PrescriptionMedicament() {}
@@ -77,5 +77,15 @@ public class PrescriptionMedicament {
 		this.medicament = medicament;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "PrescriptionMedicament{" +
+				"id=" + id +
+				", purchased=" + purchased +
+				", expiryDate=" + expiryDate +
+				", quantity=" + quantity +
+				", deleted=" + deleted +
+				", medicament=" + medicament +
+				'}';
+	}
 }

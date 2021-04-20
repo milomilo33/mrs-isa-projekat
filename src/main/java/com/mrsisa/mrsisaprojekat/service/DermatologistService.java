@@ -5,6 +5,7 @@ import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface DermatologistService {
 	List<Dermatologist> findAll();
@@ -20,4 +21,6 @@ public interface DermatologistService {
 	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
 
 	boolean dermatologistHasAppointment(String email, Long appointmentId);
+
+	List<Appointment> getAvailableAppointments(Dermatologist m);
 }

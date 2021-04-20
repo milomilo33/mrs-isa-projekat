@@ -35,8 +35,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public void delete(Appointment a) {
+        a.setDeleted(true);
+        appointmentRepository.save(a);
     }
 
     @Override

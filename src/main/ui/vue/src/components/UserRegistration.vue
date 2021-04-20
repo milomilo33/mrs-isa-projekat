@@ -233,13 +233,13 @@ export default {
         this.error_message = "Lozinke se ne poklapaju!";
       }
       if (this.$route.params.userRole == "SystemAdmin") {
-        role = "http://localhost:8081/api/systemAdmin";
+        role = `/api/systemAdmin`;
       } else if (this.$route.params.userRole == "PharmacyAdmin") {
-        role = "http://localhost:8081/api/pharmacyAdmin";
+        role = `/api/pharmacyAdmin`;
       } else if (this.$route.params.userRole == "Dermatologist") {
-        role = "http://localhost:8081/api/dermatologist";
+        role = `/api/dermatologist`;
       } else if (this.$route.params.userRole == "Supplier") {
-        role = "http://localhost:8081/api/supplier";
+        role = `/api/supplier`;
       }
       if (errorFound == false) {
         this.axios
@@ -255,7 +255,9 @@ export default {
               street: this.street,
               number: this.number,
             },
-          })
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
           .then(function (response) {
             currentObj.output = response.data;
              _this.showSuccessAlert = true;

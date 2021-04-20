@@ -10,22 +10,24 @@ public class AdminPharmacyDTO {
 	private String lastName;
 	private String phoneNumber;
 	private AddressDTO address;
+	private PharmacyDTO pharmacy;
 	
 	public AdminPharmacyDTO() {
 		
 	}
 	
 	public AdminPharmacyDTO(AdminPharmacy admin) {
-		this(admin.getEmail(), admin.getPassword(), admin.getName(), admin.getLastName(), admin.getPhoneNumber(), new AddressDTO(admin.getAddress()));
+		this(admin.getEmail(), admin.getPassword(), admin.getName(), admin.getLastName(), admin.getPhoneNumber(), new AddressDTO(admin.getAddress()), new PharmacyDTO(admin.getPharmacy()));
 	}
 	
-	public AdminPharmacyDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address) {
+	public AdminPharmacyDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address, PharmacyDTO pharmacy) {
 		this.email = email;
 		this.password = password;
 		this.lastName = lastName;
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
+		this.pharmacy = pharmacy;
 	}
 
 	public String getEmail() {
@@ -51,8 +53,12 @@ public class AdminPharmacyDTO {
 	public AddressDTO getAddress() {
 		return address;
 	}
-	
-	
+
+	public PharmacyDTO getPharmacy() {
+		return pharmacy;
+	}
+
+
 	
 }
 

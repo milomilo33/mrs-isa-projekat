@@ -31,7 +31,7 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 
 	@Override
 	public AdminPharmacy findOne(String id) {
-		AdminPharmacy admin = adminRepository.findById(id).orElseGet(null);
+		AdminPharmacy admin = adminRepository.getOnePharmacyAdmin(id);
 		return admin;
 	}
 

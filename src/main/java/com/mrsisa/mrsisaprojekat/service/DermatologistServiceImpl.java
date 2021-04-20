@@ -4,6 +4,7 @@ import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Role;
+import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DermatologistServiceImpl implements DermatologistService {
 
 	@Autowired
 	private DermatologistRepositoryDB dermatologistRepository;
-	
+
+	@Autowired
+	private AppointmentRepositoryDB appointmentRepository;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -114,6 +119,19 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 
 		return false;
+	}
+
+	@Override
+	public List<Appointment> getAvailableAppointments(Dermatologist m) {
+		List<Appointment> availableAppointments = new ArrayList<>();
+		Dermatologist d = dermatologistRepository.getExaminations(m.getEmail());
+		for(Appointment a : d.getMedicalExaminations()) {
+			if(a.getPatient() == null) {
+				availableAppointments.add(a);
+			}
+		}
+
+		return availableAppointments;
 	}
 
 
