@@ -1,7 +1,9 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 
 public class DermatologistDTO {
@@ -12,16 +14,23 @@ public class DermatologistDTO {
 	private String lastName;
 	private String phoneNumber;
 	private AddressDTO address;
+	private ArrayList<Appointment> appointments;
 	private ArrayList<WorkHourDTO> workHours;
 	private ArrayList<PharmacyDTO> pharmacies;
-	
+
 	public DermatologistDTO() {}
 
 	public DermatologistDTO(Dermatologist dermatologist) {
-		this(dermatologist.getEmail(), dermatologist.getPassword(), dermatologist.getName(), dermatologist.getLastName(), dermatologist.getPhoneNumber(),new AddressDTO(dermatologist.getAddress()));
+		this.email = dermatologist.getEmail();
+		this.password = dermatologist.getPassword();
+		this.name = dermatologist.getName();
+		this.lastName = dermatologist.getLastName();
+		this.phoneNumber = dermatologist.getPhoneNumber();
+		this.address = new AddressDTO(dermatologist.getAddress());
+		this.appointments = new ArrayList<>(dermatologist.getMedicalExaminations());
 	}
 	
-	public DermatologistDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address) {
+	public DermatologistDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address, ArrayList<Appointment> appointments) {
 		super();
 		this.email = email;
 		this.name = name;
@@ -29,7 +38,9 @@ public class DermatologistDTO {
 		this.lastName = lastName;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
+		this.appointments = appointments;
 	}
+
 	public DermatologistDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address, ArrayList<WorkHourDTO> workHours , ArrayList<PharmacyDTO> pharmacies) {
 		super();
 		this.email = email;
@@ -80,8 +91,12 @@ public class DermatologistDTO {
 	public void setPharmacies(ArrayList<PharmacyDTO> pharmacies) {
 		this.pharmacies = pharmacies;
 	}
-	
-	
 
-	
+	public ArrayList<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(ArrayList<Appointment> appointments) {
+		this.appointments = appointments;
+	}
 }

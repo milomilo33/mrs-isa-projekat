@@ -4,5 +4,9 @@ import com.mrsisa.mrsisaprojekat.model.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface AppointmentRepositoryDB extends JpaRepository<Appointment, Long> {
+//    @Query("select a from Appointment a join fetch a.chosenEmployee where ")
+//    List<Appointment> findAvailableAppointments(String email);
 }
