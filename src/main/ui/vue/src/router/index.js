@@ -18,6 +18,8 @@ import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
 import DispenseMedication from '../components/DispenseMedication'
 import DermatologistPage from '../views/DermatologistPage'
+import ExaminationSearch from '../components/ExaminationSearch'
+import AppointmentPage from '../components/AppointmentPage'
 
 Vue.use(VueRouter)
 
@@ -139,8 +141,14 @@ const routes = [
 				component: SearchPatients
 			},
 			{
-				path: "DispenseMedication",
-				component: DispenseMedication
+				path: "ExaminationSearch",
+				component: ExaminationSearch
+			},
+			{
+				path: "AppointmentPage",
+				name: "DermatologistPageAppointmentPage",
+				component: AppointmentPage,
+				props: true
 			}
 		]
 	},

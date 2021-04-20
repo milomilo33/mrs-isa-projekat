@@ -171,10 +171,14 @@ public class DermatologistController {
 		return new ResponseEntity<DermatologistDTO>(dermatologist, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}/examinations")
-	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
-	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist(@PathVariable("id") String email) {
-		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(email);
+	@GetMapping(value = "/examinations")
+	// @PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// pregledi za trenutno ulogovanog dermatologa
+	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist() {
+		//Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		//Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(currentDermatologist.getEmail());
+		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist("aleksandarstevanovic@gmail.com");
 
 		if (upcomingAppointments == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
