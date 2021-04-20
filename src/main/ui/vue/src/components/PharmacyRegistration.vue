@@ -93,7 +93,7 @@ export default {
 
       if(errorFound==false){
          this.axios
-        .post("http://localhost:8081/api/pharmacy", {
+        .post(`/api/pharmacy`, {
           name: this.name,
           description: this.description,
           address: {
@@ -102,6 +102,8 @@ export default {
             street: this.street,
             number: this.number,
           },
+        },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
         .then(function (response) {
           currentObj.output = response.data;

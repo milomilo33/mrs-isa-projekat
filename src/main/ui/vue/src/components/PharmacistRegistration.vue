@@ -105,7 +105,22 @@
 export default {
   name: "PharmacistRegistration",
   mounted() {
-    console.log("Component mounted.");
+     var AdminUsername = JSON.parse(
+      atob(localStorage.getItem('token').split(".")[1])
+    ).sub;
+    var self = this;
+    self.axios
+      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
+      .then(function (response) {
+        self.pharmacyId = response.data.pharmacy.id;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   },
   data() {
     return {
@@ -159,11 +174,15 @@ export default {
       }
       if(errorFound==false){
        this.axios
-        .post("http://localhost:8081/api/address", {
+        .post(`/api/address`, {
           country: this.country,
             city: this.city,
             street: this.street,
             number: this.number,
+        },{
+            headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
         })
         .then((response) => {
             
@@ -178,7 +197,12 @@ export default {
     GetAdress(posts){
         var self = this;
         self.axios
-            .get("http://localhost:8081/api/address/"+parseInt(posts.data.id))
+            .get(`/api/address/`+parseInt(posts.data.id),
+            {
+                 headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token')
+            }
+            })
             .then(function(response){
                 self.addressId= response.data;
                 self.GetFarmacy(response);
@@ -192,9 +216,12 @@ export default {
     GetFarmacy(addressP){
         var self = this;
         self.axios
-         .get("http://localhost:8081/api/pharmacy/1")
+         .get(`/api/pharmacy/`+parseInt(self.pharmacyId), {
+              headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+         })
          .then(function(response) {
-             self.pharmacyId = response.data;
              self.GetPharmacist(addressP,response);
         })
          .catch(function (error){ 
@@ -204,7 +231,7 @@ export default {
     },
     GetPharmacist(addressP,posts){
         var self = this;
-        self.axios.post("http://localhost:8081/api/pharmacist/",{
+        self.axios.post(`/api/pharmacist/`,{
             email: this.email,
             password:this.password, 
             name: this.name,
@@ -290,6 +317,10 @@ export default {
                 },
 
             ],
+        }, {
+             headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
         })
         .then((response) => {
             

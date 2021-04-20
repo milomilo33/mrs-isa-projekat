@@ -27,7 +27,14 @@ import AppointmentPage from '../components/AppointmentPage'
 
 
 Vue.use(VueRouter)
+const Role = {
+	AdminPharmacy: 'ROLE_PHARMACY_ADMIN',
+	Dermatologist: 'ROLE_DERMATOLOGIST',
+	Pharmacist: 'ROLE_PHARMACIST',
+	SystemAdmin: 'ROLE_SYSTEM_ADMIN',
+	Supplier: 'ROLE_SUPLIER'
 
+}
 const routes = [
 	{
 		path: "/Login",
@@ -56,11 +63,17 @@ const routes = [
 			},
 			{
 				path: "pharmacyRegistration",
-				component: PharmacyRegistration
+				component: PharmacyRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
 			},
 			{
 				path: "userRegister/:userRole",
-				component: UserRegistration
+				component: UserRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]	
+				},
 			},
 			{
 				path: "PharmacyList",
@@ -73,7 +86,10 @@ const routes = [
 			},
 			{
 				path: "MedicamentRegistration",
-				component: MedicamentRegistration
+				component: MedicamentRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
 			}
 		]
 	},
@@ -125,11 +141,18 @@ const routes = [
 			},
 			{
 				path: "SearchPatients",
-				component: SearchPatients
+				component: SearchPatients,
+				meta: {
+					roles: [Role.Pharmacist]
+				},
 			},
 			{
 				path: "DispenseMedication",
-				component: DispenseMedication
+				component: DispenseMedication,
+				meta: {
+					roles: [Role.Pharmacist]
+					
+				},
 			}
 		]
 	},
@@ -154,17 +177,27 @@ const routes = [
 			},
 			{
 				path: "SearchPatients",
-				component: SearchPatients
+				component: SearchPatients,
+				meta: {
+					roles: [Role.Dermatologist]
+				},
 			},
 			{
 				path: "ExaminationSearch",
-				component: ExaminationSearch
+				component: ExaminationSearch,
+				meta: {
+					roles: [Role.Dermatologist]
+				
+				},
 			},
 			{
 				path: "AppointmentPage",
 				name: "DermatologistPageAppointmentPage",
 				component: AppointmentPage,
-				props: true
+				props: true,
+				meta: {
+					roles: [Role.Dermatologist]
+				},
 			}
 		]
 	},
@@ -176,6 +209,7 @@ const routes = [
 			{
 				path: "pharmacyList",
 				component: PharmacyListPreview
+				
 			},
 			{
 				path: "medicamentList",
@@ -183,20 +217,32 @@ const routes = [
 			},
 			{
 				path: "MedicamentTable",
-				component: MedicamentTable
+				component: MedicamentTable,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
 			}
 			,
 			{
 				path: "PharmacistTable",
-				component:PharmacistTable
+				component:PharmacistTable,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
 			},
 			{	
 				path : "DermatologistTable",
-				component: DermatologistTable
+				component: DermatologistTable,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
 			},
 			{
 				path:"PharmacistRegistration",
-				component:PharmacistRegistration
+				component:PharmacistRegistration,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
 			},
 			{
 				path: "pharmacyList",
@@ -210,6 +256,9 @@ const routes = [
 			{
 				path: "PricelistTable",
 				component: PricelistTable,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
 			}
 
 		]
@@ -224,3 +273,14 @@ const router = new VueRouter({
 })
 
 export default router
+router.beforeEach((to, from, next) => {
+	const { roles} = to.meta;
+	if(roles){
+		const userRole = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).role;
+		if(roles.length && !roles.includes(userRole)){
+			return next({path: 'Login'});
+		}
+
+	}
+	next();
+	});

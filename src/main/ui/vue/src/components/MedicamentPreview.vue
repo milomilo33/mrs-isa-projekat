@@ -8,14 +8,14 @@
         <b-col md="6">
           <b-card-body :title="this.medicament.name">
             <b-card-text class="colorIt1">
-              Tip: {{ this.medicament.type }}
+              Type: {{ this.medicament.type }}
             </b-card-text>
             <b-card-text class="colorIt1">
-              Ocena: {{ this.ratings }}
+              Rating: {{ this.ratings }}
             </b-card-text>
             <div>
               <b-button v-b-modal="'id' + medicament.id"
-                >Specifikacija</b-button
+                >Specification</b-button
               >
 
               <b-modal
@@ -27,31 +27,31 @@
                 header-text-variant="light"
                 body-bg-variant="light"
                 body-text-variant="dark"
-                hide-footer="true"
+                :hide-footer="true"
               >
                 <b-container fluid>
                   <b-row class="mb-1 text-center colorIt">
                     <p>
-                      <b class="colorHeaders">Naziv :</b> &nbsp; #{{this.medicament.id}}
+                      <b class="colorHeaders">Name :</b> &nbsp; #{{this.medicament.id}}
                       {{ this.medicament.name }} 
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders"> Proizvodjac: </b>&nbsp;
+                      <b class="colorHeaders"> Manufacturer: </b>&nbsp;
                       {{ this.medicament.manufacturer }}
                     </p>
                   </b-row>
 
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Sastav:</b>
+                      <b class="colorHeaders">Sructure:</b>
                       {{ this.medicament.structure }}
                     </p>
                   </b-row>
                   <b-row class="mb-1 colorIt">
                     <p>
-                      <b class="colorHeaders">Napomene:</b>
+                      <b class="colorHeaders">Annotations:</b>
                       {{ this.medicament.annotation }}
                     </p>
                   </b-row>
@@ -66,12 +66,12 @@
                     </b-button>
                   </template>
                 <b-row>
-                  <input type="number" placeholder="Količina" class="m-2" :value="amount" @input="amount = $event.target.value">
-                  <b-button class="m-2" @click="reserveMedicament()"> Rezerviši lek </b-button>
+                  <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
+                  <b-button class="m-2" @click="reserveMedicament()"> Reserve medicament </b-button>
                 </b-row>
                 <b-row>
                   <datepicker class="m-2" v-model="date" @selected="date = $event.target.value"></datepicker>
-                  <div class="m-2"> Datum preuzimanja </div>
+                  <div class="m-2"> Date </div>
                   
                 </b-row>
               </b-modal>
@@ -101,12 +101,14 @@ export default {
     this.nameM = this.medicament.name;
     this.axios
       .get(
-        "http://localhost:8081/api/medicaments/ratings/" +
-          parseInt(this.medicament.id)
+        `/api/medicaments/ratings/` +
+          parseInt(this.medicament.id),{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+          }
       )
       .then((response) => {
         this.ratings = response.data;
-        console.log(this.ratings);
+        //console.log(this.ratings);
       })
       .catch((error) => console.log(error));
   },
@@ -132,16 +134,19 @@ export default {
     },
 
     reserveMedicament() {
-      console.log(this.amount);
+      //console.log(this.amount);
       if(this.amount !== null && this.date !== null) {
-        this.axios.post(`http://localhost:8080/api/patients/reserve/`, {
+        this.axios.post(`/api/patients/reserve/`, {
           patientEmail: "anasimic@gmail.com",
           medicament: this.medicament,
           expiryDate: this.date,
           quantity: this.amount
+        },{headers: {
+            Authorization: "Bearer " + localStorage.getItem('token')
+            }
         });
-        console.log(this.medicament.id);
-        console.log(this.date)
+        //console.log(this.medicament.id);
+        //console.log(this.date)
         alert("Rezervacija izvršena!");
       }
     },

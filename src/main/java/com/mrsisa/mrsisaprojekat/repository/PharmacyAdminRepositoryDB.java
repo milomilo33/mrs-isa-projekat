@@ -14,4 +14,8 @@ public interface PharmacyAdminRepositoryDB extends JpaRepository<AdminPharmacy, 
 	
 	@Query("select a from AdminPharmacy a join fetch a.roles where a.email=?1")
 	AdminPharmacy getOneLogin(String id);
+	
+	
+	@Query("select a from AdminPharmacy a join fetch a.address join fetch a.pharmacy where a.email=?1")
+	AdminPharmacy getOnePharmacyAdmin(String id);
 }

@@ -72,7 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 			// svim korisnicima dopusti da pristupe sledecim putanjama:
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /auth/**
-			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
 
 			.antMatchers("/api/medicaments/all").permitAll()
 				//.antMatchers("/api/dermatologist/examinations").permitAll() // OBRISATI!

@@ -53,7 +53,11 @@ export default {
   },
   methods: {
     onPatientAbsent() {
-        this.axios.get(`/api/appointments/` + this.appointment.id + `/absent`)
+        this.axios.get(`/api/appointments/` + this.appointment.id + `/absent`,  {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          })
         .then(() => {
             this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}` +
                                   ` has successfully been marked as absent and has been added a penalty point.` +

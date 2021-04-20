@@ -1,11 +1,9 @@
 <template>
   <div class="container">
-    <b-alert v-model="showDismissibleAlert" dismissible
-      fade variant="danger">
+    <b-alert v-model="showDismissibleAlert" dismissible fade variant="danger">
       Medicament registration failed!
     </b-alert>
-    <b-alert v-model="showSuccessAlert" dismissible
-      fade variant="success">
+    <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
       Success! You registered a new medicament.
     </b-alert>
     <div class="row justify-content-center">
@@ -142,13 +140,17 @@ export default {
       issuanceMode: "",
       substitute: [],
       content: "",
-      structure: ""
+      structure: "",
     };
   },
   mounted() {
     var _this = this;
     this.axios
-      .get("http://localhost:8080/api/medicaments/all")
+      .get(`/api/medicaments/all`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           var item = {};
@@ -163,44 +165,49 @@ export default {
       });
   },
   methods: {
-   
     formSubmit(e) {
       var _this = this;
       var error_found = false;
 
       e.preventDefault();
 
-      if(isNaN(this.id)){
+      if (isNaN(this.id)) {
         error_found = true;
       }
 
-      if(error_found == false){
+      if (error_found == false) {
         this.axios
-        .post("http://localhost:8081/api/medicaments", {
-          name: this.name,
-          id: this.id,
-          type: this.type,
-          structure: this.structure,
-          manufacturer: this.manufacturer,
-          issuanceMode: this.issuanceMode,
-          medicamentForm: this.medicamentForm,
-          annotations: this.annotations,
-          substituteMedicaments: this.substitute
-        })
-        .then(function (response) {
-          if (response.data != null) {
-            _this.showSuccessAlert = true;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          _this.showDismissibleAlert = true;
-        });
-      }
-      else{
+          .post(
+            `/api/medicaments`,
+            {
+              name: this.name,
+              id: this.id,
+              type: this.type,
+              structure: this.structure,
+              manufacturer: this.manufacturer,
+              issuanceMode: this.issuanceMode,
+              medicamentForm: this.medicamentForm,
+              annotations: this.annotations,
+              substituteMedicaments: this.substitute,
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+              },
+            }
+          )
+          .then(function (response) {
+            if (response.data != null) {
+              _this.showSuccessAlert = true;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            _this.showDismissibleAlert = true;
+          });
+      } else {
         _this.showDismissibleAlert = true;
       }
-      
     },
   },
   name: "MedicamentRegistration",
@@ -209,7 +216,7 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
 </style>
 <style scoped>
-.card-header{
+.card-header {
   background-color: #ccffbc;
 }
 </style>

@@ -23,7 +23,7 @@
       header-text-variant="light"
       body-bg-variant="light"
       body-text-variant="dark"
-      hide-footer="true"
+      :hide-footer="true"
     >
       <b-container fluid>
         <b-row class="mb-1 text-center colorIt">
