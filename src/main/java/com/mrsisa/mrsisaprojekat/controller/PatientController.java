@@ -2,13 +2,12 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.Collection;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
+import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
+import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +32,9 @@ public class PatientController {
 
 	@Autowired
 	private PrescriptionMedicamentService prescriptionMedicamentService;
+
+	@Autowired
+	private AppointmentService appointmentService;
 	
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
@@ -96,14 +98,12 @@ public class PatientController {
 		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
-		Patient p = patientService.findOne(medicament.getPatientEmail());
-		p.getReservedMedicaments().add(medicamentToReserve);
-		patientService.update(p);
+		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
 
-
+		Long id = patientService.updateWithReservation(p, medicamentToReserve);
 
 		try {
-			emailService.ReservationConfirmationMail(p);
+			emailService.ReservationConfirmationMail(p, id);
 		}
 		catch( Exception e) {
 			System.out.println(e.getMessage());
@@ -120,6 +120,45 @@ public class PatientController {
 
 		if(medicament != null) {
 			prescriptionMedicamentService.delete(id);
+			return new ResponseEntity<>(id, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
+
+		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
+		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
+
+		appointmentService.update(appointmentToReserve);
+
+		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
+
+		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
+
+
+
+		try {
+			emailService.ReserveExaminationMail(p, id);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+
+	}
+
+	@DeleteMapping(value = "/delete_examination/{id}")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Long> cancelExamination(@PathVariable("id") Long id) {
+		Appointment a = appointmentService.findOne(id);
+
+		if(a != null) {
+			appointmentService.delete(a);
 			return new ResponseEntity<>(id, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

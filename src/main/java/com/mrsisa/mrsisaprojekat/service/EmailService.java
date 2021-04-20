@@ -72,14 +72,27 @@ public class EmailService {
 	}
     
 	@Async
-	public void ReservationConfirmationMail(Patient patient) throws MailException, InterruptedException {
+	public void ReservationConfirmationMail(Patient patient, Long id) throws MailException, InterruptedException {
 		System.out.println("Slanje emaila...");
 
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo("marko.suljak80@gmail.com");
+		mail.setTo(patient.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Potvrda rezervacije leka");
-		mail.setText("Uspesno ste izvrsili rezervaciju leka. Kod rezervacije: ");
+		mail.setText("Uspesno ste izvrsili rezervaciju leka. Kod rezervacije: " + id);
+		javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+	}
+
+	@Async
+	public void ReserveExaminationMail(Patient patient, Long id) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(patient.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Potvrda rezervacije pregleda kod dermatologa");
+		mail.setText("Uspesno ste izvrsili rezervaciju pregleda kod dermatologa. Kod rezervacije pregleda: " + id);
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}

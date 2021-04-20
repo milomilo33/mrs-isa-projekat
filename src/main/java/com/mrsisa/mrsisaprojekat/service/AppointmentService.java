@@ -13,7 +13,7 @@ public interface AppointmentService {
 
     Appointment update(Appointment appointment) throws Exception;
 
-    void delete(Long id);
+    void delete(Appointment appointment);
 
     boolean markPatientAbsence(Long appointmentId);
 }

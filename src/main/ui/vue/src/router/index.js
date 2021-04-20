@@ -21,6 +21,7 @@ import PricelistTable from '../components/PricelistTable'
 import DermatologistPage from '../views/DermatologistPage'
 import Login from '../views/Login'
 import Logout from '../views/Logout'
+import PatientPage from '../views/PatientPage'
 
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
@@ -261,6 +262,30 @@ const routes = [
 				},
 			}
 
+		]
+	},
+	{
+		path: '/PatientPage',
+		name: PatientPage,
+		component: PatientPage,
+		children: [
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList/:query",
+				component: PharmacyListPreview,
+				props: true
+			},
+			{
+				path: "PatientRegistration",
+				component: PatientRegistration
+			}
 		]
 	}
 

@@ -100,6 +100,9 @@ export default defineComponent({
       .get(`/api/pharmacy/medicamentItems/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
+
+      .get(`http://localhost:8080/api/pharmacy/medicamentItems/${this.$route.params.id}`)
+
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           console.log(response);
@@ -118,6 +121,8 @@ export default defineComponent({
       .get(`/api/pharmacy/pharmacists/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
+
+      .get(`http://localhost:8080/api/pharmacy/pharmacists/${this.$route.params.id}`)
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
            var count = 0;
@@ -134,6 +139,7 @@ export default defineComponent({
           item.phoneNumber = response.data[i].phoneNumber;
           item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
           item.e = "Pharmacist";
+          item.appointments = response.data[i].appointments
           self.employees.push(item);
         }
         }
@@ -142,6 +148,8 @@ export default defineComponent({
       .get(`/api/pharmacy/dermatologists/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
+      .get(`http://localhost:8080/api/pharmacy/dermatologists/${this.$route.params.id}`)
+
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
             var count = 0;
@@ -158,7 +166,8 @@ export default defineComponent({
           item.email = response.data[i].email;
           item.phoneNumber = response.data[i].phoneNumber;
           item.e = "Dermatologist";
-          item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
+          item.address = response.data[i].address.street + " " + response.data[i].address.number + ", " + response.data[i].address.city;
+          item.appointments = response.data[i].appointments
           self.employees.push(item);
         }
       }

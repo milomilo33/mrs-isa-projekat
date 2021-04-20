@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
@@ -12,6 +9,7 @@ import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 
+import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,9 +31,6 @@ import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -50,6 +45,12 @@ public class PharmacyController {
 	
 	@Autowired
 	private MedicamentItemService medicamentItemService;
+
+	@Autowired
+	private DermatologistService dermatologistService;
+
+	@Autowired
+	private PharmacistService pharmacistService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
@@ -131,11 +132,12 @@ public class PharmacyController {
 	}
 	
 	@GetMapping(value = "/dermatologists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'DERMATOLOGIST')")
-	public ResponseEntity<Collection<DermatologistDTO>> getPharmacyDermatologists(@PathVariable("id") Long id) {
-		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(id);
+	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'DERMATOLOGIST')")
+	public ResponseEntity<Collection<DermatologistDTO>> getPharmacyDermatologists(@PathVariable("id") String id) {
+		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(Long.parseLong(id));
 		List<DermatologistDTO> returns = new ArrayList<>();
 		for(Dermatologist m: pharmacy.getDermatologists()) {
+			m.setMedicalExaminations(new HashSet<>(dermatologistService.getAvailableAppointments(m)));
 			if(!m.isDeleted()) {
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : m.getWorkHour()) {
@@ -154,12 +156,13 @@ public class PharmacyController {
 	}
 	
 	@GetMapping(value = "/pharmacists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'PHARMACIST')")
 	public ResponseEntity<Collection<PharmacistDTO>> getPharmacyPharmacists(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithPharmacists(id);
 		List<PharmacistDTO> returns = new ArrayList<>();
 		for(Pharmacist m: pharmacy.getPharmacists()) {
 			if(!m.isDeleted()) {
+				m.setCounselings(new HashSet<>(pharmacistService.getAvailableAppointments(m)));
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : m.getWorkHour()) {
 					WorkHourDTO wd = new WorkHourDTO(h);

@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 
 public interface PharmacistService {
@@ -15,5 +16,7 @@ public interface PharmacistService {
 	Pharmacist update(Pharmacist pharmacist) throws Exception;
 	
 	boolean delete(String email);
+
+	List<Appointment> getAvailableAppointments(Pharmacist p);
 
 }

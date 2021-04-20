@@ -47,7 +47,7 @@ public class Patient extends User {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<Pharmacy> subscribedPharmacies;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PrescriptionMedicament> reservedMedicaments;
 
 	public Patient() {}
@@ -182,5 +182,20 @@ public class Patient extends User {
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Patient{" +
+				"loyaltyPoints=" + loyaltyPoints +
+				", penaltyPoints=" + penaltyPoints +
+				", category=" + category +
+				", appointments=" + appointments +
+				", complaints=" + complaints +
+				", allergies=" + allergies +
+				", ePrescriptions=" + ePrescriptions +
+				", subscribedPharmacies=" + subscribedPharmacies +
+				", reservedMedicaments=" + reservedMedicaments +
+				'}';
 	}
 }
