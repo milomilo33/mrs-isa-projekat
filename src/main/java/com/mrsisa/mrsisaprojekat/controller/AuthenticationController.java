@@ -71,6 +71,9 @@ public class AuthenticationController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
+		if(!user.isActive()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		String role = user.getRoles().get(0).getName();
 		String jwt = tokenUtils.generateToken(user.getUsername(), role);
 		int expiresIn = tokenUtils.getExpiredIn();

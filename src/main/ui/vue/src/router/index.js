@@ -21,7 +21,8 @@ import PricelistTable from '../components/PricelistTable'
 import DermatologistPage from '../views/DermatologistPage'
 import Login from '../views/Login'
 import Logout from '../views/Logout'
-
+import PatientPage from '../views/PatientPage'
+import SuccessActivation from '../views/SuccessActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
 
@@ -35,6 +36,11 @@ const routes = [
 		component: Login
 	},
 	{
+		path: "/SuccessActivation",
+		name: "SuccessActivation",
+		component: SuccessActivation
+	},
+	{
 		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
 		component: PharmacyPreview,
@@ -44,6 +50,21 @@ const routes = [
 		path: "/MedicamentList",
 		name: "MedicamentListPreview",
 		component: MedicamentListPreview
+	},
+	{
+		path: "/PatientPage",
+		name: "PatientPage",
+		component: PatientPage,
+		children: [
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			}
+		]
 	},
 	{
 		path: "/SystemAdminPage",

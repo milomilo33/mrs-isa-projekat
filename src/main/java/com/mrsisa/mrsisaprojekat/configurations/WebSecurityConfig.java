@@ -71,10 +71,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
 			// svim korisnicima dopusti da pristupe sledecim putanjama:
-			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /auth/**
-			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
+			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /auth/**		// /api/auth/**
 
 			.antMatchers("/api/medicaments/all").permitAll()
+			.antMatchers("/api/patients/**").permitAll()
 				//.antMatchers("/api/dermatologist/examinations").permitAll() // OBRISATI!
 				//.antMatchers("/api/appointments/**").permitAll() // OBRISATI!
 				//.antMatchers("/api/dermatologist").hasAnyRole("DERMATOLOGIST", "PHARMACY_ADMIN", "SYSTEM_ADMIN")

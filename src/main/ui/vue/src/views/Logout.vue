@@ -9,7 +9,7 @@ export default defineComponent({
   name: "Logout",
   mounted(){
     localStorage.removeItem("token");
-    this.$router.push("/MedicamentList");
+    this.$router.push("/Login");
     }
 })
 </script>

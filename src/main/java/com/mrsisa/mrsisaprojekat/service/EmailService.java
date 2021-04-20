@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.mrsisa.mrsisaprojekat.model.ConfirmationToken;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
@@ -83,4 +84,20 @@ public class EmailService {
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}
+	
+	@Async
+	public void activationTokenMail(ConfirmationToken token, String email) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(email);
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Aktivacija naloga");
+		mail.setText("To confirm your account, please click here : "
+	            +"http://localhost:8080/api/patients/confirm-account?token="+token.getConfirmationToken());
+		javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+	}
+	
+	
 }

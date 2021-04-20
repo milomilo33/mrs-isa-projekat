@@ -92,6 +92,7 @@ public class DermatologistController {
 		dermatologist.setRatings(null);
 		dermatologist.setRequests(null);
 		dermatologist.setPharmacy(null);
+		dermatologist.setActive(true);
 		dermatologist.setAddress(saved);
 		dermatologist = dermatologistService.create(dermatologist);
 		
