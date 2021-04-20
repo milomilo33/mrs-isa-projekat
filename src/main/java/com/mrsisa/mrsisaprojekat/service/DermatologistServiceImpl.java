@@ -3,9 +3,11 @@ package com.mrsisa.mrsisaprojekat.service;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,12 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Autowired
 	private DermatologistRepositoryDB dermatologistRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleService roleService;
 	
 	@Override
 	public List<Dermatologist> findAll() {
@@ -34,8 +42,10 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Override
 	public Dermatologist create(Dermatologist dermatologist) throws Exception {
-		Dermatologist savedDermatologist = dermatologistRepository.save(dermatologist);
-		return savedDermatologist;
+		dermatologist.setPassword(passwordEncoder.encode(dermatologist.getPassword()));
+		List<Role> roles = roleService.findByName("ROLE_DERMATOLOGIST");
+		dermatologist.setRoles(roles);
+		return dermatologistRepository.save(dermatologist);
 	}
 
 	@Override

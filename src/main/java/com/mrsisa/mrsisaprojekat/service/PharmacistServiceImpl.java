@@ -4,10 +4,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
 
 @Service
@@ -15,6 +17,12 @@ public class PharmacistServiceImpl  implements PharmacistService {
 
 	@Autowired
 	private PharmacistRepositoryDB pharmacistRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleService roleService;
 	
 	@Override
 	public List<Pharmacist> findAll() {
@@ -31,11 +39,10 @@ public class PharmacistServiceImpl  implements PharmacistService {
 
 	@Override
 	public Pharmacist create(Pharmacist pharmacist) throws Exception {
-		/*if(findOne(pharmacist.getEmail()) != null) {
-			return null;
-		}*/
-		Pharmacist savedPharmacist = pharmacistRepository.save(pharmacist);
-		return savedPharmacist;
+		pharmacist.setPassword(passwordEncoder.encode(pharmacist.getPassword()));
+		List<Role> roles = roleService.findByName("ROLE_PHARMACIST");
+		pharmacist.setRoles(roles);
+		return pharmacistRepository.save(pharmacist);
 	}
 
 	@Override

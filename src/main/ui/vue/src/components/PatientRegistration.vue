@@ -250,6 +250,7 @@ export default {
           .then(function (response) {
             currentObj.output = response.data;
              _this.showSuccessAlert = true;
+             this.$router.push("/Login");
           })
           .catch(function (error) {
             currentObj.output = error;

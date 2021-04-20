@@ -2,8 +2,10 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +18,13 @@ public class PatientServiceImpl implements PatientService{
 
 	@Autowired
 	private PatientRepositoryDB patientRepository;
+	
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleService roleService;
 	
 	@Override
 	public Collection<Patient> findAll() {
@@ -31,6 +40,10 @@ public class PatientServiceImpl implements PatientService{
 
 	@Override
 	public Patient create(Patient patient) throws Exception {
+		
+		patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+		List<Role> roles = roleService.findByName("ROLE_PATIENT");
+		patient.setRoles(roles);
 		return patientRepository.save(patient);
 	}
 

@@ -18,10 +18,17 @@ import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
 import DispenseMedication from '../components/DispenseMedication'
 import DermatologistPage from '../views/DermatologistPage'
+import Login from '../views/Login'
+import Logout from '../views/Logout'
 
 Vue.use(VueRouter)
 
 const routes = [
+	{
+		path: "/Login",
+		name: "Login",
+		component: Login
+	},
 	{
 		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
@@ -87,6 +94,11 @@ const routes = [
 				component: PatientRegistration
 			}
 		]
+	},
+	{
+		path: "/Logout",
+		name: "Logout",
+		component: Logout
 	},
 	{
 		path: "/PharmacistPage",

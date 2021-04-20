@@ -64,16 +64,17 @@ public class AuthenticationController {
 		// AuthenticationException
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-		System.out.println("ddddddddddd");
+		
 		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
 		// kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
-		String jwt = tokenUtils.generateToken(user.getUsername());
+		String role = user.getRoles().get(0).getName();
+		String jwt = tokenUtils.generateToken(user.getUsername(), role);
 		int expiresIn = tokenUtils.getExpiredIn();
-
+		
 		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
