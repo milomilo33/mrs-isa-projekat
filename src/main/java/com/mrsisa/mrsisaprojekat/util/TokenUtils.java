@@ -53,9 +53,10 @@ public class TokenUtils {
 		 * @param username Korisničko ime korisnika kojem se token izdaje
 		 * @return JWT token
 		 */
-		public String generateToken(String email) {
+		public String generateToken(String email, String role) {
 			return Jwts.builder()
 					.setIssuer(APP_NAME)
+					.claim("role", role)
 					.setSubject(email)
 					.setAudience(generateAudience())
 					.setIssuedAt(new Date())
@@ -129,7 +130,7 @@ public class TokenUtils {
 			
 			try {
 				final Claims claims = this.getAllClaimsFromToken(token);
-				username = claims.getSubject();
+				username = claims.getSubject().split(",")[0];
 			} catch (ExpiredJwtException ex) {
 				throw ex;
 			} catch (Exception e) {
@@ -137,6 +138,25 @@ public class TokenUtils {
 			}
 			
 			return username;
+		}
+		/**
+		 * Funkcija za preuzimanje role vlasnika tokena (rola).
+		 * @param token JWT token.
+		 * @return Korisničko ime iz tokena ili null ukoliko ne postoji.
+		 */
+		public String getRoleFromToken(String token) {
+			String role;
+			
+			try {
+				final Claims claims = this.getAllClaimsFromToken(token);
+				role = claims.getSubject().split(",")[1];
+			} catch (ExpiredJwtException ex) {
+				throw ex;
+			} catch (Exception e) {
+				role = null;
+			}
+			
+			return role;
 		}
 
 		/**
