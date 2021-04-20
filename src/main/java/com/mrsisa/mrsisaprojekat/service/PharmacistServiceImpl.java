@@ -1,8 +1,11 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -72,6 +75,17 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		
 	}
 
+	@Override
+	public List<Appointment> getAvailableAppointments(Pharmacist p) {
+		List<Appointment> availableAppointments = new ArrayList<>();
+		Pharmacist pharmacist = pharmacistRepository.getPharmacistWithCounselings(p.getEmail());
+		for(Appointment a : pharmacist.getCounselings()) {
+			if(a.getPatient() == null) {
+				availableAppointments.add(a);
+			}
+		}
+		return availableAppointments;
+	}
 
 
 }

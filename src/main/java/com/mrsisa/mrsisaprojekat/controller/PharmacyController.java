@@ -9,7 +9,7 @@ import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 
-import com.mrsisa.mrsisaprojekat.service.DermatologistService;
+import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,9 +30,6 @@ import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 @RestController
 @RequestMapping(value="/api/pharmacy")
@@ -49,6 +46,9 @@ public class PharmacyController {
 
 	@Autowired
 	private DermatologistService dermatologistService;
+
+	@Autowired
+	private PharmacistService pharmacistService;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
@@ -159,6 +159,7 @@ public class PharmacyController {
 		List<PharmacistDTO> returns = new ArrayList<>();
 		for(Pharmacist m: pharmacy.getPharmacists()) {
 			if(!m.isDeleted()) {
+				m.setCounselings(new HashSet<>(pharmacistService.getAvailableAppointments(m)));
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : m.getWorkHour()) {
 					WorkHourDTO wd = new WorkHourDTO(h);

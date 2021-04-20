@@ -107,7 +107,7 @@ export default {
     },
 
     reserveExamination() {
-      this.axios.post('http://localhost:8080/api/patients/reserve_examination', {
+      this.axios.post('http://localhost:8080/api/patients/reserve_appointment', {
         patientEmail: "teodorabozic@gmail.com",
         appointmentId: this.appointment.id
       })

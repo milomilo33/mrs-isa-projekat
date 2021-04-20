@@ -89,7 +89,7 @@ public class EmailService {
 		System.out.println("Slanje emaila...");
 
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo("marko.suljak80@gmail.com");
+		mail.setTo(patient.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Potvrda rezervacije pregleda kod dermatologa");
 		mail.setText("Uspesno ste izvrsili rezervaciju pregleda kod dermatologa. Kod rezervacije pregleda: " + id);

@@ -130,6 +130,7 @@ export default defineComponent({
           item.phoneNumber = response.data[i].phoneNumber;
           item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
           item.e = "Pharmacist";
+          item.appointments = response.data[i].appointments
           self.employees.push(item);
         }
         }

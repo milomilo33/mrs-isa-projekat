@@ -125,7 +125,7 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping(path = "/reserve_examination", consumes = "application/json")
+	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
 
