@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
 import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "api/pharmacyAdmin")
 public class PharmacyAdminController {
 	
@@ -70,10 +72,8 @@ public class PharmacyAdminController {
 	
 	@GetMapping(value="/{id}")
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
-	public ResponseEntity<AdminPharmacyDTO> getAdmin(@PathVariable String email){
-		
-		AdminPharmacy admin = adminService.findOne(email);
-		
+	public ResponseEntity<AdminPharmacyDTO> getAdmin(@PathVariable String id){
+		AdminPharmacy admin = adminService.findOne(id);
 		if(admin == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

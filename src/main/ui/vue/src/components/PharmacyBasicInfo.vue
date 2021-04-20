@@ -41,7 +41,9 @@ export default {
     },
 
     created() {
-    this.axios.get(`/api/pharmacy/${this.$route.params.id}`)
+    this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
       .then(response => {
         this.pharmacy = response.data;
         console.log(this.pharmacy);

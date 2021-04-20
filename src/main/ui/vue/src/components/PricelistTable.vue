@@ -160,10 +160,28 @@ export default {
       datefrom :"",
       id : 0,
       priceid :0,
+      pharmacyId:0,
     };
   },
   mounted() {
-      this.refresh();  
+      var AdminUsername = JSON.parse(
+      atob(localStorage.getItem('token').split(".")[1])
+    ).sub;
+    var self = this;
+    self.axios
+      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
+      .then(function (response) {
+        self.pharmacyId = response.data.pharmacy.id;
+        self.refresh(); 
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+       
   },
   methods: {
     onFiltered(filteredItems) {
@@ -179,6 +197,14 @@ export default {
       this.errorModal.title = "";
       this.errorModal.content = "";
     },
+     dateDisabled(ymd, date) {
+      const today = new Date();
+      const m = today.getMonth();
+      const d = today.getDate();
+      const day1 = date.getDate();
+      const month1 = date.getMonth();
+      return (day1 <= d && month1 <= m) || (day1 >= d && month1 < m);
+    },
     Edit(data, button) {
         this.id = data.id;
         this.price = data.price;
@@ -192,7 +218,7 @@ export default {
         var self = this;
         console.log(self.datefrom);
         self.axios.put(
-          "http://localhost:8081/api/pricelistItems/update/"+self.id,
+          `/api/pricelistItems/update/`+self.id,
           {
             price:{
                 id :self.priceid,
@@ -200,7 +226,9 @@ export default {
                 points: self.points,
                 dateTo: self.datefrom
             }
-          }
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        }
         );
         self.items = [];
         self.refresh();
@@ -209,7 +237,9 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get("http://localhost:8081/api/pricelistItems/1")
+      .get(`/api/pricelistItems/1`, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           var item = {};

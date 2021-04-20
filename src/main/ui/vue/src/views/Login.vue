@@ -13,7 +13,7 @@
         data() {
             return {
                 username: "",
-                password: ""
+                password: "",
             }
         },
         methods: {
@@ -22,7 +22,7 @@
                     console.log("A username and password must be present");
                 }
 
-                this.axios.post("http://localhost:8080/api/auth/login",{
+                this.axios.post(`/api/auth/login`,{
                   username: this.username,
                   password: this.password 
                 }).then((response) => {
@@ -38,8 +38,7 @@
                 },
 
             findUserRole(){
-                var userRole = JSON.parse(atob(localStorage.getItem("token").split('.')[1])).role;
-                
+                var userRole = JSON.parse(atob(localStorage.getItem('token').split('.')[1])).role;
                 if(userRole=="ROLE_PATIENT"){
                   this.$router.push("/PatientPage");
                 }

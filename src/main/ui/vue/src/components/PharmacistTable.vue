@@ -35,13 +35,36 @@ export default defineComponent({
         id: "add-modal",
         title: "",
         content: "",
+        pharmacyId:0,
       },
    }
   },
   mounted(){
+     var AdminUsername = JSON.parse(
+      atob(localStorage.getItem('token').split(".")[1])
+    ).sub;
     var self = this;
     self.axios
-      .get("http://localhost:8081/api/pharmacy/pharmacists/1")
+      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
+      .then(function (response) {
+        self.pharmacyId = response.data.pharmacy.id;
+        self.GetPharmacists();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, methods: {
+    GetPharmacists(){
+      var self = this;
+    self.axios
+      .get(`/api/pharmacy/pharmacists/`+ parseInt(self.pharmacyId),{
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },})
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
            var count = 0;
@@ -64,11 +87,15 @@ export default defineComponent({
         }
          //self.totalRows = self.items.length;
       });
-  }, methods: {
+    },
 
       DeleteOne(item,button){
         var self = this;
-          self.axios.delete("http://localhost:8081/api/pharmacist/"+item.email)
+          self.axios.delete(`/api/pharmacist/`+item.email,  {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          })
       .then(function(response){
          const idx = self.items.indexOf(item);
          self.items.splice(idx,1);

@@ -57,7 +57,9 @@ export default {
 			if(this.minDistance === undefined) this.minDistance = -1
 			if(this.maxDistance === undefined) this.maxDistance = -1
 
-			this.axios.get(`http://localhost:8080/api/pharmacy/filter/distance=${this.minDistance},${this.maxDistance}&rating=${this.rating}`)
+			this.axios.get(`http://localhost:8080/api/pharmacy/filter/distance=${this.minDistance},${this.maxDistance}&rating=${this.rating}`, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
 				.then(response => {
 					console.log(response.data);
 					this.pharmacies = response.data;

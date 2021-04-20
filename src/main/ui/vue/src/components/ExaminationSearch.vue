@@ -76,7 +76,11 @@
                 let searchParams = { name: this.name, lastName: this.lastName };
                 // OVAJ ZAHTEV TREBA SLATI SA TOKENOM DERMATOLOGA KAKO BI SE DOBAVILI
                 // NJEGOVI PREGLEDI!
-                this.axios.get(`/api/dermatologist/examinations`)
+                this.axios.get(`/api/dermatologist/examinations`,  {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("token"),
+                            },
+                            })
                           .then(response => {
                             // search
                             let filteredAppointments = [];

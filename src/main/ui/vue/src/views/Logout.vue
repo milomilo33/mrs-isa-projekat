@@ -8,7 +8,7 @@ import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: "Logout",
   mounted(){
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     this.$router.push("/MedicamentList");
     }
 })

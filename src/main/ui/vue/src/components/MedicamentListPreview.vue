@@ -27,15 +27,18 @@ export default defineComponent({
   data() {
     return {
       medicaments: [],
+      search :'',
     };
   },
 
   mounted() {
     this.axios
-      .get(`http://localhost:8080/api/medicaments/all`)
+      .get(`/api/medicaments/all`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
       .then((response) => {
         this.medicaments = response.data;
-        console.log(this.medicaments);
+        //console.log(this.medicaments);
       })
       .catch((error) => console.log(error));
   },

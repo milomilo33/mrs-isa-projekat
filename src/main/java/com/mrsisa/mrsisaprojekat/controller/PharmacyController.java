@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value="/api/pharmacy")
 public class PharmacyController {
 
@@ -99,6 +101,7 @@ public class PharmacyController {
 	
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MedicamentItemDTO>> getPharmacyMedicamentItems(@PathVariable("id") Long id) {
+		System.out.println(id);
 		Collection<MedicamentItem> items = pharmacyService.getAllMedicaments(id);
 		List<MedicamentItemDTO> returns = new ArrayList<>();
 		for(MedicamentItem m: items) {

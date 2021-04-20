@@ -72,13 +72,17 @@ export default defineComponent({
     mounted() {
       console.log(this.query);
       if(this.query === 'undefined' || this.query === undefined || this.query === '') {
-        this.axios.get(`http://localhost:8080/api/pharmacy`)
+        this.axios.get(`/api/pharmacy`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
           .then(response => {
               this.pharmacies = response.data;
           }).catch(error => console.log(error));
       } else {
         console.log(this.query);
-        this.axios.get(`http://localhost:8080/api/pharmacy/search/${this.query}`)
+        this.axios.get(`/api/pharmacy/search/${this.query}`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
         .then(response => {
             this.pharmacies = response.data;
             console.log(this.pharmacies[0].name)
@@ -89,7 +93,9 @@ export default defineComponent({
   methods: {
     onChildClick(value) {
       console.log(value);
-      this.axios.get(`http://localhost:8080/api/pharmacy/search/${value}`)
+      this.axios.get(`/api/pharmacy/search/${value}`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
         .then(response => {
             this.pharmacies = response.data;
             console.log(this.pharmacies[0].name)
@@ -101,7 +107,9 @@ export default defineComponent({
       {
         this.pharmacies = value;
       } else {
-        this.axios.get(`http://localhost:8080/api/pharmacy`)
+        this.axios.get(`http://localhost:8080/api/pharmacy`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
           .then(response => {
               this.pharmacies = response.data;
           }).catch(error => console.log(error));
