@@ -157,30 +157,6 @@ public class PharmacistController {
 		
 		
 	}
-	/*@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pharmacist> updatePharmacist(@RequestBody Pharmacist pharmacist) throws Exception {
-		Pharmacist pharmacistUpdate = pharmacistService.findOne(pharmacist.getEmail());
-
-
-		if (pharmacistUpdate == null) {
-			return new ResponseEntity<Pharmacist>(HttpStatus.NOT_FOUND);
-		}
-		
-		pharmacistUpdate.setAddress(pharmacist.getAddress());
-		pharmacistUpdate.setCalendar(pharmacist.getCalendar());
-		pharmacistUpdate.setCounselings(pharmacist.getCounselings());
-		pharmacistUpdate.setLastName(pharmacist.getLastName());
-		pharmacistUpdate.setName(pharmacist.getName());
-		pharmacistUpdate.setPassword(pharmacist.getPassword());
-		pharmacistUpdate.setPhoneNumber(pharmacist.getPhoneNumber());
-		pharmacistUpdate.setRatings(pharmacist.getRatings());
-		pharmacistUpdate.setRequests(pharmacist.getRequests());
-		pharmacistUpdate.setWorkHourFrom(pharmacist.getWorkHourFrom());
-		pharmacistUpdate.setWorkHourTo(pharmacist.getWorkHourTo());
-
-		pharmacistUpdate = pharmacistService.update(pharmacistUpdate);
-		return new ResponseEntity<Pharmacist>(pharmacistUpdate, HttpStatus.OK);
-	}*/
 
 	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}")

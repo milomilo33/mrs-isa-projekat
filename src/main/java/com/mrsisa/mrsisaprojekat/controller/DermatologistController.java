@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -171,9 +172,14 @@ public class DermatologistController {
 		return new ResponseEntity<DermatologistDTO>(dermatologist, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{id}/examinations")
-	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist(@PathVariable("id") String email) {
-		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(email);
+	@GetMapping(value = "/examinations")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// pregledi za trenutno ulogovanog dermatologa
+	public ResponseEntity<Collection<Appointment>> getUpcomingExaminationsForDermatologist() {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist(currentDermatologist.getEmail());
+		//Collection<Appointment> upcomingAppointments = dermatologistService.getUpcomingExaminationsForDermatologist("aleksandarstevanovic@gmail.com");
 
 		if (upcomingAppointments == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -72,8 +72,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 			// svim korisnicima dopusti da pristupe sledecim putanjama:
 			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /auth/**
+			.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
+
 			.antMatchers("/api/medicaments/all").permitAll()
-			//.antMatchers("/api/dermatologist").hasAnyRole("DERMATOLOGIST", "PHARMACY_ADMIN", "SYSTEM_ADMIN")
+				//.antMatchers("/api/dermatologist/examinations").permitAll() // OBRISATI!
+				//.antMatchers("/api/appointments/**").permitAll() // OBRISATI!
+				//.antMatchers("/api/dermatologist").hasAnyRole("DERMATOLOGIST", "PHARMACY_ADMIN", "SYSTEM_ADMIN")
 			//.antMatchers("/api/pharmacist").hasAnyRole("PHARMACIST", "PHARMACY_ADMIN", "SYSTEM_ADMIN")
 								
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici

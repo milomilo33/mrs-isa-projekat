@@ -17,9 +17,14 @@ import MedicamentTable from '../components/MedicamentTable'
 import DermatologistTable from '../components/DermatologistTable'
 import SearchPatients from '../components/SearchPatients'
 import DispenseMedication from '../components/DispenseMedication'
+import PricelistTable from '../components/PricelistTable'
 import DermatologistPage from '../views/DermatologistPage'
 import Login from '../views/Login'
 import Logout from '../views/Logout'
+
+import ExaminationSearch from '../components/ExaminationSearch'
+import AppointmentPage from '../components/AppointmentPage'
+
 
 Vue.use(VueRouter)
 
@@ -135,6 +140,7 @@ const routes = [
 		children: [
 			{
 				path: "PharmacyList",
+				name: "DermatologistPagePharmacyList",
 				component: PharmacyListPreview
 			},
 			{
@@ -151,8 +157,14 @@ const routes = [
 				component: SearchPatients
 			},
 			{
-				path: "DispenseMedication",
-				component: DispenseMedication
+				path: "ExaminationSearch",
+				component: ExaminationSearch
+			},
+			{
+				path: "AppointmentPage",
+				name: "DermatologistPageAppointmentPage",
+				component: AppointmentPage,
+				props: true
 			}
 		]
 	},
@@ -194,7 +206,12 @@ const routes = [
 				path: "pharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
+			},
+			{
+				path: "PricelistTable",
+				component: PricelistTable,
 			}
+
 		]
 	}
 
