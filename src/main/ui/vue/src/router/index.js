@@ -23,7 +23,7 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
-
+import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
 
@@ -47,6 +47,11 @@ const routes = [
 		path: "/SuccessActivation",
 		name: "SuccessActivation",
 		component: SuccessActivation
+	},
+	{
+		path: "/FailedActivation",
+		name: "FailedActivation",
+		component: FailedActivation
 	},
 	{
 		path: "/PharmacyPreview/:id",
