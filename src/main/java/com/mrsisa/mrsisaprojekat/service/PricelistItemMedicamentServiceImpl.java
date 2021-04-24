@@ -79,4 +79,12 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		return item;
 	}
 
+
+	@Override
+	public Collection<PricelistItemMedicament> findAllMeds(Long id) {
+		Collection<PricelistItemMedicament> items = pricelistItemRepository.findAllMeds(id);
+		
+		return items;
+	}
+
 }
