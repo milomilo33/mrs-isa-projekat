@@ -11,6 +11,7 @@ import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyAdminRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.SupplierRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.SystemAdminDB;
 
 @Service
@@ -30,6 +31,9 @@ public class AllUserDetailsService implements UserDetailsService {
 	
 	@Autowired
 	private DermatologistRepositoryDB dermatologistRepository;
+	
+	@Autowired
+	private SupplierRepositoryDB supplierRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,10 +63,10 @@ public class AllUserDetailsService implements UserDetailsService {
 			return user;
 		}
 		
-		// Treba dodati za suppliera
-		// user = supplierRepository.findById(username).orElse(null);
-		// if(user != null){
-		// return user;}
+		 user = supplierRepository.getOneLogin(username);
+		 if(user != null){
+			 return user;
+		}
 		
 		throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
 		
