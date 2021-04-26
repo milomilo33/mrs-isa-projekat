@@ -144,6 +144,8 @@ export default {
     },
 
     reserveMedicament() {
+      this.isReserved = true;
+      this.unallowedQuantityMessage = "";
       //console.log(this.amount);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
@@ -154,18 +156,20 @@ export default {
         },{headers: {
             Authorization: "Bearer " + localStorage.getItem('token')
             }
+        }).then(() => {
+          if(this.isReserved === true) { 
+            alert("Rezervacija uspešno izvršena!");
+            this.isReserved = false;
+          }
         })
-        .then(this.isReserved = true)
         .catch(error => {
           console.log(error);
           this.unallowedQuantityMessage = `<p class="ml-2" style="color:red;">Reservation quantity too big.</p>`;
-        });
+          this.isReserved = false;
+        })
         //console.log(this.medicament.id);
         //console.log(this.date)
-        if(this.isReserved) { 
-          alert("Rezervacija uspešno izvršena!");
-          this.isReserved = false;
-        }
+        
       }
     },
   },
