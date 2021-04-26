@@ -1,5 +1,5 @@
 <template>
-<footer fixed="bottom">
+<footer>
     <div class="container-fluid">
         <div class="row text-center">
             <div class=col-md-6>
@@ -37,5 +37,6 @@
         background-color: #2a2d33;
         color: #d5d5d5;
         padding-top: 2rem;
+        float: bottom;
     }
 </style>
