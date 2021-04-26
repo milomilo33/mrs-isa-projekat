@@ -13,6 +13,8 @@ public interface PricelistItemMedicamentService {
 
 	Collection<PricelistItemMedicament> findAllPharmacy(Long id);
 	
+	Collection<PricelistItemMedicament> findAllMeds(Long id);
+	
 	PricelistItemMedicament findOne(Long id);
 	
 	PricelistItemMedicament create(PricelistItemMedicament pricelistItem) throws Exception;

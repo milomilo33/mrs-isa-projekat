@@ -26,7 +26,6 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 	
 	@Query("select p from Pharmacy p join fetch p.dermatologists where p.id=?1")
 	Pharmacy getOneWithDermatologists(Long id);
-	
 
 	@Query("select p from Pharmacy p join fetch p.pharmacists where p.id=?1")
 	Pharmacy getOneWithPharmacists(Long id);
