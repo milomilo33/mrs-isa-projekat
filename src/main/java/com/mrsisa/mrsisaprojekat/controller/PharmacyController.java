@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
@@ -43,9 +45,6 @@ public class PharmacyController {
 	@Autowired
 	private AddressService addressService;
 	
-	@Autowired
-	private MedicamentItemService medicamentItemService;
-
 	@Autowired
 	private DermatologistService dermatologistService;
 
@@ -101,7 +100,6 @@ public class PharmacyController {
 	
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MedicamentItemDTO>> getPharmacyMedicamentItems(@PathVariable("id") Long id) {
-		System.out.println(id);
 		Collection<MedicamentItem> items = pharmacyService.getAllMedicaments(id);
 		List<MedicamentItemDTO> returns = new ArrayList<>();
 		for(MedicamentItem m: items) {
@@ -141,11 +139,18 @@ public class PharmacyController {
 			if(!m.isDeleted()) {
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : m.getWorkHour()) {
-					WorkHourDTO wd = new WorkHourDTO(h);
-					hours.add(wd);
+					if(h.getPharmacy().getId() == pharmacy.getId()) {
+						WorkHourDTO wd = new WorkHourDTO(h);
+						hours.add(wd);
+					}
 				}
 				DermatologistDTO d = new DermatologistDTO(m);
 				d.setWorkHours(hours);
+				ArrayList<AppointmentDTO> lista = new ArrayList<AppointmentDTO>();
+				for(Appointment a : pharmacyService.findAllAppointmentsDeramtologist(d.getEmail(), pharmacy.getId())) {
+					lista.add(new AppointmentDTO(a));
+				}
+				d.setAllAppointments(lista);
 				returns.add(d);
 			}
 		}
@@ -160,15 +165,15 @@ public class PharmacyController {
 	public ResponseEntity<Collection<PharmacistDTO>> getPharmacyPharmacists(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithPharmacists(id);
 		List<PharmacistDTO> returns = new ArrayList<>();
-		for(Pharmacist m: pharmacy.getPharmacists()) {
-			if(!m.isDeleted()) {
-				m.setCounselings(new HashSet<>(pharmacistService.getAvailableAppointments(m)));
+		for(Pharmacist p: pharmacy.getPharmacists()) {
+			if(!p.isDeleted()) {
+				p.setCounselings(new HashSet<>(pharmacistService.getAvailableAppointments(p)));
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
-				for(WorkHour h : m.getWorkHour()) {
+				for(WorkHour h : p.getWorkHour()) {
 					WorkHourDTO wd = new WorkHourDTO(h);
 					hours.add(wd);
 				}
-				PharmacistDTO d = new PharmacistDTO(m);
+				PharmacistDTO d = new PharmacistDTO(p);
 				d.setWorkHours(hours);
 				returns.add(d);
 			}
@@ -178,7 +183,28 @@ public class PharmacyController {
 		}
 		return new ResponseEntity<>(returns,HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/appointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN', 'PHARMACIST')")
+	public ResponseEntity<Collection<AppointmentDTO>> getPharmacyAppointments(@PathVariable("id") Long id) {
+		Pharmacy pharmacy = pharmacyService.findOneWithAppointments(id);
+		List<AppointmentDTO> returns = new ArrayList<>();
+		for(Appointment a : pharmacy.getAppointments()) {
+			if(!a.isDone() && a.getPatient() == null) {
+				AppointmentDTO d = new AppointmentDTO(a);
+				returns.add(d);
+				}
+				
+		}
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
 
+	
+	
+	
 	@GetMapping(value = "filter/distance={minDistance},{maxDistance}&rating={rating}")
 	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("minDistance") int minDistance,
 																	@PathVariable("maxDistance") int maxDistance,

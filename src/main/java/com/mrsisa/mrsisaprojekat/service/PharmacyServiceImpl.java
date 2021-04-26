@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
@@ -108,6 +111,32 @@ public class PharmacyServiceImpl implements PharmacyService{
 		if(i == 0) return 0;
 
 		return Math.round(sum / i);
+	}
+
+	@Override
+	public Pharmacy findOneWithAppointments(Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithAppointments(id);
+		if (pharmacy == null) {
+			return null;
+		}
+	
+		return pharmacy;
+	}
+	
+	@Override
+	public ArrayList<Appointment> findAllAppointmentsDeramtologist(String email, Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithAppointments(id);
+		if (pharmacy == null) {
+			return null;
+		}
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		for(Appointment a : pharmacy.getAppointments()) {
+			if(a.getChosenEmployee().getEmail().equals(email)) {
+				appointments.add(a);
+			}
+		}
+	
+		return appointments;
 	}
 
 

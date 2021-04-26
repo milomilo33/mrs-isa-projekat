@@ -17,6 +17,7 @@ public class DermatologistDTO {
 	private ArrayList<Appointment> appointments;
 	private ArrayList<WorkHourDTO> workHours;
 	private ArrayList<PharmacyDTO> pharmacies;
+	private ArrayList<AppointmentDTO> allAppointments;
 
 	public DermatologistDTO() {}
 
@@ -27,7 +28,7 @@ public class DermatologistDTO {
 		this.lastName = dermatologist.getLastName();
 		this.phoneNumber = dermatologist.getPhoneNumber();
 		this.address = new AddressDTO(dermatologist.getAddress());
-		this.appointments = new ArrayList<>(dermatologist.getMedicalExaminations());
+		//this.appointments = new ArrayList<>(dermatologist.getMedicalExaminations());
 	}
 	
 	public DermatologistDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address, ArrayList<Appointment> appointments) {
@@ -38,7 +39,7 @@ public class DermatologistDTO {
 		this.lastName = lastName;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
-		this.appointments = appointments;
+		//this.appointments = appointments;
 	}
 
 	public DermatologistDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address, ArrayList<WorkHourDTO> workHours , ArrayList<PharmacyDTO> pharmacies) {
@@ -99,4 +100,13 @@ public class DermatologistDTO {
 	public void setAppointments(ArrayList<Appointment> appointments) {
 		this.appointments = appointments;
 	}
+
+	public ArrayList<AppointmentDTO> getAllAppointments() {
+		return allAppointments;
+	}
+
+	public void setAllAppointments(ArrayList<AppointmentDTO> allAppointments) {
+		this.allAppointments = allAppointments;
+	}
+	
 }

@@ -140,6 +140,7 @@ export default defineComponent({
           },
         })
         .then(function (response) {
+          console.log(response.data);
           for (var i = 0; i < response.data.length; i++) {
             if (
               self.items.filter((e) => e.email === response.data[i].email)

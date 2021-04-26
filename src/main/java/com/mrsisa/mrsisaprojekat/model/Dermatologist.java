@@ -20,7 +20,7 @@ import java.util.Set;
 public class Dermatologist extends Employee {
 	
 	// potencijalno kaskadiranje
-	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY, cascade= CascadeType.MERGE)
 	private Set<Appointment> medicalExaminations;
 	
 	@ManyToMany(fetch = FetchType.EAGER)

@@ -12,7 +12,7 @@ public class Rating {
 	@Column(name = "value", unique = false, nullable = false)
 	private int value;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Patient patient;
 	
 	public Rating() {}
