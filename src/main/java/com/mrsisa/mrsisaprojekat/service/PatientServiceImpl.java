@@ -2,38 +2,28 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
 
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
-import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
-import com.mrsisa.mrsisaprojekat.repository.PrescriptionRepositoryDB;
+import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
+import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Role;
-import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 
 import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Service
-public class PatientServiceImpl implements PatientService{
+public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	private PatientRepositoryDB patientRepository;
 
 	@Autowired
 	private PrescriptionRepositoryDB prescriptionRepository;
+
+	@Autowired
+	private MedicamentItemRepositoryDB medicamentItemRepository;
 
 	@Autowired
 	private AppointmentRepositoryDB appointmentRepository;
@@ -52,8 +42,7 @@ public class PatientServiceImpl implements PatientService{
 
 	@Override
 	public Patient findOne(String id) {
-		Patient patient = patientRepository.findById(id).orElseGet(null);
-		return patient;
+		return patientRepository.findById(id).orElse(null);
 	}
 
 	@Override
@@ -71,7 +60,7 @@ public class PatientServiceImpl implements PatientService{
 		if (patientToUpdate == null) {
 			return null;
 		}
-		
+
 		return patientRepository.save(patient);
 	}
 
@@ -79,7 +68,7 @@ public class PatientServiceImpl implements PatientService{
 	public Patient getOneWithReservedMeds(String email) {
 		Patient p = patientRepository.getPatientWithReservedMedicaments(email);
 		System.out.println(p);
-		if(p == null) {
+		if (p == null) {
 			p = findOne(email);
 			p.setReservedMedicaments(new HashSet<>());
 		}
@@ -92,8 +81,9 @@ public class PatientServiceImpl implements PatientService{
 
 		if (patientToUpdate == null) {
 			patientToUpdate = patientRepository.findById(p.getEmail()).orElse(null);
+			if (patientToUpdate == null) return null;
 			patientToUpdate.setReservedMedicaments(new HashSet<>());
-			if(patientToUpdate == null) return null;
+
 		}
 
 		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
@@ -103,17 +93,19 @@ public class PatientServiceImpl implements PatientService{
 		return pm.getId();
 	}
 
+
 	@Override
 	public void delete(String id) {
 		patientRepository.deleteById(id);
 	}
 
-	
+
 	@Override
 	//@Transactional
 	public Collection<Patient> findByNameAndLastName(String name, String lastName) {
 		return patientRepository.findByNameAndLastName(name, lastName);
 	}
+
 
 	@Override
 	public Collection<Appointment> getUpcomingAppointmentsForUser(String userEmail, Appointment.AppointmentType type) {
@@ -130,7 +122,7 @@ public class PatientServiceImpl implements PatientService{
 //				}
 //			}
 
-	//	}
+		//	}
 
 		return null;
 	}
@@ -139,7 +131,7 @@ public class PatientServiceImpl implements PatientService{
 	public Patient getOneWithAppointments(String email) {
 		Patient p = patientRepository.getAppointmentsForUser(email);
 
-		if(p == null) {
+		if (p == null) {
 			p = findOne(email);
 			p.setAppointments(new HashSet<>());
 		}
@@ -153,6 +145,27 @@ public class PatientServiceImpl implements PatientService{
 		patientRepository.save(patient);
 
 		return a.getId();
+	}
+
+	@Override
+	public Patient getPatientDetails(String email) {
+//		Patient patient = patientRepository.getPatientDetails(email);
+//		System.out.println(email);
+//		return patient;
+		return null;
+	}
+
+	@Override
+	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament) throws ReservationQuantityException {
+		MedicamentItem medicamentItem = medicamentItemRepository.findMedicamentItemByMedicament(medicament.getMedicament().getId());
+		if (medicamentItem != null) {
+			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
+				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
+			} else {
+				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+				medicamentItemRepository.save(medicamentItem);
+			}
+		}
 	}
 
 }

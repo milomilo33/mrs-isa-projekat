@@ -100,9 +100,6 @@ export default defineComponent({
       .get(`/api/pharmacy/medicamentItems/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
-
-      .get(`http://localhost:8080/api/pharmacy/medicamentItems/${this.$route.params.id}`)
-
       .then(function (response) {
         for (var i = 0; i < response.data.length; i++) {
           console.log(response);
@@ -121,8 +118,6 @@ export default defineComponent({
       .get(`/api/pharmacy/pharmacists/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
-
-      .get(`http://localhost:8080/api/pharmacy/pharmacists/${this.$route.params.id}`)
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
            var count = 0;
@@ -147,10 +142,7 @@ export default defineComponent({
   self.axios
       .get(`/api/pharmacy/dermatologists/${this.$route.params.id}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
-        })
-      .get(`http://localhost:8080/api/pharmacy/dermatologists/${this.$route.params.id}`)
-
-      .then(function (response) {
+        }).then(function (response) {
         for(var i = 0;i<response.data.length;i++){
             var count = 0;
             for(var j=0;j<response.data[i].workHours.length;j++){

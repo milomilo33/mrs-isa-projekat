@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 
 import java.time.LocalDate;
 
@@ -13,6 +14,12 @@ public class PrescriptionMedicamentDTO {
 
     public PrescriptionMedicamentDTO() {
 
+    }
+
+    public PrescriptionMedicamentDTO(PrescriptionMedicament pm) {
+        this.medicament = pm.getMedicament();
+        this.expiryDate = pm.getExpiryDate();
+        this.quantity = pm.getQuantity();
     }
 
     public PrescriptionMedicamentDTO(String patientEmail, Medicament medicament, LocalDate expiryDate, int quantity) {

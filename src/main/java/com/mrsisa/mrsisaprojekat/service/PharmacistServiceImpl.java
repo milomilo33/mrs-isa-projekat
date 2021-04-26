@@ -87,5 +87,12 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return availableAppointments;
 	}
 
+	@Override
+	public Pharmacist findOneCounselings(String email) {
+		Pharmacist p = pharmacistRepository.getPharmacistWithCounselings(email);
+
+		return p;
+	}
+
 
 }

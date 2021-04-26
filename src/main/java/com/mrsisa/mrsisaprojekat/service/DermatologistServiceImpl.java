@@ -134,5 +134,12 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return availableAppointments;
 	}
 
+	@Override
+	public Dermatologist findOneExaminations(String email) {
+		Dermatologist d = dermatologistRepository.getExaminations(email);
+
+		return d;
+	}
+
 
 }

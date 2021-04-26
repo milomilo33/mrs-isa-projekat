@@ -19,4 +19,5 @@ public interface PharmacistService {
 
 	List<Appointment> getAvailableAppointments(Pharmacist p);
 
+	Pharmacist findOneCounselings(String email);
 }

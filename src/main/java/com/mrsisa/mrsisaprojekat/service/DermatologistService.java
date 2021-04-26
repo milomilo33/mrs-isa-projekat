@@ -23,4 +23,8 @@ public interface DermatologistService {
 	boolean dermatologistHasAppointment(String email, Long appointmentId);
 
 	List<Appointment> getAvailableAppointments(Dermatologist m);
+
+	Dermatologist findOneExaminations(String email);
+
+
 }

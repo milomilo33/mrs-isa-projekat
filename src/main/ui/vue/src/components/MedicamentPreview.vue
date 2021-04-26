@@ -68,12 +68,14 @@
                 <b-row>
                   <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
                   <b-button class="m-2" @click="reserveMedicament()"> Reserve medicament </b-button>
+                  
                 </b-row>
                 <b-row>
-                  <datepicker class="m-2" v-model="date" @selected="date = $event.target.value"></datepicker>
+                  <datepicker class="m-2" v-model="date" @selected="date = $event.target.value" :disabled-dates="disabledDates"></datepicker>
                   <div class="m-2"> Date </div>
                   
                 </b-row>
+                <b-row v-html="unallowedQuantityMessage"></b-row>
               </b-modal>
             </div>
             
@@ -97,6 +99,24 @@ export default {
   components: {
     Datepicker
   },
+
+  data() {
+    return {
+      ratings: 0,
+      modal: "",
+      show: false,
+      nameM: "",
+      amount: null,
+      date: "",
+      success: false,
+      unallowedQuantityMessage: "",
+      isReserved: false,
+      disabledDates: {
+        to: new Date(Date.now() - 8640000)
+      }
+    };
+  },
+  
   mounted() {
     this.nameM = this.medicament.name;
     this.axios
@@ -112,17 +132,7 @@ export default {
       })
       .catch((error) => console.log(error));
   },
-  data() {
-    return {
-      ratings: 0,
-      modal: "",
-      show: false,
-      nameM: "",
-      amount: null,
-      date: "",
-      success: false
-    };
-  },
+  
   methods: {
     calculateRating: function (ratings) {
       var total = 0;
@@ -137,17 +147,25 @@ export default {
       //console.log(this.amount);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
-          patientEmail: "anasimic@gmail.com",
+          patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
           medicament: this.medicament,
           expiryDate: this.date,
           quantity: this.amount
         },{headers: {
             Authorization: "Bearer " + localStorage.getItem('token')
             }
+        })
+        .then(this.isReserved = true)
+        .catch(error => {
+          console.log(error);
+          this.unallowedQuantityMessage = `<p class="ml-2" style="color:red;">Reservation quantity too big.</p>`;
         });
         //console.log(this.medicament.id);
         //console.log(this.date)
-        alert("Rezervacija izvršena!");
+        if(this.isReserved) { 
+          alert("Rezervacija uspešno izvršena!");
+          this.isReserved = false;
+        }
       }
     },
   },

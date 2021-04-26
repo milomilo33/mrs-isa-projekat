@@ -23,6 +23,8 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
+import PatientInfo from '../components/PatientInfo'
+
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
@@ -69,6 +71,10 @@ const routes = [
 		name: "PatientPage",
 		component: PatientPage,
 		children: [
+			{
+				path: "",
+				component: PatientInfo,
+			},
 			{
 				path: "MedicamentList",
 				component: MedicamentListPreview

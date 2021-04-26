@@ -76,6 +76,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/medicaments/all").permitAll()
 			.antMatchers("/api/patients/**").permitAll()
 				.antMatchers("/api/pharmacy").permitAll()
+				// /auth/**
+			//.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
+			.antMatchers("/api/medicaments/all").permitAll()
+				.antMatchers("/api/pharmacy").permitAll().antMatchers("/api/pharmacy/**").permitAll()
+				.antMatchers("/api/patients/**").permitAll()
 				.antMatchers("/api/pharmacy/dermatologists/**").permitAll()
 				.antMatchers("/api/pharmacy/pharmacists/**").permitAll()
 				//.antMatchers("/api/dermatologist/examinations").permitAll() // OBRISATI!

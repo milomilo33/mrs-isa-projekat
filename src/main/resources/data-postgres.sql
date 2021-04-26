@@ -121,21 +121,23 @@ insert into medical_report (date, deleted, description, eprescription_id) values
 
 
 -- 0 - counseling, 1 - examination
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','14:00','14:30', 1, null, 'janatot@gmail.com', null)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','15:00','15:30', 1, null, 'janatot@gmail.com', null)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','17:00','18:00', 1, null, 'janatot@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-06','false','14:00','14:30', 1, null, 'janatot@gmail.com', 'anasimic@gmail.com')
+
 
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-25','false','10:00','10:30', 1, 2, 'aleksandarstevanovic@gmail.com', 'teodorabozic@gmail.com')
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-06','false','19:00','19:45', 0, 3, 'svetozartodorovic@gmail.com', 'darkomilev@gmail.com')
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-06','false','18:00','19:00', 0, null, 'svetozartodorovic@gmail.com', null)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-06','false','16:00','17:00', 0, null, 'svetozartodorovic@gmail.com', null)
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-06','false','15:00','16:00', 0, null, 'svetozartodorovic@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-12-12','false','19:00','19:45', 0, 3, 'svetozartodorovic@gmail.com', 'darkomilev@gmail.com')
+
 
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-26','false','20:00','20:45', 1, 4, 'lazarpopovic@gmail.com', 'lukamarkovic@gmail.com')
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-07','false','16:00','16:45', 0, 5, 'milanm@gmail.com', 'milosmilosevic@gmail.com')
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-08','false','17:00','17:45', 0, 6, 'micicmilica@gmail.com', 'ivicamarkov@gmail.com')
 
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-06','false','15:00','15:30', 1, null, 'janatot@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-07','false','17:00','18:00', 1, null, 'janatot@gmail.com', null)
 
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-06','false','18:00','19:00', 0, null, 'svetozartodorovic@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-07','false','16:00','17:00', 0, null, 'svetozartodorovic@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-08','false','15:00','16:00', 0, null, 'svetozartodorovic@gmail.com', null)
 
 -- insert into dermatologist_medical_examinations (dermatologist_email, medical_examinations_id) values ('janatot@gmail.com', 1)
 -- insert into dermatologist_medical_examinations (dermatologist_email, medical_examinations_id) values ('aleksandarstevanovic@gmail.com', 2)
