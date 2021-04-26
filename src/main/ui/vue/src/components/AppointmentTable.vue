@@ -94,6 +94,7 @@
                     :clear-on-select="false"
                     :preserve-search="true"
                     :preselect-first="true"
+                    :t =1
                     track-by="email"
                     label="FullName"
                   >
@@ -107,6 +108,7 @@
                     :clear-on-select="false"
                     :preserve-search="true"
                     :preselect-first="true"
+                    :t =0
                     track-by="email"
                     label="FullName"
                   >
@@ -184,7 +186,7 @@ components: {
       weekday: "",
       list:  [],
       allAppointments : [],
-      val : 0,
+      t : 0,
     };
   },
   mounted() {
@@ -247,7 +249,6 @@ components: {
       }else if(this.d.getDay() == 7){
         this.weekday = "sunday";
       }
-      if (this.val == 0){
                this.axios.post(`/api/appointments/`+ parseInt(this.pharmacyId),{
                   patient : {
                       email: this.e.email,
@@ -255,7 +256,7 @@ components: {
                   date : this.date,
                   termFrom : this.timefrom,
                   termTo: this.timeto,
-                  type : 1,
+                  type : parseInt(this.t),
         }, {
              headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -274,8 +275,6 @@ components: {
             this.showAlert = true;
         });
             
-
-            }
      
       
     },

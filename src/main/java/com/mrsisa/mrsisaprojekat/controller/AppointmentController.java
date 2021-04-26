@@ -6,11 +6,13 @@ import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Employee;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.service.AppointmentService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
+import com.mrsisa.mrsisaprojekat.service.PharmacistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,10 @@ public class AppointmentController {
 
     @Autowired
     private PharmacyService pharmacyService;
-
+    
+    @Autowired
+    private PharmacistService pharmacistService;
+    
     @GetMapping(value = "/{id}/absent")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
     public ResponseEntity<String> markPatientAbsence(@PathVariable("id") Long appointmentId) {
@@ -115,15 +120,29 @@ public class AppointmentController {
 		a.setDeleted(false);
 		a.setPatient(null);
 		Dermatologist d = dermatologistService.findOne(appointment.getPatient().getEmail());
-		if(!check(d.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		if(d!= null) {
+			if(!check(d.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			if(checkAppointment(d.getMedicalExaminations(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			d.setRatings(null);
+			d.setRequests(null);
+			a.setChosenEmployee(d);
+    	
+		}else {
+			Pharmacist p = pharmacistService.findOne(appointment.getPatient().getEmail());
+			if(!check(p.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			if(checkAppointment(p.getCounselings(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			p.setRatings(null);
+			p.setRequests(null);
+			a.setChosenEmployee(p);
 		}
-		if(checkAppointment(d.getMedicalExaminations(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		}
-		d.setRatings(null);
-		d.setRequests(null);
-		a.setChosenEmployee(d);
 		a.setDate(appointment.getDate());
 		a.setTermFrom(appointment.getTermFrom());
 		a.setTermTo(appointment.getTermTo());
@@ -132,12 +151,10 @@ public class AppointmentController {
 		}else {
 			a.setType(AppointmentType.COUNSELING);
 		}
-		
 		Appointment savedAppointment = appointmentService.create(a);
 		Pharmacy p = pharmacyService.findOneWithAppointments(id);
 		p.getAppointments().add(savedAppointment);
 		pharmacyService.update(p);
 		return new ResponseEntity<>(savedAppointment,HttpStatus.OK);
-    	
-	}
+    }
 }

@@ -346,6 +346,7 @@ insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) v
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (5, false, '08:00', '12:00', 1)
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (6, false, '08:00', '12:00', 1)
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '08:00', '12:00', 2)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '08:00', '12:00', 2)
 
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 1)
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 2)
@@ -355,3 +356,4 @@ insert into employee_work_hour(employee_email, work_hour_id) values ('svetozarto
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 6)
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 7)
 insert into employee_work_hour(employee_email, work_hour_id) values ('aleksandarstevanovic@gmail.com', 8)
+insert into employee_work_hour(employee_email, work_hour_id) values ('milanm@gmail.com', 9)
