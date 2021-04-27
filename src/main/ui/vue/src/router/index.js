@@ -26,6 +26,7 @@ import SuccessActivation from '../views/SuccessActivation'
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
+import ExaminedPatients from '../components/ExaminedPatients'
 import PharmacyAdminRegistration from '../components/PharmacyAdminRegistration'
 import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
@@ -255,6 +256,14 @@ const routes = [
 				meta: {
 					roles: [Role.Dermatologist]
 				},
+			},
+			{
+				path: "ExaminedPatients",
+				component: ExaminedPatients,
+				props: true,
+				meta: {
+					roles: [Role.Dermatologist]
+				}
 			}
 		]
 	},
