@@ -1,18 +1,19 @@
 <template>
     <div>
-        <h1>Your upcoming examinations</h1>
+        <h1 v-if="type === 'dermatologist'">Your examination history</h1>
+        <h1 v-if="type === 'pharmacist'">Your counseling history</h1>
         <br>
         <b-form inline>
             <b-form-input id="name"
                         name="name"
-                        placeholder="Name"
+                        placeholder="Patient name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         v-model="name">
             </b-form-input>
 
             <b-form-input id="lastName"
                         name="lastName"
-                        placeholder="Last name"
+                        placeholder="Patient last name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         v-model="lastName">
             </b-form-input>
@@ -21,11 +22,7 @@
         </b-form>
 
         <br>
-        <b-table striped hover :items="appointments" :fields="appointmentFields">
-            <template #cell(action)="row">
-                <button class="btn btn-dark" @click="startAppointment(row)"
-                    :ref="'btn' + row.index">Start appointment</button>
-            </template>
+        <b-table striped hover :items="appointments" :fields="appointmentFields" :sort-compare="dateSortCompare">
         </b-table>
     </div>
 </template>
@@ -40,8 +37,8 @@
                 appointmentFields: [
                     {
                         key: 'patient.name',
-                        headerTitle: 'Name',
-                        label: 'Name',
+                        headerTitle: 'Patient Name',
+                        label: 'Patient Name',
                         sortable: true
                     },
                     {
@@ -51,13 +48,10 @@
                         sortable: true
                     },
                     {
-                        key: 'patient.phoneNumber',
-                        headerTitle: 'Phone Number',
-                        label: 'Phone Number'
-                    },
-                    {
                         key: 'dateStr',
-                        headerTitle: 'Date'
+                        headerTitle: 'Date',
+                        label: 'Date',
+                        sortable: true
                     },
                     {
                         key: 'timeFrom',
@@ -66,9 +60,9 @@
                     {
                         key: 'timeTo',
                         headerTitle: 'To'
-                    },
-                    'action'
-                ]
+                    }
+                ],
+                type: ''
             }
         },
         methods: {
@@ -78,9 +72,18 @@
                 }
 
                 let searchParams = { name: this.name, lastName: this.lastName };
-                // OVAJ ZAHTEV TREBA SLATI SA TOKENOM DERMATOLOGA KAKO BI SE DOBAVILI
-                // NJEGOVI PREGLEDI!
-                this.axios.get(`/api/dermatologist/examinations`,  {
+                let url = '';
+                if (this.type === 'dermatologist') {
+                    url = '/api/dermatologist/examinations/done/patient';
+                }
+                else if (this.type === 'pharmacist') {
+                    url = '/api/pharmacist/examinations/done/patient';
+                }
+                else {
+                    console.log("Invalid type in examination history.");
+                    return;
+                }
+                this.axios.get(url,  {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -95,11 +98,6 @@
                                     filteredAppointments.push(appointment);
                                 }
                             }
-                            // response.data = response.data.filter(appointment => {
-                            //     return 
-                            //         appointment.patient.name.toLowerCase().includes(searchParams.name) &&
-                            //         appointment.patient.lastName.toLowerCase().includes(searchParams.lastName);
-                            // });
 
                             // date conversion
                             filteredAppointments.forEach((obj) => {
@@ -123,14 +121,18 @@
                               }
                            });
             },
-
-            startAppointment(row) {
-                // otvoriti stranicu pregleda
-                this.$router.push({ name: 'DermatologistPageAppointmentPage',
-                                    params: { appointment: row.item } });
+            dateSortCompare(a, b, key) {
+                if (key === 'dateStr') {
+                    let dateA = new Date(a[key]);
+                    let dateB = new Date(b[key]);
+                    return dateA - dateB;
+                } else {
+                    return false;
+                }
             }
         },
         mounted() {
+            this.type = this.$route.query.type;
             this.onSubmit();
         }
     }
