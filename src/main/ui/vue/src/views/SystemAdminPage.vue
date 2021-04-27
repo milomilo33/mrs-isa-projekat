@@ -11,7 +11,7 @@
            <template #button-content>
             User Registration
           </template>
-          <b-dropdown-item href="/SystemAdminPage/userRegister/PharmacyAdmin">Pharmacy Admin</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/PharmacyAdminRegistration">Pharmacy Admin</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/userRegister/SystemAdmin">System Admin</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/userRegister/Dermatologist">Dermatologist</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>

@@ -16,7 +16,7 @@ public class AdminPharmacy extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Pharmacy pharmacy;
 	
 	public AdminPharmacy() {}
