@@ -221,7 +221,5 @@ public class PharmacyController {
 		}
 		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
 	}
-
-
 	
 }

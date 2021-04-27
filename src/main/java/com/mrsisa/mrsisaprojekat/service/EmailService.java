@@ -32,7 +32,7 @@ public class EmailService {
 		mail.setTo(user.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Welcome");
-		mail.setText("You have been registered. Welcome! Your password is your phoneNumber and first cappital letter of you name and your lastname (NNNNNNNNNFL)");
+		mail.setText("Welcome " +user.getEmail()+"!You have been registered. Your password is your phoneNumber and first cappital letter of you name and your lastname (NNNNNNNNNFL)");
 		javaMailSender.send(mail);
 		
 		System.out.println("Email poslat!");

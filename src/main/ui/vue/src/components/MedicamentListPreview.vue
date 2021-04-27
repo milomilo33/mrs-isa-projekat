@@ -1,16 +1,21 @@
 <template>
   <div id="MedicamentsListPreview" class="div">
-    <div class="row justify-content-center">
-      <b-nav-form>
-          <input size="sm" class="mr-sm-2 search" placeholder="Search" v-model="search">
-          <b-button size="sm" class="my-2 my-sm-0 button" type="submit" >Search</b-button>
-    </b-nav-form>
+  <section id="sidebar">
+    <p class="colorIt">Search medicaments by its name</p>
+    <input size="sm" class="mr-sm-2 search" placeholder="Search" v-model="search">
+    <b-button size="sm" class="my-2 my-sm-0 button" type="submit" >Search</b-button>
+    <hr>
+    <p class="colorIt"><b>Apply Filter:</b></p>
+  </section>
+  <section id="products">
+    <div class="row row-cols-2 row-cols-md-3 g-2" >
+      <div class="col-lg-4 col-md-6 col-sm-10 offset-md-0 offset-sm-1" v-for="p in this.medicaments" :key="p.id">
+        <div >
+          <MedicamentPreview :medicament="p"> </MedicamentPreview>
+        </div>
+      </div>  
     </div>
-    <div v-for="p in this.medicaments" :key="p.id">
-      <div class="row justify-content-center">
-        <MedicamentPreview :medicament="p"> </MedicamentPreview>
-      </div>
-    </div>
+  </section>
   </div>
 </template>
 
@@ -46,11 +51,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.row{
-  margin-bottom: 1rem;
-}
+
+
 .search{
   border-color: black;
   border-radius: 5%;
+}
+#sidebar {
+    width: 25%;
+    float: left;
+}
+#products {
+    width: 100%;
+    padding-left: 30px;
+}
+.colorIt{
+  color: #009933;
 }
 </style>

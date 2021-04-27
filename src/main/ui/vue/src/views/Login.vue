@@ -1,5 +1,8 @@
 <template>
 <div class="justify-content-center login">
+  <b-alert v-model="showSuccessAlert" dismissible fade variant="danger">
+      Bad credentials.
+    </b-alert>
   <b-card title="Login">
     <b-form>
       <b-form-input
@@ -12,6 +15,7 @@
 
       <b-form-input
         id="input-2"
+        type="password"
         v-model="password"
         placeholder="Password"
         required
@@ -35,25 +39,29 @@ export default {
     return {
       username: "",
       password: "",
+      showSuccessAlert: false,
     };
   },
-    methods: {
-      login() {
-        if(this.username == "" && this.password == "") {
-            console.log("A username and password must be present");
-        }
 
-        this.axios.post(`/api/auth/login`,{
-            username: this.username,
-            password: this.password 
-        }).then((response) => {
-              localStorage.setItem("token", response.data.accessToken);
-                this.findUserRole();
+  methods: {
+    login() {
+      var _this = this;
+      if (this.username == "" && this.password == "") {
+        console.log("A username and password must be present");
+      }
+      this.axios
+        .post("http://localhost:8080/api/auth/login", {
+          username: this.username,
+          password: this.password,
+        })
+        .then((response) => {
+          localStorage.setItem("token", response.data.accessToken);
+          this.findUserRole();
         })
           .catch((error) => {
           console.log(error);
-
-      });
+          _this.showSuccessAlert = true;
+        });
     },
 
     findUserRole() {

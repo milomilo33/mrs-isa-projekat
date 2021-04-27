@@ -98,7 +98,7 @@ public class PatientController {
         {
         	Patient user = patientService.findOne(token.getUserEntity().getEmail());
             user.setActive(true);
-            patientService.create(user);
+            patientService.update(user);
             return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://localhost:8081/SuccessActivation")).build();
         }
         else

@@ -23,10 +23,12 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
-
+import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
+
 import AppointmentTable from '../components/AppointmentTable'
+import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 
 Vue.use(VueRouter)
 const Role = {
@@ -49,15 +51,21 @@ const routes = [
 		component: SuccessActivation
 	},
 	{
+		path: "/FailedActivation",
+		name: "FailedActivation",
+		component: FailedActivation
+	},
+	{
 		path: "/PharmacyPreview/:id",
 		name: "PharmacyPreview",
 		component: PharmacyPreview,
 		props: true
 	},
+
 	{
 		path: "/MedicamentList",
 		name: "MedicamentListPreview",
-		component: MedicamentListPreview
+		component: MedicamentListPreview,
 	},
 	{
 		path: "/PatientPage",
@@ -66,7 +74,11 @@ const routes = [
 		children: [
 			{
 				path: "MedicamentList",
-				component: MedicamentListPreview
+				component: MedicamentListPreview,
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "PharmacyList",
@@ -81,7 +93,11 @@ const routes = [
 		children: [
 			{
 				path: "MedicamentList",
-				component: MedicamentListPreview
+				component: MedicamentListPreview,
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "pharmacyRegistration",
@@ -128,6 +144,10 @@ const routes = [
 				component: MedicamentListPreview
 			},
 			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
+			},
+			{
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
@@ -155,6 +175,10 @@ const routes = [
 			{
 				path: "MedicamentList",
 				component: MedicamentListPreview
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "PharmacyList/:query",
@@ -187,6 +211,10 @@ const routes = [
 				path: "PharmacyList",
 				name: "DermatologistPagePharmacyList",
 				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "MedicamentList",
@@ -236,6 +264,10 @@ const routes = [
 			{
 				path: "medicamentList",
 				component: MedicamentListPreview
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "MedicamentTable",
