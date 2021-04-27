@@ -14,6 +14,11 @@ import javax.persistence.OneToOne;
 @Inheritance(strategy=TABLE_PER_CLASS)
 public abstract class Employee extends User {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private WorkCalendar calendar;
 	

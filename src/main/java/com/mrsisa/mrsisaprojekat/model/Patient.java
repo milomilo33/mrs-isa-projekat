@@ -11,10 +11,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Transactional
 @Entity
 public class Patient extends User {
 	
@@ -31,8 +33,8 @@ public class Patient extends User {
 	
 	@Column(name = "category", unique = false, nullable = false)
 	private Category category;
-	
-	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Set<Appointment> appointments;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

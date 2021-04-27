@@ -24,7 +24,4 @@ public interface DermatologistService {
 
 	List<Appointment> getAvailableAppointments(Dermatologist m);
 
-	Dermatologist findOneExaminations(String email);
-
-
 }

@@ -44,7 +44,7 @@ public class MedicamentItemController {
 	
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
-	public ResponseEntity<MedicamentItemDTO> deletePharmacist(@PathVariable("id") Long id) {
+	public ResponseEntity<MedicamentItemDTO> deleteMedicamentItem(@PathVariable("id") Long id) {
 
 		MedicamentItem medicamentItem = medicamentItemService.findOne(id);
 		

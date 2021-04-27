@@ -26,7 +26,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment create(Appointment appointment) throws Exception {
-        return null;
+       return appointmentRepository.save(appointment);
     }
 
     @Override

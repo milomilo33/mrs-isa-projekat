@@ -1,9 +1,5 @@
 <template>
-  <main class="my-form">
-    <div class="cotainer">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
+          <div class="my-form">
             <div class="card-header">Medicaments</div>
             <b-row>
               <b-col lg="4" class="my-1">
@@ -55,6 +51,7 @@
               :filter="filter"
               :filter-included-fields="filterOn"
               small
+              striped hover
               @filtered="onFiltered"
             >
               <template v-slot:cell(info)="data">
@@ -148,10 +145,6 @@
             </pre>
             </b-modal>
           </div>
-        </div>
-      </div>
-    </div>
-  </main>
 </template>
 
 
@@ -512,3 +505,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.my-form .card-header {
+  background-color:#ccffbc;
+}
+</style>

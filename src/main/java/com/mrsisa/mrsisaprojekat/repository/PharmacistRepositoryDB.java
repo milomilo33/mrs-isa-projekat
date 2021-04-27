@@ -13,7 +13,7 @@ public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String
 	@Query("select p from Pharmacist p join fetch p.address where p.deleted = false")
 	List<Pharmacist> getAllWithAddress();
 	
-	@Query("select p from Pharmacist p join fetch p.address where p.email=?1")
+	@Query("select p from Pharmacist p join fetch p.address join fetch p.counselings where p.email=?1")
 	Pharmacist getOnePharmacist(String id);
 	
 	@Modifying

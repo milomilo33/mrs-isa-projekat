@@ -1,8 +1,10 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
@@ -25,7 +27,12 @@ public interface PharmacyService {
 	Pharmacy findOneWithMedicaments(Long id);
 	
 	Pharmacy findOneWithDermatologists(Long id);
+	
 	Pharmacy findOneWithPharmacists(Long id);
+	
+	Pharmacy findOneWithAppointments(Long id);
 
 	int getRating(Long id);
+	
+	ArrayList<Appointment> findAllAppointmentsDeramtologist(String email, Long id);
 }

@@ -58,5 +58,13 @@ public class MedicamentServiceImpl implements MedicamentService {
 		medicamentRepository.save(medicament);
 		
 	}
+	@Override
+	public Collection<Medicament> findAllWithName(String query) {
+		return medicamentRepository.findAllWithName(query);
+	}
+	@Override
+	public Collection<Medicament> findAllFilter(int mode, int form) {
+		return medicamentRepository.findFilter(mode, form);
+	}
 
 }
