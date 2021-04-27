@@ -1,6 +1,11 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+
+import java.util.ArrayList;
 
 public class PatientDTO {
 
@@ -10,13 +15,25 @@ public class PatientDTO {
 	private String lastName;
 	private String phoneNumber;
 	private AddressDTO address;
+	private ArrayList<Appointment> appointments;
+	private ArrayList<PrescriptionMedicamentDTO> medicaments;
 	
 	public PatientDTO() {
 		
 	}
 	
 	public PatientDTO(Patient patient) {
-		this(patient.getEmail(), patient.getPassword(), patient.getName(), patient.getLastName(), patient.getPhoneNumber(), new AddressDTO(patient.getAddress()));
+		this.email = patient.getEmail();
+		this.password = patient.getPassword();
+		this.name = patient.getName();
+		this.lastName = patient.getLastName();
+		this.phoneNumber = patient.getPhoneNumber();
+		this.address = new AddressDTO(patient.getAddress());
+		this.appointments = new ArrayList<>(patient.getAppointments());
+		this.medicaments = new ArrayList<>();
+		for (PrescriptionMedicament m : patient.getReservedMedicaments()) {
+			this.medicaments.add(new PrescriptionMedicamentDTO(m));
+		}
 	}
 	
 	public PatientDTO(String email, String password, String name, String lastName, String phoneNumber, AddressDTO address) {

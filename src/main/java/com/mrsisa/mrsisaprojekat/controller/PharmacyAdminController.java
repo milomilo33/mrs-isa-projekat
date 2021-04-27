@@ -67,6 +67,9 @@ public class PharmacyAdminController {
 	@Autowired
 	private PatientService patientService;
 	
+	@Autowired
+	private PharmacyService pharmacyService;
+	
 	@GetMapping(value="/all")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<List<AdminPharmacyDTO>> getAdmins(){
@@ -96,7 +99,7 @@ public class PharmacyAdminController {
 	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> saveAdmin(@RequestBody AdminPharmacyDTO adminDTO) throws Exception{
 		
-		
+		System.out.println(adminDTO.getPharmacy().getName()+" "+adminDTO.getPharmacy().getDescription()+" "+adminDTO.getPharmacy().getId());
 		try {
 			AdminPharmacy savedAdmin = adminService.findOne(adminDTO.getEmail());
 			if(savedAdmin != null) {
@@ -134,16 +137,20 @@ public class PharmacyAdminController {
 		
 		Address saved = addressService.create(address);
 		
+		Pharmacy pharmacy = pharmacyService.findOne(adminDTO.getPharmacy().getId());
+		
+		
 		AdminPharmacy admin = new AdminPharmacy();
 		admin.setEmail(adminDTO.getEmail());
 		admin.setPassword(adminDTO.getPassword());
 		admin.setName(adminDTO.getName());
 		admin.setLastName(adminDTO.getLastName());
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
-		admin.setPharmacy(null);
+		admin.setPharmacy(pharmacy);
 		admin.setActive(true);
 		admin.setAddress(saved);
-		admin = adminService.create(admin);
+		AdminPharmacy adminSaved = new AdminPharmacy();
+		adminSaved = adminService.create(admin);
 		
 		try {
 			emailService.sendTestMail(admin);
@@ -152,7 +159,7 @@ public class PharmacyAdminController {
 			System.out.println(e.getMessage());
 		}
 		
-		return new ResponseEntity<>(new AdminPharmacyDTO(admin), HttpStatus.CREATED); 
+		return new ResponseEntity<>(new AdminPharmacyDTO(adminSaved), HttpStatus.CREATED); 
 		
 		
 	}

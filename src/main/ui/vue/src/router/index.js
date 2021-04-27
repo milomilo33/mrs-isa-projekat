@@ -23,10 +23,13 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
+// import PatientInfo from '../components/PatientInfo'
+
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
-
+import ExaminedPatients from '../components/ExaminedPatients'
+import PharmacyAdminRegistration from '../components/PharmacyAdminRegistration'
 import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 import Profile from '../components/Profile'
@@ -73,6 +76,10 @@ const routes = [
 		name: "PatientPage",
 		component: PatientPage,
 		children: [
+			// {
+			// 	path: "",
+			// 	component: PatientInfo,
+			// },
 			{
 				path: "MedicamentList",
 				component: MedicamentListPreview,
@@ -113,6 +120,13 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]	
 				},
+			},
+			{
+				path:"PharmacyAdminRegistration",
+				component: PharmacyAdminRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
 			},
 			{
 				path: "PharmacyList",
@@ -200,6 +214,14 @@ const routes = [
 					roles: [Role.Pharmacist]
 					
 				},
+			},
+			{
+				path: "ExaminedPatients",
+				component: ExaminedPatients,
+				props: true,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
 			}
 		]
 	},
@@ -249,6 +271,14 @@ const routes = [
 				meta: {
 					roles: [Role.Dermatologist]
 				},
+			},
+			{
+				path: "ExaminedPatients",
+				component: ExaminedPatients,
+				props: true,
+				meta: {
+					roles: [Role.Dermatologist]
+				}
 			}
 		]
 	},

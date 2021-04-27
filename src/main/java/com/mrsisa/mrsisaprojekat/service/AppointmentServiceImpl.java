@@ -31,6 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment update(Appointment appointment) throws Exception {
+
         return null;
     }
 

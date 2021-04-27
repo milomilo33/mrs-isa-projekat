@@ -108,16 +108,23 @@ export default {
     },
 
     reserveExamination() {
+              console.log(JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
+
       this.axios.post('http://localhost:8080/api/patients/reserve_appointment', {
-        patientEmail: "teodorabozic@gmail.com",
+        patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         appointmentId: this.appointment.id
-      })
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+      }})
       .then(response => {
         console.log(response);
         var x = document.getElementById("mySelect");
         x.remove(x.selectedIndex);
         this.employee.appointments = this.employee.appointments.filter(el => el.id !== this.appointment.id);
         x.selectedIndex = -1;
+        alert("Rezervacija uspesno izvrsena!");
       });
     },
 

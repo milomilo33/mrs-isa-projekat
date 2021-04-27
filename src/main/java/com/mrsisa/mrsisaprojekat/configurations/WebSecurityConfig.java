@@ -77,6 +77,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/api/patients/**").permitAll()
 
 				.antMatchers("/api/pharmacy").permitAll()
+				// /auth/**
+			//.authorizeRequests().antMatchers("/api/auth/**").permitAll()		// /api/auth/**
+			.antMatchers("/api/medicaments/all").permitAll()
+				.antMatchers("/api/pharmacy").permitAll().antMatchers("/api/pharmacy/**").permitAll()
+				.antMatchers("/api/patients/**").permitAll()
 				.antMatchers("/api/pharmacy/dermatologists/**").permitAll()
 				.antMatchers("/api/pharmacy/pharmacists/**").permitAll()
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici

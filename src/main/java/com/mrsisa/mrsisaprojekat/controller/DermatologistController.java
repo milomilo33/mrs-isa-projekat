@@ -189,5 +189,22 @@ public class DermatologistController {
 
 		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/examinations/done/patient")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// svi gotovi pregledi (sa pacijentima) za trenutno ulogovanog dermatologa
+	public ResponseEntity<Collection<Appointment>> getAllDoneExaminationsWithPatientsForDermatologist() {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> doneExaminations = dermatologistService.getDoneExaminationsWithPatientsForDermatologist(currentDermatologist.getEmail());
+
+		if (doneExaminations == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (doneExaminations.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(doneExaminations, HttpStatus.OK);
+	}
 }
 
