@@ -27,7 +27,6 @@ public class EmailService {
 	@Async
 	public void sendTestMail(User user) throws MailException, InterruptedException{
 		System.out.println("Slanje emaila...");
-		
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getEmail());
 		mail.setFrom(env.getProperty("spring.mail.username"));

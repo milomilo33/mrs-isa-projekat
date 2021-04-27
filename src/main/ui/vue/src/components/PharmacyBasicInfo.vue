@@ -3,7 +3,7 @@
     <b-container>
     <b-row>
       <b-col cols="4" class="col-sm-12 col-md-4 col-lg-4">
-        <img class="img" src="../slika.jpg" alt="">
+        <img class="img" src="../pharmacyStock.jpg" alt="">
       </b-col>
 
       <b-col cols="8" align-v="start">

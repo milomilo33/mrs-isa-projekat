@@ -32,6 +32,7 @@ import ExaminedPatients from '../components/ExaminedPatients'
 import PharmacyAdminRegistration from '../components/PharmacyAdminRegistration'
 import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
+import Profile from '../components/Profile'
 
 Vue.use(VueRouter)
 const Role = {
@@ -350,6 +351,22 @@ const routes = [
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
+			}, 
+			{
+				path: "PharmacyPreview",
+				component: PharmacyPreview,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+
+			},
+			{
+				path: "Profile",
+				component: Profile,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+
 			}
 
 		]

@@ -1,37 +1,15 @@
 <template>
 
 <div id="PharmacyPreview">
-  <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
-    <b-navbar-brand href="#">Home Page</b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-      </b-navbar-nav>
-      
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <Search />
-
-        <b-nav-item-dropdown right>
-          <!-- Using 'button-content' slot -->
-          <template #button-content>
-            <em class="pl-2">User</em>
-          </template>
-          <b-dropdown-item href="#">Sign In</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
-
-  <br>
+  <!--<br>
   <b-container> 
     <b-row> 
       <b-col  cols ="1" md="1"><a href="#"> Appointments</a></b-col>
       <b-col  cols ="24" md="2"><a href="#"> Reservations</a></b-col>
       <b-col  cols ="1" md="2"><a href="#"> Promotions</a></b-col></b-row>
   </b-container>
-  <br>
-  <PharmacyBasicInfo />
+  <br>-->
+  <!--<PharmacyBasicInfo />-->
   <hr>
 
   <b-container> 
@@ -91,13 +69,36 @@ export default defineComponent({
     return {
       medicaments :[],
       employees :[],
+      pharmacyId: "",
     };
   },
 
    mounted() {
+    var AdminUsername = JSON.parse(
+      atob(localStorage.getItem("token").split(".")[1])
+    ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacy/medicamentItems/${this.$route.params.id}`,{
+      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
+      .then(function (response) {
+        self.pharmacyId = response.data.pharmacy.id;
+        self.FinAll();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+   },
+   methods:{
+   FinAll(){
+     
+    var self = this;
+    console.log(self.pharmacyId);
+    self.axios
+      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
@@ -115,9 +116,10 @@ export default defineComponent({
       });
 
       self.axios
-      .get(`/api/pharmacy/pharmacists/${this.$route.params.id}`,{
+      .get(`/api/pharmacy/pharmacists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
+
       .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
            var count = 0;
@@ -140,9 +142,11 @@ export default defineComponent({
         }
   });
   self.axios
-      .get(`/api/pharmacy/dermatologists/${this.$route.params.id}`,{
+      .get(`/api/pharmacy/dermatologists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
-        }).then(function (response) {
+        })
+     
+      .then(function (response) {
         for(var i = 0;i<response.data.length;i++){
             var count = 0;
             for(var j=0;j<response.data[i].workHours.length;j++){
@@ -164,7 +168,7 @@ export default defineComponent({
         }
       }
       });
-}
+}}
 })
 
 

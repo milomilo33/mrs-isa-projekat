@@ -11,7 +11,7 @@
            <template #button-content>
             Pharmacy
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/PharmacyPreview">Profile</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/AppointmentTable">Appointments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist</b-dropdown-item>
@@ -41,7 +41,7 @@
           <template #button-content>
             <em class="pl-2">User</em>
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/Profile">Profile</b-dropdown-item>
           <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -60,6 +60,6 @@ import Search from '../components/Search'
 export default {
   components: {
     Search
-  }
+  },
 }
 </script>
