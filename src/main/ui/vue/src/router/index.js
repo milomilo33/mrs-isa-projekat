@@ -23,7 +23,7 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
-import PatientInfo from '../components/PatientInfo'
+// import PatientInfo from '../components/PatientInfo'
 
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
@@ -75,10 +75,10 @@ const routes = [
 		name: "PatientPage",
 		component: PatientPage,
 		children: [
-			{
-				path: "",
-				component: PatientInfo,
-			},
+			// {
+			// 	path: "",
+			// 	component: PatientInfo,
+			// },
 			{
 				path: "MedicamentList",
 				component: MedicamentListPreview,
@@ -213,6 +213,14 @@ const routes = [
 					roles: [Role.Pharmacist]
 					
 				},
+			},
+			{
+				path: "ExaminedPatients",
+				component: ExaminedPatients,
+				props: true,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
 			}
 		]
 	},

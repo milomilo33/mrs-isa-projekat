@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
@@ -20,4 +21,6 @@ public interface PharmacistService {
 	List<Appointment> getAvailableAppointments(Pharmacist p);
 
 	Pharmacist findOneCounselings(String email);
+
+	Collection<Appointment> getDoneCounselingsWithPatientsForPharmacist(String email);
 }

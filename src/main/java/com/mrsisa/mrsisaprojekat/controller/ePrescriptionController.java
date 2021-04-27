@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionDispenseDTO;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 import com.mrsisa.mrsisaprojekat.service.ePrescriptionService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,9 +32,8 @@ public class ePrescriptionController {
 	@GetMapping(value="/{id}/dispense")
 	@PreAuthorize("hasAnyRole('PHARMACIST')")
 	public ResponseEntity<String> dispensePrescription(@PathVariable("id") Long id) {
-		// dobaviti trenutnog farmaceuta pomocu jwt
-		// zasad ce se prosledjivati null i nece se u servisu proveravati da li je farmaceut iz te apoteke
-		boolean dispensed = ePrescriptionService.dispensePrescription(id, null);
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		boolean dispensed = ePrescriptionService.dispensePrescription(id, currentPharmacist);
 		if (!dispensed) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -43,9 +44,8 @@ public class ePrescriptionController {
 	@GetMapping(value="/{id}/dispensable", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACIST')")
 	public ResponseEntity<ePrescriptionDispenseDTO> getPrescriptionForDispensation(@PathVariable("id") Long id) {
-		// dobaviti trenutnog farmaceuta pomocu jwt
-		// zasad null kao parametar servisne metode
-		ePrescription ePrescription = ePrescriptionService.findPrescriptionForPharmacist(id, null);
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		ePrescription ePrescription = ePrescriptionService.findPrescriptionForPharmacist(id, currentPharmacist);
 		if (ePrescription == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
