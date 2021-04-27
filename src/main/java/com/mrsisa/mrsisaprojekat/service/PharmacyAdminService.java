@@ -14,5 +14,7 @@ public interface PharmacyAdminService {
 	AdminPharmacy update(AdminPharmacy admin) throws Exception;
 	
 	void delete(String id);
+	
+	AdminPharmacy findOneWithRequestMedicaments(String email);
 }
 

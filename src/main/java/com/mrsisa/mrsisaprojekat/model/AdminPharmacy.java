@@ -1,10 +1,12 @@
 package com.mrsisa.mrsisaprojekat.model;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,6 +21,9 @@ public class AdminPharmacy extends User {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Pharmacy pharmacy;
 	
+	@OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
+	private Set<RequestMedicament> requestMedicaments;
+	
 	public AdminPharmacy() {}
 
 	public Pharmacy getPharmacy() {
@@ -28,6 +33,15 @@ public class AdminPharmacy extends User {
 	public void setPharmacy(Pharmacy pharmacy) {
 		this.pharmacy = pharmacy;
 	}
+	
+	public Set<RequestMedicament> getRequestMedicaments() {
+		return requestMedicaments;
+	}
+
+	public void setRequestMedicaments(Set<RequestMedicament> requestMedicaments) {
+		this.requestMedicaments = requestMedicaments;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return getRoles();

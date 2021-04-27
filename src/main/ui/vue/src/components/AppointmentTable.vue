@@ -186,7 +186,7 @@ components: {
       weekday: "",
       list:  [],
       allAppointments : [],
-      t : 0,
+      t :1,
     };
   },
   mounted() {
@@ -248,6 +248,11 @@ components: {
         this.weekday = "saturday";
       }else if(this.d.getDay() == 7){
         this.weekday = "sunday";
+      }
+      if(this.selected == true){
+        this.t =1;
+      }else{
+        this.t =0;
       }
                this.axios.post(`/api/appointments/`+ parseInt(this.pharmacyId),{
                   patient : {

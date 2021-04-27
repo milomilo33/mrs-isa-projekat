@@ -1,5 +1,7 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import java.util.ArrayList;
+
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 
 public class AdminPharmacyDTO {
@@ -11,7 +13,9 @@ public class AdminPharmacyDTO {
 	private String phoneNumber;
 	private AddressDTO address;
 	private PharmacyDTO pharmacy;
+	private ArrayList<RequestMedicamentDTO> requestMedicaments;
 	
+
 	public AdminPharmacyDTO() {
 		
 	}
@@ -58,7 +62,13 @@ public class AdminPharmacyDTO {
 		return pharmacy;
 	}
 
+	public ArrayList<RequestMedicamentDTO> getRequestMedicaments() {
+		return requestMedicaments;
+	}
 
+	public void setRequestMedicaments(ArrayList<RequestMedicamentDTO> requestMedicaments) {
+		this.requestMedicaments = requestMedicaments;
+	}
 	
 }
 
