@@ -14,7 +14,7 @@
                 </template>
                 <b-dropdown-item href="/DermatologistPage/ExaminationSearch">Start an examination</b-dropdown-item>
                 <b-dropdown-item href="#">Schedule an examination for a client</b-dropdown-item>
-                <b-dropdown-item href="#">Examination history</b-dropdown-item>
+                <b-dropdown-item href="/DermatologistPage/ExaminedPatients?type=dermatologist">Examination history</b-dropdown-item>
                 <b-dropdown-item href="/DermatologistPage/SearchPatients">Search patients</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item href="#">Request days off</b-nav-item>

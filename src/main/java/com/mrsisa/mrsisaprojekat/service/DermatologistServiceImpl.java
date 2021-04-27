@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class DermatologistServiceImpl implements DermatologistService {
@@ -135,12 +132,37 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	public Dermatologist findOneExaminations(String email) {
-		Dermatologist d = dermatologistRepository.getExaminations(email);
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getDoneExaminationsWithPatientsForDermatologist(String email) {
+		Dermatologist dermatologist = this.findOne(email);
 
-		return d;
+		if (dermatologist == null) {
+			return null;
+		}
+
+		Collection<Appointment> examinations = dermatologist.getMedicalExaminations();
+		Collection<Appointment> doneExaminations = new ArrayList<Appointment>();
+		if (examinations == null) {
+			return doneExaminations;
+		}
+
+		for (Appointment a : examinations) {
+			if (a.isDone()) {
+				a.setMedicalReport(null);
+				a.setChosenEmployee(null);
+				a.getPatient().setSubscribedPharmacies(null);
+				a.getPatient().setAllergies(null);
+				a.getPatient().setAppointments(null);
+				a.getPatient().setComplaints(null);
+				a.getPatient().setePrescriptions(null);
+				a.getPatient().setReservedMedicaments(null);
+				a.setPatient((Patient) Hibernate.unproxy(a.getPatient()));
+				doneExaminations.add(a);
+			}
+		}
+
+		return doneExaminations;
 	}
-
 
 
 }
