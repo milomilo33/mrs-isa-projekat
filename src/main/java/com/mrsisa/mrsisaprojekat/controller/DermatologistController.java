@@ -43,16 +43,14 @@ public class DermatologistController {
 	public ResponseEntity<List<DermatologistDTO>> getDermatologist(){
 		
 		List<Dermatologist> dermatologist = dermatologistService.findAll();
-		
 		List<DermatologistDTO> dermatologistDTO = new ArrayList<>();
 		for(Dermatologist d : dermatologist) {
-			
 			DermatologistDTO pd = new DermatologistDTO(d);
 			dermatologistDTO.add(pd);
 			
 		}
 		
-		return new ResponseEntity<>(dermatologistDTO, HttpStatus.OK);
+		return new ResponseEntity<>(dermatologistDTO,HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

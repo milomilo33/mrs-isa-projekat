@@ -19,6 +19,7 @@
         v-model="password"
         placeholder="Password"
         required
+        type="password"
       >
       </b-form-input>
       <div class="mt-2">
@@ -41,6 +42,7 @@ export default {
       showSuccessAlert: false,
     };
   },
+
   methods: {
     login() {
       var _this = this;
@@ -56,7 +58,7 @@ export default {
           localStorage.setItem("token", response.data.accessToken);
           this.findUserRole();
         })
-        .catch((error) => {
+          .catch((error) => {
           console.log(error);
           _this.showSuccessAlert = true;
         });
@@ -66,7 +68,6 @@ export default {
       var userRole = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
-
       if (userRole == "ROLE_PATIENT") {
         this.$router.push("/PatientPage");
       }
@@ -87,7 +88,7 @@ export default {
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>

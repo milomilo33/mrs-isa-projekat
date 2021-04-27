@@ -12,7 +12,7 @@
             Pharmacy
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Appointments</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/AppointmentTable">Appointments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist</b-dropdown-item>
           <b-dropdown-item href="#">Orders</b-dropdown-item>

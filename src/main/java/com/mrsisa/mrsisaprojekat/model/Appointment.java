@@ -36,7 +36,7 @@ public class Appointment {
 	@Column(name = "type", unique = false, nullable = false)
 	private AppointmentType type;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Employee chosenEmployee;
 

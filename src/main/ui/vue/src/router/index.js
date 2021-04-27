@@ -26,6 +26,8 @@ import SuccessActivation from '../views/SuccessActivation'
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
+
+import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 
 Vue.use(VueRouter)
@@ -308,6 +310,13 @@ const routes = [
 			{
 				path: "PricelistTable",
 				component: PricelistTable,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
+			{
+				path: "AppointmentTable",
+				component: AppointmentTable,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},

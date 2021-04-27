@@ -35,7 +35,7 @@ public class Pharmacy {
 	@Column(name = "income", unique = false, nullable = false)
 	private double income;
 	
-	@ManyToMany(mappedBy = "pharmacies", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
+	@ManyToMany(mappedBy = "pharmacies", fetch = FetchType.EAGER, cascade= CascadeType.MERGE)
 	private Set<Dermatologist> dermatologists;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)

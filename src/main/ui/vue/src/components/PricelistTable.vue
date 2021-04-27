@@ -1,9 +1,5 @@
 <template>
-  <main class="my-form">
-    <div class="cotainer">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
+          <div class="my-form">
             <div class="card-header">Pricelist</div>
             <b-row>
               <b-col lg="4" class="my-1">
@@ -39,6 +35,7 @@
               :sort-by.sync="sortBy"
               :sort-desc.sync="sortDesc"
               :filter="filter"
+              striped hover
               :filter-included-fields="filterOn"
               small
               @filtered="onFiltered">
@@ -105,10 +102,6 @@
             </pre>
             </b-modal>
           </div>
-        </div>
-      </div>
-    </div>
-  </main>
 </template>
 
 <script>
@@ -216,7 +209,6 @@ export default {
     },
     check(){
         var self = this;
-        console.log(self.datefrom);
         self.axios.put(
           `/api/pricelistItems/update/`+self.id,
           {
@@ -229,15 +221,18 @@ export default {
           },{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         }
-        );
-        self.items = [];
-        self.refresh();
+        ).then(function(response){
+          console.log(response);
+          self.items = [];
+          self.refresh();
+        });
+        
     }
     ,
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pricelistItems/1`, {
+      .get(`/api/pricelistItems/`+ self.pharmacyId, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
@@ -269,3 +264,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.my-form .card-header {
+  background-color:#ccffbc;
+}
+</style>
