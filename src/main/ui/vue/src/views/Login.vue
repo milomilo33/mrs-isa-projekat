@@ -18,7 +18,6 @@
         v-model="password"
         placeholder="Password"
         required
-        type="password"
       >
       </b-form-input>
       <div class="mt-2">

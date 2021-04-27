@@ -27,7 +27,7 @@ import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
 import ExaminedPatients from '../components/ExaminedPatients'
-
+import PharmacyAdminRegistration from '../components/PharmacyAdminRegistration'
 import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 
@@ -113,6 +113,13 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]	
 				},
+			},
+			{
+				path:"PharmacyAdminRegistration",
+				component: PharmacyAdminRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
 			},
 			{
 				path: "PharmacyList",

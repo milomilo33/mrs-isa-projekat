@@ -1,7 +1,7 @@
 <template>
   <div class="cotainer">
     <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
-      Success! You registered a new {{$route.params.userRole}} '{{this.email}}'.
+      Success! You registered a new Pharmacy Admin '{{this.email}}'.
     </b-alert>
     <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
      Failed registration.
@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Register {{ $route.params.userRole }}</div>
+          <div class="card-header">Register Pharmacy Admin</div>
           <div class="card-body">
             <form name="my-form" @submit="formSubmit">
               <div class="form-group row">
@@ -173,6 +173,18 @@
                   />
                 </div>
               </div>
+              <div class="form-group row">
+                <label
+                  for="number"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Izaberite apoteku</label
+                >
+                <div class = "col-md-4"> 
+                  <b-form-select v-model="pharmacy">
+                  <option v-for="p in pharmacies" :value="p" :key="p.id">{{p.name}}</option>
+                  </b-form-select>
+                </div>
+              </div>
               <div class="col-md-6 offset-md-4">
                 <p class="show_error">{{ error_message }}</p>
               </div>
@@ -189,12 +201,19 @@
 
 <script>
 export default {
-  name: "UserRegistration",
+  name: "PharmacyAdminRegistration",
   mounted() {
-    console.log("Component mounted.");
+    this.axios.get(`/api/pharmacy`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+          .then(response => {
+              this.pharmacies = response.data;
+          }).catch(error => console.log(error));
   },
   data() {
     return {
+      pharmacies: null,
+      pharmacy: null,
       name: "",
       lastName: "",
       country: "",
@@ -213,6 +232,7 @@ export default {
   },
   methods: {
     formSubmit(e) {
+      console.log(this.pharmacy);
       e.preventDefault();
       let currentObj = this;
       let errorFound = false;
@@ -236,15 +256,9 @@ export default {
         errorFound = true;
         this.error_message = "Lozinke se ne poklapaju!";
       }
-      if (this.$route.params.userRole == "SystemAdmin") {
-        role = `/api/systemAdmin`;
-      } else if (this.$route.params.userRole == "PharmacyAdmin") {
-        role = `/api/pharmacyAdmin`;
-      } else if (this.$route.params.userRole == "Dermatologist") {
-        role = `/api/dermatologist`;
-      } else if (this.$route.params.userRole == "Supplier") {
-        role = `/api/supplier`;
-      }
+      
+      role = `/api/pharmacyAdmin`;
+     
       if (errorFound == false) {
         this.axios
           .post(role, {
@@ -253,6 +267,7 @@ export default {
             email: this.email,
             phoneNumber: this.phoneNumber,
             password: this.password2,
+            pharmacy: this.pharmacy,
             address: {
               country: this.country,
               city: this.city,
