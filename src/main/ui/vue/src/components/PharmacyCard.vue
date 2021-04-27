@@ -6,7 +6,7 @@
             <b-row class="w-100 hover-shadow pt-2 pb-2 border">
                     <b-col> 
                         <router-link :to="{name: 'PharmacyPreview', params: {id: p.id}}">
-                            <img class="pharmacy_img" src="../slika.jpg" alt="">
+                            <img class="pharmacy_img" src="../pharmacyStock.jpg" alt="">
                         </router-link>
                     </b-col>
                     <b-col lg="6" md="4" sm="4">

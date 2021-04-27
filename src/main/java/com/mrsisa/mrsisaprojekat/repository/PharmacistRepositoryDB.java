@@ -23,7 +23,7 @@ public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String
 	@Query("select p from Pharmacist p join fetch p.roles where p.email=?1")
 	Pharmacist getOneLogin(String id);
 
-	@Query("select p from Pharmacist p join fetch p.counselings where p.email = ?1")
+	@Query("select p from Pharmacist p join fetch p.address join fetch p.counselings where p.email = ?1")
 	Pharmacist getPharmacistWithCounselings(String email);
 	
 

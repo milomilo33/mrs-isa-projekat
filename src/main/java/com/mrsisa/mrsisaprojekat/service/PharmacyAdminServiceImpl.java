@@ -45,7 +45,8 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 
 	@Override
 	public AdminPharmacy update(AdminPharmacy admin) throws Exception {
-		AdminPharmacy adminToUpdate = adminRepository.findById(admin.getEmail()).orElseGet(null);
+		AdminPharmacy adminToUpdate = adminRepository.getOnePharmacyAdmin(admin.getEmail());
+		System.out.println(adminToUpdate.getPharmacy().getName());
 		if (adminToUpdate == null) {
 			return null;
 		}

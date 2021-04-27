@@ -29,7 +29,7 @@ public class PharmacistDTO {
 		this.phoneNumber = pharmacist.getPhoneNumber();
 		this.address = new AddressDTO(pharmacist.getAddress());
 		this.pharmacy = new PharmacyDTO(pharmacist.getPharmacy());
-		this.appointments = new ArrayList<>(pharmacist.getCounselings());
+		//this.appointments = new ArrayList<>(pharmacist.getCounselings());
 	}
 	public PharmacistDTO(String email,String password,String name,String lastName,String phoneNumber,AddressDTO address,PharmacyDTO pharmacy) {
 		super();
@@ -81,7 +81,6 @@ public class PharmacistDTO {
 	public ArrayList<WorkHourDTO> getWorkHours() {
 		return workHours;
 	}
-
 	public PharmacyDTO getPharmacy() {
 		return pharmacy;
 	}

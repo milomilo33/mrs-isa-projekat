@@ -1,7 +1,7 @@
 <template>
   <b-col align-h="start" class="border pt-2 ml-2">
     <a href="#">
-      <img class="img" src="../employee.jpg" alt="" />
+      <img class="img" src="../doctors.jpg" alt="" />
     </a>
     <b-container>
       <b-row align-h="start" class="pl-1">
@@ -73,7 +73,8 @@ export default {
       ratings: 0,
       modal: "",
       show: false,
-      appointment: null
+      appointment: null,
+      app:"",
     };
   },
   methods: {

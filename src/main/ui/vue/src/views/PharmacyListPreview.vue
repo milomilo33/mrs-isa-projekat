@@ -1,30 +1,5 @@
 <template>
     <div id="PharmacyListPreview" class="div">
-    <!--    
-        <b-navbar fixed="top" toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">Home Page</b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <b-nav-item href="#">All Products</b-nav-item>
-        <b-nav-item href="#">Contact</b-nav-item>
-      </b-navbar-nav>
-      
-    
-      
-      <b-navbar-nav class="ml-auto">
-        <Search />
-
-        <b-nav-item-dropdown right>
-          
-          <template #button-content>
-            <em class="pl-2">User</em>
-          </template>
-          <b-dropdown-item href="#">Sign In</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar> -->
       <button type="button" class="btn btn-light m-auto" align-v="right" @click="filter_show=!filter_show">Filter</button>
       <div v-if="filter_show">
         <PharmacyFilter @childToParent="filterPharmacies"/>

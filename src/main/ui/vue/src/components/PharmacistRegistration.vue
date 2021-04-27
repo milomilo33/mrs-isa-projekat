@@ -1,6 +1,9 @@
 <template>
     <main class="my-form">
        <div class="cotainer">
+           <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
+      Success! You registered a new pharmacist.
+    </b-alert>
            <div class="row justify-content-center">
                <div class="col-md-6">
                        <div class="card">
@@ -145,6 +148,7 @@ export default {
       output3: {},
       addressId:{},
       pharmacyW :{},
+      showSuccessAlert: false,
     };
   },
    methods: {
@@ -323,7 +327,7 @@ export default {
         }
         })
         .then((response) => {
-            
+            self.showSuccessAlert=true,
             console.log(response);
         })
         .catch(function (error) {
