@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,4 +86,48 @@ public class MedicamentController {
 		
 		
 	}
+	@GetMapping(value = "/search/{query}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<MedicamentDTO>> getSearchMedicament(@PathVariable("query") String query) {
+		System.out.println(query);
+		Collection<Medicament> medicaments = service.findAllWithName(query);
+
+		if (medicaments == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		Collection<MedicamentDTO> medicamentsDTO = new ArrayList<>();
+		for(Medicament m : medicaments) {
+			medicamentsDTO.add(new MedicamentDTO(m));
+		}
+	
+		return new ResponseEntity<Collection<MedicamentDTO>>(medicamentsDTO, HttpStatus.OK);
+	}
+	@GetMapping(value = "/filter/mode={mode}&form={form}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<MedicamentDTO>> getFilterMedicament(@PathVariable("mode") int mode,@PathVariable("form") int form ) {
+		Collection<Medicament> medicaments = service.findAll();
+
+		if (medicaments == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		Collection<MedicamentDTO> medicamentsDTO = new ArrayList<>();
+		for(Medicament m : medicaments) {
+			if(mode != -1 && form != -1) {
+				if(m.getIssuanceMode().ordinal() == mode && m.getMedicamentForm().ordinal()==form)
+					medicamentsDTO.add(new MedicamentDTO(m));
+			}
+			else if(mode != -1 && form == -1) {
+				if(m.getIssuanceMode().ordinal() == mode)
+					medicamentsDTO.add(new MedicamentDTO(m));
+			}
+			else if(mode == -1 && form!= -1) {
+				if(m.getMedicamentForm().ordinal() == form)
+					medicamentsDTO.add(new MedicamentDTO(m));
+			}
+			else {
+				medicamentsDTO.add(new MedicamentDTO(m));
+			}
+		}
+	
+		return new ResponseEntity<Collection<MedicamentDTO>>(medicamentsDTO, HttpStatus.OK);
+	}
+
 }

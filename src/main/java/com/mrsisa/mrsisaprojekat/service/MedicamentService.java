@@ -17,5 +17,9 @@ public interface MedicamentService {
 	void delete(Medicament medicament);
 
 	Medicament getRatings(Long id);
+
+	Collection<Medicament> findAllWithName(String query);
+
+	Collection<Medicament> findAllFilter(int mode, int form);
 	
 }
