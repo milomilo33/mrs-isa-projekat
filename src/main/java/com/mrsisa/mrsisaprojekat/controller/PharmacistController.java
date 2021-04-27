@@ -1,15 +1,14 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
-import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
@@ -188,6 +183,21 @@ public class PharmacistController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
 
+	@GetMapping(value = "/counselings/done/patient")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// svi gotovi pregledi (sa pacijentima) za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Collection<Appointment>> getAllDoneCounselingsWithPatientsForPharmacist() {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> doneCounselings = pharmacistService.getDoneCounselingsWithPatientsForPharmacist(currentPharmacist.getEmail());
+
+		if (doneCounselings == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (doneCounselings.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(doneCounselings, HttpStatus.OK);
+	}
 }

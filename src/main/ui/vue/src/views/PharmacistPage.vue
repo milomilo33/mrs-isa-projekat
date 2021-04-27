@@ -14,7 +14,7 @@
                 </template>
                 <b-dropdown-item href="#">Start a counseling session</b-dropdown-item>
                 <b-dropdown-item href="#">Schedule a counseling session for a client</b-dropdown-item>
-                <b-dropdown-item href="#">Counseling history</b-dropdown-item>
+                <b-dropdown-item href="/PharmacistPage/ExaminedPatients?type=pharmacist">Counseling history</b-dropdown-item>
                 <b-dropdown-item href="/PharmacistPage/SearchPatients">Search patients</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item href="/PharmacistPage/DispenseMedication">Dispense medication</b-nav-item>

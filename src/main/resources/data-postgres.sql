@@ -102,7 +102,7 @@ insert into pharmacist (email, deleted, active, last_name, name, password, phone
 
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-25 10:00','anasimic@gmail.com', false, false, 1)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-06 10:00','teodorabozic@gmail.com', false, false, 1)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-30 10:00','teodorabozic@gmail.com', false, false, 1)
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-07 10:00','lukamarkovic@gmail.com', false, false, 2)
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id) values ('2021-04-08 10:00','anjastupar@gmail.com', false, false, 3)
@@ -121,7 +121,8 @@ insert into medical_report (date, deleted, description, eprescription_id) values
 
 
 -- 0 - counseling, 1 - examination
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','14:00','14:30', 1, null, 'janatot@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-06','false','14:00','14:30', 1, null, 'janatot@gmail.com', 'teodorabozic@gmail.com')
+--insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','14:00','14:30', 1, null, 'janatot@gmail.com', null)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','15:00','15:30', 1, null, 'janatot@gmail.com', null)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-04-01','false','17:00','18:00', 1, null, 'janatot@gmail.com', null)
 

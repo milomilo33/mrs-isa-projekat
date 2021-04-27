@@ -4,15 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
 
 @Service
@@ -94,5 +92,37 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return p;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getDoneCounselingsWithPatientsForPharmacist(String email) {
+		Pharmacist pharmacist = this.findOne(email);
+
+		if (pharmacist == null) {
+			return null;
+		}
+
+		Collection<Appointment> counselings = pharmacist.getCounselings();
+		Collection<Appointment> doneCounselings = new ArrayList<Appointment>();
+		if (counselings == null) {
+			return doneCounselings;
+		}
+
+		for (Appointment a : counselings) {
+			if (a.isDone()) {
+				a.setMedicalReport(null);
+				a.setChosenEmployee(null);
+				a.getPatient().setSubscribedPharmacies(null);
+				a.getPatient().setAllergies(null);
+				a.getPatient().setAppointments(null);
+				a.getPatient().setComplaints(null);
+				a.getPatient().setePrescriptions(null);
+				a.getPatient().setReservedMedicaments(null);
+				a.setPatient((Patient) Hibernate.unproxy(a.getPatient()));
+				doneCounselings.add(a);
+			}
+		}
+
+		return doneCounselings;
+	}
 
 }

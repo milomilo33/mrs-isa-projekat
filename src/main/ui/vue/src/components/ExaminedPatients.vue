@@ -77,10 +77,10 @@
                     url = '/api/dermatologist/examinations/done/patient';
                 }
                 else if (this.type === 'pharmacist') {
-                    url = '/api/pharmacist/examinations/done/patient';
+                    url = '/api/pharmacist/counselings/done/patient';
                 }
                 else {
-                    console.log("Invalid type in examination history.");
+                    console.log("Invalid type in appointment history.");
                     return;
                 }
                 this.axios.get(url,  {

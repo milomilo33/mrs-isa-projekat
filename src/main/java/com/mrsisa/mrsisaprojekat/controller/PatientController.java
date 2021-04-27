@@ -186,44 +186,44 @@ public class PatientController {
 		}
 	}
 
-	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
-	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
-
-		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
-		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
-
-		appointmentService.update(appointmentToReserve);
-		if(appointmentToReserve.getType() == Appointment.AppointmentType.EXAMINATION) {
-			Dermatologist d = dermatologistService.findOneExaminations(appointmentToReserve.getChosenEmployee().getEmail());
-
-			Set<Appointment> temp = d.getMedicalExaminations();
-			temp.add(appointmentToReserve);
-			d.setMedicalExaminations(temp);
-
-			dermatologistService.update(d);
-		} else {
-			Pharmacist p = pharmacistService.findOneCounselings(appointmentToReserve.getChosenEmployee().getEmail());
-			p.getCounselings().add(appointmentToReserve);
-			pharmacistService.update(p);
-		}
-
-		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
-
-		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
-
-
-
-		try {
-			emailService.ReserveExaminationMail(p, id);
-		}
-		catch( Exception e) {
-			System.out.println(e.getMessage());
-		}
-
-		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
-
-	}
+//	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
+//	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
+//	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
+//
+//		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
+//		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
+//
+//		appointmentService.update(appointmentToReserve);
+//		if(appointmentToReserve.getType() == Appointment.AppointmentType.EXAMINATION) {
+//			Dermatologist d = dermatologistService.findOneExaminations(appointmentToReserve.getChosenEmployee().getEmail());
+//
+//			Set<Appointment> temp = d.getMedicalExaminations();
+//			temp.add(appointmentToReserve);
+//			d.setMedicalExaminations(temp);
+//
+//			dermatologistService.update(d);
+//		} else {
+//			Pharmacist p = pharmacistService.findOneCounselings(appointmentToReserve.getChosenEmployee().getEmail());
+//			p.getCounselings().add(appointmentToReserve);
+//			pharmacistService.update(p);
+//		}
+//
+//		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
+//
+//		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
+//
+//
+//
+//		try {
+//			emailService.ReserveExaminationMail(p, id);
+//		}
+//		catch( Exception e) {
+//			System.out.println(e.getMessage());
+//		}
+//
+//		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+//
+//	}
 
 	@DeleteMapping(value = "/delete_examination/{id}")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")

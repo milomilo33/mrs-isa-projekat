@@ -64,11 +64,17 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 		if (ePrescription == null) {
 			return false;
 		}
-		
-		/*//otkomentarisati kad pharmacist!=null
-		if (!ePrescription.getPharmacy().getPharmacists().contains(pharmacist)) {
+
+		boolean pharmacistInPrescriptionPharmacy = false;
+		for (Pharmacist ph : ePrescription.getPharmacy().getPharmacists()) {
+			if (ph.getEmail().equals(pharmacist.getEmail())) {
+				pharmacistInPrescriptionPharmacy = true;
+				break;
+			}
+		}
+		if (!pharmacistInPrescriptionPharmacy) {
 			return false;
-		}*/
+		}
 		
 		LocalDate date = ePrescription.getDate();
 		LocalDate now = LocalDate.now();
@@ -106,12 +112,18 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 		if (ePrescription == null) {
 			return null;
 		}
-		
-		/*//otkomentarisati kad pharmacist!=null
-		if (!ePrescription.getPharmacy().getPharmacists().contains(pharmacist)) {
+
+		boolean pharmacistInPrescriptionPharmacy = false;
+		for (Pharmacist ph : ePrescription.getPharmacy().getPharmacists()) {
+			if (ph.getEmail().equals(pharmacist.getEmail())) {
+				pharmacistInPrescriptionPharmacy = true;
+				break;
+			}
+		}
+		if (!pharmacistInPrescriptionPharmacy) {
 			return null;
-		}*/
-		
+		}
+
 		LocalDate date = ePrescription.getDate();
 		LocalDate now = LocalDate.now();
 		
