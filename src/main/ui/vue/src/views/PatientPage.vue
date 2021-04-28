@@ -8,6 +8,8 @@
         <b-navbar-nav>
           <b-nav-item href="/PatientPage/MedicamentList">Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/PharmacyList"> Pharmacies</b-nav-item>
+          <b-nav-item href="/PatientPage/ReservedAppointmentsTable"> Reserved Appointments</b-nav-item>
+          <b-nav-item href="/PatientPage/ReservedMedicamentsTable"> Reserved Medicaments</b-nav-item>
         </b-navbar-nav>
         
         <!-- Right aligned nav items -->
