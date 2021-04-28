@@ -72,7 +72,6 @@ public class PharmacyAdminController {
 	@Autowired
 	private PatientService patientService;
 
-	
 	@GetMapping(value="/all")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<List<AdminPharmacyDTO>> getAdmins(){

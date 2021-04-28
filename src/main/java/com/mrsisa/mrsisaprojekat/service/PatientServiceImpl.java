@@ -67,10 +67,21 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public Patient getOneWithReservedMeds(String email) {
 		Patient p = patientRepository.getPatientWithReservedMedicaments(email);
+		p.setAppointments(new HashSet<>());
+		p.setComplaints(new HashSet<>());
+		p.setAllergies(new HashSet<>());
+		p.setePrescriptions(new HashSet<>());
+		p.setSubscribedPharmacies(new HashSet<>());
+
 		System.out.println(p);
 		if (p == null) {
 			p = findOne(email);
 			p.setReservedMedicaments(new HashSet<>());
+			p.setAppointments(new HashSet<>());
+			p.setComplaints(new HashSet<>());
+			p.setAllergies(new HashSet<>());
+			p.setePrescriptions(new HashSet<>());
+			p.setSubscribedPharmacies(new HashSet<>());
 		}
 		return p;
 	}
@@ -89,8 +100,9 @@ public class PatientServiceImpl implements PatientService {
 		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
 		PrescriptionMedicament pm = prescriptionRepository.save(medicamentToReserve);
 		patientRepository.save(p);
+		prescriptionRepository.updatePatientReservation(p.getEmail(), medicamentToReserve.getId());
 
-		return pm.getId();
+		return medicamentToReserve.getId();
 	}
 
 
