@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,14 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
+import com.mrsisa.mrsisaprojekat.dto.RequestMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.AdminSystem;
+import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.RequestMedicament;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
@@ -66,9 +71,7 @@ public class PharmacyAdminController {
 	
 	@Autowired
 	private PatientService patientService;
-	
-	@Autowired
-	private PharmacyService pharmacyService;
+
 	
 	@GetMapping(value="/all")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
@@ -168,12 +171,10 @@ public class PharmacyAdminController {
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<AdminPharmacyDTO> updatePharmacyAdmin(@RequestBody AdminPharmacyDTO admin,@PathVariable("id") String email) throws Exception {
 		AdminPharmacy adminUpdate = adminService.findOne(email);
-		//Pharmacy p = pharmacyService.findOne(admin.getPharmacy().getId());
 		adminUpdate.setPhoneNumber(admin.getPhoneNumber());
 		adminUpdate.setEmail(admin.getEmail());
 		adminUpdate.setName(admin.getName());
 		adminUpdate.setLastName(admin.getLastName());
-		//adminUpdate.setPharmacy(p);
 		if(adminUpdate.getAddress().getCountry().equals(admin.getAddress().getCountry()) &&
 				adminUpdate.getAddress().getCity().equals(admin.getAddress().getCity()) &&
 				adminUpdate.getAddress().getStreet().equals(admin.getAddress().getStreet()) &&
@@ -193,6 +194,20 @@ public class PharmacyAdminController {
 		
 		adminUpdate = adminService.update(adminUpdate);
 		return new ResponseEntity<AdminPharmacyDTO>(new AdminPharmacyDTO(adminUpdate), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/requestMedicaments/{id}")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<AdminPharmacyDTO> getRequestMedicaments(@PathVariable("id") String email) {
+		AdminPharmacy admin = adminService.findOneWithRequestMedicaments(email);
+		ArrayList<RequestMedicamentDTO> requests = new ArrayList<RequestMedicamentDTO>();
+		for(RequestMedicament m : admin.getRequestMedicaments()) {
+			requests.add(new RequestMedicamentDTO(m));
+		}
+		AdminPharmacyDTO a = new AdminPharmacyDTO(admin);
+		a.setRequestMedicaments(requests);
+
+		return new ResponseEntity<AdminPharmacyDTO>(a, HttpStatus.OK);
 	}
 	
 

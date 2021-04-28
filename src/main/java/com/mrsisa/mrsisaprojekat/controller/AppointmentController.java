@@ -91,8 +91,8 @@ public class AppointmentController {
     	for(WorkHour w : workHours) {
     		int val = time1.compareTo(w.getWorkHourFrom());
     		int val2 = w.getWorkHourTo().compareTo(time2);
-    		if(w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() && val>0
-    				&& val2>0) {
+    		if(w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() && val>=0
+    				&& val2>=0) {
 				return true;
 			}
     	}

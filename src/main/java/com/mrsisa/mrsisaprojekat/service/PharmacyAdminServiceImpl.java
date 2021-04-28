@@ -58,4 +58,10 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	public void delete(String id) {
 		adminRepository.deleteById(id);
 	}
+
+	@Override
+	public AdminPharmacy findOneWithRequestMedicaments(String email) {
+		AdminPharmacy admin = adminRepository.getOneWithRequestMedicaments(email);
+		return admin;
+	}
 }

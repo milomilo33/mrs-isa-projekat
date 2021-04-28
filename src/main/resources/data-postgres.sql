@@ -366,3 +366,8 @@ insert into employee_work_hour(employee_email, work_hour_id) values ('svetozarto
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 7)
 insert into employee_work_hour(employee_email, work_hour_id) values ('aleksandarstevanovic@gmail.com', 8)
 insert into employee_work_hour(employee_email, work_hour_id) values ('milanm@gmail.com', 9)
+
+
+
+insert into request_medicament(accepted, quantity, admin_email,employee_email,medicament_id) values (false,10,'sarajovic@gmail.com','aleksandarstevanovic@gmail.com',3)
+insert into request_medicament(accepted, quantity, admin_email,employee_email,medicament_id) values (false,2,'sarajovic@gmail.com','milanm@gmail.com',4)
