@@ -15,7 +15,16 @@
               <p class="text-left"> {{ pharmacy.description }}</p>
             </b-row>
             <b-row class="">
-              <h5>{{ this.addressToString(pharmacy.address) }}</h5>
+              <b-link v-b-modal.modal-map><h5>{{ this.addressToString(pharmacy.address) }}</h5></b-link>
+                
+
+              <b-modal id="modal-map" hide-footer size="xl">
+                <template>
+                  <MapContainer :address="pharmacy.address"/>
+                </template>
+
+                <b-button block class="mt-4" @click="$bvModal.hide('modal-map')">Close</b-button>
+              </b-modal>
             </b-row>
     </b-container>
       </b-col>
@@ -26,10 +35,15 @@
 
 
 <script>
+import MapContainer from "./MapContainer.vue" 
 
 export default {
     name: 'PharmacyBasicInfo',
-   
+
+    components: {
+      MapContainer
+    },
+
     props: {
       
     },
@@ -67,13 +81,6 @@ export default {
     max-height: 100%;
   }
 
-  .pharmacy {
-    text-align: left;
-    }
 
-  .address {
-    position: absolute;
-    bottom: 0;
-    left: 10;
-  }
+  
 </style>

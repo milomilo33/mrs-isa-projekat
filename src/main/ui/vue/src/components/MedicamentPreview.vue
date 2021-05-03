@@ -66,7 +66,7 @@
                     </b-button>
                   </template>
                 <b-row>
-                  <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
+                  <input type="number" min="0" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
                   <b-button class="m-2" @click="reserveMedicament()"> Reserve medicament </b-button>
                   
                 </b-row>
@@ -106,7 +106,7 @@ export default {
       modal: "",
       show: false,
       nameM: "",
-      amount: null,
+      amount: Number,
       date: "",
       success: false,
       unallowedQuantityMessage: "",
@@ -146,6 +146,18 @@ export default {
     reserveMedicament() {
       this.isReserved = true;
       this.unallowedQuantityMessage = "";
+
+      if(this.amount <= 0) {
+        this.unallowedQuantityMessage = `<p class="ml-2" style="color:red;">Quantity must be a positive number.</p>`;
+        return;
+      }
+
+      if(this.amount - Math.floor(this.amount) !== 0) {
+        console.log(this.amount, Math.floor(this.amount));
+        this.unallowedQuantityMessage = `<p class="ml-2" style="color:red;">Quantity must be whole number.</p>`;
+        return;
+      }
+
       //console.log(this.amount);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
@@ -185,7 +197,7 @@ export default {
   max-width: 30rem;
 }
 .colorIt1{
-  background-color: rgb(255, 255, 204,0.7);
+  background-color: rgb(255, 255, 204, 0.7);
   border-radius: 5%;
 }
 

@@ -35,6 +35,7 @@ import AppointmentTable from '../components/AppointmentTable'
 import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 import Profile from '../components/Profile'
 import RequestMedicaments from '../components/RequestMedicaments'
+import MapContainer from "../components/MapContainer"
 
 Vue.use(VueRouter)
 const Role = {
@@ -46,6 +47,11 @@ const Role = {
 
 }
 const routes = [
+	{
+		path: "/map",
+		name: MapContainer,
+		component: MapContainer
+	},
 	{
 		path: "/Login",
 		name: "Login",
