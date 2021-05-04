@@ -1,33 +1,25 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.net.URI;
-import java.util.Collection;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
-import com.mrsisa.mrsisaprojekat.exceptions.ResourceConflictException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
-import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -41,6 +33,14 @@ public class PatientController {
 	
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private PharmacyAdminService adminService;
+	
+	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
 	
 	@Autowired
     private ConfirmationTokenRepositoryDB confirmationTokenRepository;
@@ -54,14 +54,81 @@ public class PatientController {
 	@Autowired
 	private DermatologistService dermatologistService;
 
-	@Autowired
-	private PharmacistService pharmacistService;
-	
-	
+
+	@GetMapping(value="/reservedMedication/{id}")
+	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getReservedMedication(@PathVariable("id") String id) {
+		Patient patient = patientService.getOneWithReservedMeds(id);
+
+		if(patient == null)
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		List<PrescriptionMedicamentDTO> returns = new ArrayList<>();
+		for(PrescriptionMedicament pm : patient.getReservedMedicaments()) {
+			if(!pm.isDeleted() && !pm.isPurchased()) {
+				PrescriptionMedicamentDTO medicament = new PrescriptionMedicamentDTO(pm);
+				returns.add(medicament);
+			}
+
+		}
+
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+
+
+	}
+
+
+
+	@GetMapping(value="/reservedAppointments/{id}")
+	public ResponseEntity<Collection<AppointmentDTO>> getReservedAppointments(@PathVariable("id") String id) {
+		Patient patient = patientService.getOneWithAppointments(id);
+
+		if (patient == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<AppointmentDTO> returns = new ArrayList<>();
+		for(Appointment a : patient.getAppointments()) {
+			if(!a.isDone()) {
+				AppointmentDTO d = new AppointmentDTO(a);
+				returns.add(d);
+			}
+
+		}
+
+		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
 	
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(patientDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(patientDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(patientDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(patientDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(patientDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		
 		
 		Address address = new Address();
@@ -173,17 +240,19 @@ public class PatientController {
 
 	}
 
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "cancelReservation/{id}")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
 
 		if(medicament != null) {
-			prescriptionMedicamentService.delete(id);
-			return new ResponseEntity<>(id, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			if(LocalDate.now().plusDays(1).isBefore(medicament.getExpiryDate())) {
+				prescriptionMedicamentService.delete(id);
+				return new ResponseEntity<>(id, HttpStatus.OK);
+			}
 		}
+		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 //	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
@@ -229,13 +298,16 @@ public class PatientController {
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelExamination(@PathVariable("id") Long id) {
 		Appointment a = appointmentService.findOne(id);
+		LocalDateTime now = LocalDateTime.now().plusDays(1);
 
 		if(a != null) {
-			appointmentService.delete(a);
-			return new ResponseEntity<>(id, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			if(now.isBefore(a.getDate().atTime(a.getTermFrom()))) {
+				appointmentService.delete(a);
+				return new ResponseEntity<>(id, HttpStatus.OK);
+			}
 		}
+		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 //	@GetMapping(value = "/{id}/appointments")

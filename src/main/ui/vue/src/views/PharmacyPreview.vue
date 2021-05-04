@@ -1,15 +1,15 @@
 <template>
 
 <div id="PharmacyPreview">
-  <!--<br>
+  <!-- <br>
   <b-container> 
     <b-row> 
       <b-col  cols ="1" md="1"><a href="#"> Appointments</a></b-col>
       <b-col  cols ="24" md="2"><a href="#"> Reservations</a></b-col>
       <b-col  cols ="1" md="2"><a href="#"> Promotions</a></b-col></b-row>
   </b-container>
-  <br>-->
-  <!--<PharmacyBasicInfo />-->
+  <br> -->
+  <PharmacyBasicInfo />
   <hr>
 
   <b-container> 

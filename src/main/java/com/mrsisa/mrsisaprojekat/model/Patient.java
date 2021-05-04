@@ -34,7 +34,7 @@ public class Patient extends User {
 	@Column(name = "category", unique = false, nullable = false)
 	private Category category;
 
-	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

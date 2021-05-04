@@ -4,6 +4,7 @@ import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 
 public class PrescriptionMedicamentDTO {
     private String patientEmail;
@@ -18,6 +19,8 @@ public class PrescriptionMedicamentDTO {
 
     public PrescriptionMedicamentDTO(PrescriptionMedicament pm) {
         this.medicament = pm.getMedicament();
+        this.medicament.setSubstituteMedicaments(new HashSet<>());
+        this.medicament.setRatings(new HashSet<>());
         this.expiryDate = pm.getExpiryDate();
         this.quantity = pm.getQuantity();
     }

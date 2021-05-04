@@ -1,7 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,20 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.RequestMedicamentDTO;
-import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.AdminSystem;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.RequestMedicament;
-import com.mrsisa.mrsisaprojekat.model.WorkHour;
-import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
@@ -72,7 +65,6 @@ public class PharmacyAdminController {
 	@Autowired
 	private PatientService patientService;
 
-	
 	@GetMapping(value="/all")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<List<AdminPharmacyDTO>> getAdmins(){
@@ -102,7 +94,6 @@ public class PharmacyAdminController {
 	//@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> saveAdmin(@RequestBody AdminPharmacyDTO adminDTO) throws Exception{
 		
-		System.out.println(adminDTO.getPharmacy().getName()+" "+adminDTO.getPharmacy().getDescription()+" "+adminDTO.getPharmacy().getId());
 		try {
 			AdminPharmacy savedAdmin = adminService.findOne(adminDTO.getEmail());
 			if(savedAdmin != null) {

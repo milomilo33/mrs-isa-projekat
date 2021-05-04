@@ -40,6 +40,18 @@ public class DermatologistController {
 	@Autowired
 	private WorkHourService workHourService;
 	
+	@Autowired
+	private PatientService patientService;
+	
+	@Autowired
+	private PharmacyAdminService adminService;
+	
+	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
+	
 
 	@GetMapping(value="/all")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
@@ -72,6 +84,34 @@ public class DermatologistController {
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<DermatologistDTO> saveDermatologist(@RequestBody DermatologistDTO dermatologistDTO) throws Exception{
 		
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(dermatologistDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(dermatologistDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(dermatologistDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(dermatologistDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(dermatologistDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		Address address = new Address();
 		address.setCountry(dermatologistDTO.getAddress().getCountry());
 		address.setCity(dermatologistDTO.getAddress().getCity());

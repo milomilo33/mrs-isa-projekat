@@ -23,8 +23,9 @@ import Login from '../views/Login'
 import Logout from '../views/Logout'
 import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
+import ReservedMedicamentsTable from '../components/ReservedMedicamentsTable'
 // import PatientInfo from '../components/PatientInfo'
-
+import ReservedAppointmentsTable from '../components/ReservedAppointmentsTable'
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
@@ -45,6 +46,7 @@ const Role = {
 
 }
 const routes = [
+
 	{
 		path: "/Login",
 		name: "Login",
@@ -399,6 +401,14 @@ const routes = [
 			{
 				path: "PatientRegistration",
 				component: PatientRegistration
+			},
+			{
+				path: "ReservedAppointmentsTable",
+				component: ReservedAppointmentsTable
+			},
+			{
+				path: "ReservedMedicamentsTable",
+				component: ReservedMedicamentsTable
 			}
 		]
 	}
