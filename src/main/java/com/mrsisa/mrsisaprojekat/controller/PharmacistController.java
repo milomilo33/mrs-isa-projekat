@@ -23,9 +23,13 @@ import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.PatientService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
+import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
+import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 import com.mrsisa.mrsisaprojekat.service.WorkHourService;
 
 
@@ -47,7 +51,21 @@ public class PharmacistController {
 	private WorkHourService workHourService;
 	
 	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	
+	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private PharmacyAdminService adminService;
+	
+	@Autowired
+	private PatientService patientService;
+	
+	@Autowired
+	private DermatologistService dermatologistService;
+	
 	
 	@GetMapping(value="/all")
 	public ResponseEntity<List<PharmacistDTO>> getPharmacists(){
@@ -89,6 +107,35 @@ public class PharmacistController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<PharmacistDTO> savePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception{
 		
+
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(pharmacistDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(pharmacistDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(pharmacistDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(pharmacistDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(pharmacistDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		Address address = new Address();
 		address.setCountry(pharmacistDTO.getAddress().getCountry());
 		address.setCity(pharmacistDTO.getAddress().getCity());

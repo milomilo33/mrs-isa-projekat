@@ -9,23 +9,14 @@ import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
-import com.mrsisa.mrsisaprojekat.exceptions.ResourceConflictException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-import com.mrsisa.mrsisaprojekat.service.PrescriptionMedicamentService;
-import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -42,6 +33,14 @@ public class PatientController {
 	
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private PharmacyAdminService adminService;
+	
+	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
 	
 	@Autowired
     private ConfirmationTokenRepositoryDB confirmationTokenRepository;
@@ -55,9 +54,6 @@ public class PatientController {
 	@Autowired
 	private DermatologistService dermatologistService;
 
-	@Autowired
-	private PharmacistService pharmacistService;
-	
 
 	@GetMapping(value="/reservedMedication/{id}")
 	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getReservedMedication(@PathVariable("id") String id) {
@@ -105,6 +101,34 @@ public class PatientController {
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(patientDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(patientDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(patientDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(patientDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(patientDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		
 		
 		Address address = new Address();

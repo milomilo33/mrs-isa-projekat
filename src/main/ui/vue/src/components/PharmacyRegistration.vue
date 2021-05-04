@@ -1,5 +1,11 @@
 <template>
         <div class="cotainer">
+          <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
+            Success! You registered a new pharmacy.
+          </b-alert>
+          <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
+            Failed pharmacy registration.
+          </b-alert>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                         <div class="card">
@@ -78,11 +84,15 @@ export default {
       output: "",
       error_message: "",
       success_message: "",
+      showSuccessAlert: false,
+      showFailedAlert: false,
     };
   },
   methods: {
     formSubmit(e) {
+      
       e.preventDefault();
+      let _this = this;
       let currentObj = this;
       let errorFound = false;
 
@@ -107,11 +117,13 @@ export default {
         })
         .then(function (response) {
           currentObj.output = response.data;
+          _this.showSuccessAlert = true;
         })
         .catch(function (error) {
           currentObj.output = error;
+          _this.showFailedAlert = true;
         });
-        this.success_message = "Uspesno ste registrovali apoteku."
+        
       }
     },
   },
