@@ -23,9 +23,13 @@ import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
+import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
+import com.mrsisa.mrsisaprojekat.service.SupplierService;
+import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 import com.mrsisa.mrsisaprojekat.service.WorkHourService;
 
 
@@ -36,6 +40,18 @@ public class PharmacistController {
 	
 	@Autowired
 	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private DermatologistService dermatologistService;
+	
+	@Autowired
+	private PharmacyAdminService pharmacyAdminService;
+	
+	@Autowired
+	private SystemAdminService systemAdminService;
+	
+	@Autowired
+	private SupplierService supplierService;
 	
 	@Autowired 
 	private AddressService addressService;
@@ -84,11 +100,40 @@ public class PharmacistController {
 	
 		return new ResponseEntity<PharmacistDTO>(new PharmacistDTO(pharmacist), HttpStatus.OK);
 	}
+	
+	boolean check(String email) {
+		Pharmacist pharmacist = pharmacistService.findOne(email);
+
+		if (pharmacist != null) {
+			return true;
+		}
+		Dermatologist dermatologist = dermatologistService.findOne(email);
+		if (dermatologist != null) {
+			return true;
+		}
+		AdminPharmacy pharmacyAdmin = pharmacyAdminService.findOne(email);
+		if (pharmacyAdmin != null) {
+			return true;
+		}
+		/*AdminSystem sytemAdmin = systemAdminService.findOne(email);
+		if (sytemAdmin != null) {
+			return true;
+		}
+		/*Supplier supplier = supplierService.findOne(email);
+		if (supplier != null) {
+			return true;
+		}*/
+		
+		return false;
+	}
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<PharmacistDTO> savePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception{
 		
+		if(check(pharmacistDTO.getEmail())) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+		}
 		Address address = new Address();
 		address.setCountry(pharmacistDTO.getAddress().getCountry());
 		address.setCity(pharmacistDTO.getAddress().getCity());
@@ -199,5 +244,25 @@ public class PharmacistController {
 		}
 
 		return new ResponseEntity<Collection<Appointment>>(doneCounselings, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/ratings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public double getRatings(@PathVariable("id") String email) {
+	
+		Pharmacist p = pharmacistService.getRatings(email);
+		try {
+			p.getRatings();
+		}catch(NullPointerException e) {
+			return 0;
+		}
+		
+		
+		double val = 0;
+		
+		for(Rating g : p.getRatings()) {
+			val+=g.getValue();
+		}
+		val= val/p.getRatings().size();
+		return val;
 	}
 }

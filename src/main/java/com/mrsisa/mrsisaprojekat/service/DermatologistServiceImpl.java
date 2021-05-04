@@ -164,5 +164,10 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return doneExaminations;
 	}
 
+	@Override
+	public Dermatologist getRatings(String email) {
+		return dermatologistRepository.getRatings(email);
+	}
+
 
 }

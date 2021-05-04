@@ -14,9 +14,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -132,6 +135,26 @@ public class DermatologistController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	public boolean check(Set<WorkHour> workHours, WorkHour wh) {
+		
+    	for(WorkHour w : workHours) {
+    		if((w.getDay().ordinal() == wh.getDay().ordinal() && w.getWorkHourFrom().compareTo(wh.getWorkHourFrom())==0
+    				&& w.getWorkHourTo().compareTo(wh.getWorkHourTo()) ==0) 
+    				|| ((w.getDay().ordinal() == wh.getDay().ordinal() && w.getWorkHourFrom().compareTo(wh.getWorkHourFrom())<0
+    	    				&& w.getWorkHourTo().compareTo(wh.getWorkHourTo())>0 && wh.getWorkHourFrom().compareTo(w.getWorkHourTo())<0)) ||
+    				((w.getDay().ordinal() == wh.getDay().ordinal() && w.getWorkHourFrom().compareTo(wh.getWorkHourFrom())>0
+       	    	    				&& w.getWorkHourTo().compareTo(wh.getWorkHourTo())>0 && wh.getWorkHourTo().compareTo(w.getWorkHourFrom())>0))
+    			|| ((w.getDay().ordinal() == wh.getDay().ordinal() && wh.getWorkHourFrom().compareTo(w.getWorkHourFrom())>0
+    	    	    				&& wh.getWorkHourTo().compareTo(w.getWorkHourTo())>0 && wh.getWorkHourFrom().compareTo(w.getWorkHourTo())<0))) {
+				return true;
+    	}}
+    	
+    	return  false;
+    }
+	
+	
+	
 	@PutMapping(value= "/updateDermatologist/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
 	public ResponseEntity<DermatologistDTO> updateDermatologist(@RequestBody DermatologistDTO dermatologist,@PathVariable("id") String email) throws Exception {
@@ -161,6 +184,9 @@ public class DermatologistController {
 				v.setDay(Day.SATURDAY);
 			}else if(w.getDay().equals("Sunday")) {
 				v.setDay(Day.SUNDAY);
+			}
+			if(check(dermatologistUpdate.getWorkHour(), v)) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 			WorkHour savedW = workHourService.create(v);
 			dermatologistUpdate.getWorkHour().add(savedW);
@@ -205,6 +231,26 @@ public class DermatologistController {
 		}
 
 		return new ResponseEntity<Collection<Appointment>>(doneExaminations, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/ratings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public double getRatings(@PathVariable("id") String email) {
+	
+		Dermatologist d = dermatologistService.getRatings(email);
+		try {
+			d.getRatings();
+		}catch(NullPointerException e) {
+			return 0;
+		}
+		
+		
+		double val = 0;
+		
+		for(Rating g : d.getRatings()) {
+			val+=g.getValue();
+		}
+		val= val/d.getRatings().size();
+		return val;
 	}
 }
 

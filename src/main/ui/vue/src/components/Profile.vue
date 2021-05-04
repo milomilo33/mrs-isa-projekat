@@ -7,7 +7,8 @@
            <div class="row justify-content-center">
                <div class="col-md-6">
                        <div class="card">
-                           <div class="card-header">Personal informations</div>
+                           <div class="card-header">Personal information
+                           </div>
                            <div class="card-body">
                                <form name="myform" @submit="onSubmit">
                                    <div class="form-group row">
@@ -32,7 +33,9 @@
                                         <label for="phoneNumber" class="col-md-4 col-form-label text-md-right">Phone number</label>
                                         <div class="col-md-6">
                                             <input type="text" id="phoneNumber" class="form-control" name="phoneNumber"  v-model="phoneNumber" :disabled="d">
+
                                         </div>
+                                         
                                     </div>
                                     <div class="form-group row">
                                         <label for="country" class="col-md-4 col-form-label text-md-right">Country</label>
@@ -61,12 +64,15 @@
                                             <input type="number" min="1" id="number" class="form-control" name="number"  v-model="number" :disabled="d">
                                         </div>
                                     </div>
+                                    <label v-on:click="onEdit" style="background-color:#3399ff; text-align:center;color:white; width:100px; height: 35px;border-radius: 5px">Edit</label>
                                     <div class="buttons form-group row">
+                                      
+                                     
                                       <button class="col-md-2 btn btn-success">Submit</button>
                                     </div>
                                </form>
                                <div class="buttonsss form-group row">
-                                    <button class="col-md-2 btn btn-success" v-on:click="onEdit">Edit</button> 
+                               
                                 </div>
                                
                            </div>

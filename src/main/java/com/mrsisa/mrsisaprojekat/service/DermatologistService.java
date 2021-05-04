@@ -2,12 +2,9 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.Patient;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
 public interface DermatologistService {
 	List<Dermatologist> findAll();
 	
@@ -26,5 +23,7 @@ public interface DermatologistService {
 	List<Appointment> getAvailableAppointments(Dermatologist m);
 
 	Collection<Appointment> getDoneExaminationsWithPatientsForDermatologist(String email);
+	
+	Dermatologist getRatings(String email);
 
 }

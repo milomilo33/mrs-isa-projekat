@@ -57,13 +57,12 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		if(item == null) {
 			return null;
 		}
-		System.out.println(pricelistItem.getPrice().getId());
 		Price p = priceRepository.findOnePrice(pricelistItem.getPrice().getId());
 		if(p == null) {
 			return null;
 		}
 		priceRepository.save(pricelistItem.getPrice());
-		//pricelistItemRepository.save(pricelistItem);
+		pricelistItemRepository.save(pricelistItem);
 		return item;
 		
 	

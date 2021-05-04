@@ -9,6 +9,8 @@
     :fields="fields"
     :infoModal="infoModal"
     :errorModal="errorModal"
+    :hours="hh"
+    :fields3="fields3"
     @InfoP="InfoP"
     @DeleteOne="DeleteOne"
     @AddDermatologist="AddDermatologist"
@@ -32,7 +34,7 @@ export default defineComponent({
         { key: "name", sortable: true, label: "Name" },
         { key: "lastName", sortable: true, label: "Last name" },
         { key: "email", sortable: true, label: "Email" },
-        { key: "phoneNumber", sortable: true, label: "Phone number" },
+        { key: "rating", sortable: true, label: "Rating" },
         "info",
         { key: "update", label: "Edit" },
         "delete",
@@ -64,7 +66,20 @@ export default defineComponent({
         { key: "name", label: "Name" },
         { key: "lastName", label: "Last name" },
         { key: "email", label: "Email" },
-        { key: "phoneNumber", label: "Phone number" },
+      ],
+      hh: [
+        { day: "Monday" },
+        { day: "Tuesday" },
+        { day: "Wednesday" },
+        { day: "Thursday" },
+        { day: "Friday" },
+        { day: "Saturday" },
+        { day: "Sunday" },
+      ],
+      fields3: [
+        { key: "day", label: "Day" },
+        { key: "workHourFrom", label: "Work hour from" },
+        { key: "workHourTo", label: "Work hour to" },
       ],
       selected: {},
       hours: [],
@@ -126,10 +141,27 @@ export default defineComponent({
                 response.data[i].address.city;
               self.all.push(item);
             }
+            self.GetAllRatings();
           }
           self.getAll();
           //self.totalRows = self.items.length;
         });
+    },
+
+    GetAllRatings() {
+      var self = this;
+      self.items.forEach((item) => {
+        self.axios
+          .get(`/api/dermatologist/ratings/` + item.email, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          })
+          .then(function (response) {
+            item.rating = response.data;
+          })
+          .catch((error) => console.log(error));
+      });
     },
     getAll() {
       var self = this;
@@ -140,7 +172,7 @@ export default defineComponent({
           },
         })
         .then(function (response) {
-          console.log(response.data);
+          //console.log(response.data);
           for (var i = 0; i < response.data.length; i++) {
             if (
               self.items.filter((e) => e.email === response.data[i].email)
@@ -172,16 +204,17 @@ export default defineComponent({
       this.selected = item[0];
     },
     check(item) {
-      const idx = this.dermatologistss.indexOf(this.selected);
+      var self = this;
+      const idx = this.dermatologistss.indexOf(self.selected);
       if (idx != -1) {
-        this.dermatologistss.splice(idx, 1);
-        this.axios.put(`/api/dermatologist/updateDermatologist/` +
-            this.selected.email,
+        //self.dermatologistss.splice(idx, 1);
+        self.axios.put(`/api/dermatologist/updateDermatologist/` +
+            self.selected.email,
           {
-            email: this.selected.email,
+            email: self.selected.email,
             pharmacies: [
               {
-                id: 1,
+                id: parseInt(self.pharmacyId),
               },
             ],
             workHours: [
@@ -191,7 +224,7 @@ export default defineComponent({
                 workHourTo: item[0].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -200,7 +233,7 @@ export default defineComponent({
                 workHourTo: item[1].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -209,7 +242,7 @@ export default defineComponent({
                 workHourTo: item[2].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -218,7 +251,7 @@ export default defineComponent({
                 workHourTo: item[3].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -227,7 +260,7 @@ export default defineComponent({
                 workHourTo: item[4].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -236,7 +269,7 @@ export default defineComponent({
                 workHourTo: item[5].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
               {
@@ -245,7 +278,7 @@ export default defineComponent({
                 workHourTo: item[6].workHourTo,
                 deleted: false,
                 pharmacy: {
-                  id: 1,
+                  id: parseInt(self.pharmacyId),
                 },
               },
             ],
@@ -255,9 +288,37 @@ export default defineComponent({
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
           }
-        );
+        ).then(function (response){
+          console.log(response);
+          self.dermatologistss.splice(idx, 1);
+          self.items.push(self.selected);
+        }).catch(function(error){
+          console.log(error);
+          self.hh = [];
+          self.hh.push({day:"Monday"});
+          self.hh.push({day:"Tuesday"});
+          self.hh.push({ day: "Wednesday" });
+          self.hh.push({ day: "Thursday" });
+          self.hh.push({ day: "Friday" });
+          self.hh.push({ day: "Saturday" });
+          self.hh.push({ day: "Sunday" });
+          
+          (self.errorModal.title = "Error"),
+          (self.errorModal.content = "You cannot add dermatologist with that work hour!");
+          self.errorModal.varning = "warning";
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
+          
+
+        });
+       self.axios(`/api/dermatologist/ratings/` + self.selected.email, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          }).then(function(response){
+            self.selected.rating = response.data;
+          });
       }
-      this.items.push(this.selected);
+      
     },
 
     DeleteOne(item, button) {

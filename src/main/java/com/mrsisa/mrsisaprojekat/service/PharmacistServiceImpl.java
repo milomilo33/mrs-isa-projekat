@@ -125,4 +125,9 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return doneCounselings;
 	}
 
+	@Override
+	public Pharmacist getRatings(String email) {
+		return pharmacistRepository.getRatings(email);
+	}
+
 }

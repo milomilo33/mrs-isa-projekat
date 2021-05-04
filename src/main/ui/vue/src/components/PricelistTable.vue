@@ -95,10 +95,10 @@
               v-model="points"
               ></b-form-input>
               </b-form>
-              <b-form inline>
+              <!--<b-form inline>
               <label for="example-datepicker"> Date from: </label>
               <b-form-datepicker :date-disabled-fn="dateDisabled" :value="this.datefrom" v-model="datefrom"  locale="en" class="mb-2"></b-form-datepicker>
-              </b-form>
+              </b-form>-->
             </pre>
             </b-modal>
           </div>
@@ -112,7 +112,7 @@ export default {
         { key: "name", sortable: true, label: "Medicament" },
         { key: "price", sortable: true, label: "Price" },
         { key: "points", sortable: true, label: "Points" },
-        { key: "dateFrom", sortable: true, label: "Date from" },
+        { key: "date1", sortable: true, label: "Date from" },
         {key :"edit", label:""},
       ],
       items: [],
@@ -216,7 +216,7 @@ export default {
                 id :self.priceid,
                 value: self.price,
                 points: self.points,
-                dateTo: self.datefrom
+                //dateTo: self.datefrom
             }
           },{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
@@ -249,17 +249,20 @@ export default {
           item.annotation = response.data[i].medicament.annotation;
           item.medicamentRating = 0;
           item.pharmacyId = response.data[i].pharmacy.id;
-          item.dateFrom = response.data[i].price.dateFrom[2]+ "-"+response.data[i].price.dateFrom[1]+"-"+response.data[i].price.dateFrom[0];
           item.date = response.data[i].price.dateFrom;
           item.points =  response.data[i].price.points;
           item.price =  response.data[i].price.value;
           item.priceid =  response.data[i].price.id;
           self.items.push(item);
         }
-        self.totalRows = self.items.length;
+         self.totalRows = self.items.length;
+        self.items.forEach((obj) => {
+            obj["date1"] = new Date(obj["date"]).toDateString();
+            obj["date"][1] -= 1;
+       
       });
+    });
     }
-
    
   },
 };

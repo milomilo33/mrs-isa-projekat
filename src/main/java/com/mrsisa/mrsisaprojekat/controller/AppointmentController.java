@@ -130,6 +130,7 @@ public class AppointmentController {
 			d.setRatings(null);
 			d.setRequests(null);
 			a.setChosenEmployee(d);
+			
     	
 		}else {
 			Pharmacist p = pharmacistService.findOne(appointment.getPatient().getEmail());

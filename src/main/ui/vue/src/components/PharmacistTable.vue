@@ -13,7 +13,7 @@ export default defineComponent({
     return {
       items:[],
       all:[],
-      fields: [{key:'name',sortable:true, label:'Name'}, {key:'lastName',sortable:true, label:'Last name'},{key: 'email',sortable:true, label:'Email'}, {key:'phoneNumber',sortable:true, label:'Phone number'},'info',{key:'update', label:'Edit'},'delete'],
+      fields: [{key:'name',sortable:true, label:'Name'}, {key:'lastName',sortable:true, label:'Last name'},{key: 'email',sortable:true, label:'Email'}, {key:'rating',sortable:true, label:'Rating'},'info',{key:'update', label:'Edit'},'delete'],
         sortBy:'name',
         sortDesc :false,
         filter: null,
@@ -36,6 +36,7 @@ export default defineComponent({
         title: "",
         content: "",
         pharmacyId:0,
+        vall: false,
       },
    }
   },
@@ -83,12 +84,29 @@ export default defineComponent({
           item.hours = response.data[i].workHours;
           item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
           self.all.push(item);
+          self.GetAllRatings();
         }
+
         }
          //self.totalRows = self.items.length;
       });
     },
-
+     GetAllRatings() {
+      var self = this;
+      self.items.forEach((item) => {
+        self.axios
+          .get(`/api/pharmacist/ratings/` + item.email, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+          })
+          .then(function (response) {
+            item.rating = response.data;
+          })
+          .catch((error) => console.log(error));
+      });
+       self.vall = true;
+    },
       DeleteOne(item,button){
         var self = this;
           self.axios.delete(`/api/pharmacist/`+item.email,  {

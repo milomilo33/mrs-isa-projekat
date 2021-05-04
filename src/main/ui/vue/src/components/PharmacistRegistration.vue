@@ -1,9 +1,18 @@
 <template>
     <main class="my-form">
        <div class="cotainer">
-           <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
-      Success! You registered a new pharmacist.
-    </b-alert>
+           <b-modal
+              :id="errorModal.id"
+              :title="errorModal.title"
+              ok-only
+              @ended="errModal"
+              :header-bg-variant="v"
+            >
+              <pre>{{ errorModal.content }}</pre>
+            </b-modal>
+           <!--<b-alert v-model="showSuccessAlert" dismissible fade :variant="v">
+      {{error_message}}
+    </b-alert>-->
            <div class="row justify-content-center">
                <div class="col-md-6">
                        <div class="card">
@@ -149,6 +158,12 @@ export default {
       addressId:{},
       pharmacyW :{},
       showSuccessAlert: false,
+      v:"success",
+      errorModal: {
+        id: "error-modal",
+        title: "",
+        content: "",
+      },
     };
   },
    methods: {
@@ -158,24 +173,36 @@ export default {
     
     if(!this.email|| !this.password || !this.phoneNumber || !this.lastName|| !this.name|| !this.password_confirmation || !this.country || !this.city || !this.street){
         errorFound = true;
-        this.error_message = "You must enter all data";
+        this.showSuccessAlert = true;
+        this.v ="warning";
+        this.errorModal.content = "You must enter all data";
+        this.$root.$emit("bv::show::modal", this.errorModal.id);
 
       }
       if(this.workHourFrom > this.workHourTo){
           errorFound = true;
+          this.showSuccessAlert = true;
+          this.v ="warning";
           this.error_message = "Not valid work hour.";
+          this.errorModal.content = "Not valid work hour.";
+     
+          this.$root.$emit("bv::show::modal", this.errorModal.id);
       }
       if(this.password !=this.password_confirmation){
         errorFound = true;
+        this.showSuccessAlert = true;
+        this.v ="warning";
         this.error_message = "The password confirmation does not match";
+         this.errorModal.content = "The password confirmation does not match.";
+          this.$root.$emit("bv::show::modal", this.errorModal.id);
       }
       
-      if(isNaN(this.number)){
+      /*if(isNaN(this.number)){
           errorFound = true;
       }
       if(errorFound == true){
         alert(this.error_message);
-      }
+      }*/
       if(errorFound==false){
        this.axios
         .post(`/api/address`, {
@@ -197,6 +224,10 @@ export default {
         });
         
       }
+    },
+    errModal() {
+      this.errorModal.title = "";
+      this.errorModal.content = "";
     },
     GetAdress(posts){
         var self = this;
@@ -236,13 +267,13 @@ export default {
     GetPharmacist(addressP,posts){
         var self = this;
         self.axios.post(`/api/pharmacist/`,{
-            email: this.email,
-            password:this.password, 
-            name: this.name,
-            lastName: this.lastName,
-            phoneNumber: this.phoneNumber,
-            workHourFrom:this.workHourFrom,
-            workHourTo:this.workHourTo,
+            email: self.email,
+            password:self.password, 
+            name: self.name,
+            lastName: self.lastName,
+            phoneNumber: self.phoneNumber,
+            workHourFrom:self.workHourFrom,
+            workHourTo:self.workHourTo,
             pharmacy: {
                 name: posts.data.name,
                 description: posts.data.description,
@@ -264,57 +295,57 @@ export default {
             },
             workHours :[
                 {
-                    day: this.items[0].day,
-                    workHourFrom: this.items[0].workHourFrom,
-                    workHourTo: this.items[0].workHourTo,
+                    day: self.items[0].day,
+                    workHourFrom: self.items[0].workHourFrom,
+                    workHourTo: self.items[0].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[1].day,
-                    workHourFrom: this.items[1].workHourFrom,
-                    workHourTo:this.items[1].workHourTo,
+                    day: self.items[1].day,
+                    workHourFrom: self.items[1].workHourFrom,
+                    workHourTo:self.items[1].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[2].day,
-                    workHourFrom: this.items[2].workHourFrom,
-                    workHourTo:this.items[2].workHourTo,
+                    day: self.items[2].day,
+                    workHourFrom: self.items[2].workHourFrom,
+                    workHourTo:self.items[2].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[3].day,
-                    workHourFrom: this.items[3].workHourFrom,
-                    workHourTo:this.items[3].workHourTo,
+                    day: self.items[3].day,
+                    workHourFrom: self.items[3].workHourFrom,
+                    workHourTo:self.items[3].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[4].day,
-                    workHourFrom: this.items[4].workHourFrom,
-                    workHourTo:this.items[4].workHourTo,
+                    day: self.items[4].day,
+                    workHourFrom: self.items[4].workHourFrom,
+                    workHourTo:self.items[4].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[5].day,
-                    workHourFrom: this.items[5].workHourFrom,
-                    workHourTo:this.items[5].workHourTo,
+                    day: self.items[5].day,
+                    workHourFrom: self.items[5].workHourFrom,
+                    workHourTo:self.items[5].workHourTo,
                     deleted : false,
                     pharmacy: null
 
                 },
                 {
-                    day: this.items[6].day,
-                    workHourFrom: this.items[6].workHourFrom,
-                    workHourTo:this.items[6].workHourTo,
+                    day: self.items[6].day,
+                    workHourFrom: self.items[6].workHourFrom,
+                    workHourTo:self.items[6].workHourTo,
                     deleted : false,
                     pharmacy: null
 
@@ -328,10 +359,20 @@ export default {
         })
         .then((response) => {
             self.showSuccessAlert=true,
+            self.v ="success";
+            self.error_message= "Success!";
             console.log(response);
+            self.errorModal.content = "Success! You registred pharmacist!";
+            self.$root.$emit("bv::show::modal", self.errorModal.id);
         })
         .catch(function (error) {
-           console.log(error);
+           self.showSuccessAlert=true,
+            self.v ="warning";
+            self.error_message= "Error, already exist user with same email address!";
+            console.log(error);
+            self.errorModal.content = "Error, already exist user with same email address!";
+            self.$root.$emit("bv::show::modal", self.errorModal.id);
+            
         });
     }
     }
