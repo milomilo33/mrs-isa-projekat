@@ -1,33 +1,19 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
+import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.Employee;
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.Role;
-import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.service.AppointmentService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -157,4 +143,16 @@ public class AppointmentController {
 		pharmacyService.update(p);
 		return new ResponseEntity<>(savedAppointment,HttpStatus.OK);
     }
+
+	@GetMapping(value = "/{id}/details")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<AppointmentDetailsDTO> getAppointmentDetails(@PathVariable("id") Long appointmentId) {
+    	AppointmentDetailsDTO details = appointmentService.getAppointmentDetails(appointmentId);
+
+    	if (details == null) {
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+    	return new ResponseEntity<>(details, HttpStatus.OK);
+	}
 }
