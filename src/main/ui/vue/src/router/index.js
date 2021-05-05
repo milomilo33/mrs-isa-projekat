@@ -184,6 +184,7 @@ const routes = [
 	{
 		path: "/PharmacistPage",
 		name: "PharmacistPage",
+		redirect: "/PharmacistPage/MedicamentList",
 		component: PharmacistPage,
 		children: [
 			{
@@ -231,6 +232,7 @@ const routes = [
 	{
 		path: "/DermatologistPage",
 		name: "DermatologistPage",
+		redirect: "/DermatologistPage/MedicamentList",
 		component: DermatologistPage,
 		children: [
 			{
@@ -411,6 +413,10 @@ const routes = [
 				component: ReservedMedicamentsTable
 			}
 		]
+	},
+	{
+		path: '*',
+		redirect: "/Login"
 	}
 
 ]

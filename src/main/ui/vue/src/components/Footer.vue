@@ -34,11 +34,13 @@
     }
 
     footer {
+        position: absolute;
+        left: 0;
         background-color: #2a2d33;
         color: #d5d5d5;
         padding-top: 2rem;
-        position: relative;
         bottom: 0;
+        height: 18rem;
         width: 100%;
     }
 </style>

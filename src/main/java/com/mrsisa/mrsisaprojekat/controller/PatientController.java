@@ -1,10 +1,5 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
@@ -19,7 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -202,6 +202,7 @@ public class PatientController {
 			p.setComplaints(null);
 			p.setePrescriptions(null);
 			p.setSubscribedPharmacies(null);
+			p.setReservedMedicaments(null);
 		}
 		
 		if (foundPatients == null || foundPatients.isEmpty())

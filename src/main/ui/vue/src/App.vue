@@ -1,7 +1,8 @@
 <template>
   <div class="app">
-    <div></div>
-    <router-view></router-view>
+    <div id="content-wrapper">
+      <router-view></router-view>
+    </div>
     <Footer />
   </div>
 </template>
@@ -26,9 +27,12 @@ export default {
     color: #2c3e50;
     margin-top: 60px;
     position: relative;
+    min-height: 100vh;
   }
 
-  
+  #content-wrapper {
+    padding-bottom: 18rem;
+  }
  
   
 </style>

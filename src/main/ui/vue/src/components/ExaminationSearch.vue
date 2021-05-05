@@ -57,15 +57,18 @@
                     },
                     {
                         key: 'dateStr',
-                        headerTitle: 'Date'
+                        headerTitle: 'Date',
+                        label: 'Date'
                     },
                     {
                         key: 'timeFrom',
-                        headerTitle: 'From'
+                        headerTitle: 'From',
+                        label: 'From'
                     },
                     {
                         key: 'timeTo',
-                        headerTitle: 'To'
+                        headerTitle: 'To',
+                        label: 'To'
                     },
                     'action'
                 ]

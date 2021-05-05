@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 
 import java.util.Collection;
@@ -16,4 +17,6 @@ public interface AppointmentService {
     void delete(Appointment appointment);
 
     boolean markPatientAbsence(Long appointmentId);
+
+    AppointmentDetailsDTO getAppointmentDetails(Long appointmentId);
 }
