@@ -270,10 +270,12 @@ insert into rating (value, patient_email) values (1, 'peraperic@gmail.com')
 insert into rating (value, patient_email) values (2, 'ivicamarkov@gmail.com')
 insert into rating (value, patient_email) values (4, 'teodorabatinica@gmail.com')
 insert into rating (value, patient_email) values (4, 'anasimic@gmail.com')
+insert into rating (value, patient_email) values (3, 'anasimic@gmail.com')
 
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 1)
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (2, 2)
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 3)
+insert into pharmacy_ratings (pharmacy_id, ratings_id) values (3, 13)
 
 insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-03-03', '2021-04-03', false, 'Zahtev za godisnji odmor', '', 'janatot@gmail.com')
 insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (false, '2021-04-03', '2021-05-04', false, 'Zahtev za odsustvo', '', 'svetozartodorovic@gmail.com')
