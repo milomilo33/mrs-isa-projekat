@@ -10,14 +10,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.SupplierDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import com.mrsisa.mrsisaprojekat.model.AdminSystem;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Supplier;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
+import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.PatientService;
+import com.mrsisa.mrsisaprojekat.service.PharmacistService;
+import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
 import com.mrsisa.mrsisaprojekat.service.SupplierService;
+import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -33,10 +41,54 @@ public class SupplierController {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private PharmacyAdminService adminService;
+	
+	@Autowired
+	private SystemAdminService sysAdminService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private PatientService patientService;
+	
+	@Autowired
+	private DermatologistService dermatologistService;
+	
+	
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'SUPPLIER')")
 	public ResponseEntity<SupplierDTO> saveSupplier(@RequestBody SupplierDTO supplierDTO) throws Exception{
 		
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(supplierDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(supplierDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(supplierDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(supplierDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(supplierDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 		Address address = new Address();
 		address.setCountry(supplierDTO.getAddress().getCountry());
 		address.setCity(supplierDTO.getAddress().getCity());
