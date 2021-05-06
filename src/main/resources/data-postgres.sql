@@ -37,9 +37,9 @@ insert into category_thresholds (category, threshold) values (1, 100)
 insert into category_thresholds (category, threshold) values (2, 200)
 
 
-insert into pharmacy (deleted, description, income, name, address_id) values('false','Benu apoteka...', 0, 'Benu', 1)
-insert into pharmacy (deleted, description, income, name, address_id) values('false','Dr.Max apoteka...', 0, 'Dr.Max', 2)
-insert into pharmacy (deleted, description, income, name, address_id) values('false','Laurus apoteka...', 0, 'Laurus', 3)
+insert into pharmacy (deleted, description, income, name, address_id) values('false','Ono po čemu se BENU izdvaja na tržištu jeste konstantan rad sa zaposlenim farmaceutima na usavršavanju i upoznavanju najnovijih dostignuća medicine i farmakologije.', 0, 'Benu', 1)
+insert into pharmacy (deleted, description, income, name, address_id) values('false','Dr.Max je međunarodni lanac apoteka, koji je prisutan u 6 zemalja Centralno Istočne Evrope sa preko 2000 apoteka i 12000 zaposlenih.', 0, 'Dr.Max', 2)
+insert into pharmacy (deleted, description, income, name, address_id) values('false','Sa tradicijom dugom preko dve decenije, apoteke Laurus izgradile su prepoznatljiv identitet zasnovan na promociji zdravog života, sa ciljem prevencije bolesti i očuvanja pravilnih životnih navika. ', 0, 'Laurus', 3)
 
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('jovanpetrovic@gmail.com','false','true','Petrović','Jovan','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','060915893', 9, 1)
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('sarajovic@gmail.com','false','true','Jović','Sara','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0645515823', 4, 2)

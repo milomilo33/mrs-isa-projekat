@@ -2,12 +2,15 @@ package com.mrsisa.mrsisaprojekat.repository;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
@@ -29,6 +32,9 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 
 	@Query("select p from Patient p join fetch p.appointments pa where p.email = ?1 and pa.deleted = false")
 	Patient getAppointmentsForUser(String email);
+
+	@Query("select p.subscribedPharmacies from Patient p where p.email=?1")
+	Collection<Pharmacy> findAllSubscribedPharmacies(String user);
 
 
 

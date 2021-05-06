@@ -76,9 +76,6 @@ public class PharmacistController {
 	@Autowired
 	private PatientService patientService;
 	
-	@Autowired
-	private DermatologistService dermatologistService;
-	
 	
 	@GetMapping(value="/all")
 	public ResponseEntity<List<PharmacistDTO>> getPharmacists(){
@@ -130,14 +127,14 @@ public class PharmacistController {
 		if (pharmacyAdmin != null) {
 			return true;
 		}
-		/*AdminSystem sytemAdmin = systemAdminService.findOne(email);
+		AdminSystem sytemAdmin = systemAdminService.findOne(email);
 		if (sytemAdmin != null) {
 			return true;
 		}
-		/*Supplier supplier = supplierService.findOne(email);
+		Supplier supplier = supplierService.findOne(email);
 		if (supplier != null) {
 			return true;
-		}*/
+		}
 		
 		return false;
 	}
@@ -148,36 +145,9 @@ public class PharmacistController {
 		
 
 		if(check(pharmacistDTO.getEmail())) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
 
-		try {
-			AdminPharmacy savedAdmin = adminService.findOne(pharmacistDTO.getEmail());
-			if(savedAdmin != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-			
-			Patient patient = patientService.findOne(pharmacistDTO.getEmail());
-			if(patient != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-			AdminSystem adminsystem = sysAdminService.findOne(pharmacistDTO.getEmail());
-			if(adminsystem != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-			
-			Dermatologist dermatologist = dermatologistService.findOne(pharmacistDTO.getEmail());
-			if(dermatologist != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-			
-			Pharmacist pharmacist = pharmacistService.findOne(pharmacistDTO.getEmail());
-			if(pharmacist != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-		}
-		catch(NullPointerException e) {
-			
-		}
+		
 		Address address = new Address();
 		address.setCountry(pharmacistDTO.getAddress().getCountry());
 		address.setCity(pharmacistDTO.getAddress().getCity());
@@ -240,8 +210,7 @@ public class PharmacistController {
 		catch( Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return new ResponseEntity<>(new PharmacistDTO(pharmacist), HttpStatus.CREATED); 
-		
+		return new ResponseEntity<>(new PharmacistDTO(pharmacist), HttpStatus.CREATED);
 		
 	}
 

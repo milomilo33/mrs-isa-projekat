@@ -180,4 +180,9 @@ public class PatientServiceImpl implements PatientService {
 		}
 	}
 
+	@Override
+	public Collection<Pharmacy> findAllSubscribed(String user) {
+		return patientRepository.findAllSubscribedPharmacies(user);
+	}
+
 }
