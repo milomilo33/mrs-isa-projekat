@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 
 public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String> {
@@ -26,5 +25,7 @@ public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String
 	@Query("select p from Pharmacist p join fetch p.address join fetch p.counselings where p.email = ?1")
 	Pharmacist getPharmacistWithCounselings(String email);
 	
+	@Query("select p from Pharmacist p join fetch p.ratings where p.email=?1 and p.deleted=false")
+	Pharmacist getRatings(String email);
 
 }

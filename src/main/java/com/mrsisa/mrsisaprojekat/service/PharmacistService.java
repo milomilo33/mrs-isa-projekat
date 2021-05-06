@@ -23,4 +23,7 @@ public interface PharmacistService {
 	Pharmacist findOneCounselings(String email);
 
 	Collection<Appointment> getDoneCounselingsWithPatientsForPharmacist(String email);
+	
+	Pharmacist getRatings(String email);
+
 }

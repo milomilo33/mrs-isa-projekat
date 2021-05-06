@@ -134,10 +134,10 @@
                 responsive="sm" 
                 bordered
                 small>
-                <template v-slot:cell(workhourfrom)="data">
-                <b-form-timepicker v-model="data.item.workHourFrom"  locale="en" :required="rec"></b-form-timepicker>
+                <template v-slot:cell(workHourFrom)="data">
+                <b-form-timepicker v-model="data.item.workHourFrom"  locale="en"></b-form-timepicker>
                 </template>
-                <template v-slot:cell(workhourto)="data">
+                <template v-slot:cell(workHourTo)="data">
                 <b-form-timepicker v-model="data.item.workHourTo"  locale="en"></b-form-timepicker>
                 </template>        
             </b-table>
@@ -161,20 +161,6 @@ export default {
       all: [],
       headerBgVariant: "success",
       headerErrorVariant: "danger",
-      hours: [
-        { day: "Monday" },
-        { day: "Tuesday" },
-        { day: "Wednesday" },
-        { day: "Thursday" },
-        { day: "Friday" },
-        { day: "Saturday" },
-        { day: "Sunday" },
-      ],
-      fields3: [
-        { key: "day", label: "Day" },
-        { key: "workHourFrom", label: "Work hour from" },
-        { key: "workHourTo", label: "Work hour to" },
-      ],
     };
   },
   props: {
@@ -187,6 +173,8 @@ export default {
     addModal: {},
     dermatologistss: Array,
     fields2: Array,
+    hours : Array,
+    fields3: Array,
   },
   methods: {
     onRowSelected(item) {

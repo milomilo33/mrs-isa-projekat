@@ -1,7 +1,10 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,20 +53,28 @@ public class PricelistItemController {
 		
 		Collection<PricelistItemMedicament> items = pricelistItemService.findAllPharmacy(id);
 		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
+		ArrayList<Price> prices = new ArrayList<>();
 		for(PricelistItemMedicament p : items) {
-			list.add(new PricelistItemMedicamentDTO(p));
+			/*for( Price pp : p.getPrice()) {
+				if(!pp.isDeleted()) {
+					prices.add(pp);
+				}
+			}*/
+			PricelistItemMedicamentDTO pmdt = new PricelistItemMedicamentDTO(p);
+			//pmdt.setPrice(prices);
+			list.add(pmdt);
 		}
 		
 		return new ResponseEntity<Collection<PricelistItemMedicamentDTO>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<PricelistItemMedicamentDTO> savePricelistItemMedicament(@RequestBody PricelistItemMedicament pricelistItem) throws Exception{
+	public ResponseEntity<PricelistItemMedicamentDTO> savePricelistItemMedicament(@RequestBody PricelistItemMedicamentDTO pricelistItem) throws Exception{
 		
 		Price price = new Price();
 		price.setDeleted(false);
 		price.setValue(pricelistItem.getPrice().getValue());
-		price.setDateFrom(pricelistItem.getPrice().getDateTo());
+		price.setDateFrom(LocalDate.now());
 		price.setDateTo(null);
 		price.setPoints(pricelistItem.getPrice().getPoints());
 		
@@ -72,11 +83,13 @@ public class PricelistItemController {
 		Pharmacy pharmacy = pharmacyService.findOne(pricelistItem.getPharmacy().getId());
 		PricelistItemMedicament p = new PricelistItemMedicament();
 		p.setMedicament(medicament);
+		Set<Price> pp = new HashSet<>();
+		pp.add(saved);
 		p.setPrice(saved);
 		p.setPharmacy(pharmacy);
 		
 		PricelistItemMedicament savedP = pricelistItemService.create(p);
-		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP), HttpStatus.CREATED); 
+		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP), HttpStatus.CREATED);
 	
 	}
 	
@@ -86,9 +99,10 @@ public class PricelistItemController {
 		if (pricelistUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		pricelistItem.setId(id);
-		pricelistItem.getPrice().setDateFrom(pricelistItem.getPrice().getDateTo());;
-		pricelistUpdate = pricelistItemService.update(pricelistItem);
+		pricelistUpdate.setId(id);
+		pricelistUpdate.getPrice().setValue(pricelistItem.getPrice().getValue());
+		pricelistUpdate.getPrice().setDateFrom(LocalDate.now());
+		pricelistUpdate = pricelistItemService.update(pricelistUpdate);
 		return new ResponseEntity<PricelistItemMedicamentDTO>(new PricelistItemMedicamentDTO(pricelistUpdate), HttpStatus.OK);
 	}
 	

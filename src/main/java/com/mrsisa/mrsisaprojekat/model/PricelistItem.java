@@ -3,6 +3,8 @@ package com.mrsisa.mrsisaprojekat.model;
 import static javax.persistence.InheritanceType.JOINED;
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity

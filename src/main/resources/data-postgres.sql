@@ -270,6 +270,7 @@ insert into rating (value, patient_email) values (1, 'peraperic@gmail.com')
 insert into rating (value, patient_email) values (2, 'ivicamarkov@gmail.com')
 insert into rating (value, patient_email) values (4, 'teodorabatinica@gmail.com')
 insert into rating (value, patient_email) values (4, 'anasimic@gmail.com')
+insert into rating (value, patient_email) values (2, 'anasimic@gmail.com')
 insert into rating (value, patient_email) values (3, 'anasimic@gmail.com')
 
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 1)
@@ -306,13 +307,21 @@ insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 2)
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 3)
 
-insert into pricelist_item (pharmacy_id, price_id) values (1,1)
-insert into pricelist_item (pharmacy_id, price_id) values (2,2)
-insert into pricelist_item (pharmacy_id, price_id) values (3,3)
-insert into pricelist_item (pharmacy_id, price_id) values (1,4)
-insert into pricelist_item (pharmacy_id, price_id) values (2,5)
-insert into pricelist_item (pharmacy_id, price_id) values (3,6)
-insert into pricelist_item (pharmacy_id, price_id) values (1,7)
+insert into pricelist_item(id, pharmacy_id, price_id) values (1,1,1)
+insert into pricelist_item (id, pharmacy_id, price_id) values (2,2,2)
+insert into pricelist_item (id, pharmacy_id, price_id) values (3,3,3)
+insert into pricelist_item (id, pharmacy_id, price_id) values (4,1,4)
+insert into pricelist_item (id, pharmacy_id, price_id) values (5,2,5)
+insert into pricelist_item (id, pharmacy_id, price_id) values (6,3,6)
+insert into pricelist_item (id, pharmacy_id, price_id) values (7,1,7)
+
+/*insert into pricelist_item_price(pricelist_item_id, price_id) values (1,1)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (2,2)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (3,3)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (4,4)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (5,5)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (6,6)
+insert into pricelist_item_price(pricelist_item_id, price_id) values (7,7)*/
 
 insert into pricelist_item_appointment (id, appointment_id) values (1, 1)
 insert into pricelist_item_appointment (id, appointment_id) values (2, 2)
@@ -340,6 +349,7 @@ insert into employee_ratings (employee_email, ratings_id ) values ('janatot@gmai
 insert into employee_ratings (employee_email, ratings_id ) values ('lazarpopovic@gmail.com', 10)
 insert into employee_ratings (employee_email, ratings_id ) values ('milamilic@gmail.com', 11)
 insert into employee_ratings (employee_email, ratings_id ) values ('aleksandarstevanovic@gmail.com', 12)
+insert into employee_ratings (employee_email, ratings_id ) values ('milanm@gmail.com', 13)
 
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (1, 1)
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (2, 2)
@@ -363,6 +373,7 @@ insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) v
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (6, false, '08:00', '12:00', 1)
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '08:00', '12:00', 2)
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '08:00', '12:00', 2)
+insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (2, false, '10:00', '12:00', 1)
 
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 1)
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 2)
@@ -373,6 +384,7 @@ insert into employee_work_hour(employee_email, work_hour_id) values ('svetozarto
 insert into employee_work_hour(employee_email, work_hour_id) values ('svetozartodorovic@gmail.com', 7)
 insert into employee_work_hour(employee_email, work_hour_id) values ('aleksandarstevanovic@gmail.com', 8)
 insert into employee_work_hour(employee_email, work_hour_id) values ('milanm@gmail.com', 9)
+insert into employee_work_hour(employee_email, work_hour_id) values ('janatot@gmail.com', 10)
 
 
 

@@ -1,7 +1,8 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import java.util.ArrayList;
+
 import com.mrsisa.mrsisaprojekat.model.Price;
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 
 public class PricelistItemMedicamentDTO {
@@ -45,6 +46,11 @@ public class PricelistItemMedicamentDTO {
 	public MedicamentDTO getMedicament() {
 		return medicament;
 	}
+
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+	
 
 	
 	

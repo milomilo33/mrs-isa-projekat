@@ -131,10 +131,6 @@
               v-model="points"
               ></b-form-input>
               </b-form>
-              <b-form inline>
-              <label for="example-datepicker"> Date from: </label>
-              <b-form-datepicker :date-disabled-fn="dateDisabled" v-model="datefrom"  locale="en" class="mb-2"></b-form-datepicker>
-              </b-form>
               <b-button
                   size="sm"
                   @click="AddOne()"
@@ -429,7 +425,7 @@ export default {
             {
               price: {
                 value: this.price,
-                dateTo: this.datefrom,
+                //dateTo: this.datefrom,
                 points: this.points,
               },
               pharmacy: {
@@ -445,8 +441,8 @@ export default {
               },
             }
           );
-          this.datefrom = "";
-          this.dateTo = "";
+          //this.datefrom = "";
+          //this.dateTo = "";
           this.price = 0;
           this.points = 0;
         }
