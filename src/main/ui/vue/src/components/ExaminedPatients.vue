@@ -23,7 +23,29 @@
 
         <br>
         <b-table striped hover :items="appointments" :fields="appointmentFields" :sort-compare="dateSortCompare">
+            <template #cell(action)="row">
+                <button class="btn btn-dark" @click="showExaminationDetails(row)"
+                    :ref="'btn' + row.index">Show details</button>
+            </template>
         </b-table>
+
+        <b-modal ref="info-modal" hide-footer title="Details">
+            <div class="d-block text-center">
+                <h3>Report text</h3>
+                <p>{{ this.chosenAppointmentInfo }}</p>
+            </div>
+            <div v-if="Object.keys(chosenAppointmentPrescribedMedicine).length > 0" class="d-block text-center">
+                <h3>Prescribed medicines</h3>
+                <b-list-group>
+                    <b-list-group-item v-for="(quantity, name) in chosenAppointmentPrescribedMedicine" :key="name"
+                                    class="d-flex justify-content-between align-items-center">
+                        {{ name }}
+                        <b-badge variant="primary" pill>{{ quantity }}</b-badge>
+                    </b-list-group-item>
+                </b-list-group>
+            </div>
+        <b-button class="mt-3" variant="outline-primary" block @click="hideInfoModal">Close</b-button>
+    </b-modal>
     </div>
 </template>
 
@@ -60,9 +82,12 @@
                     {
                         key: 'timeTo',
                         headerTitle: 'To'
-                    }
+                    },
+                    'action'
                 ],
-                type: ''
+                type: '',
+                chosenAppointmentInfo: '',
+                chosenAppointmentPrescribedMedicine: {}
             }
         },
         methods: {
@@ -116,11 +141,12 @@
                                 this.appointments = [];
                               }
                               else {
-                                this.appointments = []
+                                this.appointments = [];
                                 console.log(error);
                               }
                            });
             },
+
             dateSortCompare(a, b, key) {
                 if (key === 'dateStr') {
                     let dateA = new Date(a[key]);
@@ -129,8 +155,35 @@
                 } else {
                     return false;
                 }
+            },
+
+            showExaminationDetails(row) {
+                this.axios.get(`/api/appointments/${row.item.id}/details`, {
+                                headers: {
+                                    Authorization: "Bearer " + localStorage.getItem("token"),
+                                },
+                                })
+                            .then(response => {
+                                this.chosenAppointmentInfo = response.data.text;
+                                this.chosenAppointmentPrescribedMedicine = response.data.medicineQuantity;
+                                this.showInfoModal();
+                                console.log(response.data);
+                            })
+                            .catch(error => {
+                                this.chosenAppointmentPrescribedMedicine = [];
+                                console.log(error);
+                            })
+            },
+
+            hideInfoModal() {
+                this.$refs['info-modal'].hide()
+            },
+
+            showInfoModal() {
+                this.$refs['info-modal'].show()
             }
         },
+
         mounted() {
             this.type = this.$route.query.type;
             this.onSubmit();

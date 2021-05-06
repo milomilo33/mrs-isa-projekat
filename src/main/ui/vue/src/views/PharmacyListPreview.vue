@@ -1,8 +1,8 @@
 <template>
     <div id="PharmacyListPreview" class="div">
-      <button type="button" class="btn btn-light m-auto" align-v="right" @click="filter_show=!filter_show">Filter</button>
+      <button type="button" class="btn btn-light m-auto" @click="filter_show=!filter_show">Filter</button>
       <div v-if="filter_show">
-        <PharmacyFilter @childToParent="filterPharmacies"/>
+        <PharmacyFilter :allPharmacies="all" @childToParent="filterPharmacies"/>
       </div>
       <div v-if="!success">
         <h4>
@@ -32,21 +32,20 @@ export default defineComponent({
         PharmacyFilter
     },
 
-    props: {
-      query: String,
-      filter_show: false,
-      success: true
-    },
+   
 
     data() {
       return {
-        pharmacies: []
+        pharmacies: [],
+        all: [],
+        query: null,
+        filter_show: false,
+        success: true
       }
     },
 
     mounted() {
-      console.log(this.query);
-      if(this.query === 'undefined' || this.query === undefined || this.query === '') {
+      if(this.query === null) {
         this.axios.get(`/api/pharmacy`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
@@ -60,6 +59,7 @@ export default defineComponent({
         })
         .then(response => {
             this.pharmacies = response.data;
+            this.all = response.data;
             console.log(this.pharmacies[0].name)
         }).catch(error => console.log(error));
       }
@@ -73,7 +73,6 @@ export default defineComponent({
         })
         .then(response => {
             this.pharmacies = response.data;
-            console.log(this.pharmacies[0].name)
         }).catch(error => console.log(error));
     },
 
@@ -90,7 +89,6 @@ export default defineComponent({
           }).catch(error => console.log(error));
       }
       console.log(value);
-      console.log(this.pharmacies);
     }
   }
 

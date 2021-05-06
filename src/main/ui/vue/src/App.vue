@@ -1,21 +1,19 @@
 <template>
   <div class="app">
-    <div></div>
-    <router-view></router-view>
-    <!--<footer class="footer">
-    <Footer />
-    </footer>-->
+    <div id="content-wrapper">
+      <router-view></router-view>
+    </div>
     <Footer />
   </div>
 </template>
 
 <script>
-//import Footer from "./components/Footer.vue"
+import Footer from "./components/Footer.vue"
 
 export default {
   name: 'App',
   components: {
-    //Footer
+    Footer
   }
 }
 </script>
@@ -29,9 +27,12 @@ export default {
     color: #2c3e50;
     margin-top: 60px;
     position: relative;
+    min-height: 100vh;
   }
 
-  
+  #content-wrapper {
+    padding-bottom: 18rem;
+  }
  
   
 </style>
