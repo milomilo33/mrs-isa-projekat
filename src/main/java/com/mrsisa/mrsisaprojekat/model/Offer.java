@@ -26,7 +26,7 @@ public class Offer {
 	@Column(name = "deadline", unique = false, nullable = false)
 	private LocalDateTime deadline;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Supplier supplier;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
