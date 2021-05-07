@@ -14,7 +14,8 @@
           <b-dropdown-item href="/PharmacyAdminPage/PharmacyPreview">Profile</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/AppointmentTable">Appointments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
-          <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist medicaments</b-dropdown-item>
+            <b-dropdown-item href="/PharmacyAdminPage/PricelistAppointments">Pricelist appointments</b-dropdown-item>
           <b-dropdown-item href="#">Orders</b-dropdown-item>
           <b-dropdown-item href="#">Offers</b-dropdown-item>
           <b-dropdown-item href="#">Promotions</b-dropdown-item>

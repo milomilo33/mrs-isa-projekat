@@ -10,20 +10,6 @@
                   label-size="sm"
                   class="mb-0"
                 >
-                  <b-input-group size="sm">
-                    <b-form-input
-                      id="filter-input"
-                      v-model="filter"
-                      type="search"
-                      placeholder="Search"
-                    >
-                    </b-form-input>
-                    <b-input-group-append>
-                      <b-button :disabled="!filter" @click="filter = ''"
-                        >Clear</b-button
-                      >
-                    </b-input-group-append>
-                  </b-input-group>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -36,9 +22,8 @@
               :sort-desc.sync="sortDesc"
               :filter="filter"
               striped hover
-              :filter-included-fields="filterOn"
               small
-              @filtered="onFiltered">
+            >
              <template v-slot:cell(edit)="data">
                 <b-button
                   size="sm"
@@ -86,15 +71,6 @@
               v-model="price"
               ></b-form-input>
               </b-form>
-              <b-form inline>
-              <label> Points:    </label>
-              <b-form-input
-              id="inline-form-input-points"
-              class="mb-2 mr-sm-2 mb-sm-0"
-              type="number"
-              v-model="points"
-              ></b-form-input>
-              </b-form>
             </pre>
             </b-modal>
           </div>
@@ -105,9 +81,8 @@ export default {
   data() {
     return {
       fields: [
-        { key: "name", sortable: true, label: "Medicament" },
+        { key: "appointment", sortable: true, label: "Appointment" },
         { key: "price", sortable: true, label: "Price" },
-        { key: "points", sortable: true, label: "Points" },
         { key: "date1", sortable: true, label: "Date from" },
         {key :"edit", label:""},
       ],
@@ -138,17 +113,9 @@ export default {
       headerBgVariant: "success",
       headerErrorVariant: "warning",
       all: [],
-      medicamentss: [],
       old: [],
-      quantity: 0,
-      pharmacy: {},
-      selected: [],
-      medicamentItems: [],
       price: 0,
-      points:0,
-      datefrom :"",
       id : 0,
-      priceid :0,
       pharmacyId:0,
     };
   },
@@ -173,10 +140,6 @@ export default {
        
   },
   methods: {
-    onFiltered(filteredItems) {
-      self.totalRows = filteredItems.length;
-    },
-
     resetInfoModal() {
       this.infoModal.title = "";
       this.infoModal.content = "";
@@ -189,21 +152,18 @@ export default {
     Edit(data, button) {
         this.id = data.id;
         this.price = data.price;
-        this.points = data.points;
-        this.datefrom = data.date; 
-        this.priceid = data.priceid;
       (this.editModal.title = "Edit pricelist"),
         this.$root.$emit("bv::show::modal", this.editModal.id, button);
     },
     check(){
         var self = this;
         self.axios.put(
-          `/api/pricelistItems/update/`+self.id,
+          `/api/pricelistItems/appointments/update/`+self.id,
           {
             price:[{
                 id :self.priceid,
                 value: self.price,
-                points: self.points,},
+            },
             ]
           },{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
@@ -219,7 +179,7 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pricelistItems/`+ self.pharmacyId, {
+      .get(`/api/pricelistItems/appointments/`+ self.pharmacyId, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
@@ -227,23 +187,11 @@ export default {
           console.log(response.data[i]);
           var item = {};
           item.id = response.data[i].id;
-          item.medicamentId = response.data[i].medicament.id
-          item.name = response.data[i].medicament.name;
-          item.type = response.data[i].medicament.type;
-          item.medicamentForm = response.data[i].medicament.form;
-          item.manufacturer = response.data[i].medicament.manufacturer;
-          item.structure = response.data[i].medicament.structure;
-          item.issuanceMode = response.data[i].medicament.mode;
-          item.annotation = response.data[i].medicament.annotation;
-          item.medicamentRating = 0;
-          item.pharmacyId = response.data[i].pharmacy.id;
+          item.appointment = response.data[i].apointment;
+          item.price = response.data[i].price[0].value;
           item.date = response.data[i].price[0].dateFrom;
-          item.points =  response.data[i].price[0].points;
-          item.price =  response.data[i].price[0].value;
-          item.priceid =  response.data[i].price[0].id;
           self.items.push(item);
         }
-         self.totalRows = self.items.length;
         self.items.forEach((obj) => {
             obj["date1"] = new Date(obj["date"]).toDateString();
             obj["date"][1] -= 1;

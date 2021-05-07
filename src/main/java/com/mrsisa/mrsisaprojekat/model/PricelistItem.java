@@ -24,8 +24,8 @@ public abstract class PricelistItem {
 		this.id = id;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
-	private Price price;
+	@OneToMany(fetch = FetchType.LAZY)
+	private Set<Price> price;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Pharmacy pharmacy;
@@ -34,11 +34,11 @@ public abstract class PricelistItem {
 
 
 
-	public Price getPrice() {
+	public Set<Price> getPrice() {
 		return price;
 	}
 
-	public void setPrice(Price price) {
+	public void setPrice(Set<Price> price) {
 		this.price = price;
 	}
 

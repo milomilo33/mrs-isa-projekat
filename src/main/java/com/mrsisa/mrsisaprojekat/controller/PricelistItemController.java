@@ -22,16 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItem;
+import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 import com.mrsisa.mrsisaprojekat.service.MedicamentService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 import com.mrsisa.mrsisaprojekat.service.PriceService;
+import com.mrsisa.mrsisaprojekat.service.PricelistItemAppointmentService;
 import com.mrsisa.mrsisaprojekat.service.PricelistItemMedicamentService;
 
 @RestController
@@ -48,24 +51,55 @@ public class PricelistItemController {
 	@Autowired
 	private PharmacyService pharmacyService;
 	
+	@Autowired
+	private PricelistItemAppointmentService pricelistItemAppointmentService;
+	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PricelistItemMedicamentDTO>> getPriceListItems(@PathVariable("id") Long id){
 		
-		Collection<PricelistItemMedicament> items = pricelistItemService.findAllPharmacy(id);
+		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findAllPharmacy(id);
 		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
-		ArrayList<Price> prices = new ArrayList<>();
-		for(PricelistItemMedicament p : items) {
-			/*for( Price pp : p.getPrice()) {
-				if(!pp.isDeleted()) {
-					prices.add(pp);
+		
+		// samo aktivne cene (odnosne one kod kojih je deleted = false)
+		for(PricelistItemMedicament p :items) {
+			ArrayList<Price> prices = new ArrayList<>();
+			for(Price pp : p.getPrice()) {
+				if(pp.isDeleted()) {
+					continue;	
 				}
-			}*/
+				prices.add(pp);
+			}
+		
 			PricelistItemMedicamentDTO pmdt = new PricelistItemMedicamentDTO(p);
-			//pmdt.setPrice(prices);
+			pmdt.setPrice(prices);
 			list.add(pmdt);
 		}
 		
 		return new ResponseEntity<Collection<PricelistItemMedicamentDTO>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/appointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<PricelistItemAppointmentDTO>> getPriceListItemAppointments(@PathVariable("id") Long id){
+		
+		Set<PricelistItemAppointment> items = (Set<PricelistItemAppointment>) pricelistItemAppointmentService.findAllPharmacy(id);
+		ArrayList<PricelistItemAppointmentDTO> list = new ArrayList<>();
+		
+		// samo aktivne cene (odnosne one kod kojih je deleted = false)
+		for(PricelistItemAppointment p :items) {
+			ArrayList<Price> prices = new ArrayList<>();
+			for(Price pp : p.getPrice()) {
+				if(pp.isDeleted()) {
+					continue;	
+				}
+				prices.add(pp);
+			}
+		
+			PricelistItemAppointmentDTO pmdt = new PricelistItemAppointmentDTO(p);
+			pmdt.setPrice(prices);
+			list.add(pmdt);
+		}
+		
+		return new ResponseEntity<Collection<PricelistItemAppointmentDTO>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping(consumes = "application/json")
@@ -73,10 +107,10 @@ public class PricelistItemController {
 		
 		Price price = new Price();
 		price.setDeleted(false);
-		price.setValue(pricelistItem.getPrice().getValue());
+		price.setValue(pricelistItem.getPrice().get(0).getValue());
 		price.setDateFrom(LocalDate.now());
 		price.setDateTo(null);
-		price.setPoints(pricelistItem.getPrice().getPoints());
+		price.setPoints(pricelistItem.getPrice().get(0).getPoints());
 		
 		Price saved = priceService.create(price);
 		Medicament medicament = medicamentService.findOne(pricelistItem.getMedicament().getId());
@@ -85,25 +119,72 @@ public class PricelistItemController {
 		p.setMedicament(medicament);
 		Set<Price> pp = new HashSet<>();
 		pp.add(saved);
-		p.setPrice(saved);
+		p.setPrice(pp);
 		p.setPharmacy(pharmacy);
 		
 		PricelistItemMedicament savedP = pricelistItemService.create(p);
-		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP), HttpStatus.CREATED);
+		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP),HttpStatus.CREATED);
 	
 	}
 	
 	@PutMapping(value= "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PricelistItemMedicamentDTO> updatePharmacy(@RequestBody PricelistItemMedicament pricelistItem,@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<PricelistItemMedicamentDTO> updatePharmacy(@RequestBody PricelistItemMedicamentDTO pricelistItem,@PathVariable("id") Long id) throws Exception {
 		PricelistItemMedicament pricelistUpdate = pricelistItemService.findOnePricelistItemMedicament(id);
 		if (pricelistUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		pricelistUpdate.setId(id);
-		pricelistUpdate.getPrice().setValue(pricelistItem.getPrice().getValue());
-		pricelistUpdate.getPrice().setDateFrom(LocalDate.now());
+		
+		for(Price p : pricelistUpdate.getPrice()) {
+			if(!p.isDeleted()) {
+				p.setDeleted(true);
+				p.setDateTo(LocalDate.now());
+				priceService.update(p);
+				
+			}
+		}
+		Price p = new Price();
+		p.setValue(pricelistItem.getPrice().get(0).getValue());
+		p.setDateFrom(LocalDate.now());
+		p.setDateTo(null);
+		p.setDeleted(false);
+		p.setPoints(pricelistItem.getPrice().get(0).getPoints());
+		Price saved = priceService.create(p);
+		Set<Price> pr = pricelistUpdate.getPrice();
+		pr.add(saved);
+		pricelistUpdate.setPrice(pr);
 		pricelistUpdate = pricelistItemService.update(pricelistUpdate);
 		return new ResponseEntity<PricelistItemMedicamentDTO>(new PricelistItemMedicamentDTO(pricelistUpdate), HttpStatus.OK);
+	}
+	
+	@PutMapping(value= "/appointments/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PricelistItemAppointmentDTO> updateAppointments(@RequestBody PricelistItemAppointmentDTO pricelistItem,@PathVariable("id") Long id) throws Exception {
+		PricelistItemAppointment pricelistUpdate = pricelistItemAppointmentService.findOnePricelistItemAppointment(id);
+		if (pricelistUpdate == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		pricelistUpdate.setId(id);
+		
+		for(Price p : pricelistUpdate.getPrice()) {
+			if(!p.isDeleted()) {
+				p.setDeleted(true);
+				p.setDateTo(LocalDate.now());
+				priceService.update(p);
+				
+			}
+		}
+		Price p = new Price();
+		p.setValue(pricelistItem.getPrice().get(0).getValue());
+		p.setDateFrom(LocalDate.now());
+		p.setDateTo(null);
+		p.setDeleted(false);
+		p.setPoints(0);
+		Price saved = priceService.create(p);
+		Set<Price> pr = pricelistUpdate.getPrice();
+		pr.add(saved);
+		pricelistUpdate.setPrice(pr);
+		pricelistUpdate = pricelistItemAppointmentService.update(pricelistUpdate);
+		return new ResponseEntity<PricelistItemAppointmentDTO>(new PricelistItemAppointmentDTO(pricelistUpdate), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/getMedsInPharmacy/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
