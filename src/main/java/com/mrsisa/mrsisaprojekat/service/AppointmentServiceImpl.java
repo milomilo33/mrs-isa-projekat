@@ -96,4 +96,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return details;
     }
+
+    @Override
+    public void cancelExamination(Appointment appointment) {
+        appointment.setPatient(null);
+        appointmentRepository.save(appointment);
+    }
 }

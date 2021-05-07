@@ -1,8 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
@@ -66,6 +64,7 @@ public class PatientController {
 		for(PrescriptionMedicament pm : patient.getReservedMedicaments()) {
 			if(!pm.isDeleted() && !pm.isPurchased()) {
 				PrescriptionMedicamentDTO medicament = new PrescriptionMedicamentDTO(pm);
+				System.out.println(medicament.getId());
 				returns.add(medicament);
 			}
 
@@ -221,7 +220,7 @@ public class PatientController {
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
 		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
-
+		System.out.println("REZERVACIJA: " + medicamentToReserve.getExpiryDate());
 		try {
 			patientService.checkMedicamentReservationQuantity(medicamentToReserve);
 		} catch(ReservationQuantityException e) {
@@ -230,8 +229,8 @@ public class PatientController {
 		}
 
 		try {
-			Long id = patientService.updateWithReservation(p, medicamentToReserve);
-			emailService.ReservationConfirmationMail(p, id);
+			PrescriptionMedicament reservedMedicament = patientService.updateWithReservation(p, medicamentToReserve);
+			emailService.ReservationConfirmationMail(p, reservedMedicament);
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -245,10 +244,11 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
-
+		System.out.println("LEEEEEEEEEEEEK:" + medicament.getId());
 		if(medicament != null) {
 			if(LocalDate.now().plusDays(1).isBefore(medicament.getExpiryDate())) {
 				prescriptionMedicamentService.delete(id);
+
 				return new ResponseEntity<>(id, HttpStatus.OK);
 			}
 		}
@@ -295,6 +295,45 @@ public class PatientController {
 //
 //	}
 
+	@PostMapping(value = "/add_allergy")
+	public ResponseEntity<Object> addAllergy(@RequestBody AddAllergyDTO allergy) {
+
+		try {
+			patientService.addAllergy(allergy.getPatientEmail(), allergy.getMedicamentId());
+		} catch (Exception e) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Allergy to this medicament is already set");
+		}
+
+		return ResponseEntity.ok().body(allergy);
+	}
+
+	@PostMapping(value = "/remove_allergy")
+	public ResponseEntity<Object> removeAllergy(@RequestBody AddAllergyDTO allergy) {
+
+		try {
+			patientService.removeAllergy(allergy.getPatientEmail(), allergy.getMedicamentId());
+		} catch (Exception e) {
+
+			return new ResponseEntity<>(allergy, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(allergy, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/get_allergies/{email}")
+	public ResponseEntity<Collection<MedicamentDTO>> getAllergies(@PathVariable("email") String email) {
+		ArrayList<MedicamentDTO> retVal = new ArrayList<>();
+
+		Patient p = patientService.getPatientAllergies(email);
+
+		for(Medicament m : p.getAllergies()) {
+			retVal.add(new MedicamentDTO(m));
+		}
+
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
+	}
+
 	@DeleteMapping(value = "/delete_examination/{id}")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelExamination(@PathVariable("id") Long id) {
@@ -303,7 +342,7 @@ public class PatientController {
 
 		if(a != null) {
 			if(now.isBefore(a.getDate().atTime(a.getTermFrom()))) {
-				appointmentService.delete(a);
+				appointmentService.cancelExamination(a);
 				return new ResponseEntity<>(id, HttpStatus.OK);
 			}
 		}

@@ -33,6 +33,7 @@
               <b-button v-b-modal="'id' + item.id"
                 >Reserve</b-button
               >
+              
 
               <b-modal
                 content-class="my-class"
@@ -90,7 +91,8 @@ export default defineComponent({
       medicament: "",
       pricelist: "",
       amount: "",
-      date: null
+      date: null,
+      
     }
   },
   mounted(){
@@ -119,8 +121,10 @@ export default defineComponent({
       .catch((error) => console.log(error));
   },
   methods: {
+
     reserveMedicament() {
       //console.log(this.amount);
+      console.log(this.date);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
           patientEmail: "anasimic@gmail.com",

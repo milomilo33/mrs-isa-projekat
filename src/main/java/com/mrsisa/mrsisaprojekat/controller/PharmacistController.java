@@ -76,9 +76,6 @@ public class PharmacistController {
 	@Autowired
 	private PatientService patientService;
 	
-	@Autowired
-	private DermatologistService dermatologistService;
-	
 	
 	@GetMapping(value="/all")
 	public ResponseEntity<List<PharmacistDTO>> getPharmacists(){
@@ -148,8 +145,8 @@ public class PharmacistController {
 		
 
 		if(check(pharmacistDTO.getEmail())) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
-
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		try {
 			AdminPharmacy savedAdmin = adminService.findOne(pharmacistDTO.getEmail());
 			if(savedAdmin != null) {

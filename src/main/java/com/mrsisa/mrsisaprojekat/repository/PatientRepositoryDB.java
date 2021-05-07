@@ -30,6 +30,6 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 	@Query("select p from Patient p join fetch p.appointments pa where p.email = ?1 and pa.deleted = false")
 	Patient getAppointmentsForUser(String email);
 
-
-
+	@Query("select p from Patient p join fetch p.allergies pa where p.email = ?1")
+	Patient getPatientWithAllergies(String patientEmail);
 }

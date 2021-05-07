@@ -170,7 +170,7 @@
           :key="p.id"
         >
           <div>
-            <MedicamentPreview :medicament="p"> </MedicamentPreview>
+            <MedicamentPreview :medicament="p" :allergies="allergies"> </MedicamentPreview>
           </div>
         </div>
       </div>
@@ -193,11 +193,13 @@ export default defineComponent({
       medicaments: [],
       search: "",
       issuanceMode: -1,
-      medicamentForm: -1
+      medicamentForm: -1,
+      allergies: []
     };
   },
 
   mounted() {
+    this.loadAllergies();
     this.axios
       .get(`/api/medicaments/all`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -206,9 +208,19 @@ export default defineComponent({
         this.medicaments = response.data;
         //console.log(this.medicaments);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error.response.data));
+
+    
   },
   methods: {
+    loadAllergies() {
+      this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub)
+        .then(response => {
+          console.log(response.data);
+          this.allergies = response.data;
+        })
+        .catch(error => alert(error.response.data)); 
+    },
     findSearch(){
       this.axios
       .get(`/api/medicaments/search/`+this.search, {
