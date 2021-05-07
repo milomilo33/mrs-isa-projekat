@@ -127,14 +127,14 @@ public class PharmacistController {
 		if (pharmacyAdmin != null) {
 			return true;
 		}
-		/*AdminSystem sytemAdmin = systemAdminService.findOne(email);
+		AdminSystem sytemAdmin = systemAdminService.findOne(email);
 		if (sytemAdmin != null) {
 			return true;
 		}
-		/*Supplier supplier = supplierService.findOne(email);
+		Supplier supplier = supplierService.findOne(email);
 		if (supplier != null) {
 			return true;
-		}*/
+		}
 		
 		return false;
 	}
@@ -145,6 +145,10 @@ public class PharmacistController {
 		
 
 		if(check(pharmacistDTO.getEmail())) {
+
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+
+		
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		try {
@@ -237,8 +241,7 @@ public class PharmacistController {
 		catch( Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return new ResponseEntity<>(new PharmacistDTO(pharmacist), HttpStatus.CREATED); 
-		
+		return new ResponseEntity<>(new PharmacistDTO(pharmacist), HttpStatus.CREATED);
 		
 	}
 

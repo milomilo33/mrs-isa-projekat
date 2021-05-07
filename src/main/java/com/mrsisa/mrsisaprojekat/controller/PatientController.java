@@ -1,5 +1,10 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
+import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -17,7 +22,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -39,6 +46,9 @@ public class PatientController {
 	
 	@Autowired
 	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@Autowired
     private ConfirmationTokenRepositoryDB confirmationTokenRepository;
@@ -184,7 +194,7 @@ public class PatientController {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PatientDTO> getPatientDetalis(@RequestParam String email) {
-		System.out.println(email);
+		
 		Patient p = patientService.getPatientDetails(email);
 		PatientDTO patient = new PatientDTO(p);
 		return new ResponseEntity<>(patient, HttpStatus.OK);
@@ -255,7 +265,42 @@ public class PatientController {
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
+	
+	@PostMapping(value="/subscribe")
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<SubscribedPharmacyDTO> subscribeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception{
+		Patient patient = patientService.findOne(pharmacyDTO.getUser());
+		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(pharmacyDTO.getUser());
+		
+		if(subscribedPharmacies == null) {
+			subscribedPharmacies = new ArrayList<Pharmacy>();
+		}
+		
+		subscribedPharmacies.add(pharmacyDTO.getPharmacy());
+		
+		patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
+		patient = patientService.update(patient);
+		
+		return new ResponseEntity<>(pharmacyDTO, HttpStatus.CREATED);
+	} 
 
+	@GetMapping(value="/subscribedPharmacies/{id},{pharmacy}")
+	public ResponseEntity<String> getSubscribedPharmacies(@PathVariable("id") String id, @PathVariable("pharmacy") Long pharmacy){
+		
+		System.out.println("APOTEKAAAAAAAAA  "+pharmacy);
+		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(id);
+		if(subscribedPharmacies == null) {
+			System.out.println("Nestooo");
+			return new ResponseEntity<String>("Not_found", HttpStatus.OK);
+		}
+		for(Pharmacy p : subscribedPharmacies) {
+			if(p.getId() == pharmacy) {
+				System.out.println("Nesto drugooooo");
+				return new ResponseEntity<String>("Found", HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<String>("Not_found", HttpStatus.OK);
+	}
 //	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
 //	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 //	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {

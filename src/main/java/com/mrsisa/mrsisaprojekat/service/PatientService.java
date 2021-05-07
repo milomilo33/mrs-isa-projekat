@@ -4,7 +4,7 @@ import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.Patient;
-
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 
 import java.util.ArrayList;
@@ -37,9 +37,13 @@ public interface PatientService {
 
 	void checkMedicamentReservationQuantity(PrescriptionMedicament medicament) throws ReservationQuantityException;
 
+
+	Collection<Pharmacy> findAllSubscribed(String user);
+
     void addAllergy(String patientEmail, Long medicamentId) throws Exception;
 
     Patient getPatientAllergies(String email);
 
 	void removeAllergy(String patientEmail, Long medicamentId);
+
 }
