@@ -172,6 +172,9 @@ insert into medicament_item (deleted, quantity, medicament_id) values ('false', 
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 5, 3)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 6, 4)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 90, 5)
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 5, 3)
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 6, 2)
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 20, 1)
 
 
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 5)
@@ -229,17 +232,17 @@ insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values 
 
 
 
-insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('mikaantic@gmail.com', 'false','true', 'Antic', 'Mika', 'supplier1', '0624354231', 21)
-insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'true', 'Raznatovic', 'Svetlana', 'supplier2', '0604354231', 20)
-insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('lupulovb@gmail.com', 'false','true', 'Lupulov', 'Bojan', 'supplier3', '0614354231', 19)
+insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('mikaantic@gmail.com', 'false','true', 'Antic', 'Mika', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0624354231', 21)
+insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'true', 'Raznatovic', 'Svetlana', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0604354231', 20)
+insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('lupulovb@gmail.com', 'false','true', 'Lupulov', 'Bojan', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0614354231', 19)
 
 insert into user_role(user_id, role_id) values ('mikaantic@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('svetlanaraznatovic@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
 
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-06','false', 1,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-01-11','false', 1,'markoperic@gmail.com', 'lupulovb@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-06','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
 
 insert into pharmacy_orders (pharmacy_id, orders_id) values (1, 1)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
@@ -357,6 +360,9 @@ insert into offer (deadline, status, total_price, order_id, supplier_email) valu
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 7)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (3, 8)
+insert into order_t_medicament_items (order_id, medicament_items_id) values  (1, 10)
+insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 11)
+insert into order_t_medicament_items (order_id, medicament_items_id) values  (3, 9)
 
 
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (0, false, '08:00', '12:00', 1)

@@ -37,6 +37,8 @@ import Profile from '../components/Profile'
 import RequestMedicaments from '../components/RequestMedicaments'
 import PricelistAppointments from '../components/PricelistAppointments'
 
+import SupplierOrderList from '../components/SupplierOrderList'
+import SupplierPage from '../views/SupplierPage'
 
 Vue.use(VueRouter)
 const Role = {
@@ -49,6 +51,11 @@ const Role = {
 }
 const routes = [
 
+	{
+		path: "/",
+		name: UnregisteredPage,
+		component: UnregisteredPage
+	},
 	{
 		path: "/Login",
 		name: "Login",
@@ -392,6 +399,25 @@ const routes = [
 		]
 	},
 	{
+		path: '/SupplierPage',
+		name: SupplierPage,
+		component: SupplierPage,
+		children: [
+			{
+				path: "PharmacyList",
+				component: PharmacyListPreview
+			},
+			{
+				path: "MedicamentList",
+				component: MedicamentListPreview
+			},
+			{
+				path: "OrderList",
+				component: SupplierOrderList,
+			}
+		]
+	},
+	{
 		path: '/PatientPage',
 		name: PatientPage,
 		component: PatientPage,
@@ -408,10 +434,6 @@ const routes = [
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
-			},
-			{
-				path: "PatientRegistration",
-				component: PatientRegistration
 			},
 			{
 				path: "ReservedAppointmentsTable",
