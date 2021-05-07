@@ -214,12 +214,14 @@ export default defineComponent({
   },
   methods: {
     loadAllergies() {
-      this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub)
+      this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
         .then(response => {
           console.log(response.data);
           this.allergies = response.data;
         })
-        .catch(error => alert(error.response.data)); 
+        .catch(error => console.log(error.response.data)); 
     },
     findSearch(){
       this.axios

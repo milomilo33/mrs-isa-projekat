@@ -296,6 +296,7 @@ public class PatientController {
 //	}
 
 	@PostMapping(value = "/add_allergy")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Object> addAllergy(@RequestBody AddAllergyDTO allergy) {
 
 		try {
@@ -309,6 +310,7 @@ public class PatientController {
 	}
 
 	@PostMapping(value = "/remove_allergy")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Object> removeAllergy(@RequestBody AddAllergyDTO allergy) {
 
 		try {
@@ -322,6 +324,7 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/get_allergies/{email}")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Collection<MedicamentDTO>> getAllergies(@PathVariable("email") String email) {
 		ArrayList<MedicamentDTO> retVal = new ArrayList<>();
 
