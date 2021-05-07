@@ -11,13 +11,17 @@ public class PrescriptionMedicamentDTO {
     private Medicament medicament;
     private LocalDate expiryDate;
     private int quantity;
+    private Long id;
 
 
     public PrescriptionMedicamentDTO() {
 
     }
 
+
+
     public PrescriptionMedicamentDTO(PrescriptionMedicament pm) {
+        this.id = pm.getId();
         this.medicament = pm.getMedicament();
         this.medicament.setSubstituteMedicaments(new HashSet<>());
         this.medicament.setRatings(new HashSet<>());
@@ -62,5 +66,13 @@ public class PrescriptionMedicamentDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -1,15 +1,13 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,6 +31,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private MedicamentRepositoryDB medicamentRepository;
 
 	@Override
 	public Collection<Patient> findAll() {
@@ -87,7 +88,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public Long updateWithReservation(Patient p, PrescriptionMedicament medicamentToReserve) {
+	public PrescriptionMedicament updateWithReservation(Patient p, PrescriptionMedicament medicamentToReserve) {
 		Patient patientToUpdate = patientRepository.getPatientWithReservedMedicaments(p.getEmail());
 
 		if (patientToUpdate == null) {
@@ -102,7 +103,7 @@ public class PatientServiceImpl implements PatientService {
 		patientRepository.save(p);
 		prescriptionRepository.updatePatientReservation(p.getEmail(), medicamentToReserve.getId());
 
-		return medicamentToReserve.getId();
+		return medicamentToReserve;
 	}
 
 
@@ -181,8 +182,47 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+
 	public Collection<Pharmacy> findAllSubscribed(String user) {
 		return patientRepository.findAllSubscribedPharmacies(user);
+
+	public void addAllergy(String patientEmail, Long medicamentId) throws Exception {
+		Patient p = patientRepository.getPatientWithAllergies(patientEmail);
+
+		Medicament m = medicamentRepository.findById(medicamentId).orElse(null);
+
+		if(p == null) {
+			throw new Exception("Patient not found");
+		}
+		if(m == null) {
+			throw new Exception("Medicament not found");
+		}
+
+		for(Medicament medicament : p.getAllergies()) {
+			if(medicament.getId().equals(medicamentId)) {
+				throw new Exception("Allergy already exists");
+			}
+		}
+		p.getAllergies().add(m);
+		patientRepository.save(p);
+
+
+	}
+
+	@Override
+	public Patient getPatientAllergies(String email) {
+		return patientRepository.getPatientWithAllergies(email);
+	}
+
+	@Override
+	public void removeAllergy(String patientEmail, Long medicamentId) {
+		Patient p = patientRepository.getPatientWithAllergies(patientEmail);
+
+		Medicament m = medicamentRepository.findById(medicamentId).orElse(null);
+
+
+		p.setAllergies(p.getAllergies().stream().filter(medicament -> !medicament.getId().equals(medicamentId)).collect(Collectors.toSet()));
+		patientRepository.save(p);
 	}
 
 }

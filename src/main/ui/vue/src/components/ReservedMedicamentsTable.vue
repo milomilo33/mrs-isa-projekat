@@ -160,6 +160,7 @@ components: {
         console.log(response.data);
         for (var i = 0; i < response.data.length; i++) {
           var item = {};
+          item.reservationId = response.data[i].id;
           item.id = response.data[i].patientEmail;
           item.expiryDate = response.data[i].expiryDate;
           item.quantity = response.data[i].quantity;
@@ -179,7 +180,7 @@ components: {
   },
   methods: {
     test(item, index) {
-        this.selectedMedicament = item.medicament;
+        this.selectedMedicament = item;
         console.log(this.selectedMedicament);
         this.selectedIndex = index;
         console.log(index);
@@ -202,7 +203,7 @@ components: {
     cancelAppointment() {
         this.showFailedAlert = false;
         this.showSuccessAlert = false;
-        this.axios.delete(`http://localhost:8080/api/patients/cancelReservation/`+this.selectedMedicament.id,  {
+        this.axios.delete(`http://localhost:8080/api/patients/cancelReservation/`+this.selectedMedicament.reservationId,  {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -215,6 +216,8 @@ components: {
           }).catch(err => {this.showFailedAlert = true;
           console.log(err)});
     },
+
+    
       
       dateDisabled(ymd, date) {
       const today = new Date();

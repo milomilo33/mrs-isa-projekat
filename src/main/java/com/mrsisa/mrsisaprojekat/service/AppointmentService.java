@@ -19,4 +19,6 @@ public interface AppointmentService {
     boolean markPatientAbsence(Long appointmentId);
 
     AppointmentDetailsDTO getAppointmentDetails(Long appointmentId);
+
+    void cancelExamination(Appointment appointment);
 }
