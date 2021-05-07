@@ -182,10 +182,10 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-
 	public Collection<Pharmacy> findAllSubscribed(String user) {
-		return patientRepository.findAllSubscribedPharmacies(user);
+		return patientRepository.findAllSubscribedPharmacies(user);}
 
+	@Override
 	public void addAllergy(String patientEmail, Long medicamentId) throws Exception {
 		Patient p = patientRepository.getPatientWithAllergies(patientEmail);
 

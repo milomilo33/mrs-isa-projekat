@@ -7,6 +7,12 @@
           <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
             Failed to subscribe.
           </b-alert>
+          <b-alert v-model="showSuccessAlertUnsub" dismissible fade variant="success">
+            Success! You unsubscribed to {{pharmacy.name}}.
+          </b-alert>
+          <b-alert v-model="showFailedAlertUnsub" dismissible fade variant="danger">
+            Failed to unsubscribe.
+          </b-alert>
     <b-row>
       <b-col cols="4" class="col-sm-12 col-md-4 col-lg-4">
         <img class="img" src="../pharmacyStock.jpg" alt="">
@@ -64,6 +70,8 @@ export default {
         user: null,
         showSuccessAlert: false,
         showFailedAlert: false,
+        showSuccessAlertUnsub: false,
+        showFailedAlertUnsub: false
       }
     },
 
@@ -76,29 +84,33 @@ export default {
         atob(localStorage.getItem("token").split(".")[1])
       ).sub;
       
-    this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
+      this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(response => {
         this.pharmacy = response.data;
-        console.log(this.pharmacy);
         })
       .catch(error => console.log(error));
-    if(userRole == "ROLE_PATIENT"){
+
+    if(userRole == "ROLE_PATIENT")
+    {
         this.axios.get(`/api/patients/subscribedPharmacies/${this.user},`+parseInt(this.$route.params.id), {
         headers: {Authorization: "Bearer " + localStorage.getItem('token')}
-      })
+        })
       .then(response=> {
         if(response.data == "Found"){
           _this.sub = false;
           _this.unsub = true;
         }
-        else{
+        else
+        {
           _this.sub = true;
           _this.unsub = false;
         }
       })
-    }else{
+    }
+    else
+    {
       _this.sub = false;
       _this.unsub = false;
     }
@@ -107,7 +119,7 @@ export default {
 
   methods: {
     subscribe: function(){
-     
+      
       let _this = this;
       this.axios
         .post(`/api/patients/subscribe`, {
@@ -127,8 +139,24 @@ export default {
         });
     },
     unsubscribe: function(){
-      this.unsub = false;
-      this.sub = true;
+      let _this = this;
+      this.axios
+        .post(`/api/patients/unsubscribe`, {
+          pharmacy: this.pharmacy,
+          user: this.user
+        },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+        .then(function () {
+            _this.unsub = false;
+            _this.sub = true;
+            _this.showSuccessAlertUnsub = true;
+        })
+        .catch(function (error) {
+          console.log(error);
+          _this.showFailedAlertUnsub = true;
+        });
+     
     },
     addressToString: function(address) {
       return address.street + " " + address.number 
