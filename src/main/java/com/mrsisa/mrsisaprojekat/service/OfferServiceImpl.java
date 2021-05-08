@@ -1,5 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,15 @@ public class OfferServiceImpl implements OfferService{
 	@Override
 	public void delete(Long id) {
 		offerRepository.deleteById(id);;
+	}
+
+	@Override
+	public Set<Offer> offersForOrder(Long id) {
+		Set<Offer> offers = offerRepository.getOffersForOrder(id);
+		if(offers == null) {
+			return null;
+		}
+		return offers;
 	}
 
 }

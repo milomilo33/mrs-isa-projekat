@@ -41,8 +41,7 @@ public class MedicamentItemServiceImpl implements MedicamentItemService{
 
 	@Override
 	public MedicamentItem update(MedicamentItem medicamentItem) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return medicamentItemRepository.save(medicamentItem);
 	}
 
 	@Transactional(readOnly = false)
