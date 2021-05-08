@@ -121,7 +121,7 @@ public class OrderController {
 	public ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO order) throws Exception{
 		Order o = new Order();
 		// ovde staviti deadline od orderDto
-		o.setDeadline(LocalDate.now());
+		o.setDeadline(order.getDeadline());
 		o.setDeleted(false);
 		o.setStatus(OrderStatus.WAITINGFOROFFERS);
 		o.setSupplier(null);
@@ -200,22 +200,21 @@ public class OrderController {
 		}
 		
 	}
-	
+	@Transactional(readOnly = false)
 	@PutMapping(value= "/updateOrder/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
 	public ResponseEntity<OrderDTO> updateOrder(@RequestBody OrderDTO order,@PathVariable("email") String email) throws Exception {
 		Order o = orderService.findOneWithMedicaments(order.getId());
-
-		Set<Offer> offers = offerService.offersForOrder(order.getId());
 		if(o !=null) {
 			try {
-				if(offers.size() == 0 && o.getStatus().equals(OrderStatus.WAITINGFOROFFERS) && o.getAdmin().getEmail().equals(email)) {
+				if(o.getStatus().equals(OrderStatus.WAITINGFOROFFERS) && o.getAdmin().getEmail().equals(email)) {
 					for(MedicamentItemDTO m : order.getMedicamentItems()) {
 						MedicamentItem mi = medicamentItemService.findOne(m.getId());
 						mi.setQuantity(m.getQuantity());
+						
 						MedicamentItem updated = medicamentItemService.update(mi);	
 					}
-					o.setDeadline(LocalDate.now());
+					o.setDeadline(order.getDeadline());
 					o = orderService.update(o);
 					return new ResponseEntity<>(HttpStatus.OK);
 				}else {
