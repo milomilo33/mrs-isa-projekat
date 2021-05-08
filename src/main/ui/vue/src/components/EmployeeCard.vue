@@ -46,7 +46,7 @@
             {{ this.employee.email }}
           </p>
         </b-row>
-        <b-row>
+        <b-row v-if="role === 'ROLE_PATIENT'">
           <select id="mySelect" name="available_appointments" v-model="app" @change="setAppointment(app)">
               <option class="med" v-for="a in this.employee.appointments" :key="a.id" :value="a">{{parseAppointment(a)}}</option>
           </select>
@@ -67,7 +67,11 @@ export default {
   props: {
     employee: Object,
   },
-  mounted() {},
+  mounted() {
+    this.role = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).role;
+  },
   data() {
     return {
       ratings: 0,
@@ -75,6 +79,7 @@ export default {
       show: false,
       appointment: null,
       app:"",
+      role: ''
     };
   },
   methods: {
