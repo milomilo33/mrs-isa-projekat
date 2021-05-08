@@ -39,6 +39,7 @@ import PricelistAppointments from '../components/PricelistAppointments'
 
 import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
+import Orders from '../components/Orders'
 
 Vue.use(VueRouter)
 const Role = {
@@ -391,6 +392,13 @@ const routes = [
 			{
 				path: "PricelistAppointments",
 				component: PricelistAppointments,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
+			{
+				path: "Orders",
+				component: Orders,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},

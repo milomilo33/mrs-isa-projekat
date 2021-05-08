@@ -1,18 +1,22 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
+import com.mrsisa.mrsisaprojekat.model.Offer;
 import com.mrsisa.mrsisaprojekat.model.Order;
 
 public class OrderDTO {
 
+	
 	private Long id;
 	private Set<MedicamentItemDTO> medicamentItems;
-	private LocalDateTime deadline;
+	private LocalDate deadline;
 	private String status;
+	private AdminPharmacyDTO admin;
 	
 	public OrderDTO() {}
 	
@@ -24,6 +28,7 @@ public class OrderDTO {
 		}
 		this.deadline = order.getDeadline();
 		this.status = order.getStatus().name();
+		this.admin = new AdminPharmacyDTO(order.getAdmin());
 	}
 
 	public Long getId() {
@@ -42,11 +47,11 @@ public class OrderDTO {
 		this.medicamentItems = medicamentItems;
 	}
 
-	public LocalDateTime getDeadline() {
+	public LocalDate getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(LocalDateTime deadline) {
+	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
 
@@ -58,6 +63,12 @@ public class OrderDTO {
 		this.status = status;
 	}
 
-	
+	public AdminPharmacyDTO getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(AdminPharmacyDTO admin) {
+		this.admin = admin;
+	}
 	
 }

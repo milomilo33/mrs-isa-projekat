@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class Order {
 	private OrderStatus status;
 	
 	@Column(name = "deadline", unique = false, nullable = false)
-	private LocalDateTime deadline;
+	private LocalDate deadline;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private AdminPharmacy admin;
@@ -62,11 +63,11 @@ public class Order {
 
 	
 
-	public LocalDateTime getDeadline() {
+	public LocalDate getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(LocalDateTime deadline) {
+	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
 

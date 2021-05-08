@@ -12,4 +12,15 @@ public interface OrderService {
 
 	Order update(Order orderSaved);
 	
+	Set<Order> findAllOrders();
+	
+	Order create(Order o);
+	
+	Order findOneWithOffersAndAdmin(Long id);
+	
+	boolean delete(Order o);
+	
+	Order findOneWithMedicaments(Long id);
+	
+	
 }

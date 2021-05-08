@@ -354,7 +354,6 @@ insert into e_prescription_prescription_medicaments (e_prescription_id, prescrip
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (3, 3)
 
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com')
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-07', 2, 50000, 2, 'svetlanaraznatovic@gmail.com')
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com')
 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)
