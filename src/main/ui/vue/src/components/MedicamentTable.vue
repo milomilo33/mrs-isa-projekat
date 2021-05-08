@@ -423,11 +423,11 @@ export default {
           this.axios.post(
             `/api/pricelistItems/`,
             {
-              price: {
+              price: [{
                 value: this.price,
                 //dateTo: this.datefrom,
                 points: this.points,
-              },
+              },],
               pharmacy: {
                 id: this.pharmacy.id,
               },

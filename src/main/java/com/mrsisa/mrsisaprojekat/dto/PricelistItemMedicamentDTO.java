@@ -9,7 +9,7 @@ public class PricelistItemMedicamentDTO {
 	
 	private Long id;
 	private PharmacyDTO pharmacy;
-	private Price price;
+	private ArrayList<Price> price;
 	private MedicamentDTO medicament;
 	
 	
@@ -18,15 +18,15 @@ public class PricelistItemMedicamentDTO {
 	}
 
 	public PricelistItemMedicamentDTO(PricelistItemMedicament pricelistItem) {
-		this(pricelistItem.getId(), new PharmacyDTO(pricelistItem.getPharmacy()),pricelistItem.getPrice(),new MedicamentDTO(pricelistItem.getMedicament()));
+		this(pricelistItem.getId(), new PharmacyDTO(pricelistItem.getPharmacy()),new MedicamentDTO(pricelistItem.getMedicament()));
 	}
 
 
-	public PricelistItemMedicamentDTO(Long id, PharmacyDTO pharmacy,Price price, MedicamentDTO medicament) {
+	public PricelistItemMedicamentDTO(Long id, PharmacyDTO pharmacy, MedicamentDTO medicament) {
 		super();
 		this.id = id;
 		this.pharmacy = pharmacy;
-		this.price = price;
+		//this.price = price;
 		this.medicament = medicament;
 	}
 
@@ -39,7 +39,7 @@ public class PricelistItemMedicamentDTO {
 	}
 
 
-	public Price getPrice() {
+	public ArrayList<Price> getPrice() {
 		return price;
 	}
 
@@ -47,7 +47,7 @@ public class PricelistItemMedicamentDTO {
 		return medicament;
 	}
 
-	public void setPrice(Price price) {
+	public void setPrice(ArrayList<Price> price) {
 		this.price = price;
 	}
 	

@@ -28,7 +28,7 @@
               <h5 class="card-title">{{item.pharmacy.name}}</h5>
               <p class="card-text">
                 {{item.pharmacy.description}}
-                {{item.price.value}}
+                {{item.price[0].value}}
               </p>
               <b-button v-b-modal="'id' + item.id"
                 >Reserve</b-button
@@ -110,13 +110,14 @@ export default defineComponent({
 
     this.axios
       .get(
-        `/api/pricelistItems/getMedsInPharmacy/` +
+        `/api/pricelistItems/` +
           parseInt(this.$route.params.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
           }
       )
       .then((response) => {
         this.pricelist = response.data;
+        console.log(this.pricelist);
       })
       .catch((error) => console.log(error));
   },

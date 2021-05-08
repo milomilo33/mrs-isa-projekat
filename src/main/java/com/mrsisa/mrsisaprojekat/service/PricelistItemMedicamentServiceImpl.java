@@ -1,29 +1,25 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.Price;
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 import com.mrsisa.mrsisaprojekat.repository.PriceRepositoryDB;
-import com.mrsisa.mrsisaprojekat.repository.PricelistItemRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PricelistItemMedicamentRepositoryDB;
 
 @Service
 public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicamentService {
 	
 	@Autowired
-	private PricelistItemRepositoryDB pricelistItemRepository;
+	private PricelistItemMedicamentRepositoryDB pricelistItemRepository;
 
 	@Autowired
 	private PriceRepositoryDB priceRepository;
 	@Override
-	public Collection<PricelistItemMedicament> findAllPharmacy(Long id) {
-		ArrayList<PricelistItemMedicament> items = (ArrayList<PricelistItemMedicament>) pricelistItemRepository.findAllPricelistItemMedicaments(id);
+	public Set<PricelistItemMedicament> findAllPharmacy(Long id) {
+		Set<PricelistItemMedicament> items =  pricelistItemRepository.findAllPricelistItemMedicaments(id);
 		return items;
 	}
 
@@ -57,11 +53,6 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		if(item == null) {
 			return null;
 		}
-		Price p = priceRepository.findOnePrice(pricelistItem.getPrice().getId());
-		if(p == null) {
-			return null;
-		}
-		priceRepository.save(pricelistItem.getPrice());
 		pricelistItemRepository.save(pricelistItem);
 		return item;
 		

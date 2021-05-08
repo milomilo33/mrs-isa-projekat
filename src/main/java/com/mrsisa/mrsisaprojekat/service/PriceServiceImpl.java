@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.repository.PriceRepositoryDB;
 
@@ -37,8 +38,13 @@ public class PriceServiceImpl implements PriceService{
 
 	@Override
 	public Price update(Price price) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Price p = priceRepository.getOne(price.getId());
+		
+		if (p == null) {
+			return null;
+		}
+		
+		return priceRepository.save(price);
 	}
 
 	@Override
