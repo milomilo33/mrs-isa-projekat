@@ -11,4 +11,7 @@ public interface OrderRepositoryDB extends JpaRepository<Order, Long>{
 
 	@Query("select o from Order o join fetch o.medicamentItems join fetch o.admin where o.deadline > CURRENT_DATE")
 	Set<Order> getOrdersForSupplier();
+	
+	@Query("select o from Order o join fetch o.offers where o.id = ?1")
+	Order getOrderWithOffers(Long id);
 }
