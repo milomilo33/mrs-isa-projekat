@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Role;
+import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import org.hibernate.Hibernate;
@@ -167,6 +164,22 @@ public class DermatologistServiceImpl implements DermatologistService {
 	@Override
 	public Dermatologist getRatings(String email) {
 		return dermatologistRepository.getRatings(email);
+	}
+
+	@Override
+	public void addRating(Rating rating, String ratedEmployeeEmail) {
+		Dermatologist dermatologist = dermatologistRepository.getRatings(ratedEmployeeEmail);
+
+		try {
+			dermatologist.getRatings().add(rating);
+		} catch (NullPointerException e) {
+			HashSet<Rating> ratings = new HashSet<>();
+			ratings.add(rating);
+			dermatologist.setRatings(ratings);
+		}
+
+		dermatologist.getRatings().add(rating);
+		dermatologistRepository.save(dermatologist);
 	}
 
 

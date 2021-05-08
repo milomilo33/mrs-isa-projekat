@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -128,6 +129,21 @@ public class PharmacistServiceImpl  implements PharmacistService {
 	@Override
 	public Pharmacist getRatings(String email) {
 		return pharmacistRepository.getRatings(email);
+	}
+
+	@Override
+	public void addRating(Rating rating, String ratedEmployeeEmail) {
+		Pharmacist pharmacist = pharmacistRepository.getRatings(ratedEmployeeEmail);
+
+		try {
+			pharmacist.getRatings().add(rating);
+		} catch (NullPointerException e) {
+			HashSet<Rating> ratings = new HashSet<>();
+			ratings.add(rating);
+			pharmacist.setRatings(ratings);
+		}
+
+		pharmacistRepository.save(pharmacist);
 	}
 
 }

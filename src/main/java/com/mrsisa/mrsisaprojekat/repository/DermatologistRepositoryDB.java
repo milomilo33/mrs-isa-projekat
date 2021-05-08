@@ -31,4 +31,5 @@ public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, 
 	@Query("select d from Dermatologist d join fetch d.ratings where d.email=?1 and d.deleted=false")
 	Dermatologist getRatings(String email);
 
+
 }

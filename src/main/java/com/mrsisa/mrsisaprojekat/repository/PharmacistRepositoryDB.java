@@ -25,7 +25,7 @@ public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String
 	@Query("select p from Pharmacist p join fetch p.address join fetch p.counselings where p.email = ?1")
 	Pharmacist getPharmacistWithCounselings(String email);
 	
-	@Query("select p from Pharmacist p join fetch p.ratings where p.email=?1 and p.deleted=false")
+	@Query("select p from Pharmacist p left join fetch p.ratings where p.email=?1 and p.deleted=false")
 	Pharmacist getRatings(String email);
 
 }

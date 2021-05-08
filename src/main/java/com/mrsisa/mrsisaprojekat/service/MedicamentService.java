@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.Collection;
 
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Rating;
 
 public interface MedicamentService {
 
@@ -21,5 +22,6 @@ public interface MedicamentService {
 	Collection<Medicament> findAllWithName(String query);
 
 	Collection<Medicament> findAllFilter(int mode, int form);
-	
+
+    void addRating(Rating rating, Long id);
 }

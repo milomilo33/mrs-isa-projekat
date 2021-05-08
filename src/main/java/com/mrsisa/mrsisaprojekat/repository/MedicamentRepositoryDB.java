@@ -16,4 +16,7 @@ public interface MedicamentRepositoryDB extends JpaRepository<Medicament, Long>{
 
 	@Query("select m from Medicament m where m.issuanceMode=?1 or m.medicamentForm=?2")
 	Collection<Medicament> findFilter(int mode, int form);
+
+	@Query("select m from Medicament m join fetch m.ratings where m.id = ?1")
+    Medicament loadWithRatings(Long id);
 }

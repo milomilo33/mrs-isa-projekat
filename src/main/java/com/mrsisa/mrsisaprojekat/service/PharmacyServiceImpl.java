@@ -2,18 +2,15 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
-import com.mrsisa.mrsisaprojekat.model.Rating;
+import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
 @Service
@@ -137,6 +134,22 @@ public class PharmacyServiceImpl implements PharmacyService{
 		}
 	
 		return appointments;
+	}
+
+	@Override
+	public void addRating(Rating rating, Long ratedEntityId) {
+		Pharmacy pharmacy = pharmacyRepository.loadWithRatings(ratedEntityId);
+
+		try {
+			pharmacy.getRatings().add(rating);
+		} catch (NullPointerException e) {
+			HashSet<Rating> ratings = new HashSet<>();
+			ratings.add(rating);
+			pharmacy.setRatings(ratings);
+		}
+
+
+		pharmacyRepository.save(pharmacy);
 	}
 
 

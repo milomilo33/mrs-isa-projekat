@@ -10,6 +10,7 @@ import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
+import javafx.application.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,6 +63,9 @@ public class PatientController {
 
 	@Autowired
 	private DermatologistService dermatologistService;
+
+	@Autowired
+	private MedicamentService medicamentService;
 
 
 	@GetMapping(value="/reservedMedication/{id}")
@@ -415,6 +420,29 @@ public class PatientController {
 		}
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
+	}
+
+	@PostMapping(value = "/rating", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> addRating(@RequestBody RatingDTO ratingDTO) {
+		Rating rating = new Rating();
+		rating.setValue(ratingDTO.getRating());
+		rating.setPatient(patientService.findOne(ratingDTO.getPatientEmail()));
+
+		switch (ratingDTO.getRateType()) {
+			case MEDICAMENT:
+				medicamentService.addRating(rating, ratingDTO.getRatedEntityId());
+				break;
+			case DERMATOLOGIST:
+				dermatologistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+				break;
+			case PHARMACIST:
+				pharmacistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+				break;
+			case PHARMACY:
+				pharmacyService.addRating(rating, ratingDTO.getRatedEntityId());
+				break;
+		}
+		return ResponseEntity.ok().body("Ocenili ste ovaj entitet");
 	}
 
 //	@GetMapping(value = "/{id}/appointments")

@@ -1,7 +1,9 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import com.mrsisa.mrsisaprojekat.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,22 @@ public class MedicamentServiceImpl implements MedicamentService {
 	@Override
 	public Collection<Medicament> findAllFilter(int mode, int form) {
 		return medicamentRepository.findFilter(mode, form);
+	}
+
+	@Override
+	public void addRating(Rating rating, Long id) {
+		Medicament medicament = medicamentRepository.loadWithRatings(id);
+
+		try {
+			medicament.getRatings().add(rating);
+		} catch (NullPointerException e) {
+			HashSet<Rating> ratings = new HashSet<>();
+			ratings.add(rating);
+			medicament.setRatings(ratings);
+		}
+
+		medicament.getRatings().add(rating);
+		medicamentRepository.save(medicament);
 	}
 
 }
