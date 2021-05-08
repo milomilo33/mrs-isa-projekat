@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ public class OrderDTO {
 
 	private Long id;
 	private Set<MedicamentItemDTO> medicamentItems;
+	private LocalDateTime deadline;
+	private String status;
 	
 	public OrderDTO() {}
 	
@@ -19,6 +22,8 @@ public class OrderDTO {
 		for (MedicamentItem mi : order.getMedicamentItems()) {
 				medicamentItems.add(new MedicamentItemDTO(mi));
 		}
+		this.deadline = order.getDeadline();
+		this.status = order.getStatus().name();
 	}
 
 	public Long getId() {
@@ -35,6 +40,22 @@ public class OrderDTO {
 
 	public void setMedicamentItems(Set<MedicamentItemDTO> medicamentItems) {
 		this.medicamentItems = medicamentItems;
+	}
+
+	public LocalDateTime getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(LocalDateTime deadline) {
+		this.deadline = deadline;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	

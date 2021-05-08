@@ -8,4 +8,8 @@ public interface OrderService {
 
 	Set<Order> findAllBeforeDeadline();
 	
+	Order findOneWithOffers(Long id);
+
+	Order update(Order orderSaved);
+	
 }

@@ -23,4 +23,15 @@ public class OrderServiceImpl implements OrderService {
 		return orders;
 	}
 
+	@Override
+	public Order findOneWithOffers(Long id) {
+		return orderRepository.getOrderWithOffers(id);
+	}
+
+	@Override
+	public Order update(Order orderSaved) {
+		return orderRepository.save(orderSaved);
+	}
+
+	
 }
