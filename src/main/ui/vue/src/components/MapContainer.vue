@@ -26,7 +26,7 @@
     name: 'MapContainer',
     components: {},
     props: {
-        address: Object,
+        coordinates: Array,
     },
 
     data() {
@@ -40,7 +40,6 @@
     },
 
     mounted() {
-        this.guessCoordinatesFromLocation();
         setTimeout(this.initMap, 200);
     },
 
@@ -48,10 +47,11 @@
 
     methods: {
         initMap() {
-            console.log(this.address);
+            console.log('alo');
+            console.log(this.coordinates);
            
             this.markerFeature = new Feature({
-                geometry: new Point(proj.fromLonLat([this.lon, this.lat])),
+                geometry: new Point(proj.fromLonLat([this.coordinates[0], this.coordinates[1]])),
             });
 
             this.markerFeature.setStyle(new Style({
@@ -71,7 +71,7 @@
 
             console.log(this.lon, this.lat);
             
-            const center = proj.transform([this.lon, this.lat], 'EPSG:4326', 'EPSG:3857');
+            const center = proj.transform(this.coordinates, 'EPSG:4326', 'EPSG:3857');
 
             // this is where we create the OpenLayers map
             new Map({
@@ -95,39 +95,7 @@
         
     },
 
-    guessCoordinatesFromLocation: function() {
-			const url =
-				"https://nominatim.openstreetmap.org/search/" +
-				this.address.city +
-				", " +
-				this.address.street +
-				" " +
-				this.address.number;
-			this.axios
-				.get(url, {
-					params: {
-						format: "json",
-						limit: 1,
-						"accept-language": "en",
-					},
-				})
-				.then((response) => {
-					if (response.data && response.data.lenght != 0) {
-						const { lon, lat } = response.data[0];
-						this.updateCoordinatesHandler([lon, lat]);
-					}
-				})
-				.catch(() => {
-                    //console.log(error);
-					alert('Could not find coordinates based on given info.', '');
-				});
-		},
-
-        updateCoordinatesHandler: function(coordinates) {
-			this.lon = coordinates[0];
-			this.lat = coordinates[1];
-            
-		},
+    
     },
   }
 </script>

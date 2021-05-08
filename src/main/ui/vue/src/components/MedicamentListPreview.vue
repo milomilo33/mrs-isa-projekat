@@ -170,7 +170,7 @@
           :key="p.id"
         >
           <div>
-            <MedicamentPreview :medicament="p" :allergies="allergies"> </MedicamentPreview>
+            <MedicamentPreview :type="type" :medicament="p" :allergies="allergies"> </MedicamentPreview>
           </div>
         </div>
       </div>
@@ -194,12 +194,19 @@ export default defineComponent({
       search: "",
       issuanceMode: -1,
       medicamentForm: -1,
-      allergies: []
+      allergies: [],
+      type: ''
     };
   },
 
   mounted() {
+    this.type = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).role;
+    
+    
     this.loadAllergies();
+    
     this.axios
       .get(`/api/medicaments/all`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },

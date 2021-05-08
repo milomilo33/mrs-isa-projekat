@@ -30,7 +30,7 @@
                 {{item.pharmacy.description}}
                 {{item.price[0].value}}
               </p>
-              <b-button v-b-modal="'id' + item.id"
+              <b-button v-if="role === 'ROLE_PATIENT'" v-b-modal="'id' + item.id"
                 >Reserve</b-button
               >
               
@@ -92,10 +92,14 @@ export default defineComponent({
       pricelist: "",
       amount: "",
       date: null,
-      
+      role: ''
     }
   },
   mounted(){
+    this.role = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).role;
+    
      this.axios
       .get(
         `/api/medicaments/` +

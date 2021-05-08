@@ -409,6 +409,9 @@ const routes = [
 			},
 			{
 				path: "MedicamentList",
+				meta: {
+					roles: [ Role.Supplier ]
+				},
 				component: MedicamentListPreview
 			},
 			{
@@ -428,6 +431,9 @@ const routes = [
 			},
 			{
 				path: "MedicamentList",
+				meta: {
+					roles: [Role.Patient]
+				},
 				component: MedicamentListPreview
 			},
 			{
