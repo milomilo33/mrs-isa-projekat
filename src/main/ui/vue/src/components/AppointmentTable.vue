@@ -120,6 +120,7 @@
 
 <script>
 import Multiselect from "vue-multiselect";
+import moment from 'moment'
 
 export default {
   components: {
@@ -194,6 +195,12 @@ export default {
   methods: {
     onFiltered(filteredItems) {
       self.totalRows = filteredItems.length;
+    },
+     datum: function(date){
+      return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
+    },
+    vreme: function(time){
+      return moment(time,"hh:mm:ss").format("hh:mm:ss");
     },
 
     resetInfoModal() {
@@ -286,9 +293,9 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
             var item = {};
             item.id = response.data[i].appointmentId;
-            item.date = response.data[i].date;
-            item.timeFrom = response.data[i].termFrom;
-            item.timeTo = response.data[i].termTo;
+            item.date1 = self.datum(response.data[i].date);
+            item.timeFrom = self.vreme(response.data[i].termFrom);
+            item.timeTo = self.vreme(response.data[i].termTo);
             item.type = response.data[i].type;
             item.employee =
               response.data[i].employee.name +
@@ -297,16 +304,6 @@ export default {
             self.items.push(item);
           }
           self.totalRows = self.items.length;
-          self.items.forEach((obj) => {
-            obj["date1"] = new Date(obj["date"]).toDateString();
-            obj["date"][1] -= 1;
-            let timeFromArray = obj["date"]
-              .concat(obj["timeFrom"])
-              .concat([0, 0]);
-            obj["timeFrom"] = new Date(...timeFromArray).toTimeString();
-            let timeToArray = obj["date"].concat(obj["timeTo"]).concat([0, 0]);
-            obj["timeTo"] = new Date(...timeToArray).toTimeString();
-          });
         });
     },
     GetAllEmployees() {

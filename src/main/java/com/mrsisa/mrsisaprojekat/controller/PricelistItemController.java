@@ -28,7 +28,6 @@ import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 import com.mrsisa.mrsisaprojekat.service.MedicamentService;

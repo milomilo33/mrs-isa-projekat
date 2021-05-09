@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -144,6 +145,9 @@ export default {
       this.infoModal.title = "";
       this.infoModal.content = "";
     },
+     datum: function(date){
+      return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
+    },
 
     errModal() {
       this.errorModal.title = "";
@@ -189,14 +193,10 @@ export default {
           item.id = response.data[i].id;
           item.appointment = response.data[i].apointment;
           item.price = response.data[i].price[0].value;
-          item.date = response.data[i].price[0].dateFrom;
+          item.date1 = self.datum(response.data[i].price[0].dateFrom);
           self.items.push(item);
         }
-        self.items.forEach((obj) => {
-            obj["date1"] = new Date(obj["date"]).toDateString();
-            obj["date"][1] -= 1;
-       
-      });
+        
     });
     }
    

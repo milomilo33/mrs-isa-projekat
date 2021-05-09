@@ -115,6 +115,24 @@ public class OrderController {
 	return false;
 	}
 	
+	@GetMapping(value = "/filter/{status}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<Set<OrderDTO>> getFilteredOrders(@PathVariable("status") String status,@PathVariable("id") Long id) {
+		OrderStatus s = OrderStatus.PROCESSED;
+		if(status.equals("Waitingforoffers")) {
+			s = OrderStatus.WAITINGFOROFFERS;
+		}
+		Set<Order> orders = orderService.filterOrders(s);
+		Set<OrderDTO> ordersPharmacy = new HashSet<OrderDTO>();
+		for(Order o : orders) {
+			
+			if(o.getAdmin().getPharmacy().getId() == id) {
+				ordersPharmacy.add(new OrderDTO(o));
+			}
+		}
+		return new ResponseEntity<Set<OrderDTO>>(ordersPharmacy,HttpStatus.OK);
+	}
+	
 	@Transactional(readOnly = false)
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
