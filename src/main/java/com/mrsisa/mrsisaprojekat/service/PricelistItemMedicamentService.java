@@ -3,8 +3,6 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.Collection;
 
 import org.springframework.stereotype.Service;
-
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 
 

@@ -175,7 +175,7 @@ insert into medicament_item (deleted, quantity, medicament_id) values ('false', 
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 5, 3)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 6, 2)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 20, 1)
-
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 2, 1)
 
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 5)
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (5, 1)
@@ -243,10 +243,12 @@ insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-06','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 0,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
 
 insert into pharmacy_orders (pharmacy_id, orders_id) values (1, 1)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (3, 3)
+insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 4)
 
 insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-06', '2021-04-06', false, 'Promocija leka...', true)
 insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-10', '2021-04-12', false, 'Akcija leka...', false)
@@ -362,7 +364,7 @@ insert into order_t_medicament_items (order_id, medicament_items_id) values (3, 
 insert into order_t_medicament_items (order_id, medicament_items_id) values  (1, 10)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 11)
 insert into order_t_medicament_items (order_id, medicament_items_id) values  (3, 9)
-
+insert into order_t_medicament_items (order_id, medicament_items_id) values  (4, 12)
 
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (0, false, '08:00', '12:00', 1)
 insert into work_hour(day, deleted, work_hour_from, work_hour_to, pharmacy_id) values (1, false, '08:00', '12:00', 1)

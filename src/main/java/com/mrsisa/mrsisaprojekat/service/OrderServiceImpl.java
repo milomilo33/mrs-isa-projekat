@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrsisa.mrsisaprojekat.model.Order;
+import com.mrsisa.mrsisaprojekat.model.OrderStatus;
 import com.mrsisa.mrsisaprojekat.repository.OrderRepositoryDB;
 
 @Service
@@ -75,6 +76,15 @@ public class OrderServiceImpl implements OrderService {
 			return null;
 		}
 		return o;
+	}
+
+	@Override
+	public Set<Order> filterOrders(OrderStatus status) {
+		Set<Order> orders = orderRepository.filterOrders(status);
+		if(orders == null) {
+			return null;
+		}
+		return orders;
 	}
 
 	

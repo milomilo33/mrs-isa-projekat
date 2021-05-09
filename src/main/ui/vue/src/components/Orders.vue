@@ -26,7 +26,18 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-      <b-col lg="8" class="my-1">
+      <b-col lg="4" class="my-1">
+        <b-form-group
+          label="Filter"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-0"
+        >
+          <b-form-select v-model="f" :options="options" v-on:change="Filter"></b-form-select>
+        </b-form-group>
+      </b-col>
+      <b-col lg="4" class="my-1">
         <b-form-group
           label-cols-sm="3"
           label-align-sm="right"
@@ -38,6 +49,7 @@
           >
         </b-form-group>
       </b-col>
+      
     </b-row>
     <b-table
       ref="table"
@@ -205,6 +217,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   components: {
   },
@@ -230,6 +243,7 @@ export default {
         { key: "medicamentForm", label: "Medicament form" },
         { key: "manufacturer", label: "Manufacturer" },
       ],
+      options:["Processed", "Waiting for offers","All"],
       items: [],
       selectMode: "single",
       sortBy: "date1",
@@ -274,6 +288,8 @@ export default {
       orderId:0,
       da:"",
         a:[],
+      f:0,
+      filterStatus:"",
     };
   },
   mounted() {
@@ -298,6 +314,10 @@ export default {
       });
   },
   methods: {
+
+    datum: function(date){
+      return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
+    },
     onFiltered(filteredItems) {
       self.totalRows = filteredItems.length;
     },
@@ -336,6 +356,46 @@ export default {
     onRowSelected(item) {
       this.selected = item;
     },
+    Filter(){
+      var self = this;
+      if(self.f != "All"){
+      if(self.f == "Processed"){
+          self.filterStatus = "processed";
+
+      }else if(self.f == "Waiting for offers"){
+          self.filterStatus="Waitingforoffers";
+      }
+      self.items =[];
+      self.axios.get(`/api/orders/filter/` + self.filterStatus+"/"+self.pharmacyId, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+            var item = {};
+            item.id = response.data[i].id;
+            item.date1 = self.datum(response.data[i].deadline);
+            item.status = response.data[i].status;
+            item.employee = response.data[i].admin.name + " "+response.data[i].admin.lastName;
+            item.admin = response.data[i].admin.email;
+            var allM =[];
+            for(var j = 0;j<response.data[i].medicamentItems.length;j++){
+                var med ={};
+                med.name = response.data[i].medicamentItems[j].medicament.name;
+                med.quantity = response.data[i].medicamentItems[j].quantity;
+                med.id = response.data[i].medicamentItems[j].id;
+                allM.push(med);
+            }
+            item.allmeds = allM;
+            self.items.push(item);
+          }
+          console.log(self.items);
+          self.totalRows = self.items.length;
+        });
+      }else{
+        self.items =[];
+        self.refresh();
+      }
+    },
     Save(){
         for(var i =0; i<this.allmeds.length; i++){
             console.log(this.allmeds[i]);
@@ -361,10 +421,9 @@ export default {
             },
           }
         );
-        //this.medicamentItems = [];
         this.a =[];
         
-        //this.$refs.table.refresh();
+        
     },
     Ok(){
         this.allmeds=[];
@@ -430,7 +489,7 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
             var item = {};
             item.id = response.data[i].id;
-            item.date = response.data[i].deadline;
+            item.date1 = self.datum(response.data[i].deadline);
             item.status = response.data[i].status;
             item.employee = response.data[i].admin.name + " "+response.data[i].admin.lastName;
             item.admin = response.data[i].admin.email;
@@ -446,9 +505,6 @@ export default {
             self.items.push(item);
           }
           self.totalRows = self.items.length;
-          self.items.forEach((obj) => {
-            obj["date1"] = new Date(obj["date"]).toDateString();
-          });
         });
     },
     GetAllMedicaments() {
