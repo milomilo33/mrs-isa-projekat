@@ -1,5 +1,3 @@
-
-
 insert into address (city, country, number, street) values('Novi Sad','Srbija','43','Bulevar oslobođenja')
 insert into address (city, country, number, street) values('Novi Sad','Srbija','26','Kisačka')
 insert into address (city, country, number, street) values('Beograd','Srbija','16','Katanićeva')
@@ -24,6 +22,9 @@ insert into address (city, country, number, street) values('Novi Sad','Srbija','
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '22', 'Balzakova')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '25', 'Seljačkih buna')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Bulevar Vojvode Stepe')
+
+
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Boze Kuzmanovica')
 
 insert into roles (name) values ('ROLE_SYSTEM_ADMIN')
 insert into roles (name) values ('ROLE_PHARMACY_ADMIN')
@@ -166,7 +167,7 @@ na neke druge alergene, ako ste ranije imali čir na želucu ili crevu ili želu
 
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 10, 1)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 50, 2)
-insert into medicament_item (deleted, quantity, medicament_id) values ('false', 25, 3)
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 25, 1)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 100, 4)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 10, 5)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 5, 3)
@@ -236,14 +237,18 @@ insert into supplier (email, deleted, active, last_name, name, password, phone_n
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'true', 'Raznatovic', 'Svetlana', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0604354231', 20)
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('lupulovb@gmail.com', 'false','true', 'Lupulov', 'Bojan', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0614354231', 19)
 
+insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('nikolinatosic999@gmail.com', 'false','true', 'Tosic', 'Nikolina', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0614354231', 25)
+
+
 insert into user_role(user_id, role_id) values ('mikaantic@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('svetlanaraznatovic@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
+insert into user_role(user_id, role_id) values ('nikolinatosic999@gmail.com', 5)
 
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-06','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 0,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'nikolinatosic999@gmail.com')
 
 insert into pharmacy_orders (pharmacy_id, orders_id) values (1, 1)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
@@ -357,6 +362,12 @@ insert into e_prescription_prescription_medicaments (e_prescription_id, prescrip
 
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com')
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com')
+
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 4, 'nikolinatosic999@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 4, 'mikaantic@gmail.com')
+
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 2, 'nikolinatosic999@gmail.com')
+
 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)
 insert into order_t_medicament_items (order_id, medicament_items_id) values (2, 7)

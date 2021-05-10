@@ -97,7 +97,7 @@
                   size="sm"
                   @click="ShowOffers(data.item, $event.target)"
                   class="mr-1"
-                  variant="warning">
+                  variant="secondary">
                   Offers
                 </b-button>
     </template>
@@ -121,6 +121,9 @@
       @ended="resetEditModal"
     >
       <div>
+            <b-alert v-model="showEditAlert" dismissible fade :variant="varian">
+            {{message}}
+    </b-alert>
           <form name="myform">
               <div class="form-group row">
                         <label class="col-md-4 col-form-label text-md-right">Medicament </label>
@@ -213,6 +216,44 @@
         </div>
       </template>
     </b-modal>
+    <b-modal
+      size="lg"
+      :id="offersModal.id"
+      :title="offersModal.title"
+      @ok="OfferOk"
+      @ended="resetOfferModal"
+      :header-bg-variant="headerBgVariant"
+      :footer-bg-variant="headerBgVariant"
+    >
+      <template>
+        <div>
+            <b-alert v-model="showSuccessAlert" dismissible fade :variant="varian">
+            {{message}}
+    </b-alert>
+    </div>
+        <div>
+       
+          <b-table
+                  :items="alloffers" 
+                  :fields="fields4" 
+                  responsive="sm" 
+                  small
+                  :select-mode="selectMode"
+                ref="selectableTable"
+                selectable
+                @row-selected="onSelect"></b-table>
+        </div>
+        
+          <b-button
+                  v-if="processed === true"
+                  size="sm"
+                  @click="Accept()"
+                  variant="success"
+                >   Accept
+                </b-button>
+      </template>
+    </b-modal>
+
   </div>
 </template>
 
@@ -242,6 +283,12 @@ export default {
         { key: "type", label: "Type" },
         { key: "medicamentForm", label: "Medicament form" },
         { key: "manufacturer", label: "Manufacturer" },
+      ],
+      fields4: [
+        { key: "id", label: "Id" },
+        { key: "totalPrice", label: "Total price" },
+        { key: "supplier", label: "Supplier" },
+        {key: "status", label: "Status"},
       ],
       options:["Processed", "Waiting for offers","All"],
       items: [],
@@ -273,6 +320,11 @@ export default {
         title: "",
         content: "",
       },
+       offersModal: {
+        id: "offers-modal",
+        title: "",
+        content: "",
+      },
       headerBgVariant: "success",
       headerErrorVariant: "warning",
       pharmacyId: 0,
@@ -290,6 +342,12 @@ export default {
         a:[],
       f:0,
       filterStatus:"",
+      alloffers :[],
+      selectedOffer:[],
+      processed:false,
+       showSuccessAlert:false,
+       varian:"success",
+       showEditAlert:false,
     };
   },
   mounted() {
@@ -327,6 +385,13 @@ export default {
       this.detailsModal.content = "";
       this.allmeds=[];
     },
+    resetOfferModal() {
+      
+      this.offersModal.title = "";
+      this.offersModal.content = "";
+      this.alloffers=[];
+      this.processed = false;
+    },
     
     resetEditModal() {
       this.editModal.title = "";
@@ -355,6 +420,21 @@ export default {
     },
     onRowSelected(item) {
       this.selected = item;
+      
+    },
+    onSelect(item) {
+      this.selectedOffer = item;
+      
+    },
+    ShowOffers(data, button){
+      if(data.status == "WAITINGFOROFFERS"){
+        this.processed =true;
+      }else{
+                this.processed =false;
+      }
+      this.alloffers = data.offers;
+      (this.offersModal.title = "Offers"),
+        this.$root.$emit("bv::show::modal", this.offersModal.id, button);
     },
     Filter(){
       var self = this;
@@ -386,6 +466,18 @@ export default {
                 allM.push(med);
             }
             item.allmeds = allM;
+            var offers =[];
+            for (var k = 0; k < response.data[i].offers.length; k++) {
+                  var offer ={};
+                  offer.id = response.data[i].offers[k].id;
+                  offer.totalPrice = response.data[i].offers[k].totalPrice;
+                  offer.status = response.data[i].offers[k].status;
+                  offer.supplier = response.data[i].offers[k].supplier;
+                  offer.orderId = response.data[i].id;
+                  offers.push(offer);
+
+            }
+            item.offers = offers;
             self.items.push(item);
           }
           console.log(self.items);
@@ -397,31 +489,41 @@ export default {
       }
     },
     Save(){
-        for(var i =0; i<this.allmeds.length; i++){
-            console.log(this.allmeds[i]);
+      var self = this;
+        for(var i =0; i<self.allmeds.length; i++){
+          
             var medicamentItem ={};
             var medicament ={};
-            medicamentItem.id = this.allmeds[i].id;
-            medicamentItem.quantity = parseInt(this.allmeds[i].quantity);
+            medicamentItem.id = self.allmeds[i].id;
+            medicamentItem.quantity = parseInt(self.allmeds[i].quantity);
             medicamentItem.medicament = medicament;
-            this.a.push(medicamentItem);
+            self.a.push(medicamentItem);
 
         }
-        console.log(this.a);
-         this.axios.put(
-          `/api/orders/updateOrder/` + this.adminU,
+         self.axios.put(
+          `/api/orders/updateOrder/` + self.adminU,
           {
-            id: this.orderId,
-            deadline:this.da,
-            medicamentItems:this.a,
+            id: self.orderId,
+            deadline:self.da,
+            medicamentItems:self.a,
           },
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
           }
-        );
-        this.a =[];
+        ).then(function(response){
+          console.log(response);
+          self.message = "Succesfully!";
+          self.showEditAlert = true;
+        }
+        ).catch(function(error){
+            self.message = "You cannot edit processed order!";
+          self.showEditAlert = true;
+          self.varian="danger";
+          console.log(error);
+        });
+        self.a =[];
         
         
     },
@@ -445,6 +547,41 @@ export default {
         this.quantity = 0;
       }
       
+    },
+    Accept(){
+      var self = this;
+      var d = self.selectedOffer[0];
+      console.log(d.id);
+      self.axios.put(
+            `/api/offers/updateOffers/`+parseInt(d.orderId)+"/"+parseInt(d.id)+"/"+d.supplier,
+            {
+              id: d.id,
+          },
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+              },
+            }
+            
+          ).then(function (response) {
+          console.log(response);
+          self.message = "Successfuly accepted!";
+          self.showSuccessAlert = true;
+         
+        })
+        .catch(function (error) {
+           self.message = "You cannot accept before deadline!";
+          self.showSuccessAlert = true;
+          self.varian="danger";
+          console.log(error);
+        });
+
+    },
+    OfferOk(){
+      this.items =[];
+      this.allmeds =[];
+      this.alloffers =[];
+      this.refresh();
     },
     AddAll(){
         var self = this;
@@ -487,6 +624,7 @@ export default {
         })
         .then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
+            console.log(response.data[i]);
             var item = {};
             item.id = response.data[i].id;
             item.date1 = self.datum(response.data[i].deadline);
@@ -502,11 +640,25 @@ export default {
                 allM.push(med);
             }
             item.allmeds = allM;
+            var offers =[];
+            for (var k = 0; k < response.data[i].offers.length; k++) {
+                  var offer ={};
+                  offer.id = response.data[i].offers[k].id;
+                  offer.totalPrice = response.data[i].offers[k].totalPrice;
+                  offer.status = response.data[i].offers[k].status;
+                  offer.supplier = response.data[i].offers[k].supplier;
+                  offer.orderId = response.data[i].id;
+                  offers.push(offer);
+
+            }
+            item.offers = offers;
             self.items.push(item);
           }
           self.totalRows = self.items.length;
         });
+        
     },
+   
     GetAllMedicaments() {
       var self = this;
       self.axios
