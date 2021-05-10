@@ -417,6 +417,18 @@ public class PatientController {
 
 	}
 
+	@GetMapping(value = "/eprescription/{email}")
+	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithePrescriptions(email);
+		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
+		for(ePrescription ep : patient.getePrescriptions()) {
+			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));
+		}
+
+
+		return ResponseEntity.ok().body(ePrescriptionPreviewDTOS);
+	}
+
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
 //		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)
