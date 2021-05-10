@@ -6,7 +6,10 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +76,20 @@ public class OfferController {
 		orderService.update(orderSaved);
 		
 		return new ResponseEntity<OfferDTO>(offer, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/{email}")
+	@PreAuthorize("hasAnyRole('SUPPLIER')")
+	ResponseEntity<Set<OfferDTO>> getSupplierOffers(@PathVariable("email") String email){
+		Set<Offer> offers = offerService.supplierOffers(email);
+		Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+		for(Offer o: offers) {
+			Order order = orderService.findOneWithMedicaments(o.getOrder().getId());
+			o.setOrder(order);
+			offersDTO.add(new OfferDTO(o));
+		}
+		
+		return new ResponseEntity<Set<OfferDTO>>(offersDTO, HttpStatus.OK);
 	}
 
 }

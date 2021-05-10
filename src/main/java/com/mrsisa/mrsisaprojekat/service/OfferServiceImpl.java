@@ -39,4 +39,9 @@ public class OfferServiceImpl implements OfferService{
 		return offers;
 	}
 
+	@Override
+	public Set<Offer> supplierOffers(String email) {
+		return offerRepository.getOffersForSupplier(email);
+	}
+
 }
