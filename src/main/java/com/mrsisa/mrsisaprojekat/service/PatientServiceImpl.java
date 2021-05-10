@@ -35,6 +35,9 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	private MedicamentRepositoryDB medicamentRepository;
 
+	@Autowired
+	private PharmacyRepositoryDB pharmacyRepository;
+
 	@Override
 	public Collection<Patient> findAll() {
 		List<Patient> patients = patientRepository.getAllWithAddress();
@@ -169,8 +172,13 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament) throws ReservationQuantityException {
-		MedicamentItem medicamentItem = medicamentItemRepository.findMedicamentItemByMedicament(medicament.getMedicament().getId());
+	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException {
+		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
+
+		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
+				.equals(medicament.getMedicament().getId())).findFirst().orElse(null);
+
+
 		if (medicamentItem != null) {
 			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
 				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
@@ -178,7 +186,8 @@ public class PatientServiceImpl implements PatientService {
 				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
 				medicamentItemRepository.save(medicamentItem);
 			}
-		}
+		} else
+			System.out.println("AAAAAAAAAAAAAAAAAAAA");
 	}
 
 	@Override

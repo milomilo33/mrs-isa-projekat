@@ -62,7 +62,7 @@
                  
                 </b-row>
                 <b-row>
-                   <b-button variant="success" class="m-2" @click="reserveMedicament()"> Reserve medicament </b-button>
+                   <b-button variant="success" class="m-2" @click="reserveMedicament(item.pharmacy.id)"> Reserve medicament </b-button>
                   
                   
                 </b-row>
@@ -127,15 +127,15 @@ export default defineComponent({
   },
   methods: {
 
-    reserveMedicament() {
-      //console.log(this.amount);
+    reserveMedicament(pharmacy) {
       console.log(this.date);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
           patientEmail: "anasimic@gmail.com",
           medicament: this.medicament,
           expiryDate: this.date,
-          quantity: this.amount
+          quantity: this.amount,
+          pharmacyId: pharmacy
         },{headers: {
             Authorization: "Bearer " + localStorage.getItem('token')
             }

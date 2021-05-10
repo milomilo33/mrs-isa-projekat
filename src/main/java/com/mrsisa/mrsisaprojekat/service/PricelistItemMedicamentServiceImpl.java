@@ -23,6 +23,11 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		return items;
 	}
 
+	@Override
+	public Set<PricelistItemMedicament> findPharmacyForMedicament(Long id) {
+		Set<PricelistItemMedicament> items =  pricelistItemRepository.findAllMeds(id);
+		return items;
+	}
 
 	@Override
 	public void delete(Long id) {
