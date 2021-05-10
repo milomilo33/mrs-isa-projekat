@@ -15,4 +15,6 @@ public interface OfferService {
 	Set<Offer> supplierOffers(String email);
 	
 	Set<Offer> offersForOrder(Long id);
+	
+	Offer findOffer(Long id);
 }
