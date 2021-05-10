@@ -1,10 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +72,6 @@ public class OrderController {
 	
 	
 	@GetMapping(value= "/forOffer")
-	@PreAuthorize("hasAnyRole('SUPPLIER')")
 	ResponseEntity<Set<OrderDTO>> getOrdersForOffer(){
 		Set<Order> orders = orderService.findAllBeforeDeadline();
 		if(orders == null) {
