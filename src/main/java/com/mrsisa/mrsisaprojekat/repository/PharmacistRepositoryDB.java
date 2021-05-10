@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.repository;
 
 import java.util.List;
 
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,6 @@ public interface PharmacistRepositoryDB extends JpaRepository<Pharmacist, String
 	@Query("select p from Pharmacist p left join fetch p.ratings where p.email=?1 and p.deleted=false")
 	Pharmacist getRatings(String email);
 
+	@Query("select p from Pharmacist p left join fetch p.ratings pr where p.email = ?1 and pr.patient.email = ?2")
+	Pharmacist loadWithRatingOfUser(String pharmacistEmail, String patientEmail);
 }

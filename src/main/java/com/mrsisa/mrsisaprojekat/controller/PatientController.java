@@ -445,6 +445,30 @@ public class PatientController {
 		return ResponseEntity.ok().body("Ocenili ste ovaj entitet");
 	}
 
+	@GetMapping(value = "/get_rating/{email}/{id}/{type}")
+	public ResponseEntity<Integer> getRatingOfUser(@PathVariable("email") String email, @PathVariable("id") String entityId,
+												   @PathVariable("type") String type) {
+		Integer rating = -1;
+		switch (type) {
+			case "medicament":
+				rating = medicamentService.getRatingOfUser(Long.parseLong(entityId), email);
+				break;
+			case "pharmacy":
+				rating = pharmacyService.getRatingOfUser(Long.parseLong(entityId), email);
+				break;
+			case "dermatologist":
+				rating = dermatologistService.getRatingOfUser(entityId, email);
+				break;
+			case "pharmacist":
+				rating = pharmacistService.getRatingOfUser(entityId, email);
+				break;
+			default:
+				return ResponseEntity.badRequest().body(rating);
+		}
+
+		return ResponseEntity.ok().body(rating);
+	}
+
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
 //		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)

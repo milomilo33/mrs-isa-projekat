@@ -52,6 +52,7 @@ export default {
   },
   mounted() {
     
+
     this.nameM = this.medicament.name;
     this.axios
       .get(
@@ -77,7 +78,7 @@ export default {
       show: false,
       nameM: "",
       success: false,
-      isAllergic: false
+      isAllergic: false,
     };
   },
   methods: {

@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,20 +134,32 @@ public class PharmacyServiceImpl implements PharmacyService{
 	}
 
 	@Override
-	public void addRating(Rating rating, Long ratedEntityId) {
-		Pharmacy pharmacy = pharmacyRepository.loadWithRatings(ratedEntityId);
+	public void addRating(Rating rating, Long id) {
+		Pharmacy pharmacy = pharmacyRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
 
-		try {
-			pharmacy.getRatings().add(rating);
-		} catch (NullPointerException e) {
-			HashSet<Rating> ratings = new HashSet<>();
-			ratings.add(rating);
-			pharmacy.setRatings(ratings);
+		if (pharmacy == null) {
+			pharmacy = pharmacyRepository.loadWithRatings(id);
+			try {
+				pharmacy.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				pharmacy.setRatings(ratings);
+			}
+		} else {
+			pharmacy.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
 		}
 
-
 		pharmacyRepository.save(pharmacy);
+
 	}
 
+	@Override
+	public Integer getRatingOfUser(Long pharmacyId, String patientEmail) {
+		Pharmacy pharmacy = pharmacyRepository.loadWithRatingOfUser(pharmacyId, patientEmail);
 
+		if(pharmacy == null) return 0;
+
+		return Objects.requireNonNull(pharmacy.getRatings().stream().findFirst().orElse(null)).getValue();
+	}
 }

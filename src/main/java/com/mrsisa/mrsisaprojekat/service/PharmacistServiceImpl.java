@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.hibernate.Hibernate;
@@ -133,17 +130,30 @@ public class PharmacistServiceImpl  implements PharmacistService {
 
 	@Override
 	public void addRating(Rating rating, String ratedEmployeeEmail) {
-		Pharmacist pharmacist = pharmacistRepository.getRatings(ratedEmployeeEmail);
+		Pharmacist pharmacist = pharmacistRepository.loadWithRatingOfUser(ratedEmployeeEmail, rating.getPatient().getEmail());
 
-		try {
-			pharmacist.getRatings().add(rating);
-		} catch (NullPointerException e) {
-			HashSet<Rating> ratings = new HashSet<>();
-			ratings.add(rating);
-			pharmacist.setRatings(ratings);
+		if (pharmacist == null) {
+			pharmacist = pharmacistRepository.getRatings(ratedEmployeeEmail);
+			try {
+				pharmacist.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				pharmacist.setRatings(ratings);
+			}
+		} else {
+			pharmacist.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
 		}
 
 		pharmacistRepository.save(pharmacist);
-	}
 
+	}
+	@Override
+	public Integer getRatingOfUser(String pharmacistEmail, String patientEmail) {
+		Pharmacist pharmacist = pharmacistRepository.loadWithRatingOfUser(pharmacistEmail, patientEmail);
+
+		if(pharmacist == null) return 0;
+
+		return Objects.requireNonNull(pharmacist.getRatings().stream().findFirst().orElse(null)).getValue();
+	}
 }

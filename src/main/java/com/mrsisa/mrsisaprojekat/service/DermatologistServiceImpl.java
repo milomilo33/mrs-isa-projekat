@@ -168,18 +168,32 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Override
 	public void addRating(Rating rating, String ratedEmployeeEmail) {
-		Dermatologist dermatologist = dermatologistRepository.getRatings(ratedEmployeeEmail);
+		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(ratedEmployeeEmail, rating.getPatient().getEmail());
 
-		try {
-			dermatologist.getRatings().add(rating);
-		} catch (NullPointerException e) {
-			HashSet<Rating> ratings = new HashSet<>();
-			ratings.add(rating);
-			dermatologist.setRatings(ratings);
+		if (dermatologist == null) {
+			dermatologist = dermatologistRepository.getRatings(ratedEmployeeEmail);
+			try {
+				dermatologist.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				dermatologist.setRatings(ratings);
+			}
+		} else {
+			dermatologist.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
 		}
 
-		dermatologist.getRatings().add(rating);
 		dermatologistRepository.save(dermatologist);
+
+	}
+
+	@Override
+	public Integer getRatingOfUser(String dermatologistEmail, String patientEmail) {
+		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(dermatologistEmail, patientEmail);
+
+		if(dermatologist == null) return 0;
+
+		return Objects.requireNonNull(dermatologist.getRatings().stream().findFirst().orElse(null)).getValue();
 	}
 
 

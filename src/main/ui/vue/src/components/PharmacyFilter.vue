@@ -31,6 +31,13 @@
 					<label for="star2" title="text">2 stars</label>
 					<input type="radio" id="star1" name="rate" value="1" @click="rating = 1"/>
 					<label for="star1" title="text">1 star</label>
+					
+					
+					
+					
+					
+					
+					
 				</b-col>
 			</div>
 			<div>

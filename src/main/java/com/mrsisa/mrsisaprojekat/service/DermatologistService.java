@@ -28,4 +28,6 @@ public interface DermatologistService {
 	Dermatologist getRatings(String email);
 
 	void addRating(Rating rating, String ratedEmployeeEmail);
+
+	Integer getRatingOfUser(String dermatologistEmail, String patientEmail);
 }

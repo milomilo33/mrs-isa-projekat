@@ -24,4 +24,6 @@ public interface MedicamentService {
 	Collection<Medicament> findAllFilter(int mode, int form);
 
     void addRating(Rating rating, Long id);
+
+    Integer getRatingOfUser(Long id, String email);
 }
