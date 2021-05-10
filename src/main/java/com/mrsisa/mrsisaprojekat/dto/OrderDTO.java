@@ -17,6 +17,7 @@ public class OrderDTO {
 	private LocalDate deadline;
 	private String status;
 	private AdminPharmacyDTO admin;
+	private Set<OfferDTO> offers;
 	
 	public OrderDTO() {}
 	
@@ -70,5 +71,14 @@ public class OrderDTO {
 	public void setAdmin(AdminPharmacyDTO admin) {
 		this.admin = admin;
 	}
+
+	public Set<OfferDTO> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<OfferDTO> offers) {
+		this.offers = offers;
+	}
+	
 	
 }

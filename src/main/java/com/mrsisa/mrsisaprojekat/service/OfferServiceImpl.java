@@ -39,4 +39,13 @@ public class OfferServiceImpl implements OfferService{
 		return offers;
 	}
 
+	@Override
+	public Offer findOffer(Long id) {
+		Offer offer = offerRepository.findOffer(id);
+		if(offer == null) {
+			return null;
+		}
+		return offer;
+	}
+
 }
