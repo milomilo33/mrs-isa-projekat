@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 
 public class PrescriptionMedicamentDTO {
+    private Long pharmacyId;
     private String patientEmail;
     private Medicament medicament;
     private LocalDate expiryDate;
@@ -74,5 +75,13 @@ public class PrescriptionMedicamentDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getPharmacyId() {
+        return pharmacyId;
+    }
+
+    public void setPharmacyId(Long pharmacyId) {
+        this.pharmacyId = pharmacyId;
     }
 }

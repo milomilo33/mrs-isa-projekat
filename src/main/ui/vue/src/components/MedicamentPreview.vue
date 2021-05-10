@@ -105,6 +105,7 @@ export default {
     },
 
     addAllergy() {
+      
       this.axios.post(`/api/patients/add_allergy/`, {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         medicamentId: this.medicament.id

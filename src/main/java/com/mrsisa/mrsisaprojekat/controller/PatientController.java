@@ -230,9 +230,8 @@ public class PatientController {
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
 		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
-		System.out.println("REZERVACIJA: " + medicamentToReserve.getExpiryDate());
 		try {
-			patientService.checkMedicamentReservationQuantity(medicamentToReserve);
+			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getQuantity());
@@ -394,10 +393,11 @@ public class PatientController {
 
 		Patient p = patientService.getPatientAllergies(email);
 
-		for(Medicament m : p.getAllergies()) {
-			retVal.add(new MedicamentDTO(m));
+		if (p != null) {
+			for (Medicament m : p.getAllergies()) {
+				retVal.add(new MedicamentDTO(m));
+			}
 		}
-
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 

@@ -207,19 +207,26 @@ export default defineComponent({
     
     this.loadAllergies();
     
-    this.axios
+    
+    
+    
+  },
+  methods: {
+
+    loadMeds() {
+      this.axios
       .get(`/api/medicaments/all`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
+        
         this.medicaments = response.data;
+        
         //console.log(this.medicaments);
       })
       .catch((error) => console.log(error.response.data));
+    },
 
-    
-  },
-  methods: {
     loadAllergies() {
       this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -227,6 +234,7 @@ export default defineComponent({
         .then(response => {
           console.log(response.data);
           this.allergies = response.data;
+          this.loadMeds();
         })
         .catch(error => console.log(error.response.data)); 
     },

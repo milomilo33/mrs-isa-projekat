@@ -35,7 +35,7 @@ public interface PatientService {
 
 	Patient getPatientDetails(String email);
 
-	void checkMedicamentReservationQuantity(PrescriptionMedicament medicament) throws ReservationQuantityException;
+	void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException;
 
 
 	Collection<Pharmacy> findAllSubscribed(String user);

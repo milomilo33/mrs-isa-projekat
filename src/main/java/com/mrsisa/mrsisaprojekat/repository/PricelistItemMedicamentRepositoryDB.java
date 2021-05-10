@@ -17,6 +17,6 @@ public interface PricelistItemMedicamentRepositoryDB extends JpaRepository<Price
 	PricelistItemMedicament findOnePricelistItemMedicament(Long id);
 	
 	@Query("select p from PricelistItemMedicament p join fetch p.pharmacy join fetch p.price join fetch p.medicament where p.medicament.id=?1")
-	List<PricelistItemMedicament> findAllMeds(Long id);
+	Set<PricelistItemMedicament> findAllMeds(Long id);
 
 }
