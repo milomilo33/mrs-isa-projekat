@@ -40,12 +40,16 @@ public class OfferServiceImpl implements OfferService{
 	}
 
 	@Override
+	public Set<Offer> supplierOffers(String email) {
+		return offerRepository.getOffersForSupplier(email);
+
 	public Offer findOffer(Long id) {
 		Offer offer = offerRepository.findOffer(id);
 		if(offer == null) {
 			return null;
 		}
 		return offer;
+
 	}
 
 }

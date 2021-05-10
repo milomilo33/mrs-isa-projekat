@@ -12,6 +12,8 @@ public interface OfferRepositoryDB extends JpaRepository<Offer, Long> {
 	@Query("select o from Offer o join fetch o.order where o.order.id=?1")
 	Set<Offer> getOffersForOrder(Long id);
 	
+	@Query("select o from Offer o join fetch o.supplier join fetch o.order where o.supplier.email=?1")
+	Set<Offer> getOffersForSupplier(String email);
 	@Query("select o from Offer o join fetch o.order where o.id=?1")
 	Offer findOffer(Long id);
 
