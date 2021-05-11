@@ -184,4 +184,21 @@ public class OfferController {
 		}
 		return new ResponseEntity<Set<OfferDTO>>(offersDTO,HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/filter/{email},{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SUPPLIER')")
+	public ResponseEntity<Set<OfferDTO>> getOffers(@PathVariable("email") String email, @PathVariable("status") String status) {
+		System.out.println("status "+ status);
+		OfferStatus statusOffer = OfferStatus.valueOf(status);
+		
+		Set<Offer> offers = offerService.filterOffer(email, statusOffer);
+		Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+		for(Offer o: offers) {
+			Order order = orderService.findOneWithMedicaments(o.getOrder().getId());
+			o.setOrder(order);
+			offersDTO.add(new OfferDTO(o));
+		}
+		
+		return new ResponseEntity<Set<OfferDTO>>(offersDTO, HttpStatus.OK);
+	}
 }
