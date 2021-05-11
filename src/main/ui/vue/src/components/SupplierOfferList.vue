@@ -2,46 +2,47 @@
   <div>
     <h3>Offer List preview</h3>
     <hr />
-    <div class="card m-auto">
+    <div class="m-auto">
       <b-alert v-model="showFailedAlertFilter" dismissible fade variant="danger">
         No result of given filter.
       </b-alert>
-        <div class="filter-content">
+        <div class="filters">
             <div class="justify-content">
               
                 <input
                   type="radio"
                   id="accepted"
                   name="rate"
-                  value="ACCEPTED"
+                  value="accepted"
                   @click="status = 'ACCEPTED'"
                 />
-                <label for="star5" title="text">Accepted</label>
+                <label for="accepted" title="text">Accepted</label>
                 <input
                   type="radio"
                   id="rejected"
                   name="rate"
-                  value="REJECTED"
+                  value="rejected"
                   @click="status = 'REJECTED'"
                 />
-                <label for="star4" title="text">Rejected</label>
+                <label for="rejected" title="text">Rejected</label>
                 <input
                   type="radio"
                   id="waitingforanswer"
                   name="rate"
-                  value="WAITINGFORANSWER"
+                  value="waitingforanswer"
                   @click="status = 'WAITINGFORANSWER'"
                 />
-                <label for="star3" title="text">Waiting for answer</label>
+                <label  for="waitingforanswer" title="text">Waiting for answer</label>
                  <input
                   type="radio"
                   id="all"
                   name="rate"
-                  value="ALL"
+                  value="all"
+                  checked
                   @click="status = 'ALL'"
                 />
-                <label for="star3" title="text">All</label>
-            </div>
+                <label for="all" title="text">All</label>
+            </div><br>
             <div>
               <div lg="2">
                 <button class="btn btn-light" @click="fillterOffers()">
@@ -53,9 +54,10 @@
           <!-- card-body.// -->
       <!-- card-group-item.// -->
     </div>
+    <div class="jusify-content">
     <div class="row row-cols-2 row-cols-md-3 g-2">
       <div
-        class="col-lg-4 col-md-6 col-sm-10 offset-md-0 offset-sm-1"
+        class="col-lg-4 col-md-6 col-sm-6 offset-md-2 offset-sm-2" style="height: 25rem;"
         v-for="o in this.offers"
         :key="o.id"
       >
@@ -63,6 +65,7 @@
           <SupplierOffer :offer="o"> </SupplierOffer>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -77,6 +80,7 @@ export default defineComponent({
   },
   data() {
     return {
+      active: false,
       status: "",
       offers: null,
       user: "",
@@ -130,4 +134,37 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+input[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+.filters {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+ 
+.filters * {
+  display: inline-block;
+}
+ 
+.filters label {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 2rem;
+  min-width: 50px;
+  line-height: normal;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+ 
+.filters label:hover {
+  background: var(--green);
+  color: var(--white);
+}
+
+input:checked + label {
+  color: var(--white);
+  background: var(--green);
+}
+
 </style>

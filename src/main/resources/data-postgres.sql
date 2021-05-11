@@ -245,7 +245,7 @@ insert into user_role(user_id, role_id) values ('svetlanaraznatovic@gmail.com', 
 insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('nikolinatosic999@gmail.com', 5)
 
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-06','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-04-04','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
 insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'nikolinatosic999@gmail.com')
@@ -364,7 +364,7 @@ insert into offer (deadline, status, total_price, order_id, supplier_email) valu
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com')
 
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 4, 'nikolinatosic999@gmail.com')
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 4, 'mikaantic@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-05-13', 2, 500, 4, 'mikaantic@gmail.com')
 
 insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 2, 'nikolinatosic999@gmail.com')
 
