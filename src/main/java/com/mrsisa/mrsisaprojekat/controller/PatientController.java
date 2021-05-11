@@ -232,9 +232,8 @@ public class PatientController {
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
 		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
-		System.out.println("REZERVACIJA: " + medicamentToReserve.getExpiryDate());
 		try {
-			patientService.checkMedicamentReservationQuantity(medicamentToReserve);
+			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getQuantity());
@@ -396,10 +395,11 @@ public class PatientController {
 
 		Patient p = patientService.getPatientAllergies(email);
 
-		for(Medicament m : p.getAllergies()) {
-			retVal.add(new MedicamentDTO(m));
+		if (p != null) {
+			for (Medicament m : p.getAllergies()) {
+				retVal.add(new MedicamentDTO(m));
+			}
 		}
-
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
@@ -417,6 +417,18 @@ public class PatientController {
 		}
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
+	}
+
+	@GetMapping(value = "/eprescription/{email}")
+	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithePrescriptions(email);
+		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
+		for(ePrescription ep : patient.getePrescriptions()) {
+			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));
+		}
+
+
+		return ResponseEntity.ok().body(ePrescriptionPreviewDTOS);
 	}
 
 //	@GetMapping(value = "/{id}/appointments")

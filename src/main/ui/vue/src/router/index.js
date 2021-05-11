@@ -36,11 +36,13 @@ import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 import Profile from '../components/Profile'
 import RequestMedicaments from '../components/RequestMedicaments'
 import PricelistAppointments from '../components/PricelistAppointments'
-
+import SupplierOfferList from '../components/SupplierOfferList'
 import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
 import ChangePassword from '../components/ChangePassword'
+import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+
 
 Vue.use(VueRouter)
 const Role = {
@@ -466,10 +468,15 @@ const routes = [
 				component: MedicamentListPreview
 			},
 			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
+			},
+			{
 				path: "OrderList",
 				component: SupplierOrderList,
 			},
 			{
+
 				path: "ChangePassword",
 				name: "ChangePassword",
 				component: ChangePassword,
@@ -477,6 +484,11 @@ const routes = [
 					roles: [Role.Supplier]
 				},
 			},
+
+				path: "OfferList",
+				component: SupplierOfferList,
+			}
+
 		]
 	},
 	{
@@ -507,6 +519,10 @@ const routes = [
 			{
 				path: "ReservedMedicamentsTable",
 				component: ReservedMedicamentsTable
+			},
+			{
+				path: "ePrescriptions",
+				component: ePrescriptionPreview
 			}
 		]
 	},

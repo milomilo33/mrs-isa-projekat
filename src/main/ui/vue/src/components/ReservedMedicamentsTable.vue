@@ -1,6 +1,6 @@
 <template>
 <div class="my-form">
-   <div class="card-header">Appointments</div>
+   <div class="card-header">Reserved medicaments</div>
             <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
                 Cannot cancel this medicament! It's expiry date is in less than 24 hours.
             </b-alert>

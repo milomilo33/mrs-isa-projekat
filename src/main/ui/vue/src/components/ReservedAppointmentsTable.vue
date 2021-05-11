@@ -174,9 +174,9 @@ components: {
                                 obj["date1"] = new Date(obj["date"]).toDateString();
                                 obj["date"][1] -= 1;
                                 let timeFromArray = obj["date"].concat(obj["timeFrom"]).concat([0, 0]);
-                                obj["timeFrom"] = new Date(...timeFromArray).toTimeString();
+                                obj["timeFrom"] = new Date(...timeFromArray).toLocaleTimeString();
                                 let timeToArray = obj["date"].concat(obj["timeTo"]).concat([0, 0]);
-                                obj["timeTo"] = new Date(...timeToArray).toTimeString();
+                                obj["timeTo"] = new Date(...timeToArray).toLocaleTimeString();
                             });
       })
       .catch(function (error) {

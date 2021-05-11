@@ -28,6 +28,14 @@ public class OfferDTO {
 		this.supplier = offer.getSupplier().getEmail();
 		this.order = new OrderDTO(offer.getOrder());
 	}
+	
+	public OfferDTO(Long id, LocalDateTime deadline, String supplier, String status, double totalPrice) {
+		this.id = id;
+		this.deadline = deadline;
+		this.status = status;
+		this.totalPrice = totalPrice;
+		this.supplier = supplier;
+	}
 
 	public Long getId() {
 		return id;
