@@ -169,5 +169,14 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return dermatologistRepository.getRatings(email);
 	}
 
+	@Override
+	public Dermatologist getOneWithAddress(String email) {
+		Dermatologist dermatologist = dermatologistRepository.getOneWithAddress(email);
+		if(dermatologist == null) {
+			return null;
+		}
+		return dermatologist;
+	}
+
 
 }

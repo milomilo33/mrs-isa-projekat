@@ -1,6 +1,8 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
+import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
@@ -10,7 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +57,11 @@ public class DermatologistController {
 	
 	@Autowired
 	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 
 	@GetMapping(value="/all")
@@ -134,7 +145,6 @@ public class DermatologistController {
 		dermatologist.setRatings(null);
 		dermatologist.setRequests(null);
 		dermatologist.setPharmacy(null);
-		dermatologist.setActive(true);
 		dermatologist.setAddress(saved);
 		dermatologist = dermatologistService.create(dermatologist);
 		
@@ -292,5 +302,21 @@ public class DermatologistController {
 		val= val/d.getRatings().size();
 		return val;
 	}
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<DermatologistDTO> changePassword(@RequestBody DermatologistDTO dermatologist,@PathVariable("id") String password) throws Exception {
+		
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				dermatologist.getEmail(), password));
+		Dermatologist dermatologistUpdate = dermatologistService.getOneWithAddress(dermatologist.getEmail());
+		dermatologistUpdate.setPassword(passwordEncoder.encode(dermatologist.getPassword()));
+		if(!dermatologistUpdate.isActive()) {
+			dermatologistUpdate.setActive(true);
+		}
+		
+		dermatologistUpdate = dermatologistService.update(dermatologistUpdate);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 }
 

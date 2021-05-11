@@ -40,6 +40,7 @@ import PricelistAppointments from '../components/PricelistAppointments'
 import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
+import ChangePassword from '../components/ChangePassword'
 
 Vue.use(VueRouter)
 const Role = {
@@ -47,7 +48,8 @@ const Role = {
 	Dermatologist: 'ROLE_DERMATOLOGIST',
 	Pharmacist: 'ROLE_PHARMACIST',
 	SystemAdmin: 'ROLE_SYSTEM_ADMIN',
-	Supplier: 'ROLE_SUPLIER'
+	Supplier: 'ROLE_SUPPLIER',
+	Patient:'ROLE_PATIENT'
 
 }
 const routes = [
@@ -104,7 +106,15 @@ const routes = [
 			{
 				path: "PharmacyList",
 				component: PharmacyListPreview
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Patient]
+				},
+			},
 		]
 	},
 	{
@@ -156,7 +166,15 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]
 				},
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
+			},
 		]
 	},
 	{
@@ -183,7 +201,8 @@ const routes = [
 			{
 				path: "PatientRegistration",
 				component: PatientRegistration
-			}
+			},
+			
 		]
 	},
 	{
@@ -236,7 +255,15 @@ const routes = [
 				meta: {
 					roles: [Role.Pharmacist]
 				}
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Pharmacist]
+				},
+			},
 		]
 	},
 	{
@@ -294,7 +321,15 @@ const routes = [
 				meta: {
 					roles: [Role.Dermatologist]
 				}
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Dermatologist]
+				},
+			},
 		]
 	},
 	{
@@ -402,7 +437,15 @@ const routes = [
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
 
 		]
 	},
@@ -425,7 +468,15 @@ const routes = [
 			{
 				path: "OrderList",
 				component: SupplierOrderList,
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Supplier]
+				},
+			},
 		]
 	},
 	{

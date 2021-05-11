@@ -1,10 +1,5 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
-import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -15,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -61,6 +60,10 @@ public class PatientController {
 
 	@Autowired
 	private DermatologistService dermatologistService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 
 	@GetMapping(value="/reservedMedication/{id}")
@@ -74,7 +77,6 @@ public class PatientController {
 		for(PrescriptionMedicament pm : patient.getReservedMedicaments()) {
 			if(!pm.isDeleted() && !pm.isPurchased()) {
 				PrescriptionMedicamentDTO medicament = new PrescriptionMedicamentDTO(pm);
-				System.out.println(medicament.getId());
 				returns.add(medicament);
 			}
 
@@ -436,4 +438,22 @@ public class PatientController {
 //
 //		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 //	}
+	
+	
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<PatientDTO> changePassword(@RequestBody PatientDTO patient,@PathVariable("id") String password) throws Exception {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				patient.getEmail(), password));
+		Patient patientUpdate = patientService.findOne(patient.getEmail());
+		
+	
+		patientUpdate.setPassword(passwordEncoder.encode(patient.getPassword()));
+		if(!patientUpdate.isActive()) {
+			patientUpdate.setActive(true);
+		}
+		
+		patientUpdate = patientService.update(patientUpdate);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

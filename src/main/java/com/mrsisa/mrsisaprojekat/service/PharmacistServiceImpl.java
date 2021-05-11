@@ -130,4 +130,13 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return pharmacistRepository.getRatings(email);
 	}
 
+	@Override
+	public Pharmacist getOneWithAddress(String email) {
+		Pharmacist pharmacist = pharmacistRepository.getOneWithAddress(email);
+		if(pharmacist == null) {
+			return null;
+		}
+		return pharmacist;
+	}
+
 }

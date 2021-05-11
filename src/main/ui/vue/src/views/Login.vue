@@ -67,22 +67,37 @@ export default {
       var userRole = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
-      if (userRole == "ROLE_PATIENT") {
-        this.$router.push("/PatientPage");
+      var activeUser = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).active;
+      if (userRole == "ROLE_PATIENT" && activeUser==false) {
+       this.$router.push("PatientPage/ChangePassword");
+      }else if(userRole == "ROLE_PATIENT" && activeUser==true){
+           this.$router.push("/PatientPage");
       }
-      if (userRole == "ROLE_SYSTEM_ADMIN") {
-        this.$router.push("/SystemAdminPage");
+      if (userRole == "ROLE_SYSTEM_ADMIN" && activeUser == false) {
+        this.$router.push("SystemAdminPage/ChangePassword");
+      }else if(userRole == "ROLE_SYSTEM_ADMIN" && activeUser == true){
+           this.$router.push("/SystemAdminPage");
       }
-      if (userRole == "ROLE_PHARMACY_ADMIN") {
-        this.$router.push("/PharmacyAdminPage");
+      if (userRole == "ROLE_PHARMACY_ADMIN"  && activeUser==false) {
+        this.$router.push("PharmacyAdminPage/ChangePassword");
+      }else if(userRole =="ROLE_PHARMACY_ADMIN"  && activeUser==true){
+         this.$router.push("/PharmacyAdminPage");
       }
-      if (userRole == "ROLE_SUPPLIER") {
-        this.$router.push("/SupplierPage");
+      if (userRole == "ROLE_SUPPLIER" && activeUser == false) {
+        this.$router.push("SupplierPage/ChangePassword");
+      }else if(userRole == "ROLE_SUPPLIER" && activeUser == true){
+          this.$router.push("/SupplierPage");
       }
-      if (userRole == "ROLE_PHARMACIST") {
-        this.$router.push("/PharmacistPage");
+      if (userRole == "ROLE_PHARMACIST" && activeUser == false) {
+        this.$router.push("PharmacistPage/ChangePassword");
+      }else if(userRole == "ROLE_PHARMACIST" && activeUser == true){
+           this.$router.push("/PharmacistPage");
       }
-      if (userRole == "ROLE_DERMATOLOGIST") {
+      if (userRole == "ROLE_DERMATOLOGIST" && activeUser == false) {
+        this.$router.push("DermatologistPage/ChangePassword");
+      }else if(userRole == "ROLE_DERMATOLOGIST" && activeUser == true){
         this.$router.push("/DermatologistPage");
       }
     },
