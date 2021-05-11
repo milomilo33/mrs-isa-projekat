@@ -53,10 +53,11 @@ public class TokenUtils {
 		 * @param username Korisničko ime korisnika kojem se token izdaje
 		 * @return JWT token
 		 */
-		public String generateToken(String email, String role) {
+		public String generateToken(String email, String role, Boolean active) {
 			return Jwts.builder()
 					.setIssuer(APP_NAME)
 					.claim("role", role)
+					.claim("active", active)
 					.setSubject(email)
 					.setAudience(generateAudience())
 					.setIssuedAt(new Date())

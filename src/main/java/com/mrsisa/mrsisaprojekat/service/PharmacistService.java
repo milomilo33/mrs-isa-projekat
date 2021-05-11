@@ -26,4 +26,5 @@ public interface PharmacistService {
 	
 	Pharmacist getRatings(String email);
 
+	Pharmacist getOneWithAddress(String email);
 }

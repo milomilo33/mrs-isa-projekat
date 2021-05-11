@@ -31,6 +31,7 @@
             <em class="pl-2">User</em>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
+           <b-dropdown-item href="/SystemAdminPage/ChangePassword">Change password</b-dropdown-item>
           <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

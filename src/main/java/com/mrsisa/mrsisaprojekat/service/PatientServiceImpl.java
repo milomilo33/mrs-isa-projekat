@@ -76,8 +76,6 @@ public class PatientServiceImpl implements PatientService {
 		p.setAllergies(new HashSet<>());
 		p.setePrescriptions(new HashSet<>());
 		p.setSubscribedPharmacies(new HashSet<>());
-
-		System.out.println(p);
 		if (p == null) {
 			p = findOne(email);
 			p.setReservedMedicaments(new HashSet<>());

@@ -46,7 +46,6 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	@Override
 	public AdminPharmacy update(AdminPharmacy admin) throws Exception {
 		AdminPharmacy adminToUpdate = adminRepository.getOnePharmacyAdmin(admin.getEmail());
-		System.out.println(adminToUpdate.getPharmacy().getName());
 		if (adminToUpdate == null) {
 			return null;
 		}
@@ -63,5 +62,13 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	public AdminPharmacy findOneWithRequestMedicaments(String email) {
 		AdminPharmacy admin = adminRepository.getOneWithRequestMedicaments(email);
 		return admin;
+	}
+
+	@Override
+	public boolean check(String password1, String password) {
+		if(!password1.equals(passwordEncoder.encode(password))){
+			return false;
+		}
+		return true;
 	}
 }
