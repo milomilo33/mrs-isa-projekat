@@ -1,23 +1,29 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.MedicalReportRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private AppointmentRepositoryDB appointmentRepository;
+
+    @Autowired
+    private ePrescriptionRepositoryDB ePrescriptionRepository;
+
+    @Autowired
+    private MedicalReportRepositoryDB medicalReportRepositoryDB;
 
     @Override
     public Collection<Appointment> findAll() {
@@ -101,5 +107,61 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void cancelExamination(Appointment appointment) {
         appointment.setPatient(null);
         appointmentRepository.save(appointment);
+    }
+
+    @Override
+    @Transactional
+    public Long startAppointment(Long appointmentId, String employeeEmail) {
+        Appointment appointment = this.findOne(appointmentId);
+
+        if (appointment == null) {
+            return null;
+        }
+
+        if (appointment.isDeleted() || appointment.isDone()) {
+            return null;
+        }
+
+        if (!employeeEmail.equals(appointment.getChosenEmployee().getEmail())) {
+            return null;
+        }
+
+        MedicalReport report = appointment.getMedicalReport();
+        if (report != null) {
+            return report.getId();
+        }
+        else {
+            Patient patient = appointment.getPatient();
+            LocalDate date = LocalDate.now().plusDays(7);
+            Set<PrescriptionMedicament> prescriptionMedicaments = new HashSet<>();
+            Pharmacy pharmacy = null;
+            if (appointment.getChosenEmployee() instanceof Pharmacist) {
+                Pharmacist pharmacist = (Pharmacist) appointment.getChosenEmployee();
+                pharmacy = pharmacist.getPharmacy();
+            }
+            else {
+                // dermatologist
+                Dermatologist dermatologist = (Dermatologist) appointment.getChosenEmployee();
+                Set<Pharmacy> pharmacies = dermatologist.getPharmacies();
+                for (Pharmacy p : pharmacies) {
+                    for (Appointment a : p.getAppointments()) {
+                        if (a.getId().equals(appointmentId)) {
+                            pharmacy = p;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy);
+            ePrescriptionRepository.save(ePrescription);
+
+            MedicalReport newReport = new MedicalReport("", LocalDateTime.now(), ePrescription);
+            medicalReportRepositoryDB.save(newReport);
+
+            appointment.setMedicalReport(newReport);
+
+            return newReport.getId();
+        }
     }
 }

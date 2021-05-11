@@ -36,7 +36,20 @@ public class AppointmentController {
     
     @Autowired
     private PharmacistService pharmacistService;
-    
+
+	@GetMapping(value = "/{id}/start")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Long> startAppointment(@PathVariable("id") Long appointmentId) {
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		Long medicalReportId = appointmentService.startAppointment(appointmentId, employee.getEmail());
+
+		if (medicalReportId == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(medicalReportId, HttpStatus.OK);
+	}
+
     @GetMapping(value = "/{id}/absent")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
     public ResponseEntity<String> markPatientAbsence(@PathVariable("id") Long appointmentId) {

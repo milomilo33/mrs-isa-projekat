@@ -21,4 +21,6 @@ public interface AppointmentService {
     AppointmentDetailsDTO getAppointmentDetails(Long appointmentId);
 
     void cancelExamination(Appointment appointment);
+
+    Long startAppointment(Long appointmentId, String employeeEmail);
 }

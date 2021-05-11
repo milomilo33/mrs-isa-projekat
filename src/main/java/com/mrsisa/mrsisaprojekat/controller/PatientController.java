@@ -1,10 +1,5 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
-import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -24,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -247,6 +241,35 @@ public class PatientController {
 
 		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 
+	}
+
+	@PostMapping(path = "/prescribe/{id}", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Object> prescribeMedicament(@RequestBody PrescriptionMedicamentDTO medicament, @PathVariable("id") Long medicalReportId) throws Exception {
+
+		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
+		medicamentToReserve.setDeleted(false);
+		medicamentToReserve.setPurchased(false);
+		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
+		medicamentToReserve.setQuantity(medicament.getQuantity());
+		medicamentToReserve.setMedicament(medicament.getMedicament());
+		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
+		try {
+			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
+		} catch(ReservationQuantityException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getQuantity());
+		}
+
+		try {
+			PrescriptionMedicament reservedMedicament = patientService.updateWithReservation(p, medicamentToReserve);
+			emailService.ReservationConfirmationMail(p, reservedMedicament);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(value = "cancelReservation/{id}")

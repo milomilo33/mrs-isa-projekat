@@ -1,21 +1,12 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
 @Entity
 public class ePrescription {
-	
+
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,6 +30,15 @@ public class ePrescription {
 	// purchased/taken/dispensed
 	@Column(name = "done", unique = false, nullable = false)
 	private boolean done;
+
+	public ePrescription(Patient patient, LocalDate date, Set<PrescriptionMedicament> prescriptionMedicaments, Pharmacy pharmacy) {
+		this.patient = patient;
+		this.date = date;
+		this.prescriptionMedicaments = prescriptionMedicaments;
+		this.pharmacy = pharmacy;
+		this.done = false;
+		this.deleted = false;
+	}
 	
 	public ePrescription() {}
 

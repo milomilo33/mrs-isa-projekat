@@ -1,12 +1,11 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Set;
-
+import com.mrsisa.mrsisaprojekat.model.Offer;
+import com.mrsisa.mrsisaprojekat.repository.OfferRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mrsisa.mrsisaprojekat.model.Offer;
-import com.mrsisa.mrsisaprojekat.repository.OfferRepositoryDB;
+import java.util.Set;
 
 @Service
 public class OfferServiceImpl implements OfferService{
@@ -42,6 +41,7 @@ public class OfferServiceImpl implements OfferService{
 	@Override
 	public Set<Offer> supplierOffers(String email) {
 		return offerRepository.getOffersForSupplier(email);
+	}
 
 	public Offer findOffer(Long id) {
 		Offer offer = offerRepository.findOffer(id);
