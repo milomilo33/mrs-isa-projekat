@@ -43,6 +43,9 @@ import Orders from '../components/Orders'
 import ChangePassword from '../components/ChangePassword'
 import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
+//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+
+
 
 Vue.use(VueRouter)
 const Role = {
@@ -520,10 +523,11 @@ const routes = [
 				path: "ReservedMedicamentsTable",
 				component: ReservedMedicamentsTable
 			},
+			/*
 			{
 				path: "ePrescriptions",
 				component: ePrescriptionPreview
-			}
+			}*/
 		]
 	},
 	{
