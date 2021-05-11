@@ -56,6 +56,9 @@ public class PatientController {
 	@Autowired
 	private DermatologistService dermatologistService;
 
+	@Autowired
+	private MedicalReportService medicalReportService;
+
 
 	@GetMapping(value="/reservedMedication/{id}")
 	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getReservedMedication(@PathVariable("id") String id) {
@@ -246,6 +249,9 @@ public class PatientController {
 	@PostMapping(path = "/prescribe/{id}", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Object> prescribeMedicament(@RequestBody PrescriptionMedicamentDTO medicament, @PathVariable("id") Long medicalReportId) throws Exception {
+		if (!medicalReportService.reportBelongsToPatient(medicalReportId, medicament.getPatientEmail())) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
 		medicamentToReserve.setDeleted(false);
@@ -253,7 +259,7 @@ public class PatientController {
 		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
-		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
+		//Patient p = patientService.getOneWithReservedMedsAndePrescriptions(medicament.getPatientEmail());
 		try {
 			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {
@@ -262,8 +268,12 @@ public class PatientController {
 		}
 
 		try {
-			PrescriptionMedicament reservedMedicament = patientService.updateWithReservation(p, medicamentToReserve);
-			emailService.ReservationConfirmationMail(p, reservedMedicament);
+			PrescriptionMedicament reservedMedicament = patientService.updateWithPrescription(medicament.getPatientEmail(), medicamentToReserve, medicalReportId);
+			if (reservedMedicament == null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			// mejl poslati prilikom zavrsetka pregleda za ePrescription
+			//emailService.ReservationConfirmationMail(p, reservedMedicament);
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

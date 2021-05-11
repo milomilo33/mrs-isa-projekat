@@ -4,6 +4,7 @@ import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.MedicalReportRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     private ePrescriptionRepositoryDB ePrescriptionRepository;
 
     @Autowired
-    private MedicalReportRepositoryDB medicalReportRepositoryDB;
+    private MedicalReportRepositoryDB medicalReportRepository;
+
+    @Autowired
+    private PatientRepositoryDB patientRepository;
 
     @Override
     public Collection<Appointment> findAll() {
@@ -155,9 +159,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy);
             ePrescriptionRepository.save(ePrescription);
+            patient.getePrescriptions().add(ePrescription);
 
             MedicalReport newReport = new MedicalReport("", LocalDateTime.now(), ePrescription);
-            medicalReportRepositoryDB.save(newReport);
+            medicalReportRepository.save(newReport);
 
             appointment.setMedicalReport(newReport);
 
