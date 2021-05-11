@@ -179,7 +179,7 @@ export default defineComponent({
 
 <style>
 .header-color {
-  color: rgb(19, 94, 29);
+  color: var(--green);
 }
 .red-color {
   color:brown 
