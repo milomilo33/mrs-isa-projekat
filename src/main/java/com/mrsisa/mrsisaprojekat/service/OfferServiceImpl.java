@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrsisa.mrsisaprojekat.model.Offer;
+import com.mrsisa.mrsisaprojekat.model.OfferStatus;
 import com.mrsisa.mrsisaprojekat.repository.OfferRepositoryDB;
 
 @Service
@@ -37,6 +38,24 @@ public class OfferServiceImpl implements OfferService{
 			return null;
 		}
 		return offers;
+	}
+
+	@Override
+	public Set<Offer> filterOffer(String email, OfferStatus status){
+		return offerRepository.filterOffers(email, status);
+	}
+	@Override
+	public Set<Offer> supplierOffers(String email) {
+		return offerRepository.getOffersForSupplier(email);}
+
+	@Override
+	public Offer findOffer(Long id) {
+		Offer offer = offerRepository.findOffer(id);
+		if(offer == null) {
+			return null;
+		}
+		return offer;
+
 	}
 
 }

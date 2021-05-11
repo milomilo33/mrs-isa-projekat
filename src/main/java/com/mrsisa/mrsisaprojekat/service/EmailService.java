@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.mrsisa.mrsisaprojekat.model.ConfirmationToken;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Offer;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.Supplier;
 import com.mrsisa.mrsisaprojekat.model.User;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
@@ -113,6 +115,21 @@ public class EmailService {
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}
+	
+	
+	@Async
+	public void sendSupplierMail(Supplier supplier, Offer offer) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(supplier.getEmail());
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Information about your offer");
+		mail.setText("Your offer with id: " + offer.getId()+" with deadline: "+offer.getDeadline()+" is "+ offer.getStatus()+"!");
+		javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+	}
+	
 	
 	
 }

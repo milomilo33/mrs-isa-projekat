@@ -1,10 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
+import com.mrsisa.mrsisaprojekat.dto.OfferDTO;
 import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
@@ -75,7 +73,6 @@ public class OrderController {
 	
 	
 	@GetMapping(value= "/forOffer")
-	@PreAuthorize("hasAnyRole('SUPPLIER')")
 	ResponseEntity<Set<OrderDTO>> getOrdersForOffer(){
 		Set<Order> orders = orderService.findAllBeforeDeadline();
 		if(orders == null) {
@@ -98,9 +95,25 @@ public class OrderController {
 		Set<OrderDTO> ordersPharmacy = new HashSet<OrderDTO>();
 		for(Order o : orders) {
 			if(o.getAdmin().getPharmacy().getId() == id) {
-				ordersPharmacy.add(new OrderDTO(o));
+				Set<Offer> offers = offerService.offersForOrder(o.getId());
+				Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+				for(Offer oo : offers) {
+					Offer offer = offerService.findOffer(oo.getId());
+					OfferDTO od = new OfferDTO();
+					od.setDeadline(offer.getDeadline());
+					od.setId(offer.getId());
+					od.setStatus(offer.getStatus().name());
+					od.setSupplier(offer.getSupplier().getEmail());
+					od.setTotalPrice(offer.getTotalPrice());
+					offersDTO.add(od);
+					
+				}
+				OrderDTO op = new OrderDTO(o);
+				op.setOffers(offersDTO);
+				ordersPharmacy.add(op);
 			}
 		}
+		
 		return new ResponseEntity<Set<OrderDTO>>(ordersPharmacy,HttpStatus.OK);
 	}
 	
@@ -127,7 +140,22 @@ public class OrderController {
 		for(Order o : orders) {
 			
 			if(o.getAdmin().getPharmacy().getId() == id) {
-				ordersPharmacy.add(new OrderDTO(o));
+				Set<Offer> offers = offerService.offersForOrder(o.getId());
+				Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+				for(Offer oo : offers) {
+					Offer offer = offerService.findOffer(oo.getId());
+					OfferDTO od = new OfferDTO();
+					od.setDeadline(offer.getDeadline());
+					od.setId(offer.getId());
+					od.setStatus(offer.getStatus().name());
+					od.setSupplier(offer.getSupplier().getEmail());
+					od.setTotalPrice(offer.getTotalPrice());
+					offersDTO.add(od);
+					
+				}
+				OrderDTO op = new OrderDTO(o);
+				op.setOffers(offersDTO);
+				ordersPharmacy.add(op);
 			}
 		}
 		return new ResponseEntity<Set<OrderDTO>>(ordersPharmacy,HttpStatus.OK);
@@ -249,6 +277,9 @@ public class OrderController {
 		
 		
 	}
+	
+	
+	
 
 
 }
