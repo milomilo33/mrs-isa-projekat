@@ -41,7 +41,7 @@ import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
 import ChangePassword from '../components/ChangePassword'
-import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
@@ -487,6 +487,7 @@ const routes = [
 					roles: [Role.Supplier]
 				},
 			},
+			{
 
 				path: "OfferList",
 				component: SupplierOfferList,
