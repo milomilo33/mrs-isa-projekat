@@ -234,4 +234,10 @@ public class PatientServiceImpl implements PatientService {
 		patientRepository.save(p);
 	}
 
+	@Override
+	public Patient getOneWithePrescriptions(String email) {
+
+		return patientRepository.getPatientWithePrescriptions(email);
+	}
+
 }

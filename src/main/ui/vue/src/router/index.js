@@ -40,6 +40,7 @@ import SupplierOfferList from '../components/SupplierOfferList'
 import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
+import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 Vue.use(VueRouter)
 const Role = {
@@ -464,6 +465,10 @@ const routes = [
 			{
 				path: "ReservedMedicamentsTable",
 				component: ReservedMedicamentsTable
+			},
+			{
+				path: "ePrescriptions",
+				component: ePrescriptionPreview
 			}
 		]
 	},
