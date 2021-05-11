@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -253,6 +254,8 @@ public class PatientController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
 		medicamentToReserve.setDeleted(false);
 		medicamentToReserve.setPurchased(false);
@@ -261,10 +264,14 @@ public class PatientController {
 		medicamentToReserve.setMedicament(medicament.getMedicament());
 		//Patient p = patientService.getOneWithReservedMedsAndePrescriptions(medicament.getPatientEmail());
 		try {
-			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
+			boolean successful = patientService.checkMedicamentReservationQuantityForPrescription(medicamentToReserve, medicament.getPharmacyId(), employee);
+			if (!successful) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		} catch(ReservationQuantityException e) {
 			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getQuantity());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getQuantity());
+			// not found => zamenski lekovi
 		}
 
 		try {

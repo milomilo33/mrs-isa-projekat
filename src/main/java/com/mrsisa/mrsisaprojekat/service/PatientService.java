@@ -1,10 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.*;
 
 import java.util.Collection;
 
@@ -39,7 +36,7 @@ public interface PatientService {
 
 	void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException;
 
-	boolean checkMedicamentReservationQuantityForPrescription(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException;
+	boolean checkMedicamentReservationQuantityForPrescription(PrescriptionMedicament medicament, Long pharmacyId, Employee employee) throws ReservationQuantityException;
 
 	Collection<Pharmacy> findAllSubscribed(String user);
 

@@ -246,7 +246,7 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional
-	public boolean checkMedicamentReservationQuantityForPrescription(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException {
+	public boolean checkMedicamentReservationQuantityForPrescription(PrescriptionMedicament medicament, Long pharmacyId, Employee employee) throws ReservationQuantityException {
 		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
 
 		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
@@ -254,7 +254,17 @@ public class PatientServiceImpl implements PatientService {
 
 		if (medicamentItem != null) {
 			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
-				RequestMedicament requestMedicament = new RequestMedicament();
+				for (AdminPharmacy admin : pharmacy.getAdmins()) {
+					// check persistence
+					RequestMedicament requestMedicament = new RequestMedicament();
+					requestMedicament.setAccepted(false);
+					requestMedicament.setAdmin(admin);
+					requestMedicament.setEmployee(employee);
+					requestMedicament.setMedicament(medicament.getMedicament());
+					requestMedicament.setQuantity(medicament.getQuantity());
+					requestMedicamentRepository.save(requestMedicament);
+					admin.getRequestMedicaments().add(requestMedicament);
+				}
 
 				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
 			} else {
