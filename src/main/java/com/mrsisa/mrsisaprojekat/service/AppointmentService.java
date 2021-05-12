@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 
 import java.util.Collection;
 
@@ -23,4 +24,6 @@ public interface AppointmentService {
     void cancelExamination(Appointment appointment);
 
     Long startAppointment(Long appointmentId, String employeeEmail);
+
+    Pharmacy getPharmacyOfAppointment(Long appointmentId);
 }

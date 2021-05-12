@@ -147,11 +147,6 @@ public class PatientServiceImpl implements PatientService {
 			return null;
 		}
 
-		// check persistence
-		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
-		prescriptionRepository.save(medicamentToReserve);
-
-		// check persistence
 		MedicalReport report = medicalReportService.findOne(medicalReportId);
 
 		if (report == null) {
@@ -159,6 +154,11 @@ public class PatientServiceImpl implements PatientService {
 		}
 
 		report.getEprescription().getPrescriptionMedicaments().add(medicamentToReserve);
+
+		medicamentToReserve.setExpiryDate(report.getEprescription().getDate());
+		prescriptionRepository.save(medicamentToReserve);
+
+		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
 
 		return medicamentToReserve;
 	}
@@ -257,13 +257,15 @@ public class PatientServiceImpl implements PatientService {
 				for (AdminPharmacy admin : pharmacy.getAdmins()) {
 					// check persistence
 					RequestMedicament requestMedicament = new RequestMedicament();
+					requestMedicamentRepository.save(requestMedicament);
 					requestMedicament.setAccepted(false);
 					requestMedicament.setAdmin(admin);
 					requestMedicament.setEmployee(employee);
 					requestMedicament.setMedicament(medicament.getMedicament());
 					requestMedicament.setQuantity(medicament.getQuantity());
-					requestMedicamentRepository.save(requestMedicament);
+					System.out.println("i get here1");
 					admin.getRequestMedicaments().add(requestMedicament);
+					System.out.println("i get here2");
 				}
 
 				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");

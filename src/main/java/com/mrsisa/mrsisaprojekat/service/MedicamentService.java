@@ -25,4 +25,6 @@ public interface MedicamentService {
 
 	Collection<MedicamentDTO> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
 								Long medicamentId, String patientEmail, int quantity, Long pharmacyId);
+
+	Collection<MedicamentDTO> getNonallergicMedicinesForPatientInPharmacyOfAppointment(String patientEmail, Long appointmentId);
 }

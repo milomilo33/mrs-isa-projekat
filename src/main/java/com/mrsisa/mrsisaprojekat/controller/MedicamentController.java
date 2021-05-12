@@ -139,4 +139,19 @@ public class MedicamentController {
 
 		return new ResponseEntity<>(substitutes, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/non-allergic-in-pharmacy")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Collection<MedicamentDTO>> getNonallergicMedicinesForPatientInPharmacyOfAppointment(
+			@RequestParam String patientEmail, @RequestParam Long appointmentId
+	)
+	{
+		Collection<MedicamentDTO> medicines = service.getNonallergicMedicinesForPatientInPharmacyOfAppointment(patientEmail, appointmentId);
+
+		if (medicines == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(medicines, HttpStatus.OK);
+	}
 }

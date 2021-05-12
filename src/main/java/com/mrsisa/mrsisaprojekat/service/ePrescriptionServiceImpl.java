@@ -1,19 +1,22 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.model.MedicalReport;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.ePrescription;
+import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
-import com.mrsisa.mrsisaprojekat.model.ePrescription;
-import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class ePrescriptionServiceImpl implements ePrescriptionService {
@@ -23,6 +26,9 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 	
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
 	
 	@Override
 	public List<ePrescription> findAll() {
@@ -144,6 +150,38 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 		}
 		Hibernate.unproxy(ePrescription);
 		return ePrescription;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<PrescriptionMedicamentDTO> getPrescriptionMedicamentsForMedicalReport(Long medicalReportId) {
+		MedicalReport report = medicalReportService.findOne(medicalReportId);
+
+		if (report == null) {
+			return null;
+		}
+
+		if (report.isDeleted()) {
+			return null;
+		}
+
+		Collection<PrescriptionMedicament> prescriptionMedicaments = report.getEprescription().getPrescriptionMedicaments();
+
+		if (prescriptionMedicaments == null) {
+			return null;
+		}
+
+		Collection<PrescriptionMedicamentDTO> dtos = new HashSet<>();
+		for (PrescriptionMedicament pm : prescriptionMedicaments) {
+			PrescriptionMedicamentDTO dto = new PrescriptionMedicamentDTO();
+			dto.setMedicament(pm.getMedicament());
+			dto.getMedicament().setRatings(null);
+			dto.getMedicament().setSubstituteMedicaments(null);
+			dto.setQuantity(pm.getQuantity());
+			dtos.add(dto);
+		}
+
+		return dtos;
 	}
 
 }

@@ -12,8 +12,8 @@
         >Search</b-button
       >
       <hr />
-      <p class="colorIt"><b>Filters:</b></p>
-      <div class="issuanceModeFilter">
+      <p class="colorIt" v-if="!prescriptionMode"><b>Filters:</b></p>
+      <div class="issuanceModeFilter" v-if="!prescriptionMode">
         <p><b>Choose issuance mode:</b></p>
         <div class="form-check">
           <input
@@ -44,7 +44,7 @@
           </label>
         </div>
       </div>
-      <div class="medicamentFormFilter">
+      <div class="medicamentFormFilter" v-if="!prescriptionMode">
         <p><b>Choose medicament form:</b></p>
         <div class="form-check">
           <input
@@ -170,22 +170,28 @@
           :key="p.id"
         >
           <div>
-            <MedicamentPreview :type="type" :medicament="p" :allergies="allergies"> </MedicamentPreview>
+            <MedicamentPreview :type="type" :medicament="p" :allergies="allergies" :prescriptionMode="prescriptionMode" @seeMoreClicked="onSeeMore"> </MedicamentPreview>
           </div>
         </div>
       </div>
     </section>
+
+    <div v-if="Object.keys(chosenMedicament).length !== 0" :key="chosenMedicament">
+      <MedicamentInPharmacy :chosenMedicament="chosenMedicament" :appointment="appointment" :prescriptionMode=true @prescribed="onPrescribed"></MedicamentInPharmacy>
+    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "@vue/composition-api";
 import MedicamentPreview from "../components/MedicamentPreview";
+import MedicamentInPharmacy from "../components/MedicamentInPharmacy";
 
 export default defineComponent({
   name: "MedicamentListPreview",
   components: {
     MedicamentPreview,
+    MedicamentInPharmacy
   },
 
   data() {
@@ -195,8 +201,18 @@ export default defineComponent({
       issuanceMode: -1,
       medicamentForm: -1,
       allergies: [],
-      type: ''
+      type: '',
+      medicamentsOriginal: [],
+      chosenMedicament: {}
     };
+  },
+
+  props: {
+    prescriptionMode: {
+      type: Boolean,
+      default: false
+    },
+    appointment: Object
   },
 
   mounted() {
@@ -204,8 +220,11 @@ export default defineComponent({
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
     
-    
-    this.loadAllergies();
+    if (!this.prescriptionMode)
+      this.loadAllergies();
+    else {
+      this.loadNonAllergicMedsForPrescription();
+    }
     
     
     
@@ -227,6 +246,20 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
     },
 
+    loadNonAllergicMedsForPrescription() {
+      let patientEmail = this.appointment.patient.email;
+      let appointmentId = this.appointment.id;
+      this.axios.get(`/api/medicaments/non-allergic-in-pharmacy?patientEmail=${patientEmail}&appointmentId=${appointmentId}`, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+      .then((response) => {
+        this.medicaments = response.data;
+        this.medicamentsOriginal = this.medicaments;
+        //console.log(response.data);
+      })
+      .catch((error) => console.log(error.response.data));
+    },
+
     loadAllergies() {
       this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -239,6 +272,11 @@ export default defineComponent({
         .catch(error => console.log(error.response.data)); 
     },
     findSearch(){
+      if (this.prescriptionMode) {
+        this.frontEndSearch();
+        return;
+      }
+        
       this.axios
       .get(`/api/medicaments/search/`+this.search, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -250,6 +288,11 @@ export default defineComponent({
       .catch((error) => console.log(error));
     },
     findFilter(){
+      // if (this.prescriptionMode) {
+      //   this.frontEndFilter();
+      //   return;
+      // }
+
       this.axios
       .get(`/api/medicaments/filter/mode=`+parseInt(this.issuanceMode)+`&form=`+parseInt(this.medicamentForm), {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -259,6 +302,18 @@ export default defineComponent({
         //console.log(this.medicaments);
       })
       .catch((error) => console.log(error));
+    },
+
+    frontEndSearch() {
+      this.medicaments = this.medicamentsOriginal.filter((value) => value.name.toLowerCase().includes(this.search.toLowerCase()));
+    },
+
+    onSeeMore(med) {
+      this.chosenMedicament = med;
+    },
+
+    onPrescribed() {
+      this.$emit('prescribed');
     }
 
   }

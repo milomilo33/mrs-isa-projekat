@@ -169,4 +169,16 @@ public class AppointmentController {
 
     	return new ResponseEntity<>(details, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/{id}/pharmacy")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Pharmacy> getPharmacyOfAppointment(@PathVariable("id") Long appointmentId) {
+		Pharmacy pharmacy = appointmentService.getPharmacyOfAppointment(appointmentId);
+
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(pharmacy, HttpStatus.OK);
+	}
 }

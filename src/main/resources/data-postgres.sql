@@ -224,6 +224,8 @@ insert into pharmacy_appointments (pharmacy_id, appointments_id) values (1, 2)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 4)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 3)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 15)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 16)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 17)
 
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 1)
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 2)

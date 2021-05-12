@@ -14,7 +14,7 @@
             
           </div>
         </div>
-        <div class="card">
+        <div class="card" v-if="!prescriptionMode">
           <div class="card-header">Available in Pharmacies: </div>
           <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col" v-for="item in pricelist" v-bind:key="item.id">
@@ -70,8 +70,69 @@
             </div>
           </div>
         </div>
-  </div>
         </div>
+        </div>
+
+        <div class="card" v-if="prescriptionMode">
+          <div class="card-header">In Your Pharmacy: </div>
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+              <div class="card h-100">
+                <img
+                src="../pharmacyStock.jpg"
+                class="card-img-top"
+                alt="..."
+                />
+              <div class="card-body">
+              <h5 class="card-title">{{this.pharmacy.name}}</h5>
+              <p class="card-text">
+                {{this.pharmacy.description}}
+              </p>
+              <b-button v-b-modal="'id0'">Prescribe</b-button>
+              
+
+              <b-modal
+                content-class="my-class"
+                :id="'id0'"
+                ref="id0"
+                centered
+                header-bg-variant="dark"
+                header-text-variant="light"
+                body-bg-variant="light"
+                body-text-variant="dark"
+                :hide-footer="true"
+              >
+                <b-container fluid>
+              
+                </b-container>
+                <template #modal-header="{ close }">
+                    <b-button
+                      size="sm"
+                      @click="close()"
+                    >
+                      Close
+                    </b-button>
+                  </template>
+                <b-row>
+                  <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
+                </b-row>
+                <b-row>
+                   <b-button variant="success" class="m-2" @click="prescribeMedicament(pharmacy.id)"> Prescribe medicament </b-button>
+                </b-row>
+              </b-modal>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+
+      <b-modal ref="successful-prescription-modal" hide-footer title="Success" @hide="onCloseSuccessModal">
+        <div class="d-block text-center">
+            <p>Medicine successfully prescribed</p>
+        </div>
+        <b-button class="mt-3" variant="outline-success" block @click="onCloseSuccessModal">Close</b-button>
+      </b-modal>
+
       </div>  
     </div>
   </div>
@@ -92,15 +153,30 @@ export default defineComponent({
       pricelist: "",
       amount: "",
       date: null,
-      role: ''
+      role: '',
+
+      pharmacy: {}
     }
+  },
+  props: {
+    prescriptionMode: {
+      type: Boolean,
+      default: false
+    },
+    appointment: Object,
+    chosenMedicament: Object
   },
   mounted(){
     this.role = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
+
+    if (this.prescriptionMode) {
+      this.loadForPrescription();
+      return;
+    }
     
-     this.axios
+    this.axios
       .get(
         `/api/medicaments/` +
           parseInt(this.$route.params.id),{
@@ -144,6 +220,65 @@ export default defineComponent({
         //console.log(this.date)
         alert("Rezervacija izvršena!");
       }
+    },
+
+    prescribeMedicament(pharmacyId) {
+      if (this.amount > 0) {
+        this.axios.post(`/api/patients/prescribe/${this.appointment.medicalReportId}`, {
+          patientEmail: this.appointment.patient.email,
+          medicament: this.medicament,
+          expiryDate: this.date,
+          quantity: this.amount,
+          pharmacyId
+        },  {headers: {
+              Authorization: "Bearer " + localStorage.getItem('token')
+            }
+        })
+        .then(response => {
+          console.log(response);
+          this.showSuccessModal();
+        })
+        .catch(error => {
+          if (error.response.status === 404) {
+            // nude se zamenski lekovi
+            alert("zamenski lekovi");
+          }
+          else {
+            console.log(error);
+          }
+        });
+      }
+    },
+
+    loadForPrescription() {
+      this.medicament = this.chosenMedicament;
+
+      let appointmentId = this.appointment.id;
+      this.axios.get(`/api/appointments/${appointmentId}/pharmacy`, {
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        },
+                    })
+                    .then(response => {
+                      this.pharmacy = response.data;
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    })
+    },
+
+    onCloseSuccessModal() {
+      // this.$router.push({ name: 'DermatologistPageAppointmentPage',
+      //                     params: { appointment: this.appointment,
+      //                               medicalReportId: this.appointment.medicalReportId } })
+      //             .catch(() => {});
+      this.$refs['successful-prescription-modal'].hide();
+      this.$refs['id0'].hide();
+      this.$emit('prescribed');
+    },
+
+    showSuccessModal() {
+        this.$refs['successful-prescription-modal'].show();
     },
   }
 })

@@ -169,4 +169,38 @@ public class AppointmentServiceImpl implements AppointmentService {
             return newReport.getId();
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Pharmacy getPharmacyOfAppointment(Long appointmentId) {
+        Appointment appointment = this.findOne(appointmentId);
+
+        if (appointment == null) {
+            return null;
+        }
+
+        if (appointment.isDeleted()) {
+            return null;
+        }
+
+        if (appointment.getMedicalReport() == null) {
+            return null;
+        }
+
+        Pharmacy pharmacy = appointment.getMedicalReport().getEprescription().getPharmacy();
+        pharmacy.setMedicamentItems(null);
+        pharmacy.setAdmins(null);
+        pharmacy.setAppointments(null);
+        pharmacy.setDermatologists(null);
+        pharmacy.setOrders(null);
+        pharmacy.setPharmacists(null);
+        pharmacy.setPricelistAppointments(null);
+        pharmacy.setPricelistMedicaments(null);
+        pharmacy.setPromotions(null);
+        pharmacy.setRatings(null);
+        pharmacy.setRequests(null);
+        pharmacy.setVacations(null);
+
+        return pharmacy;
+    }
 }

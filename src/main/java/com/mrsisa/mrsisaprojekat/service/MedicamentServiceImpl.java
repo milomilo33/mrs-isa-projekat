@@ -1,10 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
-import com.mrsisa.mrsisaprojekat.model.Medicament;
-import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.MedicamentRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,9 @@ public class MedicamentServiceImpl implements MedicamentService {
 
 	@Autowired
 	private PharmacyService pharmacyService;
+
+	@Autowired
+	private AppointmentService appointmentService;
 	
 	@Override
 	public Medicament getRatings(Long id) {
@@ -114,6 +114,9 @@ public class MedicamentServiceImpl implements MedicamentService {
 
 			boolean allergic = false;
 			for (Medicament allergyMed : patient.getAllergies()) {
+				if (allergyMed.isDeleted()) {
+					continue;
+				}
 				if (substitute.getId().equals(allergyMed.getId())) {
 					allergic = true;
 					break;
@@ -129,6 +132,64 @@ public class MedicamentServiceImpl implements MedicamentService {
 		}
 
 		return filteredSubstitutes;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<MedicamentDTO> getNonallergicMedicinesForPatientInPharmacyOfAppointment(String patientEmail, Long appointmentId) {
+		Patient patient = patientService.findOne(patientEmail);
+		Appointment appointment = appointmentService.findOne(appointmentId);
+
+		if (patient == null || appointment == null) {
+			return null;
+		}
+
+		if (patient.isDeleted() || appointment.isDeleted()) {
+			return null;
+		}
+
+		Pharmacy pharmacy = appointment.getMedicalReport().getEprescription().getPharmacy();
+
+		if (pharmacy == null) {
+			return null;
+		}
+
+		if (pharmacy.isDeleted()) {
+			return null;
+		}
+
+		Collection<MedicamentItem> pharmacyMedicamentItems = pharmacy.getMedicamentItems();
+
+		if (pharmacyMedicamentItems == null) {
+			return new HashSet<>();
+		}
+
+		Collection<MedicamentDTO> dtos = new HashSet<>();
+		for (MedicamentItem mi : pharmacyMedicamentItems) {
+			if (mi.isDeleted()) {
+				continue;
+			}
+
+			boolean allergic = false;
+			for (Medicament allergyMed : patient.getAllergies()) {
+				if (allergyMed.isDeleted()) {
+					continue;
+				}
+				if (allergyMed.getId().equals(mi.getMedicament().getId())) {
+					allergic = true;
+					break;
+				}
+			}
+
+			if (allergic) {
+				continue;
+			}
+
+			MedicamentDTO dto = new MedicamentDTO(mi.getMedicament());
+			dtos.add(dto);
+		}
+
+		return dtos;
 	}
 
 }
