@@ -19,7 +19,7 @@ public class AppointmentDTO {
     }
     
     public AppointmentDTO(String patientEmail, Long appointmentId, LocalDate date, LocalTime termFrom, LocalTime termTo, String type, EmployeeDTO e) {
-        this.patientEmail = patientEmail;
+    	this.patientEmail = patientEmail;
         this.appointmentId = appointmentId;
         this.date = date;
         this.termFrom = termFrom;
@@ -37,13 +37,13 @@ public class AppointmentDTO {
     	}else {
     		this.patientEmail = null;
     	}
-         this.appointmentId = a.getId();
-         this.date = a.getDate();
-         this.termFrom = a.getTermFrom();
-         this.termTo = a.getTermTo();
-         this.type = a.getType().name();
-         this.employee = new EmployeeDTO(a.getChosenEmployee());
-         }
+    	this.appointmentId = a.getId();
+        this.date = a.getDate();
+        this.termFrom = a.getTermFrom();
+        this.termTo = a.getTermTo();
+        this.type = a.getType().name();
+        this.employee = new EmployeeDTO(a.getChosenEmployee());
+        }
 
     public String getPatientEmail() {
         return patientEmail;

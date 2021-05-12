@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -430,6 +431,34 @@ public class PatientController {
 
 		return ResponseEntity.ok().body(ePrescriptionPreviewDTOS);
 	}
+
+	@GetMapping(value = "/appointment_history/{email}")
+	public ResponseEntity<Collection<AppointmentDTO>> viewPastAppointments(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithAppointments(email);
+
+		if (patient == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<AppointmentDTO> returns = new ArrayList<>();
+		for(Appointment a : patient.getAppointments()) {
+			if(a.isDone()) {
+				returns.add(new AppointmentDTO(a));
+			}
+		}
+
+		return new ResponseEntity<>(returns, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/medical_report/{id}")
+	public ResponseEntity<AppointmentDetailsDTO> getMedicalReport(@PathVariable("id") Long id) {
+		AppointmentDetailsDTO appointmentDetails = appointmentService.getAppointmentDetails(id);
+
+		if(appointmentDetails == null) return ResponseEntity.badRequest().body(null);
+
+		return ResponseEntity.ok().body(appointmentDetails);
+	}
+
 
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {

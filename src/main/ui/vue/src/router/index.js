@@ -41,6 +41,7 @@ import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
 import ChangePassword from '../components/ChangePassword'
+import PastAppointmentsPage from '../components/PastAppointmentsPage'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
@@ -519,6 +520,10 @@ const routes = [
 			{
 				path: "ReservedAppointmentsTable",
 				component: ReservedAppointmentsTable
+			},
+			{
+				path: "PastAppointments",
+				component: PastAppointmentsPage
 			},
 			{
 				path: "ReservedMedicamentsTable",

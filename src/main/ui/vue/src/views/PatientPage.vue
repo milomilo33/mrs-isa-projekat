@@ -8,7 +8,15 @@
         <b-navbar-nav>
           <b-nav-item href="/PatientPage/MedicamentList">Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/PharmacyList"> Pharmacies</b-nav-item>
-          <b-nav-item href="/PatientPage/ReservedAppointmentsTable"> Reserved Appointments</b-nav-item>
+          
+          <b-nav-item-dropdown left>
+                <template #button-content>
+                    Appointments
+                </template>
+                <b-dropdown-item href="/PatientPage/ReservedAppointmentsTable"> Reserved Appointments</b-dropdown-item>
+                <b-dropdown-item href="/PatientPage/PastAppointments">Appointment history</b-dropdown-item>
+                
+            </b-nav-item-dropdown>
           <b-nav-item href="/PatientPage/ReservedMedicamentsTable"> Reserved Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/ePrescriptions"> ePrescriptions </b-nav-item>
         </b-navbar-nav>
