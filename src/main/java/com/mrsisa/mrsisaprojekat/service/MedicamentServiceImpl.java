@@ -1,5 +1,12 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.Rating;
+
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.MedicamentRepositoryDB;
@@ -78,6 +85,34 @@ public class MedicamentServiceImpl implements MedicamentService {
 	}
 
 	@Override
+	public void addRating(Rating rating, Long id) {
+		Medicament medicament = medicamentRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
+
+		if(medicament == null) {
+			medicament = medicamentRepository.loadWithRatings(id);
+			try {
+				medicament.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				medicament.setRatings(ratings);
+			}
+		}
+		else {
+			medicament.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
+		}
+
+		medicamentRepository.save(medicament);
+	}
+
+	@Override
+	public Integer getRatingOfUser(Long medicamentId, String patientEmail) {
+		Medicament medicament = medicamentRepository.loadWithRatingOfUser(medicamentId, patientEmail);
+
+		if(medicament == null) return 0;
+
+		return Objects.requireNonNull(medicament.getRatings().stream().findFirst().orElse(null)).getValue();
+	}
 	@Transactional(readOnly = true)
 	public Collection<MedicamentDTO> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(Long medicamentId, String patientEmail, int quantity, Long pharmacyId) {
 		Medicament medicament = this.findOne(medicamentId);

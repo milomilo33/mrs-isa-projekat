@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.Rating;
 
 public interface PharmacistService {
 	
@@ -26,5 +27,9 @@ public interface PharmacistService {
 	
 	Pharmacist getRatings(String email);
 
+  void addRating(Rating rating, String ratedEmployeeEmail);
+
+	Integer getRatingOfUser(String pharmacistEmail, String patientEmail);
+  
 	Pharmacist getOneWithAddress(String email);
 }

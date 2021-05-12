@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Rating;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,5 +27,9 @@ public interface DermatologistService {
 	
 	Dermatologist getRatings(String email);
 
+	void addRating(Rating rating, String ratedEmployeeEmail);
+
+	Integer getRatingOfUser(String dermatologistEmail, String patientEmail);
+  
 	Dermatologist getOneWithAddress(String email);
 }

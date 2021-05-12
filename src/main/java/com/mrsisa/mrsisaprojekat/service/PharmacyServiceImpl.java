@@ -1,19 +1,13 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import com.mrsisa.mrsisaprojekat.model.Rating;
+import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
 @Service
@@ -139,5 +133,33 @@ public class PharmacyServiceImpl implements PharmacyService{
 		return appointments;
 	}
 
+	@Override
+	public void addRating(Rating rating, Long id) {
+		Pharmacy pharmacy = pharmacyRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
 
+		if (pharmacy == null) {
+			pharmacy = pharmacyRepository.loadWithRatings(id);
+			try {
+				pharmacy.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				pharmacy.setRatings(ratings);
+			}
+		} else {
+			pharmacy.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
+		}
+
+		pharmacyRepository.save(pharmacy);
+
+	}
+
+	@Override
+	public Integer getRatingOfUser(Long pharmacyId, String patientEmail) {
+		Pharmacy pharmacy = pharmacyRepository.loadWithRatingOfUser(pharmacyId, patientEmail);
+
+		if(pharmacy == null) return 0;
+
+		return Objects.requireNonNull(pharmacy.getRatings().stream().findFirst().orElse(null)).getValue();
+	}
 }

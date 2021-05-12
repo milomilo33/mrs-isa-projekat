@@ -57,6 +57,7 @@ export default {
   },
   mounted() {
     
+
     this.nameM = this.medicament.name;
     this.axios
       .get(

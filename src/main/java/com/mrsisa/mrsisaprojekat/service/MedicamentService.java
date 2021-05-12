@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Rating;
 
 import java.util.Collection;
 
@@ -23,6 +24,10 @@ public interface MedicamentService {
 
 	Collection<Medicament> findAllFilter(int mode, int form);
 
+  void addRating(Rating rating, Long id);
+
+  Integer getRatingOfUser(Long id, String email);
+  
 	Collection<MedicamentDTO> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
 								Long medicamentId, String patientEmail, int quantity, Long pharmacyId);
 

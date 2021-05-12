@@ -1,16 +1,44 @@
 <template>
   <div class="cotainer">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+    
+    <div>
+       
+      <div class="col-md-12 row justify-content-center">
         <div class="card">
-          <div class="card-header">Medicament Specification</div>
+            <div class="card-header">Medicament Specification</div>
+            
+         
+<b-alert v-model="showSuccessAlert" dismissible fade variant="success">
+            Success! You gave this medicament {{rating}} stars.
+    </b-alert>
           <div class="card-body">
-            <h3 class="med-specification">{{this.medicament.name}}</h3>
-            <p><b class="colorHeaders"> Manufacturer: </b>&nbsp; {{this.medicament.manufacturer}}</p>
-            <p><b class="colorHeaders">Medicement Form:</b>{{this.medicament.form}}</p>
-            <p><b class="colorHeaders">Issuance Mode:</b>{{this.medicament.mode}}</p>
-            <p><b class="colorHeaders">Structure:</b> {{this.medicament.structure}}</p>
-            <p><b class="colorHeaders">Annotations:</b> {{this.medicament.annotation}}</p>
+            <b-row class="mb-4">
+              <b-col>
+                <h3 class="med-specification" style="text-align: left;">{{this.medicament.name}}</h3>
+              </b-col>
+              <b-col class="rate" v-if="role === 'ROLE_PATIENT'">
+                <input type="radio" id="star5" name="rate" value="5" @click="postRating(5)" v-model.number="rating"/>
+                <label for="star5" title="text"></label>
+                <input type="radio" id="star4" name="rate" value="4" @click="postRating(4)" v-model.number="rating"/>
+                <label for="star4" title="text"></label>
+                <input type="radio" id="star3" name="rate" value="3" @click="postRating(3)" v-model.number="rating"/>
+                <label for="star3" title="text"></label>
+                <input type="radio" id="star2" name="rate" value="2" @click="postRating(2)" v-model.number="rating"/>
+                <label for="star2" title="text"></label>
+                <input type="radio" id="star1" name="rate" value="1" @click="postRating(1)" v-model.number="rating"/>
+                <label for="star1" title="text"></label>
+                
+                
+                
+                
+              </b-col>
+            </b-row>
+            
+            <p style="text-align: left;"><b class="colorHeaders"> Manufacturer: </b>&nbsp; {{this.medicament.manufacturer}}</p>
+            <p style="text-align: left;"><b class="colorHeaders">Medicement Form: </b>{{this.medicament.form}}</p>
+            <p style="text-align: left;"><b class="colorHeaders">Issuance Mode: </b>{{this.medicament.mode}}</p>
+            <p style="text-align: left;"><b class="colorHeaders">Structure: </b> {{this.medicament.structure}}</p>
+            <p style="text-align: left;"><b class="colorHeaders">Annotations: </b> {{this.medicament.annotation}}</p>
             
           </div>
         </div>
@@ -162,9 +190,16 @@ export default defineComponent({
       amount: "",
       date: null,
       role: '',
+      rating: null,
+      showSuccessAlert: false,
 
       pharmacy: {},
       therapyLength: ""
+    }
+  },
+  computed: {
+    rating: function() {
+      this.postRating;
     }
   },
   props: {
@@ -194,6 +229,9 @@ export default defineComponent({
       )
       .then((response) => {
         this.medicament = response.data;
+        if(this.role === 'ROLE_PATIENT') {
+          this.getRatingOfUser();
+        }
       })
       .catch((error) => console.log(error));
 
@@ -209,8 +247,36 @@ export default defineComponent({
         console.log(this.pricelist);
       })
       .catch((error) => console.log(error));
+
+      
   },
   methods: {
+
+    getRatingOfUser() {
+      var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
+      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.medicament.id}/medicament`)
+        .then(response => 
+        this.rating = response.data
+        )
+        .catch(error => console.log(error));
+    },
+
+    postRating(rating) {
+      this.rating = rating
+      console.log(this.rating);
+      this.axios.post('http://localhost:8080/api/patients/rating', {
+        rateType: 1,
+        ratedEntityId: this.medicament.id,
+        rating: this.rating,
+        patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+      }}).then(() => this.showSuccess());
+    },
+
+    
 
     reserveMedicament(pharmacy) {
       console.log(this.date);
@@ -231,6 +297,10 @@ export default defineComponent({
       }
     },
 
+    showSuccess() {
+      this.showSuccessAlert = true;
+    },
+      
     prescribeMedicament(pharmacyId) {
       if (this.amount > 0) {
         this.axios.post(`/api/patients/prescribe/${this.appointment.medicalReportId}`, {
@@ -306,7 +376,48 @@ export default defineComponent({
 })
 </script>
 <style scoped>
-.colorHeaders {
-  color: #009933;
-}
+  .colorHeaders {
+    color: #009933;
+  }
+  .card {
+		width: 75%;
+		
+	}
+
+	.rate {
+	float: left;
+	height: 46px;
+	padding: 0 10px;
+	}
+	.rate:not(:checked) > input {
+		position:absolute;
+		top:-9999px;
+	}
+	.rate:not(:checked) > label {
+		float:right;
+		width:1em;
+		overflow:hidden;
+		white-space:nowrap;
+		cursor:pointer;
+		font-size:30px;
+		color:#ccc;
+
+	}
+	.rate:not(:checked) > label:before {
+		content: '★ ';
+	}
+	.rate > input:checked ~ label {
+		color: #ffc700;    
+	}
+	.rate:not(:checked) > label:hover,
+	.rate:not(:checked) > label:hover ~ label {
+		color: #deb217;  
+	}
+	.rate > input:checked + label:hover,
+	.rate > input:checked + label:hover ~ label,
+	.rate > input:checked ~ label:hover,
+	.rate > input:checked ~ label:hover ~ label,
+	.rate > label:hover ~ input:checked ~ label {
+		color: #c59b08;
+	}
 </style>

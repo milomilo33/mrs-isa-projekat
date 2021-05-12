@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Role;
+import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import org.hibernate.Hibernate;
@@ -167,6 +164,36 @@ public class DermatologistServiceImpl implements DermatologistService {
 	@Override
 	public Dermatologist getRatings(String email) {
 		return dermatologistRepository.getRatings(email);
+	}
+
+	@Override
+	public void addRating(Rating rating, String ratedEmployeeEmail) {
+		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(ratedEmployeeEmail, rating.getPatient().getEmail());
+
+		if (dermatologist == null) {
+			dermatologist = dermatologistRepository.getRatings(ratedEmployeeEmail);
+			try {
+				dermatologist.getRatings().add(rating);
+			} catch (NullPointerException e) {
+				HashSet<Rating> ratings = new HashSet<>();
+				ratings.add(rating);
+				dermatologist.setRatings(ratings);
+			}
+		} else {
+			dermatologist.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
+		}
+
+		dermatologistRepository.save(dermatologist);
+
+	}
+
+	@Override
+	public Integer getRatingOfUser(String dermatologistEmail, String patientEmail) {
+		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(dermatologistEmail, patientEmail);
+
+		if (dermatologist == null) return 0;
+
+		return Objects.requireNonNull(dermatologist.getRatings().stream().findFirst().orElse(null)).getValue();
 	}
 
 	@Override

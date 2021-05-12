@@ -10,11 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
+//import javafx.application.Application;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -68,6 +69,9 @@ public class PatientController {
 
 	@Autowired
 	private MedicalReportService medicalReportService;
+
+	@Autowired
+	private MedicamentService medicamentService;
 
 
 	@GetMapping(value="/reservedMedication/{id}")
@@ -465,6 +469,53 @@ public class PatientController {
 
 	}
 
+	@PostMapping(value = "/rating", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> addRating(@RequestBody RatingDTO ratingDTO) {
+		Rating rating = new Rating();
+		rating.setValue(ratingDTO.getRating());
+		rating.setPatient(patientService.findOne(ratingDTO.getPatientEmail()));
+
+		switch (ratingDTO.getRateType()) {
+			case MEDICAMENT:
+				medicamentService.addRating(rating, ratingDTO.getRatedEntityId());
+				break;
+			case DERMATOLOGIST:
+				dermatologistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+				break;
+			case PHARMACIST:
+				pharmacistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+				break;
+			case PHARMACY:
+				pharmacyService.addRating(rating, ratingDTO.getRatedEntityId());
+				break;
+		}
+		return ResponseEntity.ok().body("Ocenili ste ovaj entitet");
+	}
+
+	@GetMapping(value = "/get_rating/{email}/{id}/{type}")
+	public ResponseEntity<Integer> getRatingOfUser(@PathVariable("email") String email, @PathVariable("id") String entityId,
+												   @PathVariable("type") String type) {
+		Integer rating = -1;
+		switch (type) {
+			case "medicament":
+				rating = medicamentService.getRatingOfUser(Long.parseLong(entityId), email);
+				break;
+			case "pharmacy":
+				rating = pharmacyService.getRatingOfUser(Long.parseLong(entityId), email);
+				break;
+			case "dermatologist":
+				rating = dermatologistService.getRatingOfUser(entityId, email);
+				break;
+			case "pharmacist":
+				rating = pharmacistService.getRatingOfUser(entityId, email);
+				break;
+			default:
+				return ResponseEntity.badRequest().body(rating);
+		}
+
+		return ResponseEntity.ok().body(rating);
+	}
+
 	@GetMapping(value = "/eprescription/{email}")
 	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
 		Patient patient = patientService.getOneWithePrescriptions(email);
@@ -503,6 +554,7 @@ public class PatientController {
 
 		return ResponseEntity.ok().body(appointmentDetails);
 	}
+
 
 
 //	@GetMapping(value = "/{id}/appointments")

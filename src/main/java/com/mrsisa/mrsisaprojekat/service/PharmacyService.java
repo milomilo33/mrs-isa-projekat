@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.*;
 
 public interface PharmacyService {
 	
@@ -36,4 +33,7 @@ public interface PharmacyService {
 	
 	ArrayList<Appointment> findAllAppointmentsDeramtologist(String email, Long id);
 
+    void addRating(Rating rating, Long ratedEntityId);
+
+    Integer getRatingOfUser(Long id, String email);
 }
