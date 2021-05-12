@@ -26,4 +26,5 @@ public interface DermatologistService {
 	
 	Dermatologist getRatings(String email);
 
+	Dermatologist getOneWithAddress(String email);
 }

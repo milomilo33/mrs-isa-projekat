@@ -16,5 +16,7 @@ public interface PharmacyAdminService {
 	void delete(String id);
 	
 	AdminPharmacy findOneWithRequestMedicaments(String email);
+	
+	boolean check(String password1, String password);
 }
 

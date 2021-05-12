@@ -11,6 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,6 +60,10 @@ public class PatientController {
 
 	@Autowired
 	private DermatologistService dermatologistService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private MedicalReportService medicalReportService;
@@ -72,7 +80,6 @@ public class PatientController {
 		for(PrescriptionMedicament pm : patient.getReservedMedicaments()) {
 			if(!pm.isDeleted() && !pm.isPurchased()) {
 				PrescriptionMedicamentDTO medicament = new PrescriptionMedicamentDTO(pm);
-				System.out.println(medicament.getId());
 				returns.add(medicament);
 			}
 
@@ -457,6 +464,18 @@ public class PatientController {
 
 	}
 
+	@GetMapping(value = "/eprescription/{email}")
+	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithePrescriptions(email);
+		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
+		for(ePrescription ep : patient.getePrescriptions()) {
+			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));
+		}
+
+
+		return ResponseEntity.ok().body(ePrescriptionPreviewDTOS);
+	}
+
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
 //		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)
@@ -476,4 +495,22 @@ public class PatientController {
 //
 //		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 //	}
+	
+	
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<PatientDTO> changePassword(@RequestBody PatientDTO patient,@PathVariable("id") String password) throws Exception {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				patient.getEmail(), password));
+		Patient patientUpdate = patientService.findOne(patient.getEmail());
+		
+	
+		patientUpdate.setPassword(passwordEncoder.encode(patient.getPassword()));
+		if(!patientUpdate.isActive()) {
+			patientUpdate.setActive(true);
+		}
+		
+		patientUpdate = patientService.update(patientUpdate);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

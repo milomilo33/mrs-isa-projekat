@@ -87,8 +87,6 @@ public class PatientServiceImpl implements PatientService {
 		p.setAllergies(new HashSet<>());
 		p.setePrescriptions(new HashSet<>());
 		p.setSubscribedPharmacies(new HashSet<>());
-
-		System.out.println(p);
 		if (p == null) {
 			p = findOne(email);
 			p.setReservedMedicaments(new HashSet<>());
@@ -321,6 +319,12 @@ public class PatientServiceImpl implements PatientService {
 
 		p.setAllergies(p.getAllergies().stream().filter(medicament -> !medicament.getId().equals(medicamentId)).collect(Collectors.toSet()));
 		patientRepository.save(p);
+	}
+
+	@Override
+	public Patient getOneWithePrescriptions(String email) {
+
+		return patientRepository.getPatientWithePrescriptions(email);
 	}
 
 }

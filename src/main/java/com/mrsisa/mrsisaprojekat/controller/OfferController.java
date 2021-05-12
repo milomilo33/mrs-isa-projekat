@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -108,7 +109,31 @@ public class OfferController {
 		
 		return new ResponseEntity<OfferDTO>(offer, HttpStatus.OK);
 	}
-	
+	@PostMapping(value="/update")
+	@PreAuthorize("hasAnyRole('SUPPLIER')")
+	ResponseEntity<OfferDTO> updateOffer(@RequestBody OfferDTO offer){
+		System.out.println(offer.getId() +"   "+ offer.getOrder().getDeadline());
+		if(offer.getOrder().getDeadline().isBefore( LocalDate.now())) {
+			System.out.println("sssssssss");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Supplier supplier = supplierService.findOne(offer.getSupplier());
+		if(supplier == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Order order = orderService.findOneWithMedicaments(offer.getOrder().getId());
+		Offer saveOffer = new Offer();
+		saveOffer.setDeadline(offer.getDeadline());
+		saveOffer.setSupplier(supplier);
+		saveOffer.setOrder(order);
+		saveOffer.setStatus(OfferStatus.valueOf(offer.getStatus()));
+		saveOffer.setTotalPrice(offer.getTotalPrice());
+		
+		Offer savedOffer = offerService.update(saveOffer);
+		return new ResponseEntity<OfferDTO>(new OfferDTO(savedOffer), HttpStatus.OK);
+		
+	}
 	@GetMapping(value="/{email}")
 	@PreAuthorize("hasAnyRole('SUPPLIER')")
 	ResponseEntity<Set<OfferDTO>> getSupplierOffers(@PathVariable("email") String email){
@@ -183,5 +208,22 @@ public class OfferController {
 			
 		}
 		return new ResponseEntity<Set<OfferDTO>>(offersDTO,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/filter/{email},{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SUPPLIER')")
+	public ResponseEntity<Set<OfferDTO>> getOffers(@PathVariable("email") String email, @PathVariable("status") String status) {
+		System.out.println("status "+ status);
+		OfferStatus statusOffer = OfferStatus.valueOf(status);
+		
+		Set<Offer> offers = offerService.filterOffer(email, statusOffer);
+		Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+		for(Offer o: offers) {
+			Order order = orderService.findOneWithMedicaments(o.getOrder().getId());
+			o.setOrder(order);
+			offersDTO.add(new OfferDTO(o));
+		}
+		
+		return new ResponseEntity<Set<OfferDTO>>(offersDTO, HttpStatus.OK);
 	}
 }

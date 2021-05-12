@@ -8,6 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +32,7 @@ import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.RequestMedicament;
+import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.service.AddressService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
@@ -58,9 +64,15 @@ public class PharmacyAdminController {
 	
 	@Autowired
 	private PharmacistService pharmacistService;
+	
 	@Autowired
 	private PharmacyService pharmacyService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	private PatientService patientService;
@@ -141,7 +153,7 @@ public class PharmacyAdminController {
 		admin.setLastName(adminDTO.getLastName());
 		admin.setPhoneNumber(adminDTO.getPhoneNumber());
 		admin.setPharmacy(pharmacy);
-		admin.setActive(true);
+		admin.setActive(false);
 		admin.setAddress(saved);
 		AdminPharmacy adminSaved = new AdminPharmacy();
 		adminSaved = adminService.create(admin);
@@ -159,7 +171,7 @@ public class PharmacyAdminController {
 	}
 	
 	@PutMapping(value= "/updatePharmacyAdmin/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'DERMATOLOGIST')")
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> updatePharmacyAdmin(@RequestBody AdminPharmacyDTO admin,@PathVariable("id") String email) throws Exception {
 		AdminPharmacy adminUpdate = adminService.findOne(email);
 		adminUpdate.setPhoneNumber(admin.getPhoneNumber());
@@ -181,6 +193,21 @@ public class PharmacyAdminController {
 			
 			Address saved = addressService.create(ad);
 			adminUpdate.setAddress(saved);
+		}
+		
+		adminUpdate = adminService.update(adminUpdate);
+		return new ResponseEntity<AdminPharmacyDTO>(new AdminPharmacyDTO(adminUpdate), HttpStatus.OK);
+	}
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<AdminPharmacyDTO> changePassword(@RequestBody AdminPharmacyDTO admin,@PathVariable("id") String password) throws Exception {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				admin.getEmail(), password));
+		
+		AdminPharmacy adminUpdate = adminService.findOne(admin.getEmail());
+		adminUpdate.setPassword(passwordEncoder.encode(admin.getPassword()));
+		if(!adminUpdate.isActive()) {
+			adminUpdate.setActive(true);
 		}
 		
 		adminUpdate = adminService.update(adminUpdate);

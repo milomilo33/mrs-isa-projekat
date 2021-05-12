@@ -71,11 +71,16 @@ public class AuthenticationController {
 
 		// Kreiraj token za tog korisnika
 		User user = (User) authentication.getPrincipal();
-		if(!user.isActive()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
 		String role = user.getRoles().get(0).getName();
-		String jwt = tokenUtils.generateToken(user.getUsername(), role);
+		if(role.equals("PATIENT") && !user.isActive()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+		}
+		//if(!user.isActive()) {
+		//	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		//}
+		//String role = user.getRoles().get(0).getName();
+		String jwt = tokenUtils.generateToken(user.getUsername(), role, user.isActive());
 		int expiresIn = tokenUtils.getExpiredIn();
 		
 		// Vrati token kao odgovor na uspesnu autentifikaciju

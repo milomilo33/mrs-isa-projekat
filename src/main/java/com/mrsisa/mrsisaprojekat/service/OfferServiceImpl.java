@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+import com.mrsisa.mrsisaprojekat.model.Offer;
+import com.mrsisa.mrsisaprojekat.model.OfferStatus;
+import com.mrsisa.mrsisaprojekat.repository.OfferRepositoryDB;
+
 @Service
 public class OfferServiceImpl implements OfferService{
 
@@ -39,10 +43,15 @@ public class OfferServiceImpl implements OfferService{
 	}
 
 	@Override
+	public Set<Offer> filterOffer(String email, OfferStatus status){
+		return offerRepository.filterOffers(email, status);
+	}
+	@Override
 	public Set<Offer> supplierOffers(String email) {
 		return offerRepository.getOffersForSupplier(email);
 	}
 
+	@Override
 	public Offer findOffer(Long id) {
 		Offer offer = offerRepository.findOffer(id);
 		if(offer == null) {

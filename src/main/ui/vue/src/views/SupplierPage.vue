@@ -13,7 +13,7 @@
       
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <Search :path="'/SystemAdminPage'" />
+        <Search :path="'/SupplierPage'" />
 
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
@@ -22,6 +22,7 @@
             <em class="pl-2">User</em>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
+           <b-dropdown-item href="/SupplierPage/ChangePassword">Change password</b-dropdown-item>
           <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
