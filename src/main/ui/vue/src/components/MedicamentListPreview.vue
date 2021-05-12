@@ -1,5 +1,9 @@
 <template>
   <div id="MedicamentsListPreview" class="div">
+    <div v-if="substituteMode" style="text-align:center; margin-bottom: 3rem !important;">
+      <h2>Substitute medicines for {{ substitutedMedicament.name }}</h2>
+      <b-button variant="primary" @click="reloadAllMedicines">Show all medicines</b-button>
+    </div>
     <section id="sidebar">
       <p class="colorIt">Search medicaments by its name</p>
       <input
@@ -177,7 +181,7 @@
     </section>
 
     <div v-if="Object.keys(chosenMedicament).length !== 0" :key="chosenMedicament">
-      <MedicamentInPharmacy :chosenMedicament="chosenMedicament" :appointment="appointment" :prescriptionMode=true @prescribed="onPrescribed"></MedicamentInPharmacy>
+      <MedicamentInPharmacy :chosenMedicament="chosenMedicament" :appointment="appointment" :prescriptionMode=true @prescribed="onPrescribed" @substituted="onSubstituted"></MedicamentInPharmacy>
     </div>
   </div>
 </template>
@@ -202,8 +206,11 @@ export default defineComponent({
       medicamentForm: -1,
       allergies: [],
       type: '',
+      medicamentsSearchCopy: [],
       medicamentsOriginal: [],
-      chosenMedicament: {}
+      chosenMedicament: {},
+      substituteMode: false,
+      substitutedMedicament: {}
     };
   },
 
@@ -255,6 +262,7 @@ export default defineComponent({
       .then((response) => {
         this.medicaments = response.data;
         this.medicamentsOriginal = this.medicaments;
+        this.medicamentsSearchCopy = this.medicaments;
         //console.log(response.data);
       })
       .catch((error) => console.log(error.response.data));
@@ -305,7 +313,8 @@ export default defineComponent({
     },
 
     frontEndSearch() {
-      this.medicaments = this.medicamentsOriginal.filter((value) => value.name.toLowerCase().includes(this.search.toLowerCase()));
+      this.medicaments = this.medicamentsSearchCopy.filter((value) => value.name.toLowerCase().includes(this.search.toLowerCase()));
+      this.chosenMedicament = {};
     },
 
     onSeeMore(med) {
@@ -314,6 +323,34 @@ export default defineComponent({
 
     onPrescribed() {
       this.$emit('prescribed');
+    },
+
+    reloadAllMedicines() {
+      this.medicaments = this.medicamentsOriginal;
+      this.medicamentsSearchCopy = this.medicamentsOriginal;
+      this.substituteMode = false;
+      this.substitutedMedicament = {};
+      this.chosenMedicament = {};
+    },
+
+    onSubstituted(payload) {
+      this.substituteMode = true;
+      this.substitutedMedicament = payload.substitutedMed;
+      let quantity = payload.quantity;
+      let pharmacy = payload.pharmacy;
+      this.chosenMedicament = {};
+
+      this.axios.get(`/api/medicaments/${this.substitutedMedicament.id}/substitutes?` +
+                      `patientEmail=${this.appointment.patient.email}&quantity=${quantity}&pharmacyId=${pharmacy.id}`, {
+                      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+                    })
+                    .then(response => {
+                      this.medicaments = response.data;
+                      this.medicamentsSearchCopy = this.medicaments;
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    });
     }
 
   }

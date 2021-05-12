@@ -115,6 +115,7 @@
                   </template>
                 <b-row>
                   <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
+                  <input type="number" placeholder="Length of therapy" class="m-2" :value="therapyLength" @input="therapyLength = $event.target.value">
                 </b-row>
                 <b-row>
                    <b-button variant="success" class="m-2" @click="prescribeMedicament(pharmacy.id)"> Prescribe medicament </b-button>
@@ -131,6 +132,13 @@
             <p>Medicine successfully prescribed</p>
         </div>
         <b-button class="mt-3" variant="outline-success" block @click="onCloseSuccessModal">Close</b-button>
+      </b-modal>
+
+      <b-modal ref="substitute-prescription-modal" hide-footer title="Substitute medicine(s)" @hide="onCloseSubstituteModal">
+        <div class="d-block text-center">
+            <p>Not enough of this medicine in {{ pharmacy.name }}. Showing substitute medicines for {{ medicament.name }}.</p>
+        </div>
+        <b-button class="mt-3" variant="outline-warning" block @click="onCloseSubstituteModal">Close</b-button>
       </b-modal>
 
       </div>  
@@ -155,7 +163,8 @@ export default defineComponent({
       date: null,
       role: '',
 
-      pharmacy: {}
+      pharmacy: {},
+      therapyLength: ""
     }
   },
   props: {
@@ -240,8 +249,7 @@ export default defineComponent({
         })
         .catch(error => {
           if (error.response.status === 404) {
-            // nude se zamenski lekovi
-            alert("zamenski lekovi");
+            this.showSubstituteModal();
           }
           else {
             console.log(error);
@@ -277,9 +285,23 @@ export default defineComponent({
       this.$emit('prescribed');
     },
 
+    onCloseSubstituteModal() {
+      this.$refs['substitute-prescription-modal'].hide();
+      this.$refs['id0'].hide();
+      this.$emit('substituted', {
+        substitutedMed: this.medicament,
+        quantity: this.amount,
+        pharmacy: this.pharmacy
+      });
+    },
+
     showSuccessModal() {
         this.$refs['successful-prescription-modal'].show();
     },
+
+    showSubstituteModal() {
+        this.$refs['substitute-prescription-modal'].show();
+    }
   }
 })
 </script>

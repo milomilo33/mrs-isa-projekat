@@ -180,6 +180,8 @@ insert into medicament_item (deleted, quantity, medicament_id) values ('false', 
 
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 5)
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (5, 1)
+insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 4)
+insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (4, 1)
 
 insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email) values ('false','Žalba na rad apoteke Benu.', null, 1, null)
 insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email) values ('false','Žalba na rad dermatologa.', 'janatot@gmail.com', null, null)
