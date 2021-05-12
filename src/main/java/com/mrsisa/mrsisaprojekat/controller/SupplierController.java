@@ -2,14 +2,23 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.AdminSystemDTO;
 import com.mrsisa.mrsisaprojekat.dto.SupplierDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
@@ -55,6 +64,10 @@ public class SupplierController {
 	
 	@Autowired
 	private DermatologistService dermatologistService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	
 	@PostMapping(consumes = "application/json")
@@ -104,7 +117,7 @@ public class SupplierController {
 		supplier.setLastName(supplierDTO.getLastName());
 		supplier.setPhoneNumber(supplierDTO.getPhoneNumber());
 		
-		supplier.setActive(true);
+		supplier.setActive(false);
 		supplier.setDeleted(false);
 		supplier.setAddress(saved);
 		supplier = supplierService.create(supplier);
@@ -119,6 +132,21 @@ public class SupplierController {
 		
 		
 	}
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('SUPPLIER')")
+	public ResponseEntity<SupplierDTO> changePassword(@RequestBody SupplierDTO supplier,@PathVariable("id") String password) throws Exception {
+		Supplier supplierUpdate = supplierService.findOne(supplier.getEmail());
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				supplier.getEmail(), password));
+		supplierUpdate.setPassword(passwordEncoder.encode(supplier.getPassword()));
+		if(!supplierUpdate.isActive()) {
+			supplierUpdate.setActive(true);
+		}
+		
+		supplierUpdate = supplierService.update(supplierUpdate);
+		return new ResponseEntity<SupplierDTO>(new SupplierDTO(supplierUpdate), HttpStatus.OK);
+	}
+	
 	
 	
 

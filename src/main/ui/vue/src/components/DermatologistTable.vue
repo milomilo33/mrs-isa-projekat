@@ -310,7 +310,7 @@ export default defineComponent({
           
 
         });
-       self.axios(`/api/dermatologist/ratings/` + self.selected.email, {
+       self.axios.get(`/api/dermatologist/ratings/` + self.selected.email, {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },

@@ -156,4 +156,12 @@ public class PharmacistServiceImpl  implements PharmacistService {
 
 		return Objects.requireNonNull(pharmacist.getRatings().stream().findFirst().orElse(null)).getValue();
 	}
+	public Pharmacist getOneWithAddress(String email) {
+		Pharmacist pharmacist = pharmacistRepository.getOneWithAddress(email);
+		if(pharmacist == null) {
+			return null;
+		}
+		return pharmacist;
+	}
+
 }

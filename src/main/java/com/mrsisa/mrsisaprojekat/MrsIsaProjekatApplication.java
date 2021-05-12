@@ -8,7 +8,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class MrsIsaProjekatApplication {
 
-	
+//	@Bean
+//	public SessionFactory sessionFactory(HibernateEntityManagerFactory hemf) {
+//		return hemf.getSessionFactory();
+//	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(MrsIsaProjekatApplication.class, args);
 	}

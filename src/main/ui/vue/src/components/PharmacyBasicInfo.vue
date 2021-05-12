@@ -51,7 +51,7 @@
 
               <b-modal id="modal-map" hide-footer size="xl">
                 <template>
-                  <MapContainer :address="pharmacy.address"/>
+                  <MapContainer :coordinates="coordinates"/>
                 </template>
 
                 <b-button block class="mt-4" @click="$bvModal.hide('modal-map')">Close</b-button>
@@ -93,6 +93,7 @@ export default {
         showRatingAlert: false,
         role: '',
         rating: null
+        coordinates: []
       }
     },
 
@@ -111,6 +112,7 @@ export default {
         })
       .then(response => {
         this.pharmacy = response.data;
+        this.guessCoordinatesFromLocation();
         })
       .catch(error => console.log(error));
 
@@ -138,7 +140,8 @@ export default {
       _this.sub = false;
       _this.unsub = false;
     }
-   
+    
+    
   },
 
   methods: {
@@ -167,6 +170,43 @@ export default {
           Authorization: "Bearer " + localStorage.getItem('token'),
       }}).then(() => this.showRatingAlert = true);
     },
+    guessCoordinatesFromLocation: function() {
+      console.log("APOTEKA", this.pharmacy.address);
+			const url =
+				"https://nominatim.openstreetmap.org/search/" +
+				this.pharmacy.address.city +
+				", " +
+				this.pharmacy.address.street +
+				" " +
+				this.pharmacy.address.number;
+      
+			this.axios
+				.get(url, {
+					params: {
+						format: "json",
+						limit: 1,
+						"accept-language": "en",
+					},
+				})
+				.then((response) => {
+					if (response.data && response.data.lenght != 0) {
+						const { lon, lat } = response.data[0];
+            console.log(lon, lat);
+						this.updateCoordinatesHandler([lon, lat]);
+					}
+				})
+				.catch(() => {
+                    //console.log(error);
+					alert('Could not find coordinates based on given info.', '');
+				});
+		},
+
+        updateCoordinatesHandler: function(coordinates) {
+			this.coordinates[0] = coordinates[0];
+			this.coordinates[1] = coordinates[1];
+      
+            
+		},
 
     subscribe: function(){
       this.showRatingAlert = false;

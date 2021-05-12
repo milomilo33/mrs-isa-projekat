@@ -23,6 +23,5 @@ public interface MedicamentItemRepositoryDB extends JpaRepository<MedicamentItem
 	@Query("select m from MedicamentItem m join fetch m.medicament")
 	List<MedicamentItem> findAllMedicamentItems();
 
-	@Query("select m from MedicamentItem m join fetch m.medicament mm where mm.id=?1")
-	MedicamentItem findMedicamentItemByMedicament(Long id);
+
 }

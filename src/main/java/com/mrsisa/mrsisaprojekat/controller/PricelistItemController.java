@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,6 @@ import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 import com.mrsisa.mrsisaprojekat.service.MedicamentService;
@@ -41,7 +41,8 @@ import com.mrsisa.mrsisaprojekat.service.PricelistItemMedicamentService;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "api/pricelistItems")
 public class PricelistItemController {
-	
+
+
 	@Autowired
 	private PricelistItemMedicamentService pricelistItemService;
 	@Autowired
@@ -57,7 +58,7 @@ public class PricelistItemController {
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PricelistItemMedicamentDTO>> getPriceListItems(@PathVariable("id") Long id){
 		
-		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findAllPharmacy(id);
+		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findPharmacyForMedicament(id);
 		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
 		
 		// samo aktivne cene (odnosne one kod kojih je deleted = false)

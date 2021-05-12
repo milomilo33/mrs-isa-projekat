@@ -128,9 +128,24 @@
             },
 
             startAppointment(row) {
-                // otvoriti stranicu pregleda
-                this.$router.push({ name: 'DermatologistPageAppointmentPage',
-                                    params: { appointment: row.item } });
+                let appointmentId = row.item.id;
+                this.axios.get(`/api/appointments/${appointmentId}/start`, {
+                                    headers: {
+                                        Authorization: "Bearer " + localStorage.getItem("token"),
+                                    },
+                                })
+                                .then(response => {
+                                    let medicalReportId = response.data;
+                                    row.item.medicalReportId = medicalReportId;
+
+                                    // otvoriti stranicu pregleda
+                                    this.$router.push({ name: 'DermatologistPageAppointmentPage',
+                                                        params: { appointment: row.item,
+                                                                  medicalReportId } });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                })
             }
         },
         mounted() {

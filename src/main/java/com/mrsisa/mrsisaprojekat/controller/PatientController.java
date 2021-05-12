@@ -1,10 +1,5 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
-import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -16,6 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.attribute.standard.Media;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -63,6 +63,13 @@ public class PatientController {
 
 	@Autowired
 	private DermatologistService dermatologistService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
 
 	@Autowired
 	private MedicamentService medicamentService;
@@ -79,7 +86,6 @@ public class PatientController {
 		for(PrescriptionMedicament pm : patient.getReservedMedicaments()) {
 			if(!pm.isDeleted() && !pm.isPurchased()) {
 				PrescriptionMedicamentDTO medicament = new PrescriptionMedicamentDTO(pm);
-				System.out.println(medicament.getId());
 				returns.add(medicament);
 			}
 
@@ -235,9 +241,8 @@ public class PatientController {
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
 		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
-		System.out.println("REZERVACIJA: " + medicamentToReserve.getExpiryDate());
 		try {
-			patientService.checkMedicamentReservationQuantity(medicamentToReserve);
+			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getQuantity());
@@ -253,6 +258,48 @@ public class PatientController {
 
 		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 
+	}
+
+	@PostMapping(path = "/prescribe/{id}", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Object> prescribeMedicament(@RequestBody PrescriptionMedicamentDTO medicament, @PathVariable("id") Long medicalReportId) throws Exception {
+		if (!medicalReportService.reportBelongsToPatient(medicalReportId, medicament.getPatientEmail())) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
+		medicamentToReserve.setDeleted(false);
+		medicamentToReserve.setPurchased(false);
+		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
+		medicamentToReserve.setQuantity(medicament.getQuantity());
+		medicamentToReserve.setMedicament(medicament.getMedicament());
+		//Patient p = patientService.getOneWithReservedMedsAndePrescriptions(medicament.getPatientEmail());
+		try {
+			boolean successful = patientService.checkMedicamentReservationQuantityForPrescription(medicamentToReserve, medicament.getPharmacyId(), employee);
+			if (!successful) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch(ReservationQuantityException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getQuantity());
+			// not found => zamenski lekovi
+		}
+
+		try {
+			PrescriptionMedicament reservedMedicament = patientService.updateWithPrescription(medicament.getPatientEmail(), medicamentToReserve, medicalReportId);
+			if (reservedMedicament == null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			// mejl poslati prilikom zavrsetka pregleda za ePrescription
+			//emailService.ReservationConfirmationMail(p, reservedMedicament);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(value = "cancelReservation/{id}")
@@ -399,10 +446,11 @@ public class PatientController {
 
 		Patient p = patientService.getPatientAllergies(email);
 
-		for(Medicament m : p.getAllergies()) {
-			retVal.add(new MedicamentDTO(m));
+		if (p != null) {
+			for (Medicament m : p.getAllergies()) {
+				retVal.add(new MedicamentDTO(m));
+			}
 		}
-
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
@@ -469,6 +517,47 @@ public class PatientController {
 		return ResponseEntity.ok().body(rating);
 	}
 
+	@GetMapping(value = "/eprescription/{email}")
+	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithePrescriptions(email);
+		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
+		for(ePrescription ep : patient.getePrescriptions()) {
+			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));
+		}
+
+
+		return ResponseEntity.ok().body(ePrescriptionPreviewDTOS);
+	}
+
+	@GetMapping(value = "/appointment_history/{email}")
+	public ResponseEntity<Collection<AppointmentDTO>> viewPastAppointments(@PathVariable("email") String email) {
+		Patient patient = patientService.getOneWithAppointments(email);
+
+		if (patient == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<AppointmentDTO> returns = new ArrayList<>();
+		for(Appointment a : patient.getAppointments()) {
+			if(a.isDone()) {
+				returns.add(new AppointmentDTO(a));
+			}
+		}
+
+		return new ResponseEntity<>(returns, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/medical_report/{id}")
+	public ResponseEntity<AppointmentDetailsDTO> getMedicalReport(@PathVariable("id") Long id) {
+		AppointmentDetailsDTO appointmentDetails = appointmentService.getAppointmentDetails(id);
+
+		if(appointmentDetails == null) return ResponseEntity.badRequest().body(null);
+
+		return ResponseEntity.ok().body(appointmentDetails);
+	}
+
+
+
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
 //		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)
@@ -488,4 +577,22 @@ public class PatientController {
 //
 //		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 //	}
+	
+	
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<PatientDTO> changePassword(@RequestBody PatientDTO patient,@PathVariable("id") String password) throws Exception {
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				patient.getEmail(), password));
+		Patient patientUpdate = patientService.findOne(patient.getEmail());
+		
+	
+		patientUpdate.setPassword(passwordEncoder.encode(patient.getPassword()));
+		if(!patientUpdate.isActive()) {
+			patientUpdate.setActive(true);
+		}
+		
+		patientUpdate = patientService.update(patientUpdate);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

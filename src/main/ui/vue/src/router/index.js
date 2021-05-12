@@ -36,9 +36,17 @@ import MedicamentInPharmacy from '../components/MedicamentInPharmacy'
 import Profile from '../components/Profile'
 import RequestMedicaments from '../components/RequestMedicaments'
 import PricelistAppointments from '../components/PricelistAppointments'
-
+import SupplierOfferList from '../components/SupplierOfferList'
 import SupplierOrderList from '../components/SupplierOrderList'
 import SupplierPage from '../views/SupplierPage'
+import Orders from '../components/Orders'
+import ChangePassword from '../components/ChangePassword'
+import PastAppointmentsPage from '../components/PastAppointmentsPage'
+//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+
+//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+
+
 
 Vue.use(VueRouter)
 const Role = {
@@ -46,7 +54,8 @@ const Role = {
 	Dermatologist: 'ROLE_DERMATOLOGIST',
 	Pharmacist: 'ROLE_PHARMACIST',
 	SystemAdmin: 'ROLE_SYSTEM_ADMIN',
-	Supplier: 'ROLE_SUPLIER'
+	Supplier: 'ROLE_SUPPLIER',
+	Patient:'ROLE_PATIENT'
 
 }
 const routes = [
@@ -103,7 +112,15 @@ const routes = [
 			{
 				path: "PharmacyList",
 				component: PharmacyListPreview
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Patient]
+				},
+			},
 		]
 	},
 	{
@@ -155,7 +172,15 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]
 				},
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
+			},
 		]
 	},
 	{
@@ -182,7 +207,8 @@ const routes = [
 			{
 				path: "PatientRegistration",
 				component: PatientRegistration
-			}
+			},
+			
 		]
 	},
 	{
@@ -235,7 +261,15 @@ const routes = [
 				meta: {
 					roles: [Role.Pharmacist]
 				}
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Pharmacist]
+				},
+			},
 		]
 	},
 	{
@@ -293,7 +327,15 @@ const routes = [
 				meta: {
 					roles: [Role.Dermatologist]
 				}
-			}
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Dermatologist]
+				},
+			},
 		]
 	},
 	{
@@ -394,7 +436,22 @@ const routes = [
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
-			}
+			},
+			{
+				path: "Orders",
+				component: Orders,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
+			{
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
 
 		]
 	},
@@ -409,12 +466,34 @@ const routes = [
 			},
 			{
 				path: "MedicamentList",
+				meta: {
+					roles: [ Role.Supplier ]
+				},
 				component: MedicamentListPreview
+			},
+			{
+				path: "MedicamentInPharmacy/:id",
+				component: MedicamentInPharmacy
 			},
 			{
 				path: "OrderList",
 				component: SupplierOrderList,
+			},
+			{
+
+				path: "ChangePassword",
+				name: "ChangePassword",
+				component: ChangePassword,
+				meta: {
+					roles: [Role.Supplier]
+				},
+			},
+			{
+
+				path: "OfferList",
+				component: SupplierOfferList,
 			}
+
 		]
 	},
 	{
@@ -428,6 +507,9 @@ const routes = [
 			},
 			{
 				path: "MedicamentList",
+				meta: {
+					roles: [Role.Patient]
+				},
 				component: MedicamentListPreview
 			},
 			{
@@ -440,9 +522,18 @@ const routes = [
 				component: ReservedAppointmentsTable
 			},
 			{
+				path: "PastAppointments",
+				component: PastAppointmentsPage
+			},
+			{
 				path: "ReservedMedicamentsTable",
 				component: ReservedMedicamentsTable
-			}
+			},
+			/*
+			{
+				path: "ePrescriptions",
+				component: ePrescriptionPreview
+			}*/
 		]
 	},
 	{

@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
+import com.mrsisa.mrsisaprojekat.dto.ReportTextDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.service.AppointmentService;
@@ -36,7 +37,20 @@ public class AppointmentController {
     
     @Autowired
     private PharmacistService pharmacistService;
-    
+
+	@GetMapping(value = "/{id}/start")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Long> startAppointment(@PathVariable("id") Long appointmentId) {
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		Long medicalReportId = appointmentService.startAppointment(appointmentId, employee.getEmail());
+
+		if (medicalReportId == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(medicalReportId, HttpStatus.OK);
+	}
+
     @GetMapping(value = "/{id}/absent")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
     public ResponseEntity<String> markPatientAbsence(@PathVariable("id") Long appointmentId) {
@@ -73,6 +87,25 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+	@PostMapping(value = "/{id}/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Object> finishAppointment(@PathVariable("id") Long appointmentId, @RequestBody ReportTextDTO body) {
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		String reportText = body.getReportText();
+		Boolean successful = appointmentService.finishAppointment(appointmentId, employee.getEmail(), reportText);
+
+		if (successful == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		if (!successful) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
     public boolean check(Set<WorkHour> workHours, LocalDate date, LocalTime time1, LocalTime time2) {
     	for(WorkHour w : workHours) {
     		int val = time1.compareTo(w.getWorkHourFrom());
@@ -155,5 +188,17 @@ public class AppointmentController {
 		}
 
     	return new ResponseEntity<>(details, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/{id}/pharmacy")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Pharmacy> getPharmacyOfAppointment(@PathVariable("id") Long appointmentId) {
+		Pharmacy pharmacy = appointmentService.getPharmacyOfAppointment(appointmentId);
+
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(pharmacy, HttpStatus.OK);
 	}
 }

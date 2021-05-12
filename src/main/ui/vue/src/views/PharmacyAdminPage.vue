@@ -16,8 +16,7 @@
           <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist medicaments</b-dropdown-item>
             <b-dropdown-item href="/PharmacyAdminPage/PricelistAppointments">Pricelist appointments</b-dropdown-item>
-          <b-dropdown-item href="#">Orders</b-dropdown-item>
-          <b-dropdown-item href="#">Offers</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/Orders">Orders</b-dropdown-item>
           <b-dropdown-item href="#">Promotions</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item-dropdown right>
@@ -44,6 +43,7 @@
             <em class="pl-2">User</em>
           </template>
           <b-dropdown-item href="/PharmacyAdminPage/Profile">Profile</b-dropdown-item>
+           <b-dropdown-item href="/PharmacyAdminPage/ChangePassword">Change password</b-dropdown-item>
           <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

@@ -30,4 +30,6 @@ public interface DermatologistService {
 	void addRating(Rating rating, String ratedEmployeeEmail);
 
 	Integer getRatingOfUser(String dermatologistEmail, String patientEmail);
+  
+	Dermatologist getOneWithAddress(String email);
 }

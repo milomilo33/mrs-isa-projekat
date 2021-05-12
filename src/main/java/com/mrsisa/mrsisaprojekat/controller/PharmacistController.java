@@ -8,17 +8,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
@@ -75,6 +82,12 @@ public class PharmacistController {
 	
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	
 	@GetMapping(value="/all")
@@ -144,9 +157,34 @@ public class PharmacistController {
 	public ResponseEntity<PharmacistDTO> savePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception{
 		
 
-		if(check(pharmacistDTO.getEmail())) {
-
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+		try {
+			AdminPharmacy savedAdmin = adminService.findOne(pharmacistDTO.getEmail());
+			if(savedAdmin != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Patient patient = patientService.findOne(pharmacistDTO.getEmail());
+			if(patient != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			AdminSystem adminsystem = sysAdminService.findOne(pharmacistDTO.getEmail());
+			if(adminsystem != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Dermatologist dermatologist = dermatologistService.findOne(pharmacistDTO.getEmail());
+			if(dermatologist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			Pharmacist pharmacist = pharmacistService.findOne(pharmacistDTO.getEmail());
+			if(pharmacist != null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+		catch(NullPointerException e) {
+			
+		}
 
 				
 		Address address = new Address();
@@ -200,7 +238,7 @@ public class PharmacistController {
 		pharmacist.setDeleted(false);
 		pharmacist.setRatings(null);
 		pharmacist.setRequests(null);
-		pharmacist.setActive(true);
+		pharmacist.setActive(false);
 		pharmacist.setPharmacy(pharmacy);
 		pharmacist.setAddress(saved);
 		pharmacist = pharmacistService.create(pharmacist);
@@ -279,4 +317,21 @@ public class PharmacistController {
 		val= val/p.getRatings().size();
 		return val;
 	}
+	
+	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<PharmacistDTO> changePassword(@RequestBody PharmacistDTO pharmacist,@PathVariable("id") String password) throws Exception {
+		
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				pharmacist.getEmail(), password));
+		Pharmacist pharmacistUpdate = pharmacistService.getOneWithAddress(pharmacist.getEmail());
+		pharmacistUpdate.setPassword(passwordEncoder.encode(pharmacist.getPassword()));
+		if(!pharmacistUpdate.isActive()) {
+			pharmacistUpdate.setActive(true);
+		}
+		
+		pharmacistUpdate = pharmacistService.update(pharmacistUpdate);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 }

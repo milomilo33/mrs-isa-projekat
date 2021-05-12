@@ -5,8 +5,6 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 
 
@@ -19,6 +17,6 @@ public interface PricelistItemMedicamentRepositoryDB extends JpaRepository<Price
 	PricelistItemMedicament findOnePricelistItemMedicament(Long id);
 	
 	@Query("select p from PricelistItemMedicament p join fetch p.pharmacy join fetch p.price join fetch p.medicament where p.medicament.id=?1")
-	List<PricelistItemMedicament> findAllMeds(Long id);
+	Set<PricelistItemMedicament> findAllMeds(Long id);
 
 }

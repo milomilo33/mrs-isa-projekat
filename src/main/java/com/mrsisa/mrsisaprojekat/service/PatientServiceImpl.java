@@ -1,15 +1,17 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -34,6 +36,18 @@ public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	private MedicamentRepositoryDB medicamentRepository;
+
+	@Autowired
+	private PharmacyRepositoryDB pharmacyRepository;
+
+	@Autowired
+	private ePrescriptionRepositoryDB ePrescriptionRepository;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
+
+	@Autowired
+	private RequestMedicamentRepositoryDB requestMedicamentRepository;
 
 	@Override
 	public Collection<Patient> findAll() {
@@ -73,8 +87,6 @@ public class PatientServiceImpl implements PatientService {
 		p.setAllergies(new HashSet<>());
 		p.setePrescriptions(new HashSet<>());
 		p.setSubscribedPharmacies(new HashSet<>());
-
-		System.out.println(p);
 		if (p == null) {
 			p = findOne(email);
 			p.setReservedMedicaments(new HashSet<>());
@@ -84,6 +96,24 @@ public class PatientServiceImpl implements PatientService {
 			p.setePrescriptions(new HashSet<>());
 			p.setSubscribedPharmacies(new HashSet<>());
 		}
+		return p;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Patient getOneWithReservedMedsAndePrescriptions(String email) {
+		Patient p = patientRepository.getPatientWithReservedMedicaments(email);
+		if (p == null) {
+			p = findOne(email);
+			if (p == null) {
+				return null;
+			}
+			p.setReservedMedicaments(new HashSet<>());
+		}
+		if (p.getePrescriptions() == null) {
+			p.setePrescriptions(new HashSet<>());
+		}
+		//Hibernate.initialize(p.getePrescriptions());
 		return p;
 	}
 
@@ -102,6 +132,31 @@ public class PatientServiceImpl implements PatientService {
 		PrescriptionMedicament pm = prescriptionRepository.save(medicamentToReserve);
 		patientRepository.save(p);
 		prescriptionRepository.updatePatientReservation(p.getEmail(), medicamentToReserve.getId());
+
+		return medicamentToReserve;
+	}
+
+	@Override
+	@Transactional
+	public PrescriptionMedicament updateWithPrescription(String patientEmail, PrescriptionMedicament medicamentToReserve, Long medicalReportId) throws Exception {
+		Patient patientToUpdate = this.getOneWithReservedMedsAndePrescriptions(patientEmail);
+
+		if (patientToUpdate == null) {
+			return null;
+		}
+
+		MedicalReport report = medicalReportService.findOne(medicalReportId);
+
+		if (report == null) {
+			return null;
+		}
+
+		report.getEprescription().getPrescriptionMedicaments().add(medicamentToReserve);
+
+		medicamentToReserve.setExpiryDate(report.getEprescription().getDate());
+		prescriptionRepository.save(medicamentToReserve);
+
+		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
 
 		return medicamentToReserve;
 	}
@@ -169,8 +224,13 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
-	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament) throws ReservationQuantityException {
-		MedicamentItem medicamentItem = medicamentItemRepository.findMedicamentItemByMedicament(medicament.getMedicament().getId());
+	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException {
+		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
+
+		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
+				.equals(medicament.getMedicament().getId())).findFirst().orElse(null);
+
+
 		if (medicamentItem != null) {
 			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
 				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
@@ -178,7 +238,43 @@ public class PatientServiceImpl implements PatientService {
 				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
 				medicamentItemRepository.save(medicamentItem);
 			}
-		}
+		} else
+			System.out.println("AAAAAAAAAAAAAAAAAAAA");
+	}
+
+	@Override
+	@Transactional
+	public boolean checkMedicamentReservationQuantityForPrescription(PrescriptionMedicament medicament, Long pharmacyId, Employee employee) throws ReservationQuantityException {
+		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
+
+		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
+				.equals(medicament.getMedicament().getId())).findFirst().orElse(null);
+
+		if (medicamentItem != null) {
+			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
+				for (AdminPharmacy admin : pharmacy.getAdmins()) {
+					// check persistence
+					RequestMedicament requestMedicament = new RequestMedicament();
+					requestMedicamentRepository.save(requestMedicament);
+					requestMedicament.setAccepted(false);
+					requestMedicament.setAdmin(admin);
+					requestMedicament.setEmployee(employee);
+					requestMedicament.setMedicament(medicament.getMedicament());
+					requestMedicament.setQuantity(medicament.getQuantity());
+					System.out.println("i get here1");
+					admin.getRequestMedicaments().add(requestMedicament);
+					System.out.println("i get here2");
+				}
+
+				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
+			} else {
+				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+				medicamentItemRepository.save(medicamentItem);
+
+				return true;
+			}
+		} else
+			return false;
 	}
 
 	@Override
@@ -223,6 +319,12 @@ public class PatientServiceImpl implements PatientService {
 
 		p.setAllergies(p.getAllergies().stream().filter(medicament -> !medicament.getId().equals(medicamentId)).collect(Collectors.toSet()));
 		patientRepository.save(p);
+	}
+
+	@Override
+	public Patient getOneWithePrescriptions(String email) {
+
+		return patientRepository.getPatientWithePrescriptions(email);
 	}
 
 }

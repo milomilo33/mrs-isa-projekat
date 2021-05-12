@@ -18,8 +18,8 @@
                 >See more</b-button
               >
 
-              <b-button class="ml-2" variant="success" @click="addAllergy()" v-if="!this.isAllergic">Add allergy</b-button>
-              <b-button class="ml-2" variant="danger" @click="removeAllergy()" v-if="this.isAllergic">Remove allergy</b-button>
+              <b-button class="ml-2" variant="success" @click="addAllergy()" v-if="!this.isAllergic && this.type === 'ROLE_PATIENT'">Add allergy</b-button>
+              <b-button class="ml-2" variant="danger" @click="removeAllergy()" v-if="this.isAllergic && this.type === 'ROLE_PATIENT'">Remove allergy</b-button>
             </div>
       </div>
       <b-modal ref="add-modal" hide-footer title="Success">
@@ -45,7 +45,12 @@ export default {
   name: "MedicamentPreview",
   props: {
     medicament: Object,
-    allergies: Array
+    allergies: Array,
+    type: String,
+    prescriptionMode: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     
@@ -67,7 +72,8 @@ export default {
       })
       .catch((error) => console.log(error));
       
-      this.checkAllergy();
+      if(this.type === "ROLE_PATIENT")
+        this.checkAllergy();
 
     
   },
@@ -100,10 +106,16 @@ export default {
       return total / ratings.lenght;
     },
     seeMore(){
+      if (this.prescriptionMode) {
+        this.$emit('seeMoreClicked', this.medicament);
+        return;
+      }
+
       this.$router.push("MedicamentInPharmacy/"+this.medicament.id)
     },
 
     addAllergy() {
+      
       this.axios.post(`/api/patients/add_allergy/`, {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         medicamentId: this.medicament.id

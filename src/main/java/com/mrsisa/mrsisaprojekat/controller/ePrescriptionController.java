@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionDispenseDTO;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
@@ -11,13 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,5 +79,16 @@ public class ePrescriptionController {
 		ePrescriptionDispenseDTO dto = new ePrescriptionDispenseDTO(id, patientEmail, medicineQuantity, expiryDate);
 		return new ResponseEntity<ePrescriptionDispenseDTO>(dto, HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value="/medical-report/{id}/prescription-medicaments")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getPrescriptionMedicamentsForMedicalReport(@PathVariable("id") Long medicalReportId) {
+		Collection<PrescriptionMedicamentDTO> prescriptionMedicaments = ePrescriptionService.getPrescriptionMedicamentsForMedicalReport(medicalReportId);
+
+		if (prescriptionMedicaments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(prescriptionMedicaments, HttpStatus.OK);
+	}
 }

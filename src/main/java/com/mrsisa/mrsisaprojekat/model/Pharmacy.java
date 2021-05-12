@@ -48,7 +48,10 @@ public class Pharmacy {
 	private Set<MedicamentItem> medicamentItems;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PricelistItem> pricelist;
+	private Set<PricelistItemAppointment> pricelistAppointments;
+	
+	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<PricelistItemMedicament> pricelistMedicaments;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ratings;
@@ -166,15 +169,24 @@ public class Pharmacy {
 	}
 
 
-	public Set<PricelistItem> getPricelist() {
-		return pricelist;
+	
+
+
+	public Set<PricelistItemAppointment> getPricelistAppointments() {
+		return pricelistAppointments;
 	}
 
-
-	public void setPricelist(Set<PricelistItem> pricelist) {
-		this.pricelist = pricelist;
+	public void setPricelistAppointments(Set<PricelistItemAppointment> pricelistAppointments) {
+		this.pricelistAppointments = pricelistAppointments;
 	}
 
+	public Set<PricelistItemMedicament> getPricelistMedicaments() {
+		return pricelistMedicaments;
+	}
+
+	public void setPricelistMedicaments(Set<PricelistItemMedicament> pricelistMedicaments) {
+		this.pricelistMedicaments = pricelistMedicaments;
+	}
 
 	public Set<Rating> getRatings() {
 		return ratings;

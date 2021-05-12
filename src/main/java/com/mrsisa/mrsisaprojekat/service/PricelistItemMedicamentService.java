@@ -1,10 +1,9 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
-
-import com.mrsisa.mrsisaprojekat.model.PricelistItem;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 
 
@@ -26,5 +25,7 @@ public interface PricelistItemMedicamentService {
 	void restore(Long id);
 	
 	PricelistItemMedicament findOnePricelistItemMedicament(Long id);
+
+	Set<PricelistItemMedicament> findPharmacyForMedicament(Long id);
 
 }

@@ -54,7 +54,6 @@ public class Supplier extends User {
 	}	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		System.out.println(getRoles());
 		return getRoles();
 	}
 

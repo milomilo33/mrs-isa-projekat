@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data() {
     return {
@@ -195,6 +197,9 @@ export default {
       (this.editModal.title = "Edit pricelist"),
         this.$root.$emit("bv::show::modal", this.editModal.id, button);
     },
+     datum: function(date){
+      return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
+    },
     check(){
         var self = this;
         self.axios.put(
@@ -237,18 +242,13 @@ export default {
           item.annotation = response.data[i].medicament.annotation;
           item.medicamentRating = 0;
           item.pharmacyId = response.data[i].pharmacy.id;
-          item.date = response.data[i].price[0].dateFrom;
+          item.date1 = self.datum(response.data[i].price[0].dateFrom);
           item.points =  response.data[i].price[0].points;
           item.price =  response.data[i].price[0].value;
           item.priceid =  response.data[i].price[0].id;
           self.items.push(item);
         }
          self.totalRows = self.items.length;
-        self.items.forEach((obj) => {
-            obj["date1"] = new Date(obj["date"]).toDateString();
-            obj["date"][1] -= 1;
-       
-      });
     });
     }
    

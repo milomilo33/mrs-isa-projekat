@@ -8,8 +8,17 @@
         <b-navbar-nav>
           <b-nav-item href="/PatientPage/MedicamentList">Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/PharmacyList"> Pharmacies</b-nav-item>
-          <b-nav-item href="/PatientPage/ReservedAppointmentsTable"> Reserved Appointments</b-nav-item>
+          
+          <b-nav-item-dropdown left>
+                <template #button-content>
+                    Appointments
+                </template>
+                <b-dropdown-item href="/PatientPage/ReservedAppointmentsTable"> Reserved Appointments</b-dropdown-item>
+                <b-dropdown-item href="/PatientPage/PastAppointments">Appointment history</b-dropdown-item>
+                
+            </b-nav-item-dropdown>
           <b-nav-item href="/PatientPage/ReservedMedicamentsTable"> Reserved Medicaments</b-nav-item>
+          <b-nav-item href="/PatientPage/ePrescriptions"> ePrescriptions </b-nav-item>
         </b-navbar-nav>
         
         <!-- Right aligned nav items -->
@@ -24,6 +33,7 @@
                     <em class="pl-2">User</em>
                 </template>
                 <b-dropdown-item href="#">Profile</b-dropdown-item>
+                 <b-dropdown-item href="/PatientPage/ChangePassword">Change password</b-dropdown-item>
                 <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
         </b-navbar-nav>

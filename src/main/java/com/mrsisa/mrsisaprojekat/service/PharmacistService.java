@@ -27,7 +27,9 @@ public interface PharmacistService {
 	
 	Pharmacist getRatings(String email);
 
-    void addRating(Rating rating, String ratedEmployeeEmail);
+  void addRating(Rating rating, String ratedEmployeeEmail);
 
 	Integer getRatingOfUser(String pharmacistEmail, String patientEmail);
+  
+	Pharmacist getOneWithAddress(String email);
 }
