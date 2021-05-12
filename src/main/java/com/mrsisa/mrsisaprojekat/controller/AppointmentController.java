@@ -86,6 +86,24 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+	@PostMapping(value = "/{id}/finish")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Object> finishAppointment(@PathVariable("id") Long appointmentId, @RequestParam String reportText) {
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		Boolean successful = appointmentService.finishAppointment(appointmentId, employee.getEmail(), reportText);
+
+		if (successful == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		if (!successful) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
     public boolean check(Set<WorkHour> workHours, LocalDate date, LocalTime time1, LocalTime time2) {
     	for(WorkHour w : workHours) {
     		int val = time1.compareTo(w.getWorkHourFrom());
