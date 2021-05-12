@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
+import com.mrsisa.mrsisaprojekat.dto.ReportTextDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.service.AppointmentService;
@@ -87,10 +88,11 @@ public class AppointmentController {
         }
     }
 
-	@PostMapping(value = "/{id}/finish")
+	@PostMapping(value = "/{id}/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
-	public ResponseEntity<Object> finishAppointment(@PathVariable("id") Long appointmentId, @RequestParam String reportText) {
+	public ResponseEntity<Object> finishAppointment(@PathVariable("id") Long appointmentId, @RequestBody ReportTextDTO body) {
 		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		String reportText = body.getReportText();
 		Boolean successful = appointmentService.finishAppointment(appointmentId, employee.getEmail(), reportText);
 
 		if (successful == null) {

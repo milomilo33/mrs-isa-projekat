@@ -190,6 +190,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         MedicalReport report = appointment.getMedicalReport();
         report.setDescription(reportText);
 
+        appointment.setDone(true);
+
         return true;
     }
 

@@ -105,7 +105,25 @@ export default {
     },
 
     onEndExamination() {
-
+      let reportText = this.examinationText;
+      let body = {
+        reportText
+      };
+      console.log(body);
+      this.axios.post(`/api/appointments/` + this.appointment.id + `/finish`, body, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+      .then(() => {
+          this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}'s` +
+                                ` examination is now over.`;
+          this.showSuccessModal();
+      })
+      .catch(error => {
+          console.log(error);
+          this.showErrorModal();
+      });
     },
 
     onPrescribeMore() {
