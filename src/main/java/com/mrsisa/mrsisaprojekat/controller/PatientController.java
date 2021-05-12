@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -64,6 +64,9 @@ public class PatientController {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
 
 
 	@GetMapping(value="/reservedMedication/{id}")
@@ -249,6 +252,48 @@ public class PatientController {
 
 		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 
+	}
+
+	@PostMapping(path = "/prescribe/{id}", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Object> prescribeMedicament(@RequestBody PrescriptionMedicamentDTO medicament, @PathVariable("id") Long medicalReportId) throws Exception {
+		if (!medicalReportService.reportBelongsToPatient(medicalReportId, medicament.getPatientEmail())) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
+		medicamentToReserve.setDeleted(false);
+		medicamentToReserve.setPurchased(false);
+		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
+		medicamentToReserve.setQuantity(medicament.getQuantity());
+		medicamentToReserve.setMedicament(medicament.getMedicament());
+		//Patient p = patientService.getOneWithReservedMedsAndePrescriptions(medicament.getPatientEmail());
+		try {
+			boolean successful = patientService.checkMedicamentReservationQuantityForPrescription(medicamentToReserve, medicament.getPharmacyId(), employee);
+			if (!successful) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch(ReservationQuantityException e) {
+			System.out.println(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getQuantity());
+			// not found => zamenski lekovi
+		}
+
+		try {
+			PrescriptionMedicament reservedMedicament = patientService.updateWithPrescription(medicament.getPatientEmail(), medicamentToReserve, medicalReportId);
+			if (reservedMedicament == null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			// mejl poslati prilikom zavrsetka pregleda za ePrescription
+			//emailService.ReservationConfirmationMail(p, reservedMedicament);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(value = "cancelReservation/{id}")

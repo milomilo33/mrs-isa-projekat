@@ -1,17 +1,8 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class RequestMedicament {
@@ -20,7 +11,7 @@ public class RequestMedicament {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER/*, cascade= CascadeType.ALL*/)
 	private Medicament medicament;
 	
 	@Column(name = "quantity", unique = false, nullable = false)
@@ -29,7 +20,7 @@ public class RequestMedicament {
 	@Column(name = "accepted", unique = false, nullable = false)
 	private boolean accepted;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER/*, cascade= CascadeType.ALL*/)
 	private Employee employee;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

@@ -1,9 +1,11 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface ePrescriptionService {
 	List<ePrescription> findAll();
@@ -19,4 +21,6 @@ public interface ePrescriptionService {
 	boolean dispensePrescription(Long id, Pharmacist pharmacist);
 	
 	ePrescription findPrescriptionForPharmacist(Long id, Pharmacist pharmacist);
+
+	Collection<PrescriptionMedicamentDTO> getPrescriptionMedicamentsForMedicalReport(Long medicalReportId);
 }

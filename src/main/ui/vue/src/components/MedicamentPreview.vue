@@ -46,7 +46,11 @@ export default {
   props: {
     medicament: Object,
     allergies: Array,
-    type: String
+    type: String,
+    prescriptionMode: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     
@@ -101,6 +105,11 @@ export default {
       return total / ratings.lenght;
     },
     seeMore(){
+      if (this.prescriptionMode) {
+        this.$emit('seeMoreClicked', this.medicament);
+        return;
+      }
+
       this.$router.push("MedicamentInPharmacy/"+this.medicament.id)
     },
 

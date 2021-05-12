@@ -36,7 +36,20 @@ public class AppointmentController {
     
     @Autowired
     private PharmacistService pharmacistService;
-    
+
+	@GetMapping(value = "/{id}/start")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Long> startAppointment(@PathVariable("id") Long appointmentId) {
+		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		Long medicalReportId = appointmentService.startAppointment(appointmentId, employee.getEmail());
+
+		if (medicalReportId == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(medicalReportId, HttpStatus.OK);
+	}
+
     @GetMapping(value = "/{id}/absent")
     @PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
     public ResponseEntity<String> markPatientAbsence(@PathVariable("id") Long appointmentId) {
@@ -155,5 +168,17 @@ public class AppointmentController {
 		}
 
     	return new ResponseEntity<>(details, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/{id}/pharmacy")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Pharmacy> getPharmacyOfAppointment(@PathVariable("id") Long appointmentId) {
+		Pharmacy pharmacy = appointmentService.getPharmacyOfAppointment(appointmentId);
+
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(pharmacy, HttpStatus.OK);
 	}
 }

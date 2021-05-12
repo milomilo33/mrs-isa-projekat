@@ -1,26 +1,19 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
+import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Rating;
+import com.mrsisa.mrsisaprojekat.service.MedicamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
-import com.mrsisa.mrsisaprojekat.model.Medicament;
-import com.mrsisa.mrsisaprojekat.model.Rating;
-import com.mrsisa.mrsisaprojekat.service.MedicamentService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -130,4 +123,35 @@ public class MedicamentController {
 		return new ResponseEntity<Collection<MedicamentDTO>>(medicamentsDTO, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/{id}/substitutes")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Collection<MedicamentDTO>> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
+			@PathVariable("id") Long medicamentId, @RequestParam String patientEmail, @RequestParam int quantity,
+			@RequestParam Long pharmacyId
+	)
+	{
+		Collection<MedicamentDTO> substitutes = service.getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
+												medicamentId, patientEmail, quantity, pharmacyId);
+
+		if (substitutes == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(substitutes, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/non-allergic-in-pharmacy")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	public ResponseEntity<Collection<MedicamentDTO>> getNonallergicMedicinesForPatientInPharmacyOfAppointment(
+			@RequestParam String patientEmail, @RequestParam Long appointmentId
+	)
+	{
+		Collection<MedicamentDTO> medicines = service.getNonallergicMedicinesForPatientInPharmacyOfAppointment(patientEmail, appointmentId);
+
+		if (medicines == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(medicines, HttpStatus.OK);
+	}
 }
