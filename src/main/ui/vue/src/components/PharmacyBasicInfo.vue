@@ -93,19 +93,37 @@ export default {
         showRatingAlert: false,
         role: '',
         rating: null,
-        coordinates: []
+        coordinates: [],
+        idp:0,
       }
     },
 
     mounted() {
-      let _this = this;
+      var _this = this;
       let userRole = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
-      this.role = userRole;
-      this.user = JSON.parse(
+      _this.role = userRole;
+      _this.user = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).sub;
+      if(userRole =="ROLE_PHARMACY_ADMIN"){
+         _this.axios
+          .get(`/api/pharmacyAdmin/` + _this.user, {
+            headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+      })
+      .then(response=> {
+        var self = this;
+        self.idp = parseInt(response.data.pharmacy.id);
+         _this.findPharmacy(self.idp);
+       
+      })
+      .catch(error=> {
+        console.log(error);
+      });
+      }else{
       
       this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
@@ -115,7 +133,7 @@ export default {
         this.guessCoordinatesFromLocation();
         })
       .catch(error => console.log(error));
-
+      }
     if(userRole == "ROLE_PATIENT")
     {
         this.axios.get(`/api/patients/subscribedPharmacies/${this.user},`+parseInt(this.$route.params.id), {
@@ -137,6 +155,7 @@ export default {
     }
     else
     {
+      
       _this.sub = false;
       _this.unsub = false;
     }
@@ -252,6 +271,17 @@ export default {
     addressToString: function(address) {
       return address.street + " " + address.number 
         + ", " + address.city + " " + address.country;
+    },
+    findPharmacy(id){
+      var _this= this;
+         _this.axios.get(`/api/pharmacy/`+id, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+      .then(response => {
+        _this.pharmacy = response.data;
+        _this.guessCoordinatesFromLocation();
+        })
+      .catch(error => console.log(error));
     }
   }
 }
