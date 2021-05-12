@@ -8,7 +8,7 @@
                 No appointment selected!
             </b-alert>
 
-            <b-modal ref="info-modal" hide-footer title="Details">
+            <b-modal ref="info-modal" hide-footer title="Details" v-if="medicalReport != null">
             <div class="d-block text-center">
                 <h3>Report text</h3>
                 <p>{{ this.medicalReport.text }}</p>
