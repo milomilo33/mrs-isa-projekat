@@ -171,6 +171,31 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional
+    public Boolean finishAppointment(Long appointmentId, String employeeEmail, String reportText) {
+        Appointment appointment = this.findOne(appointmentId);
+
+        if (appointment == null) {
+            return null;
+        }
+
+        if (appointment.isDeleted() || appointment.isDone()) {
+            return null;
+        }
+
+        if (!employeeEmail.equals(appointment.getChosenEmployee().getEmail())) {
+            return false;
+        }
+
+        MedicalReport report = appointment.getMedicalReport();
+        report.setDescription(reportText);
+
+        appointment.setDone(true);
+
+        return true;
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Pharmacy getPharmacyOfAppointment(Long appointmentId) {
         Appointment appointment = this.findOne(appointmentId);

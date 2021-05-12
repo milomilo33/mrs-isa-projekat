@@ -25,5 +25,7 @@ public interface AppointmentService {
 
     Long startAppointment(Long appointmentId, String employeeEmail);
 
+    Boolean finishAppointment(Long appointmentId, String employeeEmail, String reportText);
+
     Pharmacy getPharmacyOfAppointment(Long appointmentId);
 }
