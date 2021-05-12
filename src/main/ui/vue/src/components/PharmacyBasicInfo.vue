@@ -92,7 +92,7 @@ export default {
         showFailedAlertUnsub: false,
         showRatingAlert: false,
         role: '',
-        rating: null
+        rating: null,
         coordinates: []
       }
     },

@@ -191,9 +191,12 @@ public class DermatologistServiceImpl implements DermatologistService {
 	public Integer getRatingOfUser(String dermatologistEmail, String patientEmail) {
 		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(dermatologistEmail, patientEmail);
 
-		if(dermatologist == null) return 0;
+		if (dermatologist == null) return 0;
 
 		return Objects.requireNonNull(dermatologist.getRatings().stream().findFirst().orElse(null)).getValue();
+	}
+
+	@Override
 	public Dermatologist getOneWithAddress(String email) {
 		Dermatologist dermatologist = dermatologistRepository.getOneWithAddress(email);
 		if(dermatologist == null) {

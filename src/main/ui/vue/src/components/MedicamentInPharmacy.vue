@@ -299,6 +299,7 @@ export default defineComponent({
 
     showSuccess() {
       this.showSuccessAlert = true;
+    },
       
     prescribeMedicament(pharmacyId) {
       if (this.amount > 0) {
