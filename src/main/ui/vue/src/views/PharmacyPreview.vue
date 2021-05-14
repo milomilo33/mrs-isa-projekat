@@ -57,12 +57,12 @@ export default defineComponent({
     MedicamentCard,
     EmployeeCard,
     Footer,
-    MedicamentPreview
+    MedicamentPreview,
 
   },
 
   props: {
-    
+    id:Object,
   },
   
   data() {
@@ -77,12 +77,17 @@ export default defineComponent({
     var AdminUsername = JSON.parse(
       atob(localStorage.getItem("token").split(".")[1])
     ).sub;
-    var self = this;
-    self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem('token'),
-        },
+     var userRole = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).role;
+       var self = this;
+      if(userRole == "ROLE_PHARMACY_ADMIN"){
+         
+          self.axios
+          .get(`/api/pharmacyAdmin/` + AdminUsername, {
+            headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
       })
       .then(function (response) {
         self.pharmacyId = response.data.pharmacy.id;
@@ -91,6 +96,11 @@ export default defineComponent({
       .catch(function (error) {
         console.log(error);
       });
+   }else{
+      console.log(self.id);
+      self.pharmacyId =self.id;
+      self.FinAll();
+   }
    },
    methods:{
    FinAll(){
