@@ -47,4 +47,6 @@ public interface PatientService {
 	void removeAllergy(String patientEmail, Long medicamentId);
 
 	Patient getOneWithePrescriptions(String email);
+
+	Patient findAllWithPurchasedMedicamentsAndAppointments(String email);
 }

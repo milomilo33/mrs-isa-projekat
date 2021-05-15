@@ -30,6 +30,9 @@ public class Complaint {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	private AdminSystem responder;
 	
+	@Column(name="response", unique=false, nullable = true)
+	private String response;
+	
 	public Complaint() {}
 
 	public String getDescription() {
@@ -80,4 +83,13 @@ public class Complaint {
 		this.responder = responder;
 	}
 
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+	
 }

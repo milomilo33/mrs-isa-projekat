@@ -26,6 +26,7 @@ import SuccessActivation from '../views/SuccessActivation'
 import ReservedMedicamentsTable from '../components/ReservedMedicamentsTable'
 // import PatientInfo from '../components/PatientInfo'
 import ReservedAppointmentsTable from '../components/ReservedAppointmentsTable'
+import WriteComplaint from '../components/WriteComplaint'
 import FailedActivation from '../views/FailedActivation'
 import ExaminationSearch from '../components/ExaminationSearch'
 import AppointmentPage from '../components/AppointmentPage'
@@ -511,6 +512,13 @@ const routes = [
 					roles: [Role.Patient]
 				},
 				component: MedicamentListPreview
+			},
+			{
+				path: "WriteComplaint",
+				meta: {
+					roles: [Role.Patient]
+				},
+				component: WriteComplaint
 			},
 			{
 				path: "PharmacyList/:query",

@@ -51,7 +51,7 @@ public class Patient extends User {
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<PrescriptionMedicament> reservedMedicaments;
-
+	
 	public Patient() {}
 	
 

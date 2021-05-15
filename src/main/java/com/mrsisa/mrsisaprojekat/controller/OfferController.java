@@ -112,25 +112,24 @@ public class OfferController {
 	@PostMapping(value="/update")
 	@PreAuthorize("hasAnyRole('SUPPLIER')")
 	ResponseEntity<OfferDTO> updateOffer(@RequestBody OfferDTO offer){
-		System.out.println(offer.getId() +"   "+ offer.getOrder().getDeadline());
+		
 		if(offer.getOrder().getDeadline().isBefore( LocalDate.now())) {
-			System.out.println("sssssssss");
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Supplier supplier = supplierService.findOne(offer.getSupplier());
 		if(supplier == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
 		Order order = orderService.findOneWithMedicaments(offer.getOrder().getId());
-		Offer saveOffer = new Offer();
+		Offer saveOffer = offerService.findOffer(offer.getId());
 		saveOffer.setDeadline(offer.getDeadline());
 		saveOffer.setSupplier(supplier);
 		saveOffer.setOrder(order);
 		saveOffer.setStatus(OfferStatus.valueOf(offer.getStatus()));
 		saveOffer.setTotalPrice(offer.getTotalPrice());
-		
 		Offer savedOffer = offerService.update(saveOffer);
+		savedOffer.setOrder(order);
+		savedOffer.setSupplier(supplier);
 		return new ResponseEntity<OfferDTO>(new OfferDTO(savedOffer), HttpStatus.OK);
 		
 	}

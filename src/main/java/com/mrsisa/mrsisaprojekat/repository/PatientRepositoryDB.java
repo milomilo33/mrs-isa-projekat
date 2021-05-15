@@ -38,6 +38,9 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 
 	@Query("select p from Patient p left join fetch p.ePrescriptions pep join fetch pep.prescriptionMedicaments where p.email=?1 and pep.done = false")
 	Patient getPatientWithePrescriptions(String email);
+	
+	@Query("select p from Patient p join fetch p.ePrescriptions pep join fetch pep.prescriptionMedicaments join fetch p.appointments pa join fetch pa.chosenEmployee join fetch pep.pharmacy join fetch p.complaints where p.email=?1 and pep.done = true and pa.deleted = false")
+	Patient getPatientWithPurchasedMedicaments(String email);
 
 	@Query("select p from Patient p join fetch p.allergies pa where p.email = ?1")
 	Patient getPatientWithAllergies(String patientEmail);
