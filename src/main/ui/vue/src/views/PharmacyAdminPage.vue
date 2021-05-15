@@ -30,7 +30,12 @@
           <b-dropdown-item href="#">Requests</b-dropdown-item>
           <b-dropdown-item href="#">Vacations</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-nav-item href="#">Reports</b-nav-item>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+            Reports
+          </template>
+           <b-dropdown-item href="/PharmacyAdminPage/ReportAppointments">Appointments report</b-dropdown-item>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
       
       <!-- Right aligned nav items -->
