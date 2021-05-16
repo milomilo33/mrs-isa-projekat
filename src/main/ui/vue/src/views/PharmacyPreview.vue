@@ -81,8 +81,7 @@ export default defineComponent({
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
        var self = this;
-      if(userRole == "ROLE_PHARMACY_ADMIN"){
-         
+      if(userRole == "ROLE_PHARMACY_ADMIN" && self.id == null){
           self.axios
           .get(`/api/pharmacyAdmin/` + AdminUsername, {
             headers: {
@@ -106,7 +105,6 @@ export default defineComponent({
    FinAll(){
      
     var self = this;
-    console.log(self.pharmacyId);
     self.axios
       .get(`/api/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
@@ -146,7 +144,7 @@ export default defineComponent({
           item.phoneNumber = response.data[i].phoneNumber;
           item.address = response.data[i].address.street + " "+response.data[i].address.number+", "+response.data[i].address.city;
           item.e = "Pharmacist";
-          item.appointments = response.data[i].appointments
+          item.appointments = response.data[i].appointments;
           self.employees.push(item);
         }
         }
@@ -173,7 +171,8 @@ export default defineComponent({
           item.phoneNumber = response.data[i].phoneNumber;
           item.e = "Dermatologist";
           item.address = response.data[i].address.street + " " + response.data[i].address.number + ", " + response.data[i].address.city;
-          item.appointments = response.data[i].appointments
+          item.appointments = response.data[i].appointments;
+          console.log(item.appointments);
           self.employees.push(item);
         }
       }

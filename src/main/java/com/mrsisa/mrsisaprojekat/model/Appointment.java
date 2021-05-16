@@ -40,7 +40,7 @@ public class Appointment {
 	@JsonIgnore
 	private Employee chosenEmployee;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	private Patient patient;
 
 	@Column(name = "done", nullable = false, columnDefinition = "boolean default false")

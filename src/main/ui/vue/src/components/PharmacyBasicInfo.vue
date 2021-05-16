@@ -107,7 +107,9 @@ export default {
       _this.user = JSON.parse(
         atob(localStorage.getItem("token").split(".")[1])
       ).sub;
-      if(userRole =="ROLE_PHARMACY_ADMIN"){
+      var d = this.$route.params.id;
+      if(userRole =="ROLE_PHARMACY_ADMIN" && d === undefined){
+       
          _this.axios
           .get(`/api/pharmacyAdmin/` + _this.user, {
             headers: {
@@ -124,7 +126,6 @@ export default {
         console.log(error);
       });
       }else{
-      
       this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })

@@ -160,6 +160,23 @@ public class PharmacyServiceImpl implements PharmacyService{
 		return Objects.requireNonNull(pharmacy.getRatings().stream().findFirst().orElse(null)).getValue();
 	}
 
+	@Override
+	public ArrayList<Appointment> findAvailableAppointmentsDeramtologist(String email, Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithAppointments(id);
+		if (pharmacy == null) {
+			return null;
+		}
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		for(Appointment a : pharmacy.getAppointments()) {
+			if(a.getChosenEmployee().getEmail().equals(email) && a.getPatient() == null) {
+				System.out.println("DA");
+				appointments.add(a);
+			}
+		}
+	
+		return appointments;
+	}
+
 
 	
 }
