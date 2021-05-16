@@ -148,6 +148,12 @@ insert into appointment (date, deleted, term_from, term_to, type, medical_report
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-17',false,'14:00','15:00', 1, null, 'aleksandarstevanovic@gmail.com', 'lukamarkovic@gmail.com')
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'09:00','09:45', 1, null, 'aleksandarstevanovic@gmail.com', 'darkomilev@gmail.com')
 
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-26',false,'16:30','17:00', 1, null, 'aleksandarstevanovic@gmail.com', 'teodorabozic@gmail.com')
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-17',false,'13:00','14:00', 1, null, 'aleksandarstevanovic@gmail.com', 'lukamarkovic@gmail.com')
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'08:45','09:00', 1, null, 'aleksandarstevanovic@gmail.com', 'darkomilev@gmail.com')
+
+
+
 insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('janatot@gmail.com', 1)
 insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('aleksandarstevanovic@gmail.com', 2)
 insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('lazarpopovic@gmail.com', 3)
@@ -228,6 +234,9 @@ insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 3)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 15)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 16)
 insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 17)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 18)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 19)
+insert into pharmacy_appointments (pharmacy_id, appointments_id) values (2, 20)
 
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 1)
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (1, 2)

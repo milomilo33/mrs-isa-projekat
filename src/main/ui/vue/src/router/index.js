@@ -46,7 +46,7 @@ import PastAppointmentsPage from '../components/PastAppointmentsPage'
 
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
-
+import ReportAppointments from '../components/ReportAppointments'
 
 Vue.use(VueRouter)
 const Role = {
@@ -448,6 +448,13 @@ const routes = [
 				path: "ChangePassword",
 				name: "ChangePassword",
 				component: ChangePassword,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
+			{
+				path: "ReportAppointments",
+				component: ReportAppointments,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
