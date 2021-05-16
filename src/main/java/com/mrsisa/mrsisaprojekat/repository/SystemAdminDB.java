@@ -12,6 +12,9 @@ public interface SystemAdminDB extends JpaRepository<AdminSystem, String>{
 	@Query("select a from AdminSystem a join fetch a.address")
 	List<AdminSystem> getAllWithAddress();
 	
-	@Query("select a from  AdminSystem a join fetch a.roles where a.email=?1")
+	@Query("select a from AdminSystem a join fetch a.roles where a.email=?1")
 	AdminSystem getOneLogin(String id);
+	
+	@Query("select a from AdminSystem a join fetch a.address where a.email=?1")
+	AdminSystem getOneWithComplaints(String email);
 }

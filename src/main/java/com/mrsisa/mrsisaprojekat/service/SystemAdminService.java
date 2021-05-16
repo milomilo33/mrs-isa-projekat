@@ -10,6 +10,8 @@ public interface SystemAdminService {
 	
 	AdminSystem findOne(String id);
 	
+	AdminSystem findOneWithCompalints(String email);
+	
 	AdminSystem create(AdminSystem admin) throws Exception;
 	
 	AdminSystem update(AdminSystem admin) throws Exception;

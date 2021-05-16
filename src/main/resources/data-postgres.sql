@@ -189,9 +189,9 @@ insert into medicament_substitute_medicaments (medicament_id, substitute_medicam
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 4)
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (4, 1)
 
-insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response) values ('false','Žalba na rad apoteke Benu.', null, 1, null, null)
-insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response) values ('false','Žalba na rad dermatologa.', 'janatot@gmail.com', null, null, null)
-insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response) values ('false','Žalba na rad apoteke Dr.Max. Cesto nema potrebnih lijekova', null, 2, null, 'U apoteci bio manjak ljudi, sve je sredjeno i radice u najboljem redu.')
+insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response, patient_email) values ('false','Žalba na rad apoteke Benu.', null, 1, null, null, 'anasimic@gmail.com' )
+insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response, patient_email) values ('false','Žalba na rad dermatologa.', 'janatot@gmail.com', null, null, null, 'teodorabozic@gmail.com')
+insert into complaint (deleted, description, employee_email, pharmacy_id, responder_email, response, patient_email) values ('true','Žalba na rad apoteke Dr.Max. Cesto nema potrebnih lijekova', null, 2,'milicamaric@gmail.com', 'U apoteci bio manjak ljudi, sve je sredjeno i radice u najboljem redu.', 'lukamarkovic@gmail.com')
 
 insert into patient_allergies (patient_email, allergies_id) values ('anasimic@gmail.com', 2)
 insert into patient_allergies (patient_email, allergies_id) values ('lukamarkovic@gmail.com', 3)

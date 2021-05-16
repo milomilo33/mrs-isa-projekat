@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,7 @@ import com.mrsisa.mrsisaprojekat.dto.ComplaintDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
+import com.mrsisa.mrsisaprojekat.model.AdminSystem;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.model.Complaint;
@@ -32,6 +34,7 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 import com.mrsisa.mrsisaprojekat.service.ComplaintService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.PatientService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyService;
@@ -43,6 +46,9 @@ import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
 public class ComplaintController {
 	
 	@Autowired 
+	private EmailService emailService;
+	
+	@Autowired
 	private ComplaintService complaintService;
 	
 	@Autowired
@@ -226,6 +232,106 @@ public class ComplaintController {
 		
 	}
 
+	@GetMapping(value="/getPharmacyComplaint/{id}")
+	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
+	public ResponseEntity<ComplaintDTO> getPharmacy(@PathVariable("id") Long id){
+		Complaint complaint = complaintService.findOneWithPharmacy(id);
+		
+		return new ResponseEntity<ComplaintDTO>(new ComplaintDTO(complaint), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/getEmployeeComplaint/{id}")
+	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
+	public ResponseEntity<ComplaintDTO> getEmployee(@PathVariable("id") Long id){
+		Complaint complaint = complaintService.findOneWithEmployee(id);
+		
+		return new ResponseEntity<ComplaintDTO>(new ComplaintDTO(complaint), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/update")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<ComplaintDTO> saveResponse(@RequestBody ComplaintDTO complaintDTO) throws Exception{
+		
+		AdminSystem admin = adminService.findOneWithCompalints(complaintDTO.getResponder());
+		if (admin == null ) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Patient patient = patientService.findOne(complaintDTO.getPatient());
+		if (patient == null ) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Complaint complaint = null;
+		if(complaintDTO.getEmployee()!= null) {
+			complaint = complaintService.findOneWithEmployee(complaintDTO.getId());
+		}
+		else {
+			complaint = complaintService.findOneWithPharmacy(complaintDTO.getId());
+		}
+		
+		if(complaint == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		System.out.println(complaint.getDescription()+ "   "+ complaint.getId());
+		complaint.setResponder(admin);
+		complaint.setPatient(patient);
+		complaint.setResponse(complaintDTO.getResponse());
+		
+		Complaint saved = complaintService.update(complaint);
+		
+		Set<Complaint> responseComplaints = complaintService.getResponderComplaint(admin.getEmail());
+		if(responseComplaints == null) {
+			responseComplaints = new HashSet<Complaint>();
+		}
+		responseComplaints.add(saved);
+		adminService.update(admin);
+		
+		
+		emailService.sendComplaintAnswer(complaint);
+		
+		return new ResponseEntity<ComplaintDTO>(new ComplaintDTO(saved.getId(), saved.getDescription(), saved.getResponder().getEmail(), saved.getResponse()), HttpStatus.OK);
+	}
+	
+	@GetMapping(value ="/getAllAnswered")
+	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
+	public ResponseEntity<Collection<ComplaintDTO>> getAllAnswered(){
+		Collection<Complaint> complaints = complaintService.findAllAnswered();
+		Collection<ComplaintDTO> complaintsDTO = new ArrayList<ComplaintDTO>();
+	
+		for(Complaint c : complaints) {
+			if(c.getEmployee() != null) {
+				ComplaintDTO dto = new ComplaintDTO(c);
+				complaintsDTO.add(dto);
+			}
+			else {
+				ComplaintDTO dto = new ComplaintDTO(c);
+				complaintsDTO.add(dto);
+			}
+		}
+		
+		return new ResponseEntity<>(complaintsDTO, HttpStatus.ACCEPTED);
+	}
+	@GetMapping(value ="/getAllUnanswered")
+	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
+	public ResponseEntity<Collection<ComplaintDTO>> getAllUnanswered(){
+		Collection<Complaint> complaints = complaintService.findAllUnanswered();
+		Collection<ComplaintDTO> complaintsDTO = new ArrayList<ComplaintDTO>();
+		for(Complaint c : complaints) {
+			if(c.getEmployee() != null) {
+				ComplaintDTO dto = new ComplaintDTO(c);
+				complaintsDTO.add(dto);
+			}
+			else {
+				ComplaintDTO dto = new ComplaintDTO(c);
+				complaintsDTO.add(dto);
+			}
+		}
+		
+		return new ResponseEntity<>(complaintsDTO, HttpStatus.ACCEPTED);
+	}
+	
 	private boolean isPharmacyAvaiable(Set<Appointment> appointments, Long id) {
 		boolean appointmentFound = false;
 		

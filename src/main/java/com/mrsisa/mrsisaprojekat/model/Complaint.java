@@ -18,10 +18,10 @@ public class Complaint {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	private Pharmacy pharmacy;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	private Employee employee;
 	
 	@Column(name = "deleted", unique = false, nullable = false)
@@ -32,6 +32,9 @@ public class Complaint {
 	
 	@Column(name="response", unique=false, nullable = true)
 	private String response;
+	
+	@ManyToOne(fetch=FetchType.LAZY, optional = true)
+	private Patient patient;
 	
 	public Complaint() {}
 
@@ -90,6 +93,15 @@ public class Complaint {
 	public void setResponse(String response) {
 		this.response = response;
 	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
 
 	
 }

@@ -59,4 +59,9 @@ public class SystemAdminServiceImpl implements SystemAdminService{
 		
 	}
 
+	@Override
+	public AdminSystem findOneWithCompalints(String email) {
+		return adminRepository.getOneWithComplaints(email);
+	}
+
 }
