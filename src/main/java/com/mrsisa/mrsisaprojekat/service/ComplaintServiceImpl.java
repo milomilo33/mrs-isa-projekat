@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,29 @@ public class ComplaintServiceImpl implements ComplaintService{
 		complaintRepository.deleteById(id);
 		
 	}
+
+	@Override
+	public Set<Complaint> getResponderComplaint(String email) {
+		return complaintRepository.findByResponder(email);
+	}
+
+	@Override
+	public Complaint findOne(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Complaint findOneWithEmployee(Long id) {
+		return complaintRepository.findOneWithEmployee(id);
+	}
+
+	@Override
+	public Complaint findOneWithPharmacy(Long id) {
+		// TODO Auto-generated method stub
+		return complaintRepository.findOneWithPharmacy(id);
+	}
+
+
 
 }

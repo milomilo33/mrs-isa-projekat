@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.mrsisa.mrsisaprojekat.model.Complaint;
 
@@ -12,10 +13,18 @@ public interface ComplaintService {
 	
 	Collection<Complaint> findAllAnswered();
 	
+	Complaint findOne(Long id);
+	
+	Set<Complaint> getResponderComplaint(String email);
+	
 	Complaint create(Complaint complaint);
 	
 	Complaint update(Complaint complaint);
 	
 	void delete(Long id);
+
+	Complaint findOneWithEmployee(Long id);
+
+	Complaint findOneWithPharmacy(Long id);
 	
 }

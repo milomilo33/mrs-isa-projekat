@@ -11,6 +11,7 @@ public class ComplaintDTO {
 	private boolean deleted;
 	private String responder;
 	private String response;
+	private String patient;
 	
 	public ComplaintDTO() {}
 
@@ -18,10 +19,32 @@ public class ComplaintDTO {
 		this.id = complaint.getId();
 		this.description = complaint.getDescription();
 		this.deleted = complaint.isDeleted();
-		this.employee = complaint.getEmployee().getEmail();
-		this.responder = complaint.getResponder().getEmail();
+		if(complaint.getEmployee() != null) {
+			this.employee = complaint.getEmployee().getEmail();
+		}else {
+			this.employee = null;
+		}
+		if(complaint.getPharmacy() != null) {
+			this.pharmacy = complaint.getPharmacy().getId();
+		}
+		else {
+			this.pharmacy = null;
+		}
+		if(complaint.getResponder()!=null) {
+			this.responder = complaint.getResponder().getEmail();
+		}
+		else {
+			this.responder = null;
+		}
+		
 		this.response = complaint.getResponse();
-		this.pharmacy = complaint.getPharmacy().getId();
+		if(complaint.getPatient() != null) {
+			this.patient = complaint.getPatient().getEmail();
+		}
+		else {
+			this.patient = null;
+		}
+		
 	}
 	
 	public ComplaintDTO(Long id, String description, String responder, String employee, Long pharmacy, String response) {
@@ -52,7 +75,12 @@ public class ComplaintDTO {
 		this.response = null;
 		this.responder = null;
 	}
-	
+	public ComplaintDTO(Long id, String description, String responder, String response) {
+		this.id = id;
+		this.description = description;
+		this.responder = responder;
+		this.response = response;
+	}
 	public ComplaintDTO(String description, Long pharmacy) {
 		this.deleted = false;
 		this.description = description;
@@ -121,5 +149,13 @@ public class ComplaintDTO {
 
 	public void setResponse(String response) {
 		this.response = response;
+	}
+
+	public String getPatient() {
+		return patient;
+	}
+
+	public void setPatient(String patient) {
+		this.patient = patient;
 	}
 }
