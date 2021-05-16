@@ -25,6 +25,7 @@ import PatientPage from '../views/PatientPage'
 import SuccessActivation from '../views/SuccessActivation'
 import ReservedMedicamentsTable from '../components/ReservedMedicamentsTable'
 // import PatientInfo from '../components/PatientInfo'
+import UnansweredComplaint from '../components/AllUnansweredComplaints'
 import ReservedAppointmentsTable from '../components/ReservedAppointmentsTable'
 import WriteComplaint from '../components/WriteComplaint'
 import FailedActivation from '../views/FailedActivation'
@@ -49,6 +50,7 @@ import PastAppointmentsPage from '../components/PastAppointmentsPage'
 
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
+//import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
 const Role = {
@@ -144,6 +146,10 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]
 				},
+			},
+			{
+				path: "unansweredComplaints",
+				component: UnansweredComplaint
 			},
 			{
 				path: "userRegister/:userRole",

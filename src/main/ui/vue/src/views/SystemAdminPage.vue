@@ -16,6 +16,13 @@
           <b-dropdown-item href="/SystemAdminPage/userRegister/Dermatologist">Dermatologist</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>
         </b-nav-item-dropdown>
+          <b-nav-item-dropdown right>
+           <template #button-content>
+           Complaints
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">See all</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">Write answer</b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
         <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
       </b-navbar-nav>
