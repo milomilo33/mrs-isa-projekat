@@ -17,8 +17,17 @@
                 <b-dropdown-item href="/PatientPage/PastAppointments">Appointment history</b-dropdown-item>
                 
             </b-nav-item-dropdown>
+          <b-nav-item-dropdown left>
+                <template #button-content>
+                    Complaints
+                </template>
+                <b-dropdown-item href="/PatientPage/ComplaintReview"> See all complaints</b-dropdown-item>
+                <b-dropdown-item href="/PatientPage/WriteComplaint">Write complaint</b-dropdown-item>
+                
+          </b-nav-item-dropdown>
           <b-nav-item href="/PatientPage/ReservedMedicamentsTable"> Reserved Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/ePrescriptions"> ePrescriptions </b-nav-item>
+          
         </b-navbar-nav>
         
         <!-- Right aligned nav items -->

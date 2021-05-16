@@ -55,9 +55,9 @@
       <!-- card-group-item.// -->
     </div>
     <div class="jusify-content">
-    <div class="row row-cols-2 row-cols-md-3 g-2">
+    <div class="row row-cols-4 row-cols-md-3 g-2">
       <div
-        class="col-lg-4 col-md-6 col-sm-6 offset-md-2 offset-sm-2" style="height: 25rem;"
+        class="col-lg-3 col-md-6 col-sm-8 offset-md-1 offset-sm-0" style="height: 25rem;"
         v-for="o in this.offers"
         :key="o.id"
       >

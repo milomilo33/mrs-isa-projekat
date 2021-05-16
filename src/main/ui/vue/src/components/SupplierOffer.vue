@@ -153,18 +153,26 @@ methods: {
   frontEndDateFormat: function (date) {
       return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
     },
+  backEndDateFormat: function(date){
+    return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
+  },
     editOffer: function(){
      
+      var dd = this.deadline+ "T00:00:00";
+      if(this.deadline==""){
+        dd = this.backEndDateFormat(this.offer.deadline)+"T00:00:00";
+      }
       if(this.totalPrice < 1){
          this.showDismissibleAlertModal = true;
       }
       else{
+        console.log(dd);
           this.axios
         .post(
           `/api/offers/update`,
           {
             id: this.offer.id,
-            deadline: this.deadline + "T00:00:00",
+            deadline: dd,
             status: this.offer.status,
             supplier: this.supplier,
             totalPrice: this.offer.totalPrice,
@@ -181,6 +189,8 @@ methods: {
             this.showSuccessAlert = true;
             this.showDismissibleAlertModal = false;
             this.showDismissibleAlert = false;
+            this.offer.deadline = response.data.deadline;
+            this.deadline="";
           }
         })
         .catch((error) => {

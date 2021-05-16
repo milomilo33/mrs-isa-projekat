@@ -174,6 +174,10 @@ public class PatientServiceImpl implements PatientService {
 		return patientRepository.findByNameAndLastName(name, lastName);
 	}
 
+	@Override
+	public Patient findAllWithPurchasedMedicamentsAndAppointments(String email) {
+		return patientRepository.getPatientWithPurchasedMedicaments(email);
+	}
 
 	@Override
 	public Collection<Appointment> getUpcomingAppointmentsForUser(String userEmail, Appointment.AppointmentType type) {
