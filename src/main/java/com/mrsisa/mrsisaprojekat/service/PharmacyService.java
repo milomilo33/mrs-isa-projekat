@@ -1,9 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
 import com.mrsisa.mrsisaprojekat.model.*;
 
 public interface PharmacyService {
@@ -36,4 +34,6 @@ public interface PharmacyService {
     void addRating(Rating rating, Long ratedEntityId);
 
     Integer getRatingOfUser(Long id, String email);
+    
+    
 }

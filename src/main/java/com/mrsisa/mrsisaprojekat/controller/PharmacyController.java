@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
+import com.mrsisa.mrsisaprojekat.dto.MedicamentInePrescriptionDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO.Quarter;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ReportAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
-
+import com.mrsisa.mrsisaprojekat.dto.ePrescriptionPreviewDTO;
 import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +40,9 @@ import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
+import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -56,6 +60,16 @@ public class PharmacyController {
 
 	@Autowired
 	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private ePrescriptionService ePrescriptionService;
+	
+	@Autowired
+	private PrescriptionMedicamentService prescriptionService;
+	
+	@Autowired
+	private ReportService reportService;
+	
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
@@ -226,101 +240,29 @@ public class PharmacyController {
 
 		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
 	}
-	public ArrayList<MonthAppointmentDTO> makeReport(){
-		ArrayList<MonthAppointmentDTO> set = new ArrayList<MonthAppointmentDTO>();
-		for(int i =0;i<11;i++) {
-			MonthAppointmentDTO month = new MonthAppointmentDTO();
-			month.setMonth(Month.of(i+1));
-			HashMap<Integer,Integer> values = new HashMap<Integer,Integer>();
-			if(i == 0 || i ==2 || i== 4 || i ==6 || i == 7 ||i==9 || i ==11) {
-				for(int j =1;j<32;j++) {
-					values.put(j, 0);
-				}
-				
-			}else if(i == 1) {
-				if(LocalDateTime.now().getYear()/400 == 0 && (LocalDateTime.now().getYear()/100 !=0 && LocalDateTime.now().getYear()/4 ==0)) {
-					for(int j =1;j<30;j++) {
-						values.put(j, 0);
-					}
-				}else {
-					for(int j =1;j<29;j++) {
-						values.put(j, 0);
-					}
-				}
-			}else {
-				for(int j =1;j<31;j++) {
-					values.put(j, 0);
-				}
-			}
-			month.setValues(values);
-			set.add(month);
-
-		}
-		return set;
-		
-	}
-	public ArrayList<MonthAppointmentDTO> subValues(Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list){
-		for(Appointment a : pharmacyList) {
-			for(MonthAppointmentDTO aa : list) {
-				//is Done fali
-				if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth())) {
-					int val = aa.getValues().get(a.getDate().getDayOfMonth());
-					aa.getValues().put(a.getDate().getDayOfMonth(),val+1);
-				}
-			}
-			
-		}
-		
-		return list;
-	}
+	
 	
 	@GetMapping(value = "/reportAppointments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
 	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportAppointments(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithAppointments(id);
 		ReportAppointmentDTO report = new ReportAppointmentDTO();
-		ArrayList<MonthAppointmentDTO> appointments = makeReport();
-		ArrayList<MonthAppointmentDTO> appointmentsReturned = subValues(pharmacy.getAppointments(), appointments);
-		
-		ArrayList<MonthAppointmentDTO> all = new ArrayList<MonthAppointmentDTO>();
-		for(MonthAppointmentDTO m : appointmentsReturned) {
-			for(Integer i : m.getValues().keySet()) {
-					MonthAppointmentDTO mm = new MonthAppointmentDTO();
-					mm.setMonth(m.getMonth());
-					mm.setDay(i);
-					mm.setValue(m.getValues().get(i));
-					all.add(mm);
-				}
-			}
-			
-	
+		ArrayList<MonthAppointmentDTO> appointments = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues(pharmacy.getAppointments(), appointments);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByDay(appointmentsReturned);
 		report.setMonthAppoinntments(all);
 		return new ResponseEntity<>(report, HttpStatus.OK);
 	}
 
-	public ArrayList<MonthAppointmentDTO> findByMonth(ArrayList<MonthAppointmentDTO> appointmentsReturned){
-		ArrayList<MonthAppointmentDTO> all = new ArrayList<MonthAppointmentDTO>();
-		for(MonthAppointmentDTO m : appointmentsReturned) {
-			MonthAppointmentDTO mm = new MonthAppointmentDTO();
-			mm.setMonth(m.getMonth());
-			int value = 0;
-			for(Integer i : m.getValues().keySet()) {
-					value += m.getValues().get(i);
-				}
-			mm.setValue(value);
-			all.add(mm);
-			}
-	return all;
-		
-	}
+	
 	@GetMapping(value = "/reportAppointments1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
 	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportAppointments1(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithAppointments(id);
 		ReportAppointmentDTO report = new ReportAppointmentDTO();
-		ArrayList<MonthAppointmentDTO> appointments = makeReport();
-		ArrayList<MonthAppointmentDTO> appointmentsReturned = subValues(pharmacy.getAppointments(), appointments);
-		ArrayList<MonthAppointmentDTO> all = findByMonth(appointmentsReturned);
+		ArrayList<MonthAppointmentDTO> appointments = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues(pharmacy.getAppointments(), appointments);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByMonth(appointmentsReturned);
 		report.setMonthAppoinntments(all);
 		return new ResponseEntity<>(report, HttpStatus.OK);
 	}
@@ -330,65 +272,54 @@ public class PharmacyController {
 	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportAppointments2(@PathVariable("id") Long id) {
 		Pharmacy pharmacy = pharmacyService.findOneWithAppointments(id);
 		ReportAppointmentDTO report = new ReportAppointmentDTO();
-		ArrayList<MonthAppointmentDTO> appointments = makeReport();
-		ArrayList<MonthAppointmentDTO> appointmentsReturned = subValues(pharmacy.getAppointments(), appointments);
-		ArrayList<MonthAppointmentDTO> all = findByMonth(appointmentsReturned);
+		ArrayList<MonthAppointmentDTO> appointments = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues(pharmacy.getAppointments(), appointments);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByMonth(appointmentsReturned);
+		ArrayList<MonthAppointmentDTO> quarters = reportService.findByQuarters(all);
 		
-		ArrayList<MonthAppointmentDTO> q1 = new ArrayList<MonthAppointmentDTO>();
-		ArrayList<MonthAppointmentDTO> q2 = new ArrayList<MonthAppointmentDTO>();
-		ArrayList<MonthAppointmentDTO> q3 = new ArrayList<MonthAppointmentDTO>();
-		ArrayList<MonthAppointmentDTO> q4 = new ArrayList<MonthAppointmentDTO>();
-		ArrayList<MonthAppointmentDTO> quarters = new ArrayList<MonthAppointmentDTO>();
-		for(MonthAppointmentDTO m : all) {
-			if(m.getMonth().getValue() == 1 || m.getMonth().getValue() ==2 || m.getMonth().getValue() == 3) {
-				q1.add(m);
-			}else if(m.getMonth().getValue() == 4 || m.getMonth().getValue() ==5 || m.getMonth().getValue() == 6) {
-				q2.add(m);
-			}else if(m.getMonth().getValue() == 7 || m.getMonth().getValue() ==8 || m.getMonth().getValue() == 9) {
-				q3.add(m);
-			}else {
-				q4.add(m);
-			}
-		}
-		MonthAppointmentDTO ma = new MonthAppointmentDTO();
-		ma.setQuarter(Quarter.Q1);
-		int value = 0;
-		for(MonthAppointmentDTO m: q1) {
-			value += m.getValue();
-		}
-		ma.setValue(value);
-		quarters.add(ma);	
+		report.setMonthAppoinntments(quarters);
+		return new ResponseEntity<>(report, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/reportMedicaments/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportMedicaments(@PathVariable("id") Long id) {
+		Set<ePrescription> ePrescriptions = ePrescriptionService.findAllePrescriptionsInPharmacy(id);
+		Set<ePrescriptionPreviewDTO> dtos = reportService.findePrescriptions(ePrescriptions);
+		ReportAppointmentDTO report = new ReportAppointmentDTO();
+		ArrayList<MonthAppointmentDTO> list = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues1(dtos, list);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByDay(appointmentsReturned);
+		report.setMonthAppoinntments(all);
+	
+		return new ResponseEntity<>(report,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/reportMedicaments1/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportMedicaments1(@PathVariable("id") Long id) {
+		Set<ePrescription> ePrescriptions = ePrescriptionService.findAllePrescriptionsInPharmacy(id);
+		Set<ePrescriptionPreviewDTO> dtos = reportService.findePrescriptions(ePrescriptions);
+		ReportAppointmentDTO report = new ReportAppointmentDTO();
+		ArrayList<MonthAppointmentDTO> list = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues1(dtos, list);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByMonth(appointmentsReturned);
+		report.setMonthAppoinntments(all);
+		return new ResponseEntity<>(report, HttpStatus.OK);
+	}
+	@GetMapping(value = "/reportMedicaments2/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<ReportAppointmentDTO> getPharmacyReportMedicaments2(@PathVariable("id") Long id) {
+		Set<ePrescription> ePrescriptions = ePrescriptionService.findAllePrescriptionsInPharmacy(id);
+		Set<ePrescriptionPreviewDTO> dtos = reportService.findePrescriptions(ePrescriptions);
 		
-		MonthAppointmentDTO ma1 = new MonthAppointmentDTO();
-		ma1.setQuarter(Quarter.Q2);
-		int value1 = 0;
-		for(MonthAppointmentDTO m1: q2) {
-			value1 += m1.getValue();
-			
-		}
-		ma1.setValue(value1);
-		quarters.add(ma1);	
+		ReportAppointmentDTO report = new ReportAppointmentDTO();
+		ArrayList<MonthAppointmentDTO> list = reportService.makeReport();
+		ArrayList<MonthAppointmentDTO> appointmentsReturned = reportService.subValues1(dtos, list);
+		ArrayList<MonthAppointmentDTO> all = reportService.findByMonth(appointmentsReturned);
+		ArrayList<MonthAppointmentDTO> quarters = reportService.findByQuarters(all);
 		
-		
-		MonthAppointmentDTO ma2 = new MonthAppointmentDTO();
-		ma2.setQuarter(Quarter.Q3);
-		int value2 = 0;
-		for(MonthAppointmentDTO m2: q3) {
-			value2 += m2.getValue();
-			
-		}
-		ma2.setValue(value2);
-		quarters.add(ma2);	
-		
-		MonthAppointmentDTO ma3 = new MonthAppointmentDTO();
-		ma3.setQuarter(Quarter.Q4);
-		int value3 = 0;
-		for(MonthAppointmentDTO m3: q4) {
-			value3 += m3.getValue();
-			
-		}
-		ma3.setValue(value3);
-		quarters.add(ma3);	
 		report.setMonthAppoinntments(quarters);
 		return new ResponseEntity<>(report, HttpStatus.OK);
 	}

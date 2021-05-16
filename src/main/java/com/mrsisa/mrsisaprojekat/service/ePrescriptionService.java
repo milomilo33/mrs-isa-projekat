@@ -6,6 +6,7 @@ import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface ePrescriptionService {
 	List<ePrescription> findAll();
@@ -23,4 +24,6 @@ public interface ePrescriptionService {
 	ePrescription findPrescriptionForPharmacist(Long id, Pharmacist pharmacist);
 
 	Collection<PrescriptionMedicamentDTO> getPrescriptionMedicamentsForMedicalReport(Long medicalReportId);
+	
+	Set<ePrescription> findAllePrescriptionsInPharmacy(Long id);
 }

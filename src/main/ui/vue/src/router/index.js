@@ -48,6 +48,7 @@ import PastAppointmentsPage from '../components/PastAppointmentsPage'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 import ReportAppointments from '../components/ReportAppointments'
+import ReportMedicaments from '../components/ReportMedicaments'
 
 Vue.use(VueRouter)
 const Role = {
@@ -456,6 +457,13 @@ const routes = [
 			{
 				path: "ReportAppointments",
 				component: ReportAppointments,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+			},
+				{
+				path: "ReportMedicaments",
+				component: ReportMedicaments,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
