@@ -30,14 +30,18 @@ public class ePrescription {
 	// purchased/taken/dispensed
 	@Column(name = "done", unique = false, nullable = false)
 	private boolean done;
+	
+	@Column(name = "takenDate", unique = false, nullable = true)
+	private LocalDate takenDate;
 
-	public ePrescription(Patient patient, LocalDate date, Set<PrescriptionMedicament> prescriptionMedicaments, Pharmacy pharmacy) {
+	public ePrescription(Patient patient, LocalDate date, Set<PrescriptionMedicament> prescriptionMedicaments, Pharmacy pharmacy, LocalDate takenDate) {
 		this.patient = patient;
 		this.date = date;
 		this.prescriptionMedicaments = prescriptionMedicaments;
 		this.pharmacy = pharmacy;
 		this.done = false;
 		this.deleted = false;
+		this.takenDate = takenDate;
 	}
 	
 	public ePrescription() {}
@@ -97,6 +101,16 @@ public class ePrescription {
 	public void setDone(boolean done) {
 		this.done = done;
 	}
+
+	public LocalDate getTakenDate() {
+		return takenDate;
+	}
+
+	public void setTakenDate(LocalDate takenDate) {
+		this.takenDate = takenDate;
+	}
+	
+	
 
 	
 }

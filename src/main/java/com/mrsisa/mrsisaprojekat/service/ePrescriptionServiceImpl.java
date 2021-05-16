@@ -17,6 +17,7 @@ import java.time.Period;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ePrescriptionServiceImpl implements ePrescriptionService {
@@ -182,6 +183,15 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 		}
 
 		return dtos;
+	}
+
+	@Override
+	public Set<ePrescription> findAllePrescriptionsInPharmacy(Long id) {
+		Set<ePrescription> ePrescriptions = ePrescriptionRepository.findPharmacyePrescriptions(id);
+		if(ePrescriptions == null) {
+			return null;
+		}
+		return ePrescriptions;
 	}
 
 }

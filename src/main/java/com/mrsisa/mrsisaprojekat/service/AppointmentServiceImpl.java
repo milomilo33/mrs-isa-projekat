@@ -157,7 +157,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 }
             }
 
-            ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy);
+            ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy, null);
             ePrescriptionRepository.save(ePrescription);
             patient.getePrescriptions().add(ePrescription);
 

@@ -5,9 +5,6 @@ import java.util.*;
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
 @Service
@@ -162,4 +159,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 
 		return Objects.requireNonNull(pharmacy.getRatings().stream().findFirst().orElse(null)).getValue();
 	}
+
+
+	
 }

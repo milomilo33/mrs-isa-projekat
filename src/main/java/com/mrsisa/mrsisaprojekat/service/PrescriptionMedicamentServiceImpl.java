@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Service
 public class PrescriptionMedicamentServiceImpl implements PrescriptionMedicamentService {
@@ -47,4 +48,10 @@ public class PrescriptionMedicamentServiceImpl implements PrescriptionMedicament
 
         prescriptionRepository.save(medicament);
     }
+
+	@Override
+	public Set<PrescriptionMedicament> findInePrescrition(Long id) {
+		
+		return null;
+	}
 }

@@ -1,6 +1,6 @@
 <template >
     <div class="Filter">
-         <b-col lg="4" class="my-1">
+        <b-col lg="4" class="my-1">
         <b-form-group
           label="Choose period"
           label-cols-sm="3"
@@ -11,7 +11,6 @@
           <b-form-select v-model="f" :options="o" v-on:change="findFilter"></b-form-select>
         </b-form-group>
       </b-col>
-   
   <div class="large" v-if="value === true">
     <line-chart :chartData="chartData" :options="options"></line-chart>
   </div>
@@ -32,8 +31,9 @@
         d:[],
         l:[],
         value : false,
+        tip:"",
         pharmacyId:"",
-         o:["Month", "Quarter","Year"],
+        o:["Month", "Quarter","Year"],
         f:0,
       }
     },
@@ -63,7 +63,7 @@
           datasets: [
             {
               type:'bar',
-              label: 'Appointments',
+              label: 'Medicaments',
               backgroundColor: '#ccffbc',
               data:this.d
             }, 
@@ -76,12 +76,13 @@
         this.value = true;
         },
         findFilter(){
+            console.log(this.f);
             var self = this;
             self.l = [];
             self.d =[];
             if(self.f == "Month"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportMedicaments/` + parseInt(self.pharmacyId), {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -98,7 +99,7 @@
                
             }else if(self.f == "Year"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments1/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportMedicaments1/` + parseInt(self.pharmacyId), {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -115,7 +116,7 @@
                 
             }else if(self.f == "Quarter"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments2/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportMedicaments2/` + parseInt(self.pharmacyId), {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
