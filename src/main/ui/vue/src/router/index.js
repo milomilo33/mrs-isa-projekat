@@ -352,7 +352,7 @@ const routes = [
 		component: PharmacyAdminPage,
 		children:[
 			{
-				path: "pharmacyList",
+				path: "pharmacyList/:query",
 				component: PharmacyListPreview
 				
 			},

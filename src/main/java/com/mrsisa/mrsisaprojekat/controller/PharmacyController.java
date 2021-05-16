@@ -1,20 +1,14 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
-import com.mrsisa.mrsisaprojekat.dto.MedicamentInePrescriptionDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO.Quarter;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ReportAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionPreviewDTO;
@@ -24,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +33,6 @@ import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
@@ -64,8 +56,6 @@ public class PharmacyController {
 	@Autowired
 	private ePrescriptionService ePrescriptionService;
 	
-	@Autowired
-	private PrescriptionMedicamentService prescriptionService;
 	
 	@Autowired
 	private ReportService reportService;
@@ -155,7 +145,7 @@ public class PharmacyController {
 		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(Long.parseLong(id));
 		List<DermatologistDTO> returns = new ArrayList<>();
 		for(Dermatologist m: pharmacy.getDermatologists()) {
-			m.setMedicalExaminations(new HashSet<>(dermatologistService.getAvailableAppointments(m)));
+			ArrayList<Appointment> list = pharmacyService.findAvailableAppointmentsDeramtologist(m.getEmail(),pharmacy.getId());
 			if(!m.isDeleted()) {
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : m.getWorkHour()) {
@@ -171,9 +161,11 @@ public class PharmacyController {
 					lista.add(new AppointmentDTO(a));
 				}
 				d.setAllAppointments(lista);
+				d.setAppointments(list);
 				returns.add(d);
 			}
 		}
+		
 		if (pharmacy == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -187,7 +179,7 @@ public class PharmacyController {
 		List<PharmacistDTO> returns = new ArrayList<>();
 		for(Pharmacist p: pharmacy.getPharmacists()) {
 			if(!p.isDeleted()) {
-				p.setCounselings(new HashSet<>(pharmacistService.getAvailableAppointments(p)));
+				ArrayList<Appointment> list = pharmacyService.findAvailableAppointmentsDeramtologist(p.getEmail(),pharmacy.getId());
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : p.getWorkHour()) {
 					WorkHourDTO wd = new WorkHourDTO(h);
@@ -195,6 +187,7 @@ public class PharmacyController {
 				}
 				PharmacistDTO d = new PharmacistDTO(p);
 				d.setWorkHours(hours);
+				d.setAppointments(list);
 				returns.add(d);
 			}
 		}

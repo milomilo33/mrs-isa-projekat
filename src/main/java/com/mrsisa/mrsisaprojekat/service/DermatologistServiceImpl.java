@@ -3,6 +3,8 @@ package com.mrsisa.mrsisaprojekat.service;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
+
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Autowired
 	private DermatologistRepositoryDB dermatologistRepository;
+	
+	@Autowired
+	private PharmacyRepositoryDB pharmacyRepository;
 
 	@Autowired
 	private AppointmentRepositoryDB appointmentRepository;
@@ -115,18 +120,6 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return false;
 	}
 
-	@Override
-	public List<Appointment> getAvailableAppointments(Dermatologist m) {
-		List<Appointment> availableAppointments = new ArrayList<>();
-		Dermatologist d = dermatologistRepository.getExaminations(m.getEmail());
-		for(Appointment a : d.getMedicalExaminations()) {
-			if(a.getPatient() == null) {
-				availableAppointments.add(a);
-			}
-		}
-
-		return availableAppointments;
-	}
 
 	@Override
 	@Transactional(readOnly = true)

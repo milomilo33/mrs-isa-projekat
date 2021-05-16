@@ -26,8 +26,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private MedicalReportRepositoryDB medicalReportRepository;
 
-    @Autowired
-    private PatientRepositoryDB patientRepository;
 
     @Override
     public Collection<Appointment> findAll() {
@@ -156,8 +154,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                     }
                 }
             }
-
-            ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy, null);
+            // dodati price
+            ePrescription ePrescription = new ePrescription(patient, date, prescriptionMedicaments, pharmacy, null,0);
             ePrescriptionRepository.save(ePrescription);
             patient.getePrescriptions().add(ePrescription);
 
