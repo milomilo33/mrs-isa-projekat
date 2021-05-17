@@ -81,9 +81,10 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 		Collection<Appointment> upcomingAppointments = new ArrayList<Appointment>();
 		for (Appointment a : examinations) {
+			System.out.println("hey " + a.getId());
 			LocalDate appointmentDate = a.getDate();
 			LocalDate today = LocalDate.now();
-			if (!a.isDeleted() && !a.isDone()) {
+			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
 				if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
 					a.setMedicalReport(null);
 					a.setChosenEmployee(null);
@@ -198,5 +199,10 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return dermatologist;
 	}
 
+	@Override
+	public Dermatologist findOneExaminations(String email) {
+		Dermatologist d = dermatologistRepository.getDermatologistWithExaminations(email);
 
+		return d;
+	}
 }

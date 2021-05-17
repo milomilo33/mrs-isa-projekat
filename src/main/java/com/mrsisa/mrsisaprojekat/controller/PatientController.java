@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 //import javafx.application.Application;
 
@@ -371,14 +368,15 @@ public class PatientController {
 		}
 		return new ResponseEntity<String>("Not_found", HttpStatus.OK);
 	}
-//	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
-//	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
-//	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
-//
-//		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
-//		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
-//
-//		appointmentService.update(appointmentToReserve);
+
+	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
+	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
+
+		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
+		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
+
+		appointmentService.update(appointmentToReserve);
 //		if(appointmentToReserve.getType() == Appointment.AppointmentType.EXAMINATION) {
 //			Dermatologist d = dermatologistService.findOneExaminations(appointmentToReserve.getChosenEmployee().getEmail());
 //
@@ -393,22 +391,22 @@ public class PatientController {
 //			pharmacistService.update(p);
 //		}
 //
-//		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
-//
-//		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
-//
-//
-//
-//		try {
-//			emailService.ReserveExaminationMail(p, id);
-//		}
-//		catch( Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//
-//		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
-//
-//	}
+		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
+
+		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
+
+
+
+		try {
+			emailService.ReserveExaminationMail(p, id);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+
+	}
 
 	@PostMapping(value = "/add_allergy")
 	@PreAuthorize("hasAnyRole('PATIENT')")

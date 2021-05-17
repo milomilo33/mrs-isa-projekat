@@ -114,8 +114,9 @@ export default {
 
     reserveExamination() {
               console.log(JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
+              console.log(typeof JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
 
-      this.axios.post('http://localhost:8080/api/patients/reserve_appointment', {
+      this.axios.post('/api/patients/reserve_appointment', {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         appointmentId: this.appointment.id
       },
