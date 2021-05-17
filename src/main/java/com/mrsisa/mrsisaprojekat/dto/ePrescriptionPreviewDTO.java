@@ -12,6 +12,7 @@ public class ePrescriptionPreviewDTO {
     private Long id;
     private LocalDate expiryDate;
     private Set<MedicamentInePrescriptionDTO> medicine;
+    private double price;
 
     public ePrescriptionPreviewDTO() {}
 
@@ -48,4 +49,14 @@ public class ePrescriptionPreviewDTO {
     public void setMedicine(Set<MedicamentInePrescriptionDTO> medicine) {
         this.medicine = medicine;
     }
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+    
+    
 }

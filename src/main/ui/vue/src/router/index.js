@@ -51,6 +51,7 @@ import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
+import ReportPharmacy from '../components/ReportPharmacy'
 //import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
@@ -479,12 +480,20 @@ const routes = [
 					roles: [Role.AdminPharmacy]
 				},
 			},
-				{
+			{
 				path: "ReportMedicaments",
 				component: ReportMedicaments,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},
+			},
+			{
+				path: "ReportPharmacy",
+				component: ReportPharmacy,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+				
 			},
 
 		]

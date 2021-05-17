@@ -337,7 +337,7 @@ insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 2)
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 3)
 
-insert into pricelist_item_appointment (appointment, pharmacy_id) values (1, 1)
+insert into pricelist_item_appointment (appointment, pharmacy_id) values (0, 1)
 insert into pricelist_item_appointment (appointment, pharmacy_id) values (1, 1)
 insert into pricelist_item_appointment (appointment, pharmacy_id) values (0, 2)
 insert into pricelist_item_appointment (appointment, pharmacy_id) values (1, 2)
@@ -382,14 +382,14 @@ insert into e_prescription_prescription_medicaments (e_prescription_id, prescrip
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (2, 2)
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (3, 3)
 
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com')
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com', null)
 
 
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 100000, 4, 'nikolinatosic999@gmail.com')
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 4, 'mikaantic@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 100000, 4, 'nikolinatosic999@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 500, 4, 'mikaantic@gmail.com', null)
 
-insert into offer (deadline, status, total_price, order_id, supplier_email) values ('2021-01-10', 2, 500, 2, 'nikolinatosic999@gmail.com')
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 500, 2, 'nikolinatosic999@gmail.com', null)
 
 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)

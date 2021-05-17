@@ -63,7 +63,7 @@
           datasets: [
             {
               type:'bar',
-              label: 'Medicaments',
+              label: 'Income',
               backgroundColor: '#ccffbc',
               data:this.d
             }, 
@@ -79,11 +79,11 @@
             var self = this;
             self.l = [];
             self.d =[];
-             if(self.f =="January" || self.f =="February" || self.f =="March" || self.f =="April" || self.f =="May" || self.f =="June"
+            if(self.f =="January" || self.f =="February" || self.f =="March" || self.f =="April" || self.f =="May" || self.f =="June"
             || self.f =="July" || self.f =="August" || self.f =="September"|| self.f =="October" || self.f =="November"
             || self.f =="December"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments/` + parseInt(self.pharmacyId)+"/"+self.f, {
+                    .get(`/api/pharmacy/reportPharmacy/` + parseInt(self.pharmacyId)+"/"+self.f, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -101,7 +101,7 @@
                
             }else if(self.f == "Year"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments1/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportPharmacy1/` + parseInt(self.pharmacyId), {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -119,7 +119,7 @@
                 
             }else if(self.f == "Quarter"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments2/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportPharmacy2/` + parseInt(self.pharmacyId), {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
