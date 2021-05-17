@@ -4,7 +4,6 @@ import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
-
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -81,7 +81,6 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 		Collection<Appointment> upcomingAppointments = new ArrayList<Appointment>();
 		for (Appointment a : examinations) {
-			System.out.println("hey " + a.getId());
 			LocalDate appointmentDate = a.getDate();
 			LocalDate today = LocalDate.now();
 			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
@@ -153,6 +152,40 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 
 		return doneExaminations;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getAllExistingExaminationsForDermatologist(String email) {
+		Dermatologist dermatologist = this.findOne(email);
+
+		if (dermatologist == null) {
+			return null;
+		}
+
+		Collection<Appointment> examinations = dermatologist.getMedicalExaminations();
+		Collection<Appointment> existingExaminations = new ArrayList<Appointment>();
+		if (examinations == null) {
+			return existingExaminations;
+		}
+
+		LocalDate today = LocalDate.now();
+		for (Appointment a : examinations) {
+			LocalDate appointmentDate = a.getDate();
+			if (a.getPatient() == null) {
+				boolean isBeforeScheduledTime = false;
+				LocalTime timeFrom = a.getTermFrom();
+				LocalTime now = LocalTime.now();
+				isBeforeScheduledTime = now.isBefore(timeFrom);
+				if (today.isBefore(appointmentDate) || (today.isEqual(appointmentDate) && isBeforeScheduledTime)) {
+					a.setMedicalReport(null);
+					a.setChosenEmployee(null);
+					existingExaminations.add(a);
+				}
+			}
+		}
+
+		return existingExaminations;
 	}
 
 	@Override

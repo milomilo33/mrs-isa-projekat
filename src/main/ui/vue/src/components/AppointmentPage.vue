@@ -22,11 +22,12 @@
     </div>
 
     <div style="text-align:center;">
-        <b-button variant="danger" @click="onPatientAbsent">Patient is absent</b-button>
+        <b-button size="sm" variant="info" @click="onScheduleAnotherAppointment">Schedule another appointment</b-button>
     </div>
     <br>
     <div style="text-align:center;">
-        <b-button variant="success" @click="onEndExamination">End examination</b-button>
+        <b-button variant="danger" @click="onPatientAbsent" style="margin:10px;">Patient is absent</b-button>
+        <b-button variant="success" @click="onEndExamination" style="margin:10px;">End examination</b-button>
     </div>
     <br>
 
@@ -48,6 +49,15 @@
         <MedicamentListPreview :prescriptionMode=true :appointment="appointment" @prescribed="onPrescribed"></MedicamentListPreview>
         <br>
         <b-button class="mt-3" style="margin-top: 5rem;" variant="outline-success" block @click="hidePrescriptionModal">Done</b-button>
+    </b-modal>
+
+    <b-modal size="xl" ref="scheduling-modal" hide-footer title="Scheduling">
+        <b-table striped hover :items="existingAppointments" :fields="existingAppointmentsFields">
+            <template #cell(action)="row">
+                <button class="btn btn-dark" @click="scheduleExistingAppointment(row)"
+                    :ref="'btn' + row.index">Schedule</button>
+            </template>
+        </b-table>
     </b-modal>
   </div>
 </template>
@@ -78,6 +88,25 @@ export default {
               label: 'Quantity',
               sortable: true
           },
+      ],
+      existingAppointments: [],
+      existingAppointmentsFields: [
+            {
+                key: 'dateStr',
+                headerTitle: 'Date',
+                label: 'Date'
+            },
+            {
+                key: 'timeFrom',
+                headerTitle: 'From',
+                label: 'From'
+            },
+            {
+                key: 'timeTo',
+                headerTitle: 'To',
+                label: 'To'
+            },
+            'action'
       ]
     }
   },
@@ -126,6 +155,58 @@ export default {
       });
     },
 
+    onScheduleAnotherAppointment() {
+        this.axios.get(`/api/dermatologist/examinations/existing`, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+            },
+        })
+        .then(response => {
+            let returnedAppointments = response.data;
+
+            // date conversion
+            returnedAppointments.forEach((obj) => {
+                obj["dateStr"] = new Date(obj["date"]).toDateString();
+                obj["date"][1] -= 1;
+                let timeFromArray = obj["date"].concat(obj["termFrom"]).concat([0, 0]);
+                obj["timeFrom"] = new Date(...timeFromArray).toLocaleTimeString();
+                let timeToArray = obj["date"].concat(obj["termTo"]).concat([0, 0]);
+                obj["timeTo"] = new Date(...timeToArray).toLocaleTimeString();
+            });
+
+            this.existingAppointments = returnedAppointments;
+
+            console.log(response);
+            this.showSchedulingModal();
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    },
+
+    scheduleExistingAppointment(row) {
+        let existingAppointmentId = row.item.id;
+
+        let body = {
+            patientEmail: this.appointment.patient.email,
+            appointmentId: existingAppointmentId
+        };
+
+        this.axios.post('/api/patients/reserve_appointment', body, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+            }
+        })
+        .then(response => {
+            console.log(response);
+            this.hideSchedulingModal();
+        })
+        .catch(error => {
+            console.log(error);
+            this.showErrorModal();
+        });
+    },
+
     onPrescribeMore() {
         this.showPrescriptionModal();
     },
@@ -142,6 +223,10 @@ export default {
         this.$refs['prescription-modal'].hide()
     },
 
+    hideSchedulingModal() {
+        this.$refs['scheduling-modal'].hide()
+    },
+
     showErrorModal() {
         this.$refs['error-modal'].show()
     },
@@ -154,23 +239,27 @@ export default {
         this.$refs['prescription-modal'].show()
     },
 
+    showSchedulingModal() {
+        this.$refs['scheduling-modal'].show()
+    },
+
     goToHomePage() {
         this.$router.push({ name: 'DermatologistPagePharmacyList' });
     },
 
     loadPrescriptionTable() {
         this.axios.get(`/api/eprescriptions/medical-report/${this.medicalReportId}/prescription-medicaments`, {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                    },
-                })
-                .then(response => {
-                    this.prescribedMedicines = response.data;
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+                        headers: {
+                            Authorization: "Bearer " + localStorage.getItem("token"),
+                        },
+                    })
+                    .then(response => {
+                        this.prescribedMedicines = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
     },
 
     onPrescribed() {

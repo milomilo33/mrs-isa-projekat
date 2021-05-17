@@ -1,8 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
@@ -20,8 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -281,6 +277,23 @@ public class DermatologistController {
 		}
 
 		return new ResponseEntity<Collection<Appointment>>(doneExaminations, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/examinations/existing")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// svi slobodni termini pregleda za trenutno ulogovanog dermatologa
+	public ResponseEntity<Collection<Appointment>> getAllExistingExaminationsForDermatologist() {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> existingExaminations = dermatologistService.getAllExistingExaminationsForDermatologist(currentDermatologist.getEmail());
+
+		if (existingExaminations == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (existingExaminations.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(existingExaminations, HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/ratings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

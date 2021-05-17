@@ -23,6 +23,8 @@ public interface DermatologistService {
 
 
 	Collection<Appointment> getDoneExaminationsWithPatientsForDermatologist(String email);
+
+	Collection<Appointment>getAllExistingExaminationsForDermatologist(String email);
 	
 	Dermatologist getRatings(String email);
 
