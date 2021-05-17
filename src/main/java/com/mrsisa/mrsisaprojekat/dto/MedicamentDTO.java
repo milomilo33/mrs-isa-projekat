@@ -15,16 +15,17 @@ public class MedicamentDTO {
 	private String annotation;
 	private String structure;
 	private String manufacturer;
+	private int points;
 	
 	public MedicamentDTO() {
 		
 	}
 	public MedicamentDTO(Medicament m) {
-		this(m.getId(), m.getName(), m.getType(), m.getMedicamentForm().name(), m.getIssuanceMode().name(), m.getAnnotations(), m.getStructure(), m.getManufacturer());
+		this(m.getId(), m.getName(), m.getType(), m.getMedicamentForm().name(), m.getIssuanceMode().name(), m.getAnnotations(), m.getStructure(), m.getManufacturer(), m.getPoints());
 	}
 	
 	public MedicamentDTO(Long id, String name, String type, String medicamentForm, String issuanceMode,
-			String annotations, String structure, String manufacturer) {
+			String annotations, String structure, String manufacturer, int points) {
 		this.id = id;
 		this.name = name;
 		this.type = type;
@@ -33,7 +34,10 @@ public class MedicamentDTO {
 		this.manufacturer = manufacturer;
 		this.mode = issuanceMode;
 		this.form = medicamentForm;
+		this.points = points;
 	}
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -58,6 +62,10 @@ public class MedicamentDTO {
 	public String getManufacturer() {
 		return manufacturer;
 	}
+	public int getPoints() {
+		return points;
+	}
+	
 	
 	
 }

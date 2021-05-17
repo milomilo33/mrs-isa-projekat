@@ -54,7 +54,7 @@
           <!-- card-body.// -->
       <!-- card-group-item.// -->
     </div>
-    <div class="jusify-content">
+    <div class="justify-content">
     <div class="row row-cols-4 row-cols-md-3 g-2">
       <div
         class="col-lg-3 col-md-6 col-sm-8 offset-md-1 offset-sm-0" style="height: 25rem;"

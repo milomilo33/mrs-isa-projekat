@@ -44,6 +44,9 @@ public class Medicament {
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
+	@Column(name = "points", unique = false, nullable = false)
+	private int points;
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ratings;
 	
@@ -153,6 +156,15 @@ public class Medicament {
 		this.ratings = ratings;
 	}
 
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
+	
 	
 	
 	

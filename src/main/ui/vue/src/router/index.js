@@ -48,7 +48,7 @@ import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
-
+import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
@@ -134,6 +134,13 @@ const routes = [
 		name: "SystemAdminPage",
 		component: SystemAdminPage,
 		children: [
+			{
+				path: "LoyaltyProgram",
+				component: LoyaltyProgram,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
+			},
 			{
 				path: "MedicamentList",
 				component: MedicamentListPreview,
