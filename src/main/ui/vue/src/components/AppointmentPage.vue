@@ -52,12 +52,66 @@
     </b-modal>
 
     <b-modal size="xl" ref="scheduling-modal" hide-footer title="Scheduling">
+        <div class="d-block text-center">
+            <h3>Existing appointments</h3>
+        </div>
         <b-table striped hover :items="existingAppointments" :fields="existingAppointmentsFields">
             <template #cell(action)="row">
                 <button class="btn btn-dark" @click="scheduleExistingAppointment(row)"
                     :ref="'btn' + row.index">Schedule</button>
             </template>
         </b-table>
+        <b-button variant="info" @click="onCreateAndScheduleNewAppointment" style="margin:10px;">
+            Create and schedule new appointment
+        </b-button>
+    </b-modal>
+
+    <b-modal ref="scheduling-success-modal" hide-footer title="Success" @hide="hideAllSchedulingModals">
+        <div class="d-block text-center">
+            <p>{{ this.successMessage }}</p>
+        </div>
+        <b-button class="mt-3" variant="outline-success" block @click="hideAllSchedulingModals">Close</b-button>
+    </b-modal>
+
+    <b-modal ref="scheduling-error-modal" hide-footer title="Error">
+        <div class="d-block text-center">
+            <p>{{ this.schedulingErrorMessage }}</p>
+        </div>
+        <b-button class="mt-3" variant="outline-danger" block @click="hideSchedulingErrorModal">Close</b-button>
+    </b-modal>
+
+    <b-modal
+      size="lm"
+      ref="scheduling-picker-modal"
+      :id="'scheduling-picker-modal'"
+      :title="'Create and schedule new appointment'"
+      @ok="createAndScheduleAppointment"
+      @ended="showSuccessModal"
+      :header-bg-variant="'success'"
+      :footer-bg-variant="'success'"
+    >
+      <template>
+        <div>
+          <label></label>
+          <label for="dd"> Date: </label>
+          <b-form-datepicker
+            :date-disabled-fn="dateDisabled"
+            v-model="schedulingDate"
+            locale="en"
+            class="mb-2"
+          ></b-form-datepicker>
+        </div>
+        <div>
+          <label></label>
+          <label for="tf"> Time from: </label>
+          <b-form-timepicker v-model="timeFrom" locale="en"></b-form-timepicker>
+        </div>
+        <div>
+          <label></label>
+          <label for="tt"> Time to: </label>
+          <b-form-timepicker v-model="timeTo" locale="en"></b-form-timepicker>
+        </div>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -107,7 +161,11 @@ export default {
                 label: 'To'
             },
             'action'
-      ]
+      ],
+      schedulingDate: "",
+      timeFrom: "",
+      timeTo: "",
+      schedulingErrorMessage: ""
     }
   },
   props: {
@@ -184,6 +242,10 @@ export default {
         });
     },
 
+    onCreateAndScheduleNewAppointment() {
+        this.showSchedulingPickerModal();
+    },
+
     scheduleExistingAppointment(row) {
         let existingAppointmentId = row.item.id;
 
@@ -199,12 +261,44 @@ export default {
         })
         .then(response => {
             console.log(response);
-            this.hideSchedulingModal();
+            this.successMessage = "Appointment successfully scheduled!";
+            this.showSchedulingSuccessModal();
         })
         .catch(error => {
             console.log(error);
-            this.showErrorModal();
+            this.schedulingErrorMessage = "Failed to schedule appointment";
+            this.showSchedulingErrorModal();
         });
+    },
+
+    createAndScheduleAppointment() {
+        if (!this.schedulingDate || !this.timeFrom || !this.timeTo) {
+            this.schedulingErrorMessage = "Some fields are empty!";
+            this.showSchedulingErrorModal();
+            return;
+        }
+        let date = new Date(this.schedulingDate);
+        let body = {
+            patientEmail: this.appointment.patient.email,
+            date,
+            termFrom: this.timeFrom,
+            termTo: this.timeTo
+        };
+        this.axios.post(`/api/dermatologist/appointments/schedule-new`, body, {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("token"),
+                            },
+                        })
+                        .then(response => {
+                            console.log(response);
+                            this.successMessage = "Successfully created and scheduled appointment!";
+                            this.showSchedulingSuccessModal();
+                        })
+                        .catch(error => {
+                            this.schedulingErrorMessage = "Failed to create and schedule appointment!";
+                            this.showSchedulingErrorModal();
+                            console.log(error);
+                        });
     },
 
     onPrescribeMore() {
@@ -227,6 +321,10 @@ export default {
         this.$refs['scheduling-modal'].hide()
     },
 
+    hideSchedulingErrorModal() {
+        this.$refs['scheduling-error-modal'].hide()
+    },
+
     showErrorModal() {
         this.$refs['error-modal'].show()
     },
@@ -241,6 +339,24 @@ export default {
 
     showSchedulingModal() {
         this.$refs['scheduling-modal'].show()
+    },
+
+    showSchedulingSuccessModal() {
+        this.$refs['scheduling-success-modal'].show()
+    },
+
+    showSchedulingPickerModal() {
+        this.$refs['scheduling-picker-modal'].show()
+    },
+
+    showSchedulingErrorModal() {
+        this.$refs['scheduling-error-modal'].show()
+    },
+
+    hideAllSchedulingModals() {
+        this.$refs['scheduling-modal'].hide();
+        this.$refs['scheduling-success-modal'].hide();
+        this.$refs['scheduling-picker-modal'].hide()
     },
 
     goToHomePage() {
@@ -265,7 +381,16 @@ export default {
     onPrescribed() {
       this.hidePrescriptionModal();
       this.loadPrescriptionTable();
-    }
+    },
+
+    dateDisabled(ymd, date) {
+      const today = new Date();
+      const m = today.getMonth();
+      const d = today.getDate();
+      const day1 = date.getDate();
+      const month1 = date.getMonth();
+      return (day1 <= d && month1 <= m) || (day1 >= d && month1 < m);
+    },
   },
 
   mounted() {
