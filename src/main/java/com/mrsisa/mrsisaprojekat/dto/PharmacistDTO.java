@@ -18,6 +18,7 @@ public class PharmacistDTO {
 	private PharmacyDTO pharmacy;
 	private ArrayList<WorkHourDTO> workHours;
 	private ArrayList<Appointment> appointments;
+	private double rating;
 
 	public PharmacistDTO() {}
 
@@ -96,4 +97,13 @@ public class PharmacistDTO {
 	public void setAppointments(ArrayList<Appointment> appointments) {
 		this.appointments = appointments;
 	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+	
 }

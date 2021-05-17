@@ -164,4 +164,25 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return pharmacist;
 	}
 
+	
+	@Override
+	public double getRating(String email) {
+		Pharmacist d = pharmacistRepository.getRatings(email);
+		try {
+			d.getRatings();
+		}catch(NullPointerException e) {
+			return 0;
+		}
+			
+			
+		double val = 0;
+			
+		for(Rating g : d.getRatings()) {
+			val+=g.getValue();
+		}
+		val= val/d.getRatings().size();
+		return val;
+	}
+	
+
 }

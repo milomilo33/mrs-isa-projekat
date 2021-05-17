@@ -26,6 +26,9 @@ public class Offer {
 	@Column(name = "deadline", unique = false, nullable = false)
 	private LocalDateTime deadline;
 	
+	@Column(name = "acceptedDate", unique = false, nullable = true)
+	private LocalDateTime acceptedDate;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Supplier supplier;
 	
@@ -92,6 +95,18 @@ public class Offer {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
+
+
+	public LocalDateTime getAcceptedDate() {
+		return acceptedDate;
+	}
+
+
+	public void setAcceptedDate(LocalDateTime acceptedDate) {
+		this.acceptedDate = acceptedDate;
+	}
+	
+	
 
 
 	

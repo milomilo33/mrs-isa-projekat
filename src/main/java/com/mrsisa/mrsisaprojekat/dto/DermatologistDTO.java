@@ -18,6 +18,7 @@ public class DermatologistDTO {
 	private ArrayList<WorkHourDTO> workHours;
 	private ArrayList<PharmacyDTO> pharmacies;
 	private ArrayList<AppointmentDTO> allAppointments;
+	private double rating;
 
 	public DermatologistDTO() {}
 
@@ -133,5 +134,15 @@ public class DermatologistDTO {
 	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+	
+	
 	
 }

@@ -20,7 +20,7 @@
            <template #button-content>
            Complaints
           </template>
-          <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">See all</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/answeredComplaints">See all complaints</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">Write answer</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>

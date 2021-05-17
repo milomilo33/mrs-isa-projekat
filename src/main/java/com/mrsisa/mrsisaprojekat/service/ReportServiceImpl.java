@@ -7,18 +7,36 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentInePrescriptionDTO;
 import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO;
+import com.mrsisa.mrsisaprojekat.dto.OfferDTO;
+import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionPreviewDTO;
 import com.mrsisa.mrsisaprojekat.dto.MonthAppointmentDTO.Quarter;
+import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
+import com.mrsisa.mrsisaprojekat.model.Offer;
+import com.mrsisa.mrsisaprojekat.model.OfferStatus;
+import com.mrsisa.mrsisaprojekat.model.Order;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
+import com.mrsisa.mrsisaprojekat.model.Price;
+import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 @Service
 public class ReportServiceImpl implements ReportService {
+	
+	@Autowired
+	private PricelistItemAppointmentService pricelistItemAppointmentService;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private OfferService offerService;
 
 	@Override
 	public ArrayList<MonthAppointmentDTO> makeReport() {
@@ -199,5 +217,109 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	
+	@Override
+	public ArrayList<PricelistItemAppointmentDTO> findPricelistItemsAppointments(Long id){
+		Set<PricelistItemAppointment> items = (Set<PricelistItemAppointment>) pricelistItemAppointmentService.findAllPharmacy(id);
+		ArrayList<PricelistItemAppointmentDTO> list = new ArrayList<>();
+	
+		// samo aktivne cene (odnosne one kod kojih je deleted = false)
+		for(PricelistItemAppointment p :items) {
+			ArrayList<Price> prices = new ArrayList<>();
+			for(Price pp : p.getPrice()) {
+				if(pp.isDeleted()) {
+					continue;	
+				}
+				prices.add(pp);
+			}
+	
+		PricelistItemAppointmentDTO pmdt = new PricelistItemAppointmentDTO(p);
+		pmdt.setPrice(prices);
+		list.add(pmdt);
+	}
+		return list;
+	
+	}
 
+	@Override
+	public ArrayList<MonthAppointmentDTO> subPriceAppointments(ArrayList<PricelistItemAppointmentDTO> l,
+			Set<Appointment> pharmacyList, ArrayList<MonthAppointmentDTO> list, Set<ePrescriptionPreviewDTO> ePrescriptions, Set<OrderDTO> ordersInPharmacy) {
+		for(Appointment a : pharmacyList) {
+			for(MonthAppointmentDTO aa : list) {
+				for(PricelistItemAppointmentDTO p: l) {
+				//is Done fali
+				if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth()) && a.getType() == p.getApointment()) {
+					int val = aa.getValues().get(a.getDate().getDayOfMonth());
+					aa.getValues().put(a.getDate().getDayOfMonth(),(int)(val+p.getPrice().get(0).getValue()));
+					}
+				}
+			}
+			
+		}
+		for(ePrescriptionPreviewDTO a : ePrescriptions) {
+				for(MonthAppointmentDTO aa : list) {
+					if(a.getExpiryDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getExpiryDate().getDayOfMonth())) {
+						int val = aa.getValues().get(a.getExpiryDate().getDayOfMonth());
+						aa.getValues().put(a.getExpiryDate().getDayOfMonth(),(int)(val+ a.getPrice()));
+				}
+			}
+			
+		}
+		for(OrderDTO o : ordersInPharmacy) {
+				for(OfferDTO oo : o.getOffers()) {
+					for(MonthAppointmentDTO aa : list) {
+						if(oo.getDeadline().getMonth() == aa.getMonth() && aa.getValues().containsKey(oo.getDeadline().getDayOfMonth())) {
+							int val = aa.getValues().get(oo.getDeadline().getDayOfMonth());
+							aa.getValues().put(oo.getDeadline().getDayOfMonth(),(int)(val- oo.getTotalPrice()));
+					}
+					
+					
+				}
+				
+			}
+		}
+		
+		
+		return list;
+	}
+
+	@Override
+	public Set<ePrescriptionPreviewDTO> findePrescriptionsPrice(Set<ePrescription> ePrescriptions) {
+		Set<ePrescriptionPreviewDTO> dtos = new HashSet<ePrescriptionPreviewDTO>();
+		for(ePrescription e: ePrescriptions) {
+			ePrescriptionPreviewDTO preview = new ePrescriptionPreviewDTO();
+			preview.setExpiryDate(e.getTakenDate());
+			preview.setId(e.getId());
+			preview.setPrice(e.getPrice());
+			dtos.add(preview);
+			
+		}
+		return dtos;
+	}
+
+	@Override
+	public Set<OrderDTO> findAllOrdersInPharmacy(Long id) {
+		Set<Order> orders = orderService.findAllOrders();
+		Set<OrderDTO> ordersPharmacy = new HashSet<OrderDTO>();
+		for(Order o : orders) {
+			if(o.getAdmin().getPharmacy().getId() == id) {
+				Set<Offer> offers = offerService.offersForOrder(o.getId());
+				Set<OfferDTO> offersDTO = new HashSet<OfferDTO>();
+				for(Offer oo : offers) {
+					if(oo.getStatus().equals(OfferStatus.ACCEPTED)) {
+						Offer offer = offerService.findOffer(oo.getId());
+						OfferDTO od = new OfferDTO();
+						od.setDeadline(offer.getAcceptedDate());
+						od.setId(offer.getId());
+						od.setTotalPrice(offer.getTotalPrice());
+						offersDTO.add(od);
+					}
+					
+				}
+				OrderDTO op = new OrderDTO(o);
+				op.setOffers(offersDTO);
+				ordersPharmacy.add(op);
+			}
+		}
+		return ordersPharmacy;
+	}
 }

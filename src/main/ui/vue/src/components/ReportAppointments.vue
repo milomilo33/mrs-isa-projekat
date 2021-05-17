@@ -33,7 +33,7 @@
         l:[],
         value : false,
         pharmacyId:"",
-         o:["Month", "Quarter","Year"],
+        o:["January","February","March","April","May","June","July","August","September","October","November","December", "Quarter","Year"],
         f:0,
       }
     },
@@ -79,9 +79,11 @@
             var self = this;
             self.l = [];
             self.d =[];
-            if(self.f == "Month"){
+             if(self.f =="January" || self.f =="February" || self.f =="March" || self.f =="April" || self.f =="May"  || self.f =="June"
+            || self.f =="July" || self.f =="August" || self.f =="September"|| self.f =="October" || self.f =="November"
+            || self.f =="December"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportAppointments/` + parseInt(self.pharmacyId)+"/"+self.f, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -91,6 +93,7 @@
                     self.l.push(response.data.monthAppoinntments[i].day);
                     self.d.push(response.data.monthAppoinntments[i].value);   
                 } 
+                self.fillData();
                 })
                 .catch(error => {
                     console.log(error);
@@ -108,6 +111,7 @@
                     self.l.push(response.data.monthAppoinntments[i].month);
                     self.d.push(response.data.monthAppoinntments[i].value);   
                 } 
+                self.fillData();
                 })
                 .catch(error => {
                     console.log(error);
@@ -125,12 +129,12 @@
                     self.l.push(response.data.monthAppoinntments[i].quarter);
                     self.d.push(response.data.monthAppoinntments[i].value);   
                 } 
+                self.fillData();
                 })
                 .catch(error => {
                     console.log(error);
                 });
             }
-             self.fillData();
         }
     }
   }

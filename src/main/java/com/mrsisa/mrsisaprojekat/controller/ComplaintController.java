@@ -294,18 +294,14 @@ public class ComplaintController {
 		return new ResponseEntity<ComplaintDTO>(new ComplaintDTO(saved.getId(), saved.getDescription(), saved.getResponder().getEmail(), saved.getResponse()), HttpStatus.OK);
 	}
 	
-	@GetMapping(value ="/getAllAnswered")
+	@GetMapping(value ="/getAllAnswered/{email}")
 	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
-	public ResponseEntity<Collection<ComplaintDTO>> getAllAnswered(){
+	public ResponseEntity<Collection<ComplaintDTO>> getAllAnswered(@PathVariable("email") String email){
 		Collection<Complaint> complaints = complaintService.findAllAnswered();
 		Collection<ComplaintDTO> complaintsDTO = new ArrayList<ComplaintDTO>();
 	
 		for(Complaint c : complaints) {
-			if(c.getEmployee() != null) {
-				ComplaintDTO dto = new ComplaintDTO(c);
-				complaintsDTO.add(dto);
-			}
-			else {
+			if(c.getResponder().getEmail().equalsIgnoreCase(email) || c.getPatient().getEmail().equalsIgnoreCase(email)) {
 				ComplaintDTO dto = new ComplaintDTO(c);
 				complaintsDTO.add(dto);
 			}

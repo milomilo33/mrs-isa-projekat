@@ -39,4 +39,6 @@ public interface DermatologistService {
 	Dermatologist findOneExaminations(String email);
 
 	String createAndScheduleNewAppointment(String dermatologistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId);
+	
+	double getRating(String email);
 }
