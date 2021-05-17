@@ -54,6 +54,11 @@ public class PharmacyController {
 	@Autowired
 	private ePrescriptionService ePrescriptionService;
 	
+	@Autowired
+	private DermatologistService dermatologistService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
 	
 	@Autowired
 	private ReportService reportService;
@@ -160,6 +165,7 @@ public class PharmacyController {
 				}
 				d.setAllAppointments(lista);
 				d.setAppointments(list);
+				d.setRating(dermatologistService.getRating(d.getEmail()));
 				returns.add(d);
 			}
 		}
@@ -186,6 +192,7 @@ public class PharmacyController {
 				PharmacistDTO d = new PharmacistDTO(p);
 				d.setWorkHours(hours);
 				d.setAppointments(list);
+				d.setRating(pharmacistService.getRating(d.getEmail()));
 				returns.add(d);
 			}
 		}
