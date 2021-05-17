@@ -79,6 +79,17 @@
                 />
               </div>
               <div class="form-group col-md-6">
+                <label name="points">Points</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="points"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
                 <label name="annotations">Annotations</label>
                 <input
                   type="text"
@@ -141,6 +152,7 @@ export default {
       substitute: [],
       content: "",
       structure: "",
+      points: 0,
     };
   },
   mounted() {
@@ -189,6 +201,7 @@ export default {
               medicamentForm: this.medicamentForm,
               annotations: this.annotations,
               substituteMedicaments: this.substitute,
+              points: this.points,
             },
             {
               headers: {

@@ -19,6 +19,9 @@ public class CategoryThresholds {
 	@Column(name = "category", unique = true, nullable = false)
 	private Category category;
 	
+	@Column(name = "discount", unique = true, nullable = false)
+	private Integer discount;
+	
 	public CategoryThresholds() {}
 	
 	public Long getId() {
@@ -39,4 +42,13 @@ public class CategoryThresholds {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+	
 }

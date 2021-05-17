@@ -33,9 +33,9 @@ insert into roles (name) values ('ROLE_PHARMACIST')
 insert into roles (name) values ('ROLE_SUPPLIER')
 insert into roles (name) values ('ROLE_PATIENT')
 
-insert into category_thresholds (category, threshold) values (0, 50)
-insert into category_thresholds (category, threshold) values (1, 100)
-insert into category_thresholds (category, threshold) values (2, 200)
+insert into category_thresholds (category, threshold, discount) values (0, 50, 0)
+insert into category_thresholds (category, threshold, discount) values (1, 100, 2)
+insert into category_thresholds (category, threshold, discount) values (2, 200, 5)
 
 
 insert into pharmacy (deleted, description, income, name, address_id) values('false','Ono po čemu se BENU izdvaja na tržištu jeste konstantan rad sa zaposlenim farmaceutima na usavršavanju i upoznavanju najnovijih dostignuća medicine i farmakologije.', 0, 'Benu', 1)
@@ -162,17 +162,17 @@ insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('a
 insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('lazarpopovic@gmail.com', 3)
 insert into dermatologists_pharmacies (dermatologist_id, pharmacy_id) values ('janatot@gmail.com', 3)
 
-insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type) values (1, 'Lek Trandolapril PharmaS ne smete uzimati ako ste alergični (preosetljivi) na trandolapril ili na bilo koju od pomoćnih supstanci ovog leka','false' , 1,'PHARMAS D.O.O. BEOGRAD', 1,'Trandolapril PharmaS',' gvožđe(III)-oksid, žuti (E 172); eritrozin (E 127); titan-dioksid (E 171); natrijum-laurilsulfat;
-želatin' , 'Humani lekovi')
-insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type) values (2, 'Pacijenti koji boluju od retkog naslednog oboljenja netolerancije galaktoze, Lapp laktaznog deficita ili loše
+insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type, points) values (1, 'Lek Trandolapril PharmaS ne smete uzimati ako ste alergični (preosetljivi) na trandolapril ili na bilo koju od pomoćnih supstanci ovog leka','false' , 1,'PHARMAS D.O.O. BEOGRAD', 1,'Trandolapril PharmaS',' gvožđe(III)-oksid, žuti (E 172); eritrozin (E 127); titan-dioksid (E 171); natrijum-laurilsulfat;
+želatin' , 'Humani lekovi', 2)
+insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type, points) values (2, 'Pacijenti koji boluju od retkog naslednog oboljenja netolerancije galaktoze, Lapp laktaznog deficita ili loše
 glukozno-galaktozne apsorpcije ne bi trebalo koristiti ovaj lek zbog sadržaja laktoze. ','false' , 1,'FAMAR A.V.E. ANTHOUSSA PLANT ', 2,'Brufen','celuloza, mikrokristalna;kroskarmeloza-natrijum;
-laktoza, monohidrat;silicijum-dioksid koloidni bezvodni;natrijum-lauril sulfat;magnezijum-stearat' , 'Humani lekovi')
-insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type) values (3, 'Lek Buscopan ne smete koristiti ako ste alergični (preosetljivi) na hioscin-butilbromid ili neku drugu komponentu leka, ukoliko patite od mijastenije gravis (bolest koju karakteriše izrazita slabost mišića ili čak nemogućnost kretanja tela),','false' , 1,'Delpharm Reims ', 2,'Buscopan','Kalcijum-hidrogenfosfat, bezvodni; kukuruzni skrob,osušen; kukuruzni skrob, rastvorni; Silicijum-dioksid,
-koloidni, bezvodni; Vinska kiselina; Stearinska kiselina.' , 'Humani lekovi')
-insert into medicament (id,annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type) values (4, 'Lek Prospan ne smete uzimati ako ste alergični (preosetljivi) na bršljan ili na bilo koju pomoćnu supstancu ovog leka','false', 1,'ENGELHARD ARZNEIMITTEL GMBH &CO.KG',  7,'Prospan','Aktivna supstanca je: bršljan, suvi ekstrakt lista
-1 mL sirupa sadrži 7 mg suvog ekstrakta lista bršljana.Pomoćne supstance su: kalijum-sorbat; limunska kiselina, bezvodna; ksantan guma; aroma trešnje.' , 'Humani lekovi')
-insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type) values (5, 'Kada uzimate lek Andol posebno vodite računa: ako ste preosetljivi (alergični) na druge lekove protiv bolova, zapaljenja (antiinflamatorna sredstva) ili
-na neke druge alergene, ako ste ranije imali čir na želucu ili crevu ili želudačnocrevna krvarenja. ','false' , 1,'Pliva Hrvatska d.o.o.', 1,'Andol','Aktivna supstanca je acetilsalicilna kiselina.Sadržaj pomoćnih supstanci: magnezijum-oksid, teški; skrob, kukuruzni; želatin; talk; skrob, kukuruzni, preželatinovani; celuloza, mikrokristalna; silicijum dioksid, koloidni, bezvodni ' , 'Humani lekovi')
+laktoza, monohidrat;silicijum-dioksid koloidni bezvodni;natrijum-lauril sulfat;magnezijum-stearat' , 'Humani lekovi', 3)
+insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type, points) values (3, 'Lek Buscopan ne smete koristiti ako ste alergični (preosetljivi) na hioscin-butilbromid ili neku drugu komponentu leka, ukoliko patite od mijastenije gravis (bolest koju karakteriše izrazita slabost mišića ili čak nemogućnost kretanja tela),','false' , 1,'Delpharm Reims ', 2,'Buscopan','Kalcijum-hidrogenfosfat, bezvodni; kukuruzni skrob,osušen; kukuruzni skrob, rastvorni; Silicijum-dioksid,
+koloidni, bezvodni; Vinska kiselina; Stearinska kiselina.' , 'Humani lekovi', 1)
+insert into medicament (id,annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type, points) values (4, 'Lek Prospan ne smete uzimati ako ste alergični (preosetljivi) na bršljan ili na bilo koju pomoćnu supstancu ovog leka','false', 1,'ENGELHARD ARZNEIMITTEL GMBH &CO.KG',  7,'Prospan','Aktivna supstanca je: bršljan, suvi ekstrakt lista
+1 mL sirupa sadrži 7 mg suvog ekstrakta lista bršljana.Pomoćne supstance su: kalijum-sorbat; limunska kiselina, bezvodna; ksantan guma; aroma trešnje.' , 'Humani lekovi', 2)
+insert into medicament (id, annotations, deleted, issuance_mode, manufacturer, medicament_form, name, structure, type, points) values (5, 'Kada uzimate lek Andol posebno vodite računa: ako ste preosetljivi (alergični) na druge lekove protiv bolova, zapaljenja (antiinflamatorna sredstva) ili
+na neke druge alergene, ako ste ranije imali čir na želucu ili crevu ili želudačnocrevna krvarenja. ','false' , 1,'Pliva Hrvatska d.o.o.', 1,'Andol','Aktivna supstanca je acetilsalicilna kiselina.Sadržaj pomoćnih supstanci: magnezijum-oksid, teški; skrob, kukuruzni; želatin; talk; skrob, kukuruzni, preželatinovani; celuloza, mikrokristalna; silicijum dioksid, koloidni, bezvodni ' , 'Humani lekovi', 2)
 
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 10, 1)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 50, 2)
@@ -421,7 +421,9 @@ insert into employee_work_hour(employee_email, work_hour_id) values ('svetozarto
 insert into employee_work_hour(employee_email, work_hour_id) values ('aleksandarstevanovic@gmail.com', 8)
 insert into employee_work_hour(employee_email, work_hour_id) values ('milanm@gmail.com', 9)
 insert into employee_work_hour(employee_email, work_hour_id) values ('janatot@gmail.com', 10)
-
+ 
+insert into appointment_points(type, points) values(0, 2)
+insert into appointment_points(type, points) values(1, 3)
 
 
 insert into request_medicament(accepted, quantity, admin_email,employee_email,medicament_id) values (false,10,'sarajovic@gmail.com','aleksandarstevanovic@gmail.com',3)
