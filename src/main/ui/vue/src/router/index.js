@@ -44,6 +44,7 @@ import SupplierPage from '../views/SupplierPage'
 import Orders from '../components/Orders'
 import ChangePassword from '../components/ChangePassword'
 import PastAppointmentsPage from '../components/PastAppointmentsPage'
+import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
@@ -148,8 +149,19 @@ const routes = [
 				},
 			},
 			{
+				path: "answeredComplaints",
+				component: AllAnsweredComplaints,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
+
+			},
+			{
 				path: "unansweredComplaints",
-				component: UnansweredComplaint
+				component: UnansweredComplaint,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
 			},
 			{
 				path: "userRegister/:userRole",
@@ -540,6 +552,13 @@ const routes = [
 					roles: [Role.Patient]
 				},
 				component: WriteComplaint
+			},
+			{
+				path: "ComplaintReview",
+				component: AllAnsweredComplaints,
+				meta: {
+					roles: [Role.Patient]
+				}
 			},
 			{
 				path: "PharmacyList/:query",
