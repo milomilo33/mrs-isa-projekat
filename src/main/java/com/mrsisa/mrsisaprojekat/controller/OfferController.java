@@ -167,6 +167,7 @@ public class OfferController {
 				
 				Offer o = offerService.findOffer(idOffer);
 				o.setStatus(OfferStatus.ACCEPTED);
+				o.setAcceptedDate(LocalDateTime.now());
 				Offer saved = offerService.update(o);
 				emailService.sendSupplierMail(supplier, saved);
 			}

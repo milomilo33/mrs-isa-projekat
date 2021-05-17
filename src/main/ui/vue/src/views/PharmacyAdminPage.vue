@@ -36,6 +36,7 @@
           </template>
            <b-dropdown-item href="/PharmacyAdminPage/ReportAppointments">Appointments report</b-dropdown-item>
            <b-dropdown-item href="/PharmacyAdminPage/ReportMedicaments">Medicaments report</b-dropdown-item>
+            <b-dropdown-item href="/PharmacyAdminPage/ReportPharmacy">Income report</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
       
