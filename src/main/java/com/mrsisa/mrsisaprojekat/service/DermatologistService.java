@@ -31,4 +31,6 @@ public interface DermatologistService {
 	Integer getRatingOfUser(String dermatologistEmail, String patientEmail);
   
 	Dermatologist getOneWithAddress(String email);
+	
+	double getRating(String email);
 }

@@ -172,7 +172,6 @@ export default defineComponent({
           item.e = "Dermatologist";
           item.address = response.data[i].address.street + " " + response.data[i].address.number + ", " + response.data[i].address.city;
           item.appointments = response.data[i].appointments;
-          console.log(item.appointments);
           self.employees.push(item);
         }
       }

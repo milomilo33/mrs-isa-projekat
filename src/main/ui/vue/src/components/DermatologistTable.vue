@@ -15,7 +15,9 @@
     @DeleteOne="DeleteOne"
     @AddDermatologist="AddDermatologist"
     @OnRowSelected="OnRowSelected"
+    @onSubmit ="onSubmit"
     @check="check"
+    @Filter="Filter"
   ></Table>
 </template>
 <script>
@@ -126,6 +128,7 @@ export default defineComponent({
               }
             }
             if (count != 7) {
+              
               var item = {};
               item.name = response.data[i].name;
               item.lastName = response.data[i].lastName;
@@ -139,29 +142,14 @@ export default defineComponent({
                 response.data[i].address.number +
                 ", " +
                 response.data[i].address.city;
+              item.rating = response.data[i].rating;
               self.all.push(item);
             }
-            self.GetAllRatings();
+            
           }
           self.getAll();
           //self.totalRows = self.items.length;
         });
-    },
-
-    GetAllRatings() {
-      var self = this;
-      self.items.forEach((item) => {
-        self.axios
-          .get(`/api/dermatologist/ratings/` + item.email, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem('token'),
-            },
-          })
-          .then(function (response) {
-            item.rating = response.data;
-          })
-          .catch((error) => console.log(error));
-      });
     },
     getAll() {
       var self = this;
@@ -406,6 +394,31 @@ export default defineComponent({
     errModal() {
       this.errorModal.title = "";
       this.errorModal.content = "";
+    },
+    onSubmit(name, lastname) {
+      var self = this;
+      var filtered = [];
+      for (var i = 0; i < self.all.length; i++) {
+        if (
+          self.all[i].name.toLowerCase().includes(name.toLowerCase()) &&
+          self.all[i].lastName.toLowerCase().includes(lastname.toLowerCase())
+        ) {
+          filtered.push(self.all[i]);
+        }
+      }
+      self.items = filtered;
+    },
+     Filter(r) {
+      var self = this;
+      var filtered = [];
+      for (var i = 0; i < self.all.length; i++) {
+        if (
+          self.all[i].rating == r
+        ) {
+          filtered.push(self.all[i]);
+        }
+      }
+      self.items = filtered;
     },
   },
 });
