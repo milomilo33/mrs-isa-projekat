@@ -1,12 +1,5 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
-import com.mrsisa.mrsisaprojekat.model.Rating;
-
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.MedicamentRepositoryDB;
@@ -16,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 @Service
 public class MedicamentServiceImpl implements MedicamentService {
@@ -186,6 +180,7 @@ public class MedicamentServiceImpl implements MedicamentService {
 		Pharmacy pharmacy = appointment.getMedicalReport().getEprescription().getPharmacy();
 
 		if (pharmacy == null) {
+			System.out.println("lulz");
 			return null;
 		}
 

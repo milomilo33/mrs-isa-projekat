@@ -239,6 +239,7 @@ export default {
         })
         .catch(error => {
             console.log(error);
+            this.showSchedulingModal();
         });
     },
 
@@ -284,7 +285,8 @@ export default {
             termFrom: this.timeFrom,
             termTo: this.timeTo
         };
-        this.axios.post(`/api/dermatologist/appointments/schedule-new`, body, {
+        let medicalReportId = this.appointment.medicalReportId;
+        this.axios.post(`/api/dermatologist/appointments/schedule-new/` + medicalReportId, body, {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -295,9 +297,9 @@ export default {
                             this.showSchedulingSuccessModal();
                         })
                         .catch(error => {
-                            this.schedulingErrorMessage = "Failed to create and schedule appointment!";
+                            this.schedulingErrorMessage = error.response.data;
                             this.showSchedulingErrorModal();
-                            console.log(error);
+                            console.log(error.response);
                         });
     },
 

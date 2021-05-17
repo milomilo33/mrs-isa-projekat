@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -330,6 +333,30 @@ public class DermatologistController {
 		dermatologistUpdate = dermatologistService.update(dermatologistUpdate);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	@PostMapping(value = "/appointments/schedule-new/{medical-report-id}")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<String> createAndScheduleNewAppointment(@RequestBody AppointmentDTO appointmentDTO, @PathVariable("medical-report-id") Long medicalReportId) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LocalDate date = appointmentDTO.getDate();
+		LocalTime timeFrom = appointmentDTO.getTermFrom();
+		LocalTime timeTo = appointmentDTO.getTermTo();
+		String patientEmail = appointmentDTO.getPatientEmail();
+
+		String message = dermatologistService.createAndScheduleNewAppointment(currentDermatologist.getEmail(), patientEmail, date, timeFrom, timeTo, medicalReportId);
+
+		if (message != null) {
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			emailService.appointmentScheduledMail(date,timeFrom, timeTo,currentDermatologist,patientEmail);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
 
