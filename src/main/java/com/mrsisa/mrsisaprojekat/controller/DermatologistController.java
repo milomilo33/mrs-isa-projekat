@@ -1,8 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
@@ -282,6 +281,23 @@ public class DermatologistController {
 
 		return new ResponseEntity<Collection<Appointment>>(doneExaminations, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/examinations/existing")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// svi slobodni termini pregleda za trenutno ulogovanog dermatologa
+	public ResponseEntity<Collection<Appointment>> getAllExistingExaminationsForDermatologist() {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> existingExaminations = dermatologistService.getAllExistingExaminationsForDermatologist(currentDermatologist.getEmail());
+
+		if (existingExaminations == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (existingExaminations.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(existingExaminations, HttpStatus.OK);
+	}
 	
 	@GetMapping(value="/ratings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public double getRatings(@PathVariable("id") String email) {
@@ -317,6 +333,30 @@ public class DermatologistController {
 		dermatologistUpdate = dermatologistService.update(dermatologistUpdate);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	@PostMapping(value = "/appointments/schedule-new/{medical-report-id}")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<String> createAndScheduleNewAppointment(@RequestBody AppointmentDTO appointmentDTO, @PathVariable("medical-report-id") Long medicalReportId) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LocalDate date = appointmentDTO.getDate();
+		LocalTime timeFrom = appointmentDTO.getTermFrom();
+		LocalTime timeTo = appointmentDTO.getTermTo();
+		String patientEmail = appointmentDTO.getPatientEmail();
+
+		String message = dermatologistService.createAndScheduleNewAppointment(currentDermatologist.getEmail(), patientEmail, date, timeFrom, timeTo, medicalReportId);
+
+		if (message != null) {
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			emailService.appointmentScheduledMail(date,timeFrom, timeTo,currentDermatologist,patientEmail);
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
 

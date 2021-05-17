@@ -4,7 +4,6 @@ import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
-
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,14 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DermatologistServiceImpl implements DermatologistService {
 
 	@Autowired
 	private DermatologistRepositoryDB dermatologistRepository;
-	
+
 	@Autowired
 	private PharmacyRepositoryDB pharmacyRepository;
 
@@ -31,7 +32,13 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 	@Autowired
 	private RoleService roleService;
-	
+
+	@Autowired
+	private PatientService patientService;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
+
 	@Override
 	public List<Dermatologist> findAll() {
 		List<Dermatologist> dermatologists = dermatologistRepository.getAllWithAddress();
@@ -83,7 +90,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 		for (Appointment a : examinations) {
 			LocalDate appointmentDate = a.getDate();
 			LocalDate today = LocalDate.now();
-			if (!a.isDeleted() && !a.isDone()) {
+			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
 				if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
 					a.setMedicalReport(null);
 					a.setChosenEmployee(null);
@@ -155,6 +162,40 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getAllExistingExaminationsForDermatologist(String email) {
+		Dermatologist dermatologist = this.findOne(email);
+
+		if (dermatologist == null) {
+			return null;
+		}
+
+		Collection<Appointment> examinations = dermatologist.getMedicalExaminations();
+		Collection<Appointment> existingExaminations = new ArrayList<Appointment>();
+		if (examinations == null) {
+			return existingExaminations;
+		}
+
+		LocalDate today = LocalDate.now();
+		for (Appointment a : examinations) {
+			LocalDate appointmentDate = a.getDate();
+			if (a.getPatient() == null) {
+				boolean isBeforeScheduledTime = false;
+				LocalTime timeFrom = a.getTermFrom();
+				LocalTime now = LocalTime.now();
+				isBeforeScheduledTime = now.isBefore(timeFrom);
+				if (today.isBefore(appointmentDate) || (today.isEqual(appointmentDate) && isBeforeScheduledTime)) {
+					a.setMedicalReport(null);
+					a.setChosenEmployee(null);
+					existingExaminations.add(a);
+				}
+			}
+		}
+
+		return existingExaminations;
+	}
+
+	@Override
 	public Dermatologist getRatings(String email) {
 		return dermatologistRepository.getRatings(email);
 	}
@@ -198,7 +239,6 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return dermatologist;
 	}
 
-	@Override
 	public double getRating(String email) {
 		Dermatologist d = dermatologistRepository.getRatings(email);
 		try {
@@ -215,7 +255,138 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 		val= val/d.getRatings().size();
 		return val;
+	}  
+  
+	@Override
+	public Dermatologist findOneExaminations(String email) {
+		Dermatologist d = dermatologistRepository.getDermatologistWithExaminations(email);
+
+		return d;
 	}
 
+	@Override
+	@Transactional
+	public String createAndScheduleNewAppointment(String dermatologistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId) {
+		// provera da li je datum validan
+		if (timeFrom.isAfter(timeTo) || timeFrom.equals(timeTo)) {
+			return "Invalid date!";
+		}
+		LocalDate today = LocalDate.now();
+		LocalTime timeNow = LocalTime.now();
+		if (date.isBefore(today) || (date.isEqual(today) && timeFrom.isBefore(timeNow))) {
+			return "Invalid date!";
+		}
 
+		Dermatologist dermatologist = this.findOne(dermatologistEmail);
+		Patient patient = patientService.findOne(patientEmail);
+		MedicalReport report = medicalReportService.findOne(medicalReportId);
+
+		if (patient == null || dermatologist == null) {
+			return "Invalid dermatologist or patient!";
+		}
+
+		if (patient.isDeleted() || dermatologist.isDeleted()) {
+			return "Invalid dermatologist or patient!";
+		}
+
+		if (report == null) {
+			return "Medical report does not exist!";
+		}
+
+		if (report.isDeleted()) {
+			return "Medical report does not exist!";
+		}
+
+		Pharmacy pharmacy = report.getEprescription().getPharmacy();
+
+		if (pharmacy == null) {
+			return "Pharmacy does not exist!";
+		}
+
+		boolean dermatologistInPharmacy = false;
+		for (Dermatologist d : pharmacy.getDermatologists()) {
+			if (d.getEmail().equals(dermatologistEmail)) {
+				dermatologistInPharmacy = true;
+			}
+		}
+		if (!dermatologistInPharmacy) {
+			return "Dermatologist does not work in this pharmacy!";
+		}
+
+		boolean appointmentMeetsCriteria = true;
+		if (dermatologist.getWorkHour() == null) {
+			return "Dermatologist does not have work hours!";
+		}
+
+		// provera da li je termin u okviru radnog vremena dermatologa
+		Set<WorkHour> workHoursInPharmacy = dermatologist.getWorkHour()
+												.stream()
+												.filter(wh -> !wh.isDeleted() && wh.getPharmacy().getId().equals(pharmacy.getId()))
+												.collect(Collectors.toSet());
+		boolean appointmentDuringWorkHours = false;
+		int dayInt = date.getDayOfWeek().getValue();
+		for (WorkHour wh : workHoursInPharmacy) {
+			LocalTime workHourFrom = wh.getWorkHourFrom();
+			LocalTime workHourTo = wh.getWorkHourTo();
+			// + 1 -- zato sto dayOfWeek pocinje od 1
+			int workHourDayInt = wh.getDay().ordinal() + 1;
+			if (workHourDayInt == dayInt && (workHourFrom.isBefore(timeFrom) || workHourFrom.equals(timeFrom)) &&
+					(workHourTo.isAfter(timeTo) || workHourTo.equals(timeTo))) {
+				appointmentDuringWorkHours = true;
+			}
+		}
+
+		if (!appointmentDuringWorkHours) {
+			return "Appointment is not during dermatologist's working hours!";
+		}
+
+		// provera da li se termin preklapa sa postojecim terminom dermatologa
+		if (dermatologist.getMedicalExaminations() != null) {
+			for (Appointment a : dermatologist.getMedicalExaminations()) {
+				if (!a.isDeleted()) {
+					// preklapanje
+					if (a.getDate().isEqual(date) && a.getTermFrom().isBefore(timeTo) && timeFrom.isBefore(a.getTermTo())) {
+						return "Appointment overlaps with another one of your appointments!";
+					}
+				}
+			}
+		}
+
+		// provera da li je termin u okviru neradnih dana dermatologa
+		if (dermatologist.getCalendar() != null) {
+			for (Vacation v : dermatologist.getCalendar().getVacations()) {
+				if (!v.isDeleted()) {
+					if (date.isEqual(v.getDateFrom()) || date.isEqual(v.getDateTo()) || (date.isAfter(v.getDateFrom()) && date.isBefore(v.getDateTo()))) {
+						return "Appointment overlaps with vacation days!";
+					}
+				}
+			}
+		}
+
+		// provera da li se termin preklapa sa postojecim pregledom pacijenta
+		if (patient.getAppointments() != null) {
+			for (Appointment a : patient.getAppointments()) {
+				if (!a.isDeleted()) {
+					if (a.getDate().isEqual(date) && a.getTermFrom().isBefore(timeTo) && timeFrom.isBefore(a.getTermTo())) {
+						return "Appointment overlaps with another one of the patient's appointments!";
+					}
+				}
+			}
+		}
+
+		Appointment newAppointment = new Appointment();
+		newAppointment.setDeleted(false);
+		newAppointment.setPatient(patient);
+		newAppointment.setChosenEmployee(dermatologist);
+		newAppointment.setType(Appointment.AppointmentType.EXAMINATION);
+		newAppointment.setDate(date);
+		newAppointment.setTermFrom(timeFrom);
+		newAppointment.setTermTo(timeTo);
+
+		appointmentRepository.save(newAppointment);
+
+		pharmacy.getAppointments().add(newAppointment);
+
+		return null;
+	}
 }

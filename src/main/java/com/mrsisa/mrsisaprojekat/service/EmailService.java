@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -8,15 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.mrsisa.mrsisaprojekat.model.Complaint;
-import com.mrsisa.mrsisaprojekat.model.ConfirmationToken;
-import com.mrsisa.mrsisaprojekat.model.Medicament;
-import com.mrsisa.mrsisaprojekat.model.Offer;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
-import com.mrsisa.mrsisaprojekat.model.Supplier;
-import com.mrsisa.mrsisaprojekat.model.User;
-import com.mrsisa.mrsisaprojekat.model.ePrescription;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class EmailService {
@@ -144,6 +138,14 @@ public class EmailService {
 		System.out.println("Email poslat!");
 	}
 	
-	
-	
+	@Async
+	public void appointmentScheduledMail(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Dermatologist dermatologist, String patientEmail) {
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(patientEmail);
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Appointment created and scheduled");
+		mail.setText("Appointment scheduled.\nDermatologist: " + dermatologist.getName() + " " +
+					dermatologist.getLastName() + "\nDate: " + date + "\nFrom: " + timeFrom + "\nTo: " + timeTo);
+		javaMailSender.send(mail);
+	}
 }
