@@ -9,14 +9,16 @@ public class AppointmentCalendarDTO {
     private LocalDateTime dateStart;
     private LocalDateTime dateEnd;
     private String pharmacyName;
+    private String status;
 
-    public AppointmentCalendarDTO(String patientName, String patientLastName, Long appointmentId, LocalDateTime dateStart, LocalDateTime dateEnd, String pharmacyName) {
+    public AppointmentCalendarDTO(String patientName, String patientLastName, Long appointmentId, LocalDateTime dateStart, LocalDateTime dateEnd, String pharmacyName, String status) {
         this.patientName = patientName;
         this.patientLastName = patientLastName;
         this.appointmentId = appointmentId;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.pharmacyName = pharmacyName;
+        this.status = status;
     }
 
     public AppointmentCalendarDTO() {}
@@ -67,5 +69,13 @@ public class AppointmentCalendarDTO {
 
     public void setPharmacyName(String pharmacyName) {
         this.pharmacyName = pharmacyName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

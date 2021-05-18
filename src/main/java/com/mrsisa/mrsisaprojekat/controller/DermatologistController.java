@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -363,7 +364,9 @@ public class DermatologistController {
 
 	@GetMapping(value = "/appointments/calendar")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
-	public ResponseEntity<Collection<AppointmentCalendarDTO>> getAllAppointmentsBetweenDatesForCalendar(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+	public ResponseEntity<Collection<AppointmentCalendarDTO>> getAllAppointmentsBetweenDatesForCalendar(@RequestParam String startDateStr, @RequestParam String endDateStr) {
+		LocalDateTime startDate = LocalDateTime.parse(startDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		LocalDateTime endDate = LocalDateTime.parse(endDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Collection<AppointmentCalendarDTO> appointments = dermatologistService.getAllAppointmentsBetweenDatesForCalendar(startDate, endDate, currentDermatologist.getEmail());
 

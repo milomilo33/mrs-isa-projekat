@@ -397,12 +397,14 @@ public class DermatologistServiceImpl implements DermatologistService {
 	public Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail) {
 		// provera da li je datum validan
 		if (startDate.isAfter(endDate) || startDate.equals(endDate)) {
+			System.out.println("invalid date");
 			return null;
 		}
 
 		Dermatologist dermatologist = this.findOne(dermatologistEmail);
 
 		if (dermatologist == null) {
+			System.out.println("no derma");
 			return null;
 		}
 
@@ -412,6 +414,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 
 		Collection<Appointment> appointments = dermatologist.getMedicalExaminations();
 		if (appointments == null) {
+			System.out.println("no derma appts");
 			return new HashSet<>();
 		}
 		appointments = appointments
@@ -442,15 +445,36 @@ public class DermatologistServiceImpl implements DermatologistService {
 			}
 
 			if (pharmacyName == null) {
-				return null;
+				System.out.println(a.getId());
+//				return null;
+				continue;
 			}
 
-			String patientName = a.getPatient().getName();
-			String patientLastName = a.getPatient().getLastName();
+			String patientName = null;
+			String patientLastName = null;
+			if (a.getPatient() != null) {
+				patientName = a.getPatient().getName();
+				patientLastName = a.getPatient().getLastName();
+			}
 			Long appointmentId = a.getId();
 			LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
 			LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
-			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDate, appEndDate, pharmacyName);
+			String status = null;
+			if (patientName == null) {
+				status = "slot";
+			}
+			else if (a.isDone()) {
+				status = "done";
+			}
+			else {
+				if (a.getMedicalReport() != null) {
+					status = "started";
+				}
+				else {
+					status = "scheduled";
+				}
+			}
+			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDate, appEndDate, pharmacyName, status);
 			calendarAppointments.add(appDto);
 		}
 
