@@ -24,7 +24,7 @@
         <b-navbar-nav class="ml-auto">
             <Search :path="'/DermatologistPage'"/>
 
-            <b-nav-item href="#" style="margin-left: 10px;">
+            <b-nav-item href="/DermatologistPage/DermatologistWorkCalendar" style="margin-left: 10px;">
                 <b-icon-calendar-2-week></b-icon-calendar-2-week>
             </b-nav-item>
             <b-nav-item-dropdown right>

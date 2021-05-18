@@ -54,6 +54,8 @@ import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
 //import { component } from 'vue/types/umd'
 
+import DermatologistWorkCalendar from '../components/DermatologistWorkCalendar'
+
 Vue.use(VueRouter)
 const Role = {
 	AdminPharmacy: 'ROLE_PHARMACY_ADMIN',
@@ -364,6 +366,14 @@ const routes = [
 					roles: [Role.Dermatologist]
 				},
 			},
+			{
+				path: "DermatologistWorkCalendar",
+				name: "DermatologistWorkCalendar",
+				component: DermatologistWorkCalendar,
+				meta: {
+					roles: [Role.Dermatologist]
+				}
+			}
 		]
 	},
 	{
