@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -255,8 +257,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 		val= val/d.getRatings().size();
 		return val;
-	}  
-  
+	}
+
 	@Override
 	public Dermatologist findOneExaminations(String email) {
 		Dermatologist d = dermatologistRepository.getDermatologistWithExaminations(email);
@@ -388,5 +390,70 @@ public class DermatologistServiceImpl implements DermatologistService {
 		pharmacy.getAppointments().add(newAppointment);
 
 		return null;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail) {
+		// provera da li je datum validan
+		if (startDate.isAfter(endDate) || startDate.equals(endDate)) {
+			return null;
+		}
+
+		Dermatologist dermatologist = this.findOne(dermatologistEmail);
+
+		if (dermatologist == null) {
+			return null;
+		}
+
+		if (dermatologist.isDeleted()) {
+			return null;
+		}
+
+		Collection<Appointment> appointments = dermatologist.getMedicalExaminations();
+		if (appointments == null) {
+			return new HashSet<>();
+		}
+		appointments = appointments
+							.stream()
+							.filter(a -> {
+								LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
+								LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
+								return !a.isDeleted() && !appStartDate.isAfter(endDate) && !startDate.isAfter(appEndDate);
+							})
+							.collect(Collectors.toSet());
+
+		Collection<AppointmentCalendarDTO> calendarAppointments = new HashSet<>();
+		for (Appointment a : appointments) {
+			Set<Pharmacy> pharmacies = dermatologist.getPharmacies();
+			String pharmacyName = null;
+			for (Pharmacy p : pharmacies) {
+				boolean pharmacyFound = false;
+				for (Appointment appPharmacy : p.getAppointments()) {
+					if (appPharmacy.getId().equals(a.getId())) {
+						pharmacyName = p.getName();
+						pharmacyFound = true;
+						break;
+					}
+				}
+				if (pharmacyFound) {
+					break;
+				}
+			}
+
+			if (pharmacyName == null) {
+				return null;
+			}
+
+			String patientName = a.getPatient().getName();
+			String patientLastName = a.getPatient().getLastName();
+			Long appointmentId = a.getId();
+			LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
+			LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
+			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDate, appEndDate, pharmacyName);
+			calendarAppointments.add(appDto);
+		}
+
+		return calendarAppointments;
 	}
 }

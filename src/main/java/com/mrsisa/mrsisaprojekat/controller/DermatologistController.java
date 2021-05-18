@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -357,6 +359,23 @@ public class DermatologistController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/appointments/calendar")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<Collection<AppointmentCalendarDTO>> getAllAppointmentsBetweenDatesForCalendar(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<AppointmentCalendarDTO> appointments = dermatologistService.getAllAppointmentsBetweenDatesForCalendar(startDate, endDate, currentDermatologist.getEmail());
+
+		if (appointments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		if (appointments.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(appointments, HttpStatus.OK);
 	}
 }
 
