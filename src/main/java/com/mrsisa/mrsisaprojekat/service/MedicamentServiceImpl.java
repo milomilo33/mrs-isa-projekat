@@ -94,6 +94,7 @@ public class MedicamentServiceImpl implements MedicamentService {
 		}
 		else {
 			medicament.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
+
 		}
 
 		medicamentRepository.save(medicament);

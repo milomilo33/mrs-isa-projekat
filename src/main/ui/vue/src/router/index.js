@@ -46,6 +46,7 @@ import ChangePassword from '../components/ChangePassword'
 import PastAppointmentsPage from '../components/PastAppointmentsPage'
 import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+import PatientProfile from '../components/PatientProfile'
 
 import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import LoyaltyProgram from '../components/LoyaltyProgram'
@@ -611,11 +612,16 @@ const routes = [
 				path: "ReservedMedicamentsTable",
 				component: ReservedMedicamentsTable
 			},
+			{
+				path: "PatientProfile",
+				component: PatientProfile
+			}
+			/*
 			
 			{
 				path: "ePrescriptions",
 				component: ePrescriptionPreview
-			}
+			}*/
 		]
 	},
 	{

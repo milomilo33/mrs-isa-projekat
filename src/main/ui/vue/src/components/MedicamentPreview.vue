@@ -110,7 +110,7 @@ export default {
         this.$emit('seeMoreClicked', this.medicament);
         return;
       }
-
+      
       this.$router.push("MedicamentInPharmacy/"+this.medicament.id)
     },
 
