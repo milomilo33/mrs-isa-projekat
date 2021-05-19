@@ -1,11 +1,13 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Rating;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 public interface PharmacistService {
 	
@@ -34,4 +36,6 @@ public interface PharmacistService {
 	Pharmacist getOneWithAddress(String email);
 	
 	double getRating(String email);
+
+	Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail);
 }

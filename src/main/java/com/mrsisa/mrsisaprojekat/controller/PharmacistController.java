@@ -1,8 +1,11 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.util.*;
-
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
+import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
+import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,31 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
-import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
-import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
-import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
-import com.mrsisa.mrsisaprojekat.service.AddressService;
-import com.mrsisa.mrsisaprojekat.service.DermatologistService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.PatientService;
-import com.mrsisa.mrsisaprojekat.service.PharmacistService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyService;
-import com.mrsisa.mrsisaprojekat.service.SupplierService;
-import com.mrsisa.mrsisaprojekat.service.SystemAdminService;
-import com.mrsisa.mrsisaprojekat.service.WorkHourService;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @RestController
@@ -333,5 +316,23 @@ public class PharmacistController {
 		pharmacistUpdate = pharmacistService.update(pharmacistUpdate);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value = "/appointments/calendar")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<Collection<AppointmentCalendarDTO>> getAllAppointmentsBetweenDatesForCalendar(@RequestParam String startDateStr, @RequestParam String endDateStr) {
+		LocalDateTime startDate = LocalDateTime.parse(startDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		LocalDateTime endDate = LocalDateTime.parse(endDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<AppointmentCalendarDTO> appointments = pharmacistService.getAllAppointmentsBetweenDatesForCalendar(startDate, endDate, currentPharmacist.getEmail());
+
+		if (appointments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		if (appointments.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(appointments, HttpStatus.OK);
+	}
 }

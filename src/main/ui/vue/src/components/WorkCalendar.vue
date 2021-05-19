@@ -24,7 +24,7 @@
             <div class="d-block text-center">
                 <h3>Appointment info</h3>
                 <p>Type: {{ appointmentStatusToText(chosenAppointment.status) }}</p>
-                <p>Pharmacy: {{ chosenAppointment.pharmacyName }}</p>
+                <p v-if="type === 'dermatologist'">Pharmacy: {{ chosenAppointment.pharmacyName }}</p>
                 <p v-if="chosenAppointment.status !== 'slot'">Patient: {{ chosenAppointment.patientName }} {{ chosenAppointment.patientLastName }}</p>
             </div>
             <b-button v-if="chosenAppointment.status === 'done'" class="mt-3" variant="outline-primary" block @click="showReportDetails">Show details</b-button>
@@ -89,7 +89,8 @@
                 chosenAppointment: {},
                 chosenAppointmentInfo: '',
                 chosenAppointmentPrescribedMedicine: [],
-                scheduledAppointmentIsUpcoming: false
+                scheduledAppointmentIsUpcoming: false,
+                type: ''
             }
         },
 
@@ -111,7 +112,7 @@
             loadEvents(dateInfo, success, failure) {
                 let startDate = dateInfo.startStr;
                 let endDate = dateInfo.endStr;
-                this.axios.get(`/api/dermatologist/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
+                this.axios.get(`/api/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                     },
@@ -194,6 +195,9 @@
             },
 
             startAppointment() {
+                // uraditi za zapocinjanje savetovanja
+                if (this.type === 'pharmacist')
+                    return;
                 let appointmentId = this.chosenAppointment.appointmentId;
                 this.axios.get(`/api/appointments/${appointmentId}/start`, {
                                     headers: {
@@ -242,8 +246,8 @@
             }
         },
 
-        mounted() {
-
+        created() {
+            this.type = this.$route.query.type;
         }
     }
 </script>

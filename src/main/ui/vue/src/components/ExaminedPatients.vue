@@ -129,9 +129,9 @@
                                 obj["dateStr"] = new Date(obj["date"]).toDateString();
                                 obj["date"][1] -= 1;
                                 let timeFromArray = obj["date"].concat(obj["termFrom"]).concat([0, 0]);
-                                obj["timeFrom"] = new Date(...timeFromArray).toTimeString();
+                                obj["timeFrom"] = new Date(...timeFromArray).toLocaleTimeString();
                                 let timeToArray = obj["date"].concat(obj["termTo"]).concat([0, 0]);
-                                obj["timeTo"] = new Date(...timeToArray).toTimeString();
+                                obj["timeTo"] = new Date(...timeToArray).toLocaleTimeString();
                             });
 
                             this.appointments = filteredAppointments;
