@@ -1,6 +1,6 @@
 <template>
     <div style="margin-bottom: 20px;">
-        <b-container-fluid>
+        <div>
             <b-row class="text-center">
                 <b-col></b-col>
                 <b-col cols="10">
@@ -18,7 +18,7 @@
                 </b-col>
                 <b-col></b-col>
             </b-row>
-        </b-container-fluid>
+        </div>
 
         <b-modal ref="info-modal" hide-footer title="Details">
             <div class="d-block text-center">
