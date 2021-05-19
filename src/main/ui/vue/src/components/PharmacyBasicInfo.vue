@@ -168,8 +168,8 @@ export default {
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      console.log(patientEmail, this.pharmacy.id);
-      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.pharmacy.id}/pharmacy`)
+      console.log("ALO", this.pharmacy);
+      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
         .then(response => 
         this.rating = response.data
         )
@@ -181,17 +181,17 @@ export default {
       console.log(this.rating);
       this.axios.post('http://localhost:8080/api/patients/rating', {
         rateType: 1,
-        ratedEntityId: this.pharmacy.id,
+        ratedEntityId: this.$route.params.id,
         rating: this.rating,
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
       },
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
-      }}).then(() => this.showRatingAlert = true);
+      }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.data));
     },
     guessCoordinatesFromLocation: function() {
-      console.log("APOTEKA", this.pharmacy.address);
+      console.log("APOTEKA", this.pharmacy);
 			const url =
 				"https://nominatim.openstreetmap.org/search/" +
 				this.pharmacy.address.city +

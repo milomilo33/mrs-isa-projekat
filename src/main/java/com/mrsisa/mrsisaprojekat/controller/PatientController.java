@@ -115,7 +115,7 @@ public class PatientController {
 	}
 	
 	@PostMapping(consumes = "application/json")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
 		try {
 			AdminPharmacy savedAdmin = adminService.findOne(patientDTO.getEmail());
@@ -125,7 +125,27 @@ public class PatientController {
 			
 			Patient patient = patientService.findOne(patientDTO.getEmail());
 			if(patient != null) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				Address a = addressService.findOne(patientDTO.getAddress().getId());
+
+				a.setCountry(patientDTO.getAddress().getCountry());
+				a.setCity(patientDTO.getAddress().getCity());
+				a.setStreet(patientDTO.getAddress().getStreet());
+				a.setNumber(patientDTO.getAddress().getNumber());
+				a = addressService.update(a);
+				System.out.println(a.getId());
+				patient.setEmail(patientDTO.getEmail());
+				patient.setName(patientDTO.getName());
+				patient.setLastName(patientDTO.getLastName());
+				patient.setPhoneNumber(patientDTO.getPhoneNumber());
+
+				patient.setActive(false);
+				patient.setCategory(Category.REGULAR);
+				patient.setLoyaltyPoints(0);
+				patient.setPenaltyPoints(0);
+				patient = patientService.update(patient);
+
+
+				return ResponseEntity.ok().body(null);
 			}
 			AdminSystem adminsystem = sysAdminService.findOne(patientDTO.getEmail());
 			if(adminsystem != null) {
@@ -199,11 +219,15 @@ public class PatientController {
         }
     }
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PatientDTO> getPatientDetalis(@RequestParam String email) {
+    @GetMapping(value = "/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PatientDTO> getPatientDetalis(@PathVariable("email") String email) {
 		
-		Patient p = patientService.getPatientDetails(email);
-		PatientDTO patient = new PatientDTO(p);
+		Patient p = patientService.getOneWithAddress(email);
+
+		PatientDTO patient = new PatientDTO(p.getEmail(), null, p.getName(), p.getLastName(), p.getPhoneNumber(), new AddressDTO(p.getAddress()));
+
+
+
 		return new ResponseEntity<>(patient, HttpStatus.OK);
 	}
 
@@ -591,5 +615,19 @@ public class PatientController {
 		
 		patientUpdate = patientService.update(patientUpdate);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/loyalty/{email}")
+	public ResponseEntity<PatientLoyaltyDTO> getPatientLoyalty(@PathVariable("email") String email) {
+		Patient p = patientService.findOne(email);
+
+		PatientLoyaltyDTO loyaltyDTO = new PatientLoyaltyDTO(p.getLoyaltyPoints(), p.getCategory());
+
+		if(loyaltyDTO == null)
+		{
+			return ResponseEntity.badRequest().body(null);
+		}
+
+		return ResponseEntity.ok().body(loyaltyDTO);
 	}
 }

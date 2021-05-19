@@ -180,6 +180,11 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public Patient getOneWithAddress(String email) {
+		return patientRepository.getOneWithAddress(email);
+	}
+
+	@Override
 	public Collection<Appointment> getUpcomingAppointmentsForUser(String userEmail, Appointment.AppointmentType type) {
 //		List<Appointment> appointments = patientRepository.getAppointmentsForUser(userEmail);
 //
@@ -221,10 +226,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Patient getPatientDetails(String email) {
-//		Patient patient = patientRepository.getPatientDetails(email);
-//		System.out.println(email);
-//		return patient;
-		return null;
+		Patient patient = patientRepository.getOne(email);
+		return patient;
+
 	}
 
 	@Override

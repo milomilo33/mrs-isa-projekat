@@ -26,6 +26,9 @@
       :hide-footer="true"
     >
       <b-container fluid>
+        <b-alert v-model="showRatingAlert" dismissible fade variant="success">
+            Success! You gave this {{employee.e.toLowerCase()}} {{rating}} stars.
+        </b-alert>
         <b-row class="mb-1 text-center colorIt">
           <p>
             <b class="colorHeaders">Name:</b>
@@ -54,8 +57,22 @@
         </b-row>
       </b-container>
       <template #modal-header="{ close }">
-        <b-button size="sm" @click="close()"> Close </b-button>
-      </template>
+        <b-col align-h="start">
+          <b-button class="mt-1" @click="close()"> Close </b-button>
+        </b-col>
+        <b-col class="rate" v-if="role === 'ROLE_PATIENT'" style="margin-right:auto;">
+          <input type="radio" id="star52" name="rate" value="5" @click="postRatingEmployee(5)" v-model.number="rating"/>
+          <label for="star52" title="text"></label>
+          <input type="radio" id="star42" name="rate" value="4" @click="postRatingEmployee(4)" v-model.number="rating"/>
+          <label for="star42" title="text"></label>
+          <input type="radio" id="star32" name="rate" value="3" @click="postRatingEmployee(3)" v-model.number="rating"/>
+          <label for="star32" title="text"></label>
+          <input type="radio" id="star22" name="rate" value="2" @click="postRatingEmployee(2)" v-model.number="rating"/>
+          <label for="star22" title="text"></label>
+          <input type="radio" id="star12" name="rate" value="1" @click="postRatingEmployee(1)" v-model.number="rating"/>
+          <label for="star12" title="text"></label> 
+        </b-col>
+        </template>
     </b-modal>
   </b-col>
 </template>
@@ -79,10 +96,38 @@ export default {
       show: false,
       appointment: null,
       app:"",
-      role: ''
+      role: '',
+      rating: null,
+      showRatingAlert: false
     };
   },
   methods: {
+
+    getRatingOfUser() {
+      var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
+      console.log("ALO", this.pharmacy);
+      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
+        .then(response => 
+        this.rating = response.data
+        )
+        .catch(error => console.log(error));
+    }, 
+
+    postRatingEmployee(rating) {
+      this.rating = rating
+      console.log("ZAPOSLENMI", this.employee);
+      this.axios.post('http://localhost:8080/api/patients/rating', {
+        rateType: this.employee.e === "Pharmacist" ? 2 : 3,
+        ratedEmployeeEmail: this.employee.email,
+        rating: this.rating,
+        patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+      }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.data));
+    },
+
     parseAppointment(a) {
       let retval = "";
       let date = new Date(a.date[0], a.date[1], a.date[2]);
@@ -155,4 +200,43 @@ export default {
   background-color: rgb(255, 255, 204, 0.7);
   border-radius: 5%;
 }
+
+
+	.rate {
+	float: left;
+	height: 46px;
+	padding: 0 10px;
+	}
+	.rate:not(:checked) > input {
+		position:absolute;
+		top:-9999px;
+	}
+	.rate:not(:checked) > label {
+		float:right;
+		width:1em;
+		overflow:hidden;
+		white-space:nowrap;
+		cursor:pointer;
+		font-size:30px;
+		color:#ccc;
+
+	}
+	.rate:not(:checked) > label:before {
+		content: '★ ';
+	}
+	.rate > input:checked ~ label {
+		color: #ffc700;    
+	}
+	.rate:not(:checked) > label:hover,
+	.rate:not(:checked) > label:hover ~ label {
+		color: #deb217;  
+	}
+	.rate > input:checked + label:hover,
+	.rate > input:checked + label:hover ~ label,
+	.rate > input:checked ~ label:hover,
+	.rate > input:checked ~ label:hover ~ label,
+	.rate > label:hover ~ input:checked ~ label {
+		color: #c59b08;
+	}
+
 </style>

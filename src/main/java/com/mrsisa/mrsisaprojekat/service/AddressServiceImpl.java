@@ -38,10 +38,16 @@ public class AddressServiceImpl implements AddressService{
 	@Override
 	public Address update(Address address) throws Exception {
 		Address addressToUpdate = findOne(address.getId());
+
 		if (addressToUpdate == null) {
 			return null;
 		}
-		addressRepository.save(address);
+
+
+		address = addressRepository.saveAndFlush(address);
+
+
+
 		return address;
 	}
 

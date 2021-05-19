@@ -74,6 +74,7 @@ export default defineComponent({
   },
 
    mounted() {
+     console.log("ID", this.id);
     var AdminUsername = JSON.parse(
       atob(localStorage.getItem("token").split(".")[1])
     ).sub;
@@ -81,6 +82,7 @@ export default defineComponent({
         atob(localStorage.getItem("token").split(".")[1])
       ).role;
        var self = this;
+
       if(userRole == "ROLE_PHARMACY_ADMIN" && self.id == null){
           self.axios
           .get(`/api/pharmacyAdmin/` + AdminUsername, {
@@ -97,7 +99,7 @@ export default defineComponent({
       });
    }else{
       console.log(self.id);
-      self.pharmacyId =self.id;
+      self.pharmacyId = self.id;
       self.FinAll();
    }
    },
@@ -106,7 +108,7 @@ export default defineComponent({
      
     var self = this;
     self.axios
-      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
+      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
