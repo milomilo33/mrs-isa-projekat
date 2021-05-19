@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -265,6 +268,20 @@ public class DermatologistController {
 		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/examination/{id}/upcoming")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// zakazani pregled za trenutno ulogovanog dermatologa
+	public ResponseEntity<Appointment> getUpcomingExaminationForDermatologist(@PathVariable("id") Long appointmentId) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Appointment upcomingAppointment = dermatologistService.getUpcomingExaminationForDermatologist(currentDermatologist.getEmail(), appointmentId);
+
+		if (upcomingAppointment == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<Appointment>(upcomingAppointment, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/examinations/done/patient")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
 	// svi gotovi pregledi (sa pacijentima) za trenutno ulogovanog dermatologa
@@ -357,6 +374,25 @@ public class DermatologistController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/appointments/calendar")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<Collection<AppointmentCalendarDTO>> getAllAppointmentsBetweenDatesForCalendar(@RequestParam String startDateStr, @RequestParam String endDateStr) {
+		LocalDateTime startDate = LocalDateTime.parse(startDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		LocalDateTime endDate = LocalDateTime.parse(endDateStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<AppointmentCalendarDTO> appointments = dermatologistService.getAllAppointmentsBetweenDatesForCalendar(startDate, endDate, currentDermatologist.getEmail());
+
+		if (appointments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		if (appointments.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(appointments, HttpStatus.OK);
 	}
 }
 

@@ -25,7 +25,7 @@
         <b-navbar-nav class="ml-auto">
             <Search :path="'/PharmacistPage'"/>
 
-            <b-nav-item href="#" style="margin-left: 10px;">
+            <b-nav-item href="/PharmacistPage/WorkCalendar?type=pharmacist" style="margin-left: 10px;">
                 <b-icon-calendar-2-week></b-icon-calendar-2-week>
             </b-nav-item>
             <b-nav-item-dropdown right>

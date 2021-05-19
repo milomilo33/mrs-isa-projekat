@@ -1,15 +1,18 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.*;
-
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PharmacistServiceImpl  implements PharmacistService {
@@ -183,6 +186,75 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		val= val/d.getRatings().size();
 		return val;
 	}
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String pharmacistEmail) {
+		// provera da li je datum validan
+		if (startDate.isAfter(endDate) || startDate.equals(endDate)) {
+			return null;
+		}
+
+		Pharmacist pharmacist = this.findOne(pharmacistEmail);
+
+		if (pharmacist == null) {
+			return null;
+		}
+
+		if (pharmacist.isDeleted()) {
+			return null;
+		}
+
+		Collection<Appointment> appointments = pharmacist.getCounselings();
+		if (appointments == null) {
+			return new HashSet<>();
+		}
+		appointments = appointments
+				.stream()
+				.filter(a -> {
+					LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
+					LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
+					return !a.isDeleted() && !appStartDate.isAfter(endDate) && !startDate.isAfter(appEndDate);
+				})
+				.collect(Collectors.toSet());
+
+		Collection<AppointmentCalendarDTO> calendarAppointments = new HashSet<>();
+		for (Appointment a : appointments) {
+			Pharmacy pharmacy = pharmacist.getPharmacy();
+
+			String pharmacyName = pharmacy.getName();
+			String patientName = null;
+			String patientLastName = null;
+			if (a.getPatient() != null) {
+				patientName = a.getPatient().getName();
+				patientLastName = a.getPatient().getLastName();
+			}
+			Long appointmentId = a.getId();
+			LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
+			LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
+			String appStartDateStr = appStartDate.format(DateTimeFormatter.ISO_DATE_TIME);
+			String appEndDateStr = appEndDate.format(DateTimeFormatter.ISO_DATE_TIME);
+			String status = null;
+			if (patientName == null) {
+				status = "slot";
+			}
+			else if (a.isDone()) {
+				status = "done";
+			}
+			else {
+				if (a.getMedicalReport() != null) {
+					status = "started";
+				}
+				else {
+					status = "scheduled";
+				}
+			}
+			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDateStr, appEndDateStr, pharmacyName, status);
+			calendarAppointments.add(appDto);
+		}
+
+		return calendarAppointments;
+	}
+
 
 }

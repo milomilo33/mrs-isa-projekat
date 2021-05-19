@@ -113,7 +113,24 @@ public class PatientController {
 
 		return new ResponseEntity<>(returns,HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value = "/allSubscribed/{email}")
+	public ResponseEntity<Collection<PharmacyDTO>> getAllSubscribedPharmacies(@PathVariable("email") String email) {
+		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(email);
+		Collection<PharmacyDTO> subPharmaciesDTO = new ArrayList<>();
+
+		if(subscribedPharmacies == null) {
+			return ResponseEntity.badRequest().body(null);
+		}
+
+		for(Pharmacy p : subscribedPharmacies)
+		{
+			subPharmaciesDTO.add(new PharmacyDTO(p));
+		}
+
+		return ResponseEntity.ok().body(subPharmaciesDTO);
+	}
+
 	@PostMapping(consumes = "application/json")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
@@ -122,7 +139,7 @@ public class PatientController {
 			if(savedAdmin != null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			
+
 			Patient patient = patientService.findOne(patientDTO.getEmail());
 			if(patient != null) {
 				Address a = addressService.findOne(patientDTO.getAddress().getId());
@@ -151,30 +168,30 @@ public class PatientController {
 			if(adminsystem != null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			
+
 			Dermatologist dermatologist = dermatologistService.findOne(patientDTO.getEmail());
 			if(dermatologist != null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			
+
 			Pharmacist pharmacist = pharmacistService.findOne(patientDTO.getEmail());
 			if(pharmacist != null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		}
 		catch(NullPointerException e) {
-			
+
 		}
-		
-		
+
+
 		Address address = new Address();
 		address.setCountry(patientDTO.getAddress().getCountry());
 		address.setCity(patientDTO.getAddress().getCity());
 		address.setStreet(patientDTO.getAddress().getStreet());
 		address.setNumber(patientDTO.getAddress().getNumber());
-		
+
 		Address saved = addressService.create(address);
-		
+
 		Patient patient = new Patient();
 		patient.setEmail(patientDTO.getEmail());
 		patient.setPassword(patientDTO.getPassword());
@@ -187,18 +204,18 @@ public class PatientController {
 		patient.setLoyaltyPoints(0);
 		patient.setPenaltyPoints(0);
 		patient = patientService.create(patient);
-		
+
 		ConfirmationToken token = new ConfirmationToken(patient);
 
-        confirmationTokenRepository.save(token);
+		confirmationTokenRepository.save(token);
 		try {
 			emailService.activationTokenMail(token, patient.getEmail());
 		}
 		catch( Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
-		return new ResponseEntity<>(new PatientDTO(patient), HttpStatus.CREATED); 
+
+		return new ResponseEntity<>(new PatientDTO(patient), HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value="/confirm-account")
