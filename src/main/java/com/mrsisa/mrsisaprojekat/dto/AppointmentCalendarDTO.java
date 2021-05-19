@@ -1,22 +1,20 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
-import java.time.LocalDateTime;
-
 public class AppointmentCalendarDTO {
     private String patientName;
     private String patientLastName;
     private Long appointmentId;
-    private LocalDateTime dateStart;
-    private LocalDateTime dateEnd;
+    private String dateStartStr;
+    private String dateEndStr;
     private String pharmacyName;
     private String status;
 
-    public AppointmentCalendarDTO(String patientName, String patientLastName, Long appointmentId, LocalDateTime dateStart, LocalDateTime dateEnd, String pharmacyName, String status) {
+    public AppointmentCalendarDTO(String patientName, String patientLastName, Long appointmentId, String dateStartStr, String dateEndStr, String pharmacyName, String status) {
         this.patientName = patientName;
         this.patientLastName = patientLastName;
         this.appointmentId = appointmentId;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+        this.dateStartStr = dateStartStr;
+        this.dateEndStr = dateEndStr;
         this.pharmacyName = pharmacyName;
         this.status = status;
     }
@@ -47,20 +45,20 @@ public class AppointmentCalendarDTO {
         this.appointmentId = appointmentId;
     }
 
-    public LocalDateTime getDateStart() {
-        return dateStart;
+    public String getDateStartStr() {
+        return dateStartStr;
     }
 
-    public void setDateStart(LocalDateTime dateStart) {
-        this.dateStart = dateStart;
+    public void setDateStartStr(String dateStartStr) {
+        this.dateStartStr = dateStartStr;
     }
 
-    public LocalDateTime getDateEnd() {
-        return dateEnd;
+    public String getDateEndStr() {
+        return dateEndStr;
     }
 
-    public void setDateEnd(LocalDateTime dateEnd) {
-        this.dateEnd = dateEnd;
+    public void setDateEndStr(String dateEndStr) {
+        this.dateEndStr = dateEndStr;
     }
 
     public String getPharmacyName() {

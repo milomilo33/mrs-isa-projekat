@@ -268,6 +268,20 @@ public class DermatologistController {
 		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/examination/{id}/upcoming")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	// zakazani pregled za trenutno ulogovanog dermatologa
+	public ResponseEntity<Appointment> getUpcomingExaminationForDermatologist(@PathVariable("id") Long appointmentId) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Appointment upcomingAppointment = dermatologistService.getUpcomingExaminationForDermatologist(currentDermatologist.getEmail(), appointmentId);
+
+		if (upcomingAppointment == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<Appointment>(upcomingAppointment, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/examinations/done/patient")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
 	// svi gotovi pregledi (sa pacijentima) za trenutno ulogovanog dermatologa

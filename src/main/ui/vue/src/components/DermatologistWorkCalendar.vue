@@ -1,15 +1,55 @@
 <template>
-  <div class='work-calendar'>
-    <FullCalendar
-    class='demo-app-calendar'
-    :options='calendarOptions'
-    >
-    <!-- <template v-slot:eventContent='arg'>
-        <b>{{ arg.timeText }}</b>
-        <i>{{ arg.event.title }}</i>
-    </template> -->
-    </FullCalendar>
-  </div>
+    <div style="margin-bottom: 20px;">
+        <b-container-fluid>
+            <b-row class="text-center">
+                <b-col></b-col>
+                <b-col cols="10">
+                    <div class='work-calendar'>
+                        <FullCalendar
+                        class='demo-app-calendar'
+                        :options='calendarOptions'
+                        >
+                        <!-- <template v-slot:eventContent='arg'>
+                            <b>{{ arg.timeText }}</b>
+                            <i>{{ arg.event.title }}</i>
+                        </template> -->
+                        </FullCalendar>
+                    </div>
+                </b-col>
+                <b-col></b-col>
+            </b-row>
+        </b-container-fluid>
+
+        <b-modal ref="info-modal" hide-footer title="Details">
+            <div class="d-block text-center">
+                <h3>Appointment info</h3>
+                <p>Type: {{ appointmentStatusToText(chosenAppointment.status) }}</p>
+                <p>Pharmacy: {{ chosenAppointment.pharmacyName }}</p>
+                <p v-if="chosenAppointment.status !== 'slot'">Patient: {{ chosenAppointment.patientName }} {{ chosenAppointment.patientLastName }}</p>
+            </div>
+            <b-button v-if="chosenAppointment.status === 'done'" class="mt-3" variant="outline-primary" block @click="showReportDetails">Show details</b-button>
+            <b-button v-if="scheduledAppointmentIsUpcoming || chosenAppointment.status === 'started'" class="mt-3" variant="dark" block @click="startAppointment">Start appointment</b-button>
+            <b-button class="mt-3" variant="outline-danger" block @click="hideInfoModal">Close</b-button>
+        </b-modal>
+
+        <b-modal ref="report-info-modal" hide-footer title="Report Details">
+            <div class="d-block text-center">
+                <h3>Report text</h3>
+                <p>{{ this.chosenAppointmentInfo }}</p>
+            </div>
+            <div v-if="Object.keys(chosenAppointmentPrescribedMedicine).length > 0" class="d-block text-center">
+                <h3>Prescribed medicines</h3>
+                <b-list-group>
+                    <b-list-group-item v-for="(quantity, name) in chosenAppointmentPrescribedMedicine" :key="name"
+                                    class="d-flex justify-content-between align-items-center">
+                        {{ name }}
+                        <b-badge variant="primary" pill>{{ quantity }}</b-badge>
+                    </b-list-group-item>
+                </b-list-group>
+            </div>
+            <b-button class="mt-3" variant="outline-primary" block @click="hideReportInfoModal">Close</b-button>
+        </b-modal>
+    </div>
 </template>
 
 <script>
@@ -42,40 +82,35 @@
                     selectMirror: true,
                     dayMaxEvents: true,
                     weekends: true,
-                    //select: this.handleDateSelect,
                     eventClick: this.handleEventClick,
-                    //eventsSet: this.handleEvents
-                    //datesSet: this.datesChanged,
                     events: this.loadEvents,
-                    /* you can update a remote database when these fire:
-                    eventAdd:
-                    eventChange:
-                    eventRemove:
-                    */
+                    height: '70vh'
                 },
-                currentEvents: []
+                chosenAppointment: {},
+                chosenAppointmentInfo: '',
+                chosenAppointmentPrescribedMedicine: [],
+                scheduledAppointmentIsUpcoming: false
             }
         },
 
         methods: {
             handleEventClick(clickInfo) {
                 console.log(clickInfo.event.extendedProps);
-                // this.calendarOptions.events.push({
-                //             title: 'abcssssss',
-                //             start: '2021-05-21',
-                //             end: '2021-05-23',
-                //             data: {
-                //                 lol: 'lol'
-                //             }
-                // });
-                console.log(this.calendarOptions);
+                this.chosenAppointment = clickInfo.event.extendedProps.data;
+                this.scheduledAppointmentIsUpcoming = false;
+                if (this.chosenAppointment.status === 'scheduled') {
+                    let endDate = new Date(this.chosenAppointment.dateEndStr);
+                    let now = new Date();
+                    if (now < endDate) {
+                        this.scheduledAppointmentIsUpcoming = true;
+                    }
+                }
+                this.showInfoModal();
             },
 
             loadEvents(dateInfo, success, failure) {
-                console.log(dateInfo);
                 let startDate = dateInfo.startStr;
                 let endDate = dateInfo.endStr;
-                console.log(encodeURI(startDate));
                 this.axios.get(`/api/dermatologist/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -83,69 +118,127 @@
                 })
                 .then(response => {
                     let calendarAppointments = response.data;
-                    console.log(calendarAppointments);
-                    // this.calendarOptions.events = [];
+
                     let eventObjects = calendarAppointments.map(appointment => {
-                        let title = '';
+                        let color = '';
                         switch (appointment.status) {
                             case 'slot':
-                                title = 'Appointment slot ';
+                                color = 'green';
                                 break;
                             case 'done':
-                                title = 'Finished appointment ';
+                                color = 'red';
                                 break;
                             case 'started':
-                                title = 'Appointment in progress ';
+                                color = 'orange';
                                 break;
                             case 'scheduled':
-                                title = 'Scheduled appointment ';
+                                color = 'blue';
                                 break;
                             default:
-                                title = 'ERROR';
+                                color = 'black';
                                 break;
                         }
+                        let title = this.appointmentStatusToText(appointment.status);
 
                         let eventObj = {
                             title,
-                            start: appointment.dateStart,
-                            end: appointment.dateEnd,
-                            data: appointment
+                            start: appointment.dateStartStr,
+                            end: appointment.dateEndStr,
+                            data: appointment,
+                            color
                         };
 
-                        // this.events.push(eventObj);
                         return eventObj;
                     });
 
                     success(eventObjects).map(eventElement => {
-                        // let title = '';
-                        // let appointment = eventElement;
-
-                        // switch (appointment.status) {
-                        //     case 'slot':
-                        //         title = 'Appointment slot ';
-                        //         break;
-                        //     case 'done':
-                        //         title = 'Finished appointment ';
-                        //         break;
-                        //     case 'started':
-                        //         title = 'Appointment in progress ';
-                        //         break;
-                        //     case 'scheduled':
-                        //         title = 'Scheduled appointment ';
-                        //         break;
-                        //     default:
-                        //         title = 'ERROR';
-                        //         break;
-                        // }
-
                         return eventElement;
                     });
                 })
                 .catch(error => {
-                    //this.calendarOptions.events = [];
                     failure(error);
                     console.log(error);
                 })
+            },
+
+            appointmentStatusToText(status) {
+                switch (status) {
+                    case 'slot':
+                        return 'Appointment slot ';
+                    case 'done':
+                        return 'Finished appointment ';
+                    case 'started':
+                        return 'Appointment in progress ';
+                    case 'scheduled':
+                        return 'Scheduled appointment ';
+                    default:
+                        return 'ERROR';
+                }
+            },
+
+            showReportDetails() {
+                this.axios.get(`/api/appointments/${this.chosenAppointment.appointmentId}/details`, {
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("token"),
+                            },
+                            })
+                            .then(response => {
+                                this.chosenAppointmentInfo = response.data.text;
+                                this.chosenAppointmentPrescribedMedicine = response.data.medicineQuantity;
+                                this.showReportInfoModal();
+                            })
+                            .catch(error => {
+                                this.chosenAppointmentPrescribedMedicine = [];
+                                console.log(error);
+                            })
+            },
+
+            startAppointment() {
+                let appointmentId = this.chosenAppointment.appointmentId;
+                this.axios.get(`/api/appointments/${appointmentId}/start`, {
+                                    headers: {
+                                        Authorization: "Bearer " + localStorage.getItem("token"),
+                                    },
+                                })
+                                .then(response => {
+                                    let medicalReportId = response.data;
+
+                                    this.axios.get(`/api/dermatologist/examination/${appointmentId}/upcoming`, {
+                                                        headers: {
+                                                            Authorization: "Bearer " + localStorage.getItem("token"),
+                                                        },
+                                                    })
+                                                    .then(nestedResponse => {
+                                                        let appointment = nestedResponse.data;
+                                                        appointment.medicalReportId = medicalReportId;
+
+                                                        // otvoriti stranicu pregleda
+                                                        this.$router.push({ name: 'DermatologistPageAppointmentPage',
+                                                                            params: { appointment, medicalReportId } });
+                                                    })
+                                                    .catch(nestedError => {
+                                                        console.log(nestedError);
+                                                    });
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                })
+            },
+
+            hideInfoModal() {
+                this.$refs['info-modal'].hide()
+            },
+
+            showInfoModal() {
+                this.$refs['info-modal'].show()
+            },
+
+            hideReportInfoModal() {
+                this.$refs['report-info-modal'].hide()
+            },
+
+            showReportInfoModal() {
+                this.$refs['report-info-modal'].show()
             }
         },
 

@@ -23,6 +23,8 @@ public interface DermatologistService {
 
 	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
 
+	Appointment getUpcomingExaminationForDermatologist(String email, Long appointmentId);
+
 	boolean dermatologistHasAppointment(String email, Long appointmentId);
 
 

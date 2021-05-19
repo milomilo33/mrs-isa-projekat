@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,6 +110,31 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 
 		return upcomingAppointments;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Appointment getUpcomingExaminationForDermatologist(String email, Long appointmentId) {
+		Collection<Appointment> upcomingExaminations = this.getUpcomingExaminationsForDermatologist(email);
+
+		if (upcomingExaminations == null || upcomingExaminations.isEmpty()) {
+			return null;
+		}
+
+		upcomingExaminations = upcomingExaminations
+									.stream()
+									.filter(e -> !e.isDeleted() && e.getId().equals(appointmentId))
+									.collect(Collectors.toSet());
+		if (upcomingExaminations.size() != 1) {
+			return null;
+		}
+
+		Appointment upcomingApt = null;
+		for (Appointment a : upcomingExaminations) {
+			upcomingApt = a;
+		}
+
+		return upcomingApt;
 	}
 
 	@Override
@@ -445,9 +471,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 			}
 
 			if (pharmacyName == null) {
-				System.out.println(a.getId());
-//				return null;
-				continue;
+				return null;
 			}
 
 			String patientName = null;
@@ -459,6 +483,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 			Long appointmentId = a.getId();
 			LocalDateTime appStartDate = a.getDate().atTime(a.getTermFrom());
 			LocalDateTime appEndDate = a.getDate().atTime(a.getTermTo());
+			String appStartDateStr = appStartDate.format(DateTimeFormatter.ISO_DATE_TIME);
+			String appEndDateStr = appEndDate.format(DateTimeFormatter.ISO_DATE_TIME);
 			String status = null;
 			if (patientName == null) {
 				status = "slot";
@@ -474,7 +500,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 					status = "scheduled";
 				}
 			}
-			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDate, appEndDate, pharmacyName, status);
+			AppointmentCalendarDTO appDto = new AppointmentCalendarDTO(patientName, patientLastName, appointmentId, appStartDateStr, appEndDateStr, pharmacyName, status);
 			calendarAppointments.add(appDto);
 		}
 
