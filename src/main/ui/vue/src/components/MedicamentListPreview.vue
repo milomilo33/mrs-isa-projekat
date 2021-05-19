@@ -232,6 +232,10 @@ export default defineComponent({
     else {
       this.loadNonAllergicMedsForPrescription();
     }
+
+    if(this.type != "ROLE_PATIENT") {
+      this.loadMeds();
+    }
     
     
     

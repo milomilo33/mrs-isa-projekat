@@ -208,6 +208,8 @@ components: {
   methods: {
 
     getMedicalReport() {
+        this.showNoAppointment = false;
+
         if(this.selectedAppointment.id === undefined) { 
             this.showNoAppointment = true;
             return;
@@ -215,7 +217,6 @@ components: {
 
         this.showFailedAlert = false;
         this.showMedicalReport = false;
-
         this.axios.get(`http://localhost:8080/api/patients/medical_report/`+ this.selectedAppointment.id,  {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
@@ -224,9 +225,8 @@ components: {
               this.medicalReport = response.data;
               this.showMedicalReport = true;
               this.showInfoModal();
-              console.log(response.data);
               
-          }).catch();
+          }).catch(error => console.log(error.data));
     }, 
     test(item, index) {
         this.selectedAppointment = item;
