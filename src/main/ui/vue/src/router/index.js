@@ -54,7 +54,7 @@ import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
 //import { component } from 'vue/types/umd'
 
-import DermatologistWorkCalendar from '../components/DermatologistWorkCalendar'
+import WorkCalendar from '../components/WorkCalendar'
 
 Vue.use(VueRouter)
 const Role = {
@@ -300,6 +300,14 @@ const routes = [
 					roles: [Role.Pharmacist]
 				},
 			},
+			{
+				path: "WorkCalendar",
+				name: "PharmacistWorkCalendar",
+				component: WorkCalendar,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
+			}
 		]
 	},
 	{
@@ -367,9 +375,9 @@ const routes = [
 				},
 			},
 			{
-				path: "DermatologistWorkCalendar",
+				path: "WorkCalendar",
 				name: "DermatologistWorkCalendar",
-				component: DermatologistWorkCalendar,
+				component: WorkCalendar,
 				meta: {
 					roles: [Role.Dermatologist]
 				}
