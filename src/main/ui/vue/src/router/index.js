@@ -48,7 +48,7 @@ import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import PatientProfile from '../components/PatientProfile'
 
-import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
@@ -388,6 +388,7 @@ const routes = [
 	{
 		path : "/PharmacyAdminPage",
 		name: "PharmacyAdminPage",
+		redirect: "/PharmacyAdminPage/PharmacyPreview",
 		component: PharmacyAdminPage,
 		children:[
 			{
