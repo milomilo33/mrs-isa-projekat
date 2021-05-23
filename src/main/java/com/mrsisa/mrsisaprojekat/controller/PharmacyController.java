@@ -390,4 +390,11 @@ public class PharmacyController {
 		report.setMonthAppoinntments(quarters);
 		return new ResponseEntity<>(report, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/rating/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<Integer> getPharmacyRating(@PathVariable("id") Long id) {
+		int rating = pharmacyService.getRating(id);
+		return new ResponseEntity<>(rating, HttpStatus.OK);
+	}
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
-    <b-navbar-brand href="/PharmacyAdminPage">Home Page</b-navbar-brand>
+    <b-navbar-brand href="/PharmacyAdminPage/PharmacyPreview">Home Page</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
@@ -11,7 +11,6 @@
            <template #button-content>
             Pharmacy
           </template>
-          <b-dropdown-item href="/PharmacyAdminPage/PharmacyPreview">Profile</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/AppointmentTable">Appointments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/MedicamentTable">Medicaments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist medicaments</b-dropdown-item>

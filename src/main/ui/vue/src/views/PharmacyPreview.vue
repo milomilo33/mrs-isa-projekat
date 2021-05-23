@@ -1,14 +1,6 @@
 <template>
 
 <div id="PharmacyPreview">
-  <!-- <br>
-  <b-container> 
-    <b-row> 
-      <b-col  cols ="1" md="1"><a href="#"> Appointments</a></b-col>
-      <b-col  cols ="24" md="2"><a href="#"> Reservations</a></b-col>
-      <b-col  cols ="1" md="2"><a href="#"> Promotions</a></b-col></b-row>
-  </b-container>
-  <br> -->
   <PharmacyBasicInfo />
   <hr>
 
@@ -108,7 +100,7 @@ export default defineComponent({
      
     var self = this;
     self.axios
-      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.id),{
+      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {

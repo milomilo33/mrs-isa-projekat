@@ -40,6 +40,18 @@
                 <input type="radio" id="star1" name="rate" value="1" @click="postRating(1)" v-model.number="rating"/>
                 <label for="star1" title="text"></label> 
             </b-col> 
+            <b-col class="rate" v-if="role === 'ROLE_PHARMACY_ADMIN'" style="margin-right:auto;">
+                <input type="radio" id="star5" name="rate" value="5" v-model.number="rating" disabled=true/>
+                <label for="star5" title="text"></label>
+                <input type="radio" id="star4" name="rate" value="4"  v-model.number="rating" disabled=true/>
+                <label for="star4" title="text"></label>
+                <input type="radio" id="star3" name="rate" value="3"  v-model.number="rating" disabled=true/>
+                <label for="star3" title="text"></label>
+                <input type="radio" id="star2" name="rate" value="2"  v-model.number="rating" disabled=true/>
+                <label for="star2" title="text"></label>
+                <input type="radio" id="star1" name="rate" value="1"  v-model.number="rating" disabled=true/>
+                <label for="star1" title="text"></label> 
+            </b-col> 
             <b-row>
               </b-row>
             </b-row>
@@ -117,9 +129,11 @@ export default {
           },
       })
       .then(response=> {
+          
         var self = this;
         self.idp = parseInt(response.data.pharmacy.id);
          _this.findPharmacy(self.idp);
+         _this.findRating(self.idp);
        
       })
       .catch(error=> {
@@ -283,8 +297,20 @@ export default {
         _this.guessCoordinatesFromLocation();
         })
       .catch(error => console.log(error));
-    }
+    },
+    findRating(){
+    var _this= this;
+              _this.axios.get(`/api/pharmacy/rating/`+_this.idp, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+      .then(response => {
+        this.rating = response.data;
+        })
+      .catch(error => console.log(error));
+      }
+    
   }
+  
 }
 </script>
 
@@ -339,7 +365,5 @@ export default {
 	.rate > label:hover ~ input:checked ~ label {
 		color: #c59b08;
 	}
-
-
   
 </style>
