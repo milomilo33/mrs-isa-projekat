@@ -1,12 +1,14 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
-import com.mrsisa.mrsisaprojekat.repository.PriceRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PricelistItemMedicamentRepositoryDB;
 
 @Service
@@ -16,7 +18,7 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 	private PricelistItemMedicamentRepositoryDB pricelistItemRepository;
 
 	@Autowired
-	private PriceRepositoryDB priceRepository;
+	private PriceService priceService;
 	@Override
 	public Set<PricelistItemMedicament> findAllPharmacy(Long id) {
 		Set<PricelistItemMedicament> items =  pricelistItemRepository.findAllPricelistItemMedicaments(id);
@@ -80,6 +82,22 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		Collection<PricelistItemMedicament> items = pricelistItemRepository.findAllMeds(id);
 		
 		return items;
+	}
+
+	@Override
+	public void checkPromotions(Set<PricelistItemMedicament> pricelistItems) throws Exception {
+
+		for(PricelistItemMedicament p :pricelistItems) {
+			for(Price pp : p.getPrice()) {
+				if(pp.isPromotion() && pp.getDateTo().isEqual(LocalDate.now())) {
+					pp.setDeleted(true);
+					priceService.update(pp);
+					priceService.findPrice(p.getPrice(), pp.getDateFrom());
+					
+				}
+				
+			}
+		}
 	}
 
 }

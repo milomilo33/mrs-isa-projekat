@@ -27,5 +27,8 @@ public interface PricelistItemMedicamentService {
 	PricelistItemMedicament findOnePricelistItemMedicament(Long id);
 
 	Set<PricelistItemMedicament> findPharmacyForMedicament(Long id);
+	
+	void checkPromotions(Set<PricelistItemMedicament>pricelistItems)  throws Exception;
+	
 
 }

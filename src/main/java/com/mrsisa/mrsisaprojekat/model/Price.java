@@ -26,6 +26,9 @@ public class Price {
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
+	@Column(name = "promotion", unique = false, nullable = false)
+	private boolean promotion;
+	
 	public Price() {}
 
 	public Long getId() {
@@ -75,6 +78,16 @@ public class Price {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
+	public boolean isPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(boolean promotion) {
+		this.promotion = promotion;
+	}
+	
+	
 
 	
 

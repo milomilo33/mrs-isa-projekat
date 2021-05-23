@@ -1,11 +1,12 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.repository.PriceRepositoryDB;
 
@@ -56,6 +57,18 @@ public class PriceServiceImpl implements PriceService{
 	@Override
 	public void restore(Long id) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void findPrice(Set<Price> prices, LocalDate date) {
+		for(Price p : prices) {
+			if(p.getDateTo().isEqual(date)) {
+				p.setDeleted(false);
+				p.setDateTo(null);
+				priceRepository.save(p);
+			}
+		}
 		
 	}
 
