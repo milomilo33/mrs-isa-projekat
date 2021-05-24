@@ -1,7 +1,6 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;

@@ -12,6 +12,7 @@ import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ReportAppointmentDTO;
+import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionPreviewDTO;
 import com.mrsisa.mrsisaprojekat.service.*;
@@ -37,6 +38,7 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
+import com.mrsisa.mrsisaprojekat.model.Request;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
@@ -396,5 +398,22 @@ public class PharmacyController {
 	public ResponseEntity<Integer> getPharmacyRating(@PathVariable("id") Long id) {
 		int rating = pharmacyService.getRating(id);
 		return new ResponseEntity<>(rating, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping(value = "/requests/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
+	public ResponseEntity<Collection<RequestDTO>> getPharmacyRequests(@PathVariable("id") Long id) {
+		Pharmacy pharmacy = pharmacyService.findOneWithRequests(id);
+		List<RequestDTO> returns = new ArrayList<>();
+		for(Request r : pharmacy.getRequests()) {
+				RequestDTO d = new RequestDTO(r);
+				returns.add(d);
+				
+		}
+		if (pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(returns,HttpStatus.OK);
 	}
 }
