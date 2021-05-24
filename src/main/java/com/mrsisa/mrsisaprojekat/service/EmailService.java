@@ -127,7 +127,6 @@ public class EmailService {
 	
 	@Async
 	public void sendSupplierMail(Supplier supplier, Offer offer) throws MailException, InterruptedException {
-		System.out.println("Slanje emaila...");
 
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(supplier.getEmail());
@@ -148,4 +147,23 @@ public class EmailService {
 					dermatologist.getLastName() + "\nDate: " + date + "\nFrom: " + timeFrom + "\nTo: " + timeTo);
 		javaMailSender.send(mail);
 	}
+	
+	
+	@Async
+	public void sendEmployeeMail(Employee employee, Request request) throws MailException, InterruptedException {
+		System.out.println("Slanje emaila...");
+
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo("nikolinatosic999@gmail.com");
+		mail.setFrom(env.getProperty("spring.mail.username"));
+		mail.setSubject("Information about your request");
+		if(request.isAccepted()) {
+			mail.setText("Your request for absence that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is accepted!");
+		}else {
+			mail.setText("Your request for absence that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is rejected!");
+		}
+		javaMailSender.send(mail);
+		System.out.println("Email poslat!");
+	}
+	
 }

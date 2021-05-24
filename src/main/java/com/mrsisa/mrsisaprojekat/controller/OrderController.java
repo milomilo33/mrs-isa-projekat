@@ -1,6 +1,5 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,27 +19,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
 import com.mrsisa.mrsisaprojekat.dto.OfferDTO;
 import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
-import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
-import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
-import com.mrsisa.mrsisaprojekat.model.Address;
+
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Offer;
 import com.mrsisa.mrsisaprojekat.model.Order;
 import com.mrsisa.mrsisaprojekat.model.OrderStatus;
-import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.WorkHour;
-import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
-import com.mrsisa.mrsisaprojekat.repository.OrderRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
 import com.mrsisa.mrsisaprojekat.service.MedicamentService;
 import com.mrsisa.mrsisaprojekat.service.OfferService;

@@ -177,6 +177,16 @@ public class PharmacyServiceImpl implements PharmacyService{
 		return appointments;
 	}
 
+	@Override
+	public Pharmacy findOneWithRequests(Long id) {
+		Pharmacy pharmacy = pharmacyRepository.getOneWithRequests(id);
+		if (pharmacy == null) {
+			return null;
+		}
+	
+		return pharmacy;
+	}
+
 
 	
 }

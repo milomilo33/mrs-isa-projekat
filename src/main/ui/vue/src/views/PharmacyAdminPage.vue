@@ -16,7 +16,6 @@
           <b-dropdown-item href="/PharmacyAdminPage/PricelistTable">Pricelist medicaments</b-dropdown-item>
             <b-dropdown-item href="/PharmacyAdminPage/PricelistAppointments">Pricelist appointments</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/Orders">Orders</b-dropdown-item>
-          <b-dropdown-item href="#">Promotions</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item-dropdown right>
            <template #button-content>
@@ -26,8 +25,7 @@
           <b-dropdown-item href="/PharmacyAdminPage/DermatologistTable">Dermatologists</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/PharmacistTable">Pharmacists</b-dropdown-item>
           <b-dropdown-item href="/PharmacyAdminPage/RequestMedicaments">Requested Medicaments</b-dropdown-item>
-          <b-dropdown-item href="#">Requests</b-dropdown-item>
-          <b-dropdown-item href="#">Vacations</b-dropdown-item>
+          <b-dropdown-item href="/PharmacyAdminPage/Request">Requests</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item-dropdown right>
            <template #button-content>

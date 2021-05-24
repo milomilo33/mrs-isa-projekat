@@ -13,8 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.springframework.transaction.annotation.Transactional;
-
 @Entity
 public class Pharmacy {
 	
