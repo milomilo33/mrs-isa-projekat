@@ -100,4 +100,13 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		}
 	}
 
+	@Override
+	public PricelistItemMedicament findByPharmacyAndMed(Long id, Long pId) {
+		PricelistItemMedicament pMed = pricelistItemRepository.findByPharmacyAndMed(id, pId);
+		if(pMed == null) {
+			return null;
+		}
+		return pMed;
+	}
+
 }

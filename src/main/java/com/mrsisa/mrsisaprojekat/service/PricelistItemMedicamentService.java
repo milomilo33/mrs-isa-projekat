@@ -30,5 +30,7 @@ public interface PricelistItemMedicamentService {
 	
 	void checkPromotions(Set<PricelistItemMedicament>pricelistItems)  throws Exception;
 	
+	PricelistItemMedicament findByPharmacyAndMed(Long id, Long pId);
+	
 
 }

@@ -199,13 +199,12 @@ public class PricelistItemController {
 		return new ResponseEntity<Collection<PricelistItemMedicamentDTO>>(list, HttpStatus.OK);
 	}
 	
-	@PutMapping(value= "/promotion/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PricelistItemMedicamentDTO> makePromotion(@RequestBody PricelistItemMedicamentDTO pricelistItem,@PathVariable("id") Long id) throws Exception {
-		PricelistItemMedicament pricelistUpdate = pricelistItemService.findOnePricelistItemMedicament(id);
+	@PutMapping(value= "/promotion/{id}/{pId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<PricelistItemMedicamentDTO> makePromotion(@RequestBody PricelistItemMedicamentDTO pricelistItem,@PathVariable("id") Long id, @PathVariable("pId") Long pId) throws Exception {
+		PricelistItemMedicament pricelistUpdate = pricelistItemService.findByPharmacyAndMed(id,pId);
 		if (pricelistUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		pricelistUpdate.setId(id);
 		
 		for(Price p : pricelistUpdate.getPrice()) {
 			if(!p.isDeleted()) {
@@ -217,8 +216,8 @@ public class PricelistItemController {
 		}
 		Price p = new Price();
 		p.setValue(pricelistItem.getPrice().get(0).getValue());
-		p.setDateFrom(LocalDate.now());
-		p.setDateTo(LocalDate.of(2021, 5, 25));
+		p.setDateFrom(pricelistItem.getPrice().get(0).getDateFrom());
+		p.setDateTo(pricelistItem.getPrice().get(0).getDateTo());
 		p.setDeleted(false);
 		p.setPoints(0);
 		p.setPromotion(true);

@@ -26,6 +26,20 @@
                   </b-input-group>
                 </b-form-group>
               </b-col>
+               <b-col lg="8" class="my-1">
+                <b-form-group
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+                >
+                  <b-button
+                    @click="AddPromotion($event.target)"
+                    variant="success"
+                    >Add promotion</b-button
+                  >
+                </b-form-group>
+              </b-col>
             </b-row>
             <b-table
               ref="table"
@@ -59,15 +73,7 @@
             >
               <pre>{{ errorModal.content }}</pre>
             </b-modal>
-            <b-modal
-              size="lg"
-              :id="addModal.id"
-              :title="addModal.title"
-              ok-only
-              @ended="resetInfoModal"
-              :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant">
-            </b-modal>
+            
              <b-modal
               size="sm"
               :id="editModal.id"
@@ -97,6 +103,49 @@
               </b-form>
             </pre>
             </b-modal>
+            <b-modal
+              size="lg"
+              :id="addModal.id"
+              :title="addModal.title"
+              ok-only
+              @ended="resetInfoModal"
+              :header-bg-variant="headerBgVariant"
+              :footer-bg-variant="headerBgVariant"
+            >
+              <pre> 
+                  <b-table
+                  :items="medicamentss" 
+                  :fields="fields2" 
+                  responsive="sm" 
+                  small
+                  :select-mode="selectMode"
+                    ref="selectableTable"
+                    selectable
+                    @row-selected="onRowSelected"></b-table>
+              <b-form inline>
+              <label> Price:     </label>
+              <b-form-input
+              id="inline-form-input-price"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="price"
+              ></b-form-input>
+              </b-form>
+              <b-form inline>
+              <label> Date from: </label>
+              <b-form-datepicker  v-model="tf" :min="min" class="mb-2"></b-form-datepicker>
+              <label> Date to: </label>
+              <b-form-datepicker  v-model="tt" :min="min" class="mb-2"></b-form-datepicker>
+              </b-form>
+              <b-button
+                  size="sm"
+                  @click="AddOne()"
+                  variant="success"
+                >   Add
+                </b-button>
+              
+            </pre>
+            </b-modal>
           </div>
 </template>
 
@@ -111,7 +160,16 @@ export default {
         { key: "price", sortable: true, label: "Price" },
         { key: "points", sortable: true, label: "Points" },
         { key: "date1", sortable: true, label: "Date from" },
+        { key: "date2", sortable: true, label: "Date to" },
+        { key: "promotion", sortable: true, label: "Promotion" },
         {key :"edit", label:""},
+      ],
+      fields2: [
+        { key: "id", label: "Id" },
+        { key: "name", label: "Name" },
+        { key: "type", label: "Type" },
+        { key: "medicamentForm", label: "Medicament form" },
+        { key: "manufacturer", label: "Manufacturer" },
       ],
       items: [],
       selectMode: "single",
@@ -147,11 +205,14 @@ export default {
       selected: [],
       medicamentItems: [],
       price: 0,
-      points:0,
+      tf:"",
+      tt:"",
       datefrom :"",
+      points:0,
       id : 0,
       priceid :0,
       pharmacyId:0,
+      min: Date,
     };
   },
   mounted() {
@@ -166,6 +227,9 @@ export default {
         },
       })
       .then(function (response) {
+         const now = new Date()
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        self.min = new Date(today)
         self.pharmacyId = response.data.pharmacy.id;
         self.refresh(); 
       })
@@ -243,14 +307,86 @@ export default {
           item.medicamentRating = 0;
           item.pharmacyId = response.data[i].pharmacy.id;
           item.date1 = self.datum(response.data[i].price[0].dateFrom);
+          if(response.data[i].price[0].dateTo == null){
+            item.date2 = "";
+          }else{
+            item.date2 = self.datum(response.data[i].price[0].dateTo);
+          }
+          if(response.data[i].price[0].promotion == true){
+            item.promotion = "promotion";
+          }else{
+            item.promotion = "";
+          }
+
           item.points =  response.data[i].price[0].points;
           item.price =  response.data[i].price[0].value;
           item.priceid =  response.data[i].price[0].id;
           self.items.push(item);
         }
          self.totalRows = self.items.length;
+         self.GetAllMedicamentItems();
     });
-    }
+    },
+     onRowSelected(item) {
+      this.selected = item;
+    },
+    AddPromotion(button) {
+      (this.addModal.title = "Add promotion"),
+        this.$root.$emit("bv::show::modal", this.addModal.id, button);
+    },
+    GetAllMedicamentItems() {
+      var self = this;
+      self.axios
+        .get(`/api/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+              var item = {};
+              item.id = response.data[i].id;
+              item.name = response.data[i].medicament.name;
+              item.medId = response.data[i].medicament.id;
+              item.type = response.data[i].medicament.type;
+              item.annotation = response.data[i].medicament.annotation;
+              item.structure = response.data[i].medicament.structure;
+              item.manufacturer = response.data[i].medicament.manufacturer;
+              item.medicamentForm = response.data[i].medicament.form;
+              item.issuanceMode = response.data[i].medicament.mode;
+              self.medicamentss.push(item);
+          }
+          self.totalRows = self.items.length;
+        });
+    },
+    AddOne() {
+      var d = this.selected[0];
+      const idx = this.medicamentss.indexOf(d);
+      if (idx != -1) {
+        this.medicamentss.splice(idx, 1);
+         var self = this;
+         self.axios.put(
+          `/api/pricelistItems/promotion/`+self.selected[0].id+`/`+self.pharmacyId,
+          {
+            price:[{
+                id :self.priceid,
+                value: self.price,
+                dateFrom: self.tf,
+                dateTo:self.tt},
+            ]
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        }
+        ).then(function(response){
+          console.log(response);
+          self.selected = [];
+          self.items = [];
+          self.medicamentss = [];
+          self.refresh();
+        });
+        
+      }
+    },
    
   },
 };
