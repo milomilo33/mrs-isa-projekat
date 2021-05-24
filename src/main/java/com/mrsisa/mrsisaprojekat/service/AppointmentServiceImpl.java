@@ -219,7 +219,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         pharmacy.setPharmacists(null);
         pharmacy.setPricelistAppointments(null);
         pharmacy.setPricelistMedicaments(null);
-        pharmacy.setPromotions(null);
         pharmacy.setRatings(null);
         pharmacy.setRequests(null);
         pharmacy.setVacations(null);
