@@ -1,9 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
-import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
-import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
-import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
+import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.*;
@@ -91,6 +88,32 @@ public class DermatologistController {
 		}
 	
 		return new ResponseEntity<DermatologistDTO>(new DermatologistDTO(dermatologist), HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/update", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	@Transactional
+	public ResponseEntity<DermatologistDTO> updateDermatologist(@RequestBody DermatologistDTO dermatologistDTO) throws Exception {
+		Dermatologist dermatologist = dermatologistService.findOne(dermatologistDTO.getEmail());
+		if (dermatologist != null) {
+			Address a = addressService.findOne(dermatologistDTO.getAddress().getId());
+
+			a.setCountry(dermatologistDTO.getAddress().getCountry());
+			a.setCity(dermatologistDTO.getAddress().getCity());
+			a.setStreet(dermatologistDTO.getAddress().getStreet());
+			a.setNumber(dermatologistDTO.getAddress().getNumber());
+//			a = addressService.update(a);
+			dermatologist.setName(dermatologistDTO.getName());
+			dermatologist.setLastName(dermatologistDTO.getLastName());
+			dermatologist.setPhoneNumber(dermatologistDTO.getPhoneNumber());
+
+//			dermatologist = dermatologistService.update(dermatologist);
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PostMapping(consumes = "application/json")

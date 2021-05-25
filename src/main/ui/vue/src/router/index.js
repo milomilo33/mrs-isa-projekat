@@ -309,6 +309,13 @@ const routes = [
 				meta: {
 					roles: [Role.Pharmacist]
 				}
+			},
+			{
+				path: "PatientProfile",
+				component: PatientProfile,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
 			}
 		]
 	},
@@ -380,6 +387,13 @@ const routes = [
 				path: "WorkCalendar",
 				name: "DermatologistWorkCalendar",
 				component: WorkCalendar,
+				meta: {
+					roles: [Role.Dermatologist]
+				}
+			},
+			{
+				path: "PatientProfile",
+				component: PatientProfile,
 				meta: {
 					roles: [Role.Dermatologist]
 				}

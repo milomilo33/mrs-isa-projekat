@@ -3,6 +3,9 @@
         <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
             You have succesfully updated your profile.
         </b-alert>
+        <b-alert v-model="showErrorAlert" dismissible fade variant="danger">
+            Invalid input data!
+        </b-alert>
         <b-row>
             <b-col class="col-lg-4">
                 <img src="../patient.jpg" alt="">
@@ -57,13 +60,13 @@
                     </b-col> 
                 </b-row>
                 <br>
-                <b-row class="mb-3 mt-2">
+                <b-row class="mb-3 mt-2" v-if="type === 'patient'">
                    <b-col class="col-lg-2 label"> Category: </b-col>
                    <b-col class="ml-3 text-center" 
                    v-bind:class="{ bronze: loyalty.category === 'REGULAR', silver: loyalty.category === 'SILVER', gold: loyalty.category === 'GOLD'}"> 
                        {{loyalty.category}} </b-col>
                 </b-row>
-                <b-row class="mb-3"> 
+                <b-row class="mb-3" v-if="type === 'patient'"> 
                     <b-col class="col-lg-2 label"> Loyalty points: </b-col>
                     <b-col> {{loyalty.points}} </b-col>
                 </b-row>
@@ -86,7 +89,9 @@ export default {
             patient: null,
             username: "",
             address: "",
-            showSuccessAlert: false
+            showSuccessAlert: false,
+            showErrorAlert: false,
+            type: "patient"
         }
     },
 
@@ -94,12 +99,23 @@ export default {
         this.username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
 
         this.loadPatient();
-        this.loadLoyalty();
+        if (this.type === "patient")
+            this.loadLoyalty();
+    },
+
+    created() {
+        if (this.$route.query.type)
+            this.type = this.$route.query.type;
     },
 
     methods: {
         loadPatient() {
-            this.axios.get(`http://localhost:8080/api/patients/${this.username}`)
+            let targetApi = this.type === "patient" ? "patients" : this.type;
+            this.axios.get(`http://localhost:8080/api/${targetApi}/${this.username}`, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
+                })
                 .then((response) => {
                     this.patient = response.data   
                     this.address = this.addressToString(this.patient.address);
@@ -124,10 +140,37 @@ export default {
         },
 
         saveChanges() {
+            let valid = true;
+            if (!this.patient.name.trim())
+                valid = false;
+            if (!this.patient.lastName.trim())
+                valid = false;
+            if (!this.patient.phoneNumber.toString().trim())
+                valid = false;
+            if (!this.patient.address.country.trim())
+                valid = false;
+            if (!this.patient.address.city.trim())
+                valid = false;
+            if (!this.patient.address.street.trim())
+                valid = false;
+            if (!this.patient.address.number.toString().trim())
+                valid = false;
+            if (!valid) {
+                this.showErrorAlert = true;
+                return;
+            }
+
+            this.showErrorAlert = false;
             this.showSuccessAlert = false;
-            alert(this.addressToString(this.patient.address))
-            
-            this.axios.post(`http://localhost:8080/api/patients`, this.patient)
+            if (this.type === "patient") 
+                alert(this.addressToString(this.patient.address))
+
+            let targetApi = this.type === "patient" ? "patients" : this.type + "/update";
+            this.axios.post(`http://localhost:8080/api/${targetApi}`, this.patient, {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
+                })
                 .then(() => this.showSuccessAlert = true)
                 .catch(error => console.log(error.data));
         }
