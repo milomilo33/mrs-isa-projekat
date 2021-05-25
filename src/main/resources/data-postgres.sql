@@ -290,14 +290,6 @@ insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (3, 3)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 4)
 
-insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-06', '2021-04-06', false, 'Promocija leka...', true)
-insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-10', '2021-04-12', false, 'Akcija leka...', false)
-insert into promotion (date_from, date_to, deleted, description, promotion) values ('2021-03-11', '2021-04-22', false, 'Promocija leka...', true)
-
-insert into pharmacy_promotions (pharmacy_id, promotions_id) values (1, 1)
-insert into pharmacy_promotions (pharmacy_id, promotions_id) values (1, 2)
-insert into pharmacy_promotions (pharmacy_id, promotions_id) values (3, 3)
-
 insert into rating (value, patient_email) values (2, 'anasimic@gmail.com')
 insert into rating (value, patient_email) values (4, 'teodorabozic@gmail.com')
 insert into rating (value, patient_email) values (5, 'anjastupar@gmail.com')
@@ -335,6 +327,7 @@ insert into prescription_medicament (deleted, expiry_date, purchased, quantity, 
 insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2023-02-02', false, 300, 2)
 insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2022-06-12', false, 130, 3)
 
+
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 5, 899.99)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 6, 1199.99)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 7, 999.99)
@@ -345,6 +338,7 @@ insert into price (date_from, date_to, deleted, points, value) values ('2021-01-
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 2500.00)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 1700.00)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 2200.00)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-05-24', null, false, 0, 550.00, false)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 220.00)
 
 
@@ -362,13 +356,15 @@ insert into pricelist_item_appointment (appointment, pharmacy_id) values (1, 3)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 1)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (3, 2)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 3)
+insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (2, 1)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 2)
 
 
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (1,1)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (2,2)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (3,3)
-insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (4,11)
+insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (5,12)
+
 
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (1,4)
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (2,5)

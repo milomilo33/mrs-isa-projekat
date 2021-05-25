@@ -1,50 +1,51 @@
-package com.mrsisa.mrsisaprojekat.model;
+package com.mrsisa.mrsisaprojekat.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import com.mrsisa.mrsisaprojekat.model.Request;
 
-@Entity
-public class Request {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RequestDTO {
 	private Long id;
 	
-	@Column(name = "description", unique = false, nullable = false)
 	private String description;
 	
-	@Column(name = "dateFrom", unique = false, nullable = false)
 	private LocalDate dateFrom;
 	
-	@Column(name = "dateTo", unique = false, nullable = false)
 	private LocalDate dateTo;
 	
-	@Column(name = "accepted", unique = false, nullable = false)
 	private boolean accepted;
+
+	private String rejectionReason;
+
+	private EmployeeDTO employee;
 	
-	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
-	@Column(name = "rejectionReason", unique = false, nullable = true)
-	private String rejectionReason;
+	public RequestDTO() {}
+
+	public RequestDTO(Request request) {
+		this.id = request.getId();
+		this.dateFrom = request.getDateFrom();
+		this.dateTo = request.getDateTo();
+		this.accepted = request.isAccepted();
+		this.rejectionReason = request.getRejectionReason();
+		this.employee = new EmployeeDTO(request.getEmployee());
+		this.deleted = request.isDeleted();
+	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	private Employee employee;
-	
-	public Request() {}
-	
-	public Request(Long id, String description, LocalDate dateFrom, LocalDate dateTo, boolean accepted,
-			boolean deleted) {
+
+	public RequestDTO(Long id, String description, LocalDate dateFrom, LocalDate dateTo, boolean accepted,
+			String rejectionReason, EmployeeDTO employee, boolean deleted) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
 		this.accepted = accepted;
+		this.rejectionReason = rejectionReason;
+		this.employee = employee;
 		this.deleted = deleted;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -86,14 +87,6 @@ public class Request {
 		this.accepted = accepted;
 	}
 
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
 	public String getRejectionReason() {
 		return rejectionReason;
 	}
@@ -102,14 +95,22 @@ public class Request {
 		this.rejectionReason = rejectionReason;
 	}
 
-	public Employee getEmployee() {
+	public EmployeeDTO getEmployee() {
 		return employee;
 	}
 
-	public void setEmployee(Employee employee) {
+	public void setEmployee(EmployeeDTO employee) {
 		this.employee = employee;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 	
-
+	
 }

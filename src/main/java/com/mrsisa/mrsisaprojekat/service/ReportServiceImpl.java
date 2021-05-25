@@ -143,11 +143,11 @@ public class ReportServiceImpl implements ReportService {
 		ArrayList<MonthAppointmentDTO> q4 = new ArrayList<MonthAppointmentDTO>();
 		ArrayList<MonthAppointmentDTO> quarters = new ArrayList<MonthAppointmentDTO>();
 		for(MonthAppointmentDTO m : all) {
-			if(m.getMonth().getValue() == 1 || m.getMonth().getValue() ==2 || m.getMonth().getValue() == 3) {
+			if(m.getMonth().getValue() == 1 || m.getMonth().getValue() == 2 || m.getMonth().getValue() == 3) {
 				q1.add(m);
-			}else if(m.getMonth().getValue() == 4 || m.getMonth().getValue() ==5 || m.getMonth().getValue() == 6) {
+			}else if(m.getMonth().getValue() == 4 || m.getMonth().getValue() == 5 || m.getMonth().getValue() == 6) {
 				q2.add(m);
-			}else if(m.getMonth().getValue() == 7 || m.getMonth().getValue() ==8 || m.getMonth().getValue() == 9) {
+			}else if(m.getMonth().getValue() == 7 || m.getMonth().getValue() == 8 || m.getMonth().getValue() == 9) {
 				q3.add(m);
 			}else {
 				q4.add(m);

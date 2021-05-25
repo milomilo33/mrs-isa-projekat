@@ -50,6 +50,7 @@ public class PricelistItemMedicamentDTO {
 	public void setPrice(ArrayList<Price> price) {
 		this.price = price;
 	}
+
 	
 
 	

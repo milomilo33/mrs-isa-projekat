@@ -13,8 +13,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.springframework.transaction.annotation.Transactional;
-
 @Entity
 public class Pharmacy {
 	
@@ -55,9 +53,6 @@ public class Pharmacy {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Rating> ratings;
-	
-	@OneToMany(fetch = FetchType.LAZY)
-	private Set<Promotion> promotions;
 	
 	@OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY)
 	private Set<AdminPharmacy> admins;
@@ -196,17 +191,6 @@ public class Pharmacy {
 	public void setRatings(Set<Rating> ratings) {
 		this.ratings = ratings;
 	}
-
-
-	public Set<Promotion> getPromotions() {
-		return promotions;
-	}
-
-
-	public void setPromotions(Set<Promotion> promotions) {
-		this.promotions = promotions;
-	}
-
 
 	public Set<AdminPharmacy> getAdmins() {
 		return admins;

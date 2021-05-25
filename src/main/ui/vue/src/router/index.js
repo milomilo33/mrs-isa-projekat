@@ -53,6 +53,7 @@ import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
+import Request from '../components/Request'
 //import { component } from 'vue/types/umd'
 import QRCodeReader from '../components/QRCodeReader'
 import WorkCalendar from '../components/WorkCalendar'
@@ -517,6 +518,14 @@ const routes = [
 			{
 				path: "ReportPharmacy",
 				component: ReportPharmacy,
+				meta: {
+					roles: [Role.AdminPharmacy]
+				},
+				
+			},
+			{
+				path: "Request",
+				component: Request,
 				meta: {
 					roles: [Role.AdminPharmacy]
 				},

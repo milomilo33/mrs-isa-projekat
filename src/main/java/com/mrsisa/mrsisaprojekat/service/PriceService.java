@@ -1,6 +1,8 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -20,4 +22,5 @@ public interface PriceService {
 	
 	void restore(Long id);
 
+	void findPrice(Set<Price> prices,LocalDate date);
 }
