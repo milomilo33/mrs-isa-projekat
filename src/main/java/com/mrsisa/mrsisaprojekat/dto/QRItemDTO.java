@@ -7,6 +7,7 @@ public class QRItemDTO {
 	private int points;
 	private String name;
 	
+	
 	public QRItemDTO() {}
 	
 	public QRItemDTO(Long medicamentId, int quantity) {
@@ -52,6 +53,5 @@ public class QRItemDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 	
 }

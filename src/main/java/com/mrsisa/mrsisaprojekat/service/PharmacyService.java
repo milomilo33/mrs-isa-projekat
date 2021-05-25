@@ -2,6 +2,8 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import com.mrsisa.mrsisaprojekat.model.*;
 
 public interface PharmacyService {
@@ -18,7 +20,7 @@ public interface PharmacyService {
 	
 	List<MedicamentItem> getAllMedicaments(Long id);
 	
-	List<Pharmacy> getAllWithMedicaments();
+	Set<Pharmacy> getAllWithMedicaments();
 	
 	Pharmacy findOneWithMedicaments(Long id);
 	

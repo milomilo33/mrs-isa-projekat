@@ -27,8 +27,8 @@ public class PrescriptionMedicamentServiceImpl implements PrescriptionMedicament
     }
 
     @Override
-    public void create(PrescriptionMedicament medicamentItem) throws Exception {
-        prescriptionRepository.save(medicamentItem);
+    public PrescriptionMedicament create(PrescriptionMedicament medicamentItem) throws Exception {
+        return prescriptionRepository.save(medicamentItem);
     }
 
     @Override

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 //import javafx.application.Application;
@@ -34,6 +35,9 @@ import java.util.*;
 public class PatientController {
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private ePrescriptionService ePrescriptionService;
 	
 	@Autowired
 	private PricelistItemMedicamentService pricelistService;
@@ -77,7 +81,9 @@ public class PatientController {
 	@Autowired
 	private MedicamentService medicamentService;
 
-
+	@Autowired
+	private CategoryThresholdsService categoryService;
+	
 	@GetMapping(value="/reservedMedication/{id}")
 	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getReservedMedication(@PathVariable("id") String id) {
 		Patient patient = patientService.getOneWithReservedMeds(id);
@@ -644,6 +650,15 @@ public class PatientController {
 		if(pharmacies == null) {
 			return null;
 		}
+		
+		List<CategoryThresholds> cts = categoryService.findAll();
+		int discount = 0;
+		for(CategoryThresholds c: cts) {
+			if(patient.getCategory() == c.getCategory()) {
+				discount = c.getDiscount();
+			}	
+		}
+		
 		int itemSize = items.size();
 		double value = 0;
 		int nmb = 0;
@@ -670,6 +685,7 @@ public class PatientController {
 			if(nmb == itemSize) {
 				AddressDTO address = new AddressDTO(p.getAddress());
 				int rating = pharmacyService.getRating(p.getId());
+				value = (value - ((value*discount)/100));
 				PharmacyDTO pharmacyDTO = new PharmacyDTO(p.getId(), p.getName(), p.getDescription(), value, address, rating);
 				dtos.add(pharmacyDTO);
 				value = 0;
@@ -682,6 +698,84 @@ public class PatientController {
 		}
 		
 		return dtos;
+	}
+	
+	@PostMapping(value="/addEPrescription")
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<QRCodePharmacyDTO> createePrescription(@RequestBody QRCodePharmacyDTO dto) throws Exception{
+		
+		Patient p = patientService.getOneWithAddress(dto.getQrCode().getPatient());
+		if(p == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		Pharmacy pharmacy = pharmacyService.findOneWithMedicaments(dto.getPharmacy().getId());
+		if(pharmacy == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		for(MedicamentItem m : pharmacy.getMedicamentItems()) {
+			for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
+				if(m.getMedicament().getId() == item.getMedicamentId()) {
+					m.setQuantity(m.getQuantity()-item.getQuantity());
+				}
+			}
+		}
+		pharmacy = pharmacyService.update(pharmacy);
+		
+		int points = 0;
+		Set<PrescriptionMedicament> prescribedMeds = new HashSet<PrescriptionMedicament>();
+		for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
+			PrescriptionMedicament pm = new PrescriptionMedicament();
+			pm.setPurchased(true);
+			pm.setDeleted(false);
+			pm.setExpiryDate(LocalDate.now());
+			pm.setQuantity(item.getQuantity());
+			pm.setMedicament(medicamentService.findOne(item.getMedicamentId()));
+			prescribedMeds.add(pm);
+			points += (item.getPoints()*item.getQuantity());
+		}
+		
+		p.setLoyaltyPoints(p.getLoyaltyPoints()+points);
+		
+		CategoryThresholds ct = new CategoryThresholds();
+		List<CategoryThresholds> cts = categoryService.findAll();
+		int index = 0;
+		for(CategoryThresholds c: cts) {
+			if(p.getLoyaltyPoints() > c.getThreshold()) {
+				index = index + 1;
+			}	
+		}
+		
+		ct = cts.get(index);
+		p.setCategory(ct.getCategory());
+		int discount = ct.getDiscount();
+		
+		double totalPrice = dto.getPharmacy().getCost() - ((dto.getPharmacy().getCost() * discount)/100);
+		p = patientService.update(p);
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate localDate = LocalDate.parse(dto.getQrCode().getDate(), formatter);
+		
+		ePrescription prescription = new ePrescription();
+		prescription.setDate(localDate);
+		prescription.setDeleted(false);
+		prescription.setDone(true);
+		prescription.setPatient(p);
+		prescription.setPrescriptionMedicaments(prescribedMeds);
+		prescription.setPrice(totalPrice);
+		prescription.setTakenDate(LocalDate.now());
+		prescription.setPharmacy(pharmacy);
+		
+		prescription = ePrescriptionService.create(prescription);
+		
+		if(prescription == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		dto.setId(prescription.getId());
+		return new ResponseEntity<QRCodePharmacyDTO>(dto, HttpStatus.OK);
+		
 	}
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
@@ -707,6 +801,7 @@ public class PatientController {
 	@PutMapping(value= "/changePassword/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<PatientDTO> changePassword(@RequestBody PatientDTO patient,@PathVariable("id") String password) throws Exception {
+		@SuppressWarnings("unused")
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				patient.getEmail(), password));
 		Patient patientUpdate = patientService.findOne(patient.getEmail());
@@ -721,6 +816,7 @@ public class PatientController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@SuppressWarnings("unused")
 	@GetMapping(value = "/loyalty/{email}")
 	public ResponseEntity<PatientLoyaltyDTO> getPatientLoyalty(@PathVariable("email") String email) {
 		Patient p = patientService.findOne(email);

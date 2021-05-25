@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 	private CategoryThresholdRepositoryDB categoryThresholdsRepository;
 	
 	@Override
-	public Collection<CategoryThresholds> findAll() {
-		return categoryThresholdsRepository.findAll();
+	public List<CategoryThresholds> findAll() {
+		return categoryThresholdsRepository.findByOrderByCategoryAsc();
 	}
 
 	@Override

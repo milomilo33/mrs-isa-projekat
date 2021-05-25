@@ -178,7 +178,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 	}
 
 	@Override
-	public List<Pharmacy> getAllWithMedicaments() {
+	public Set<Pharmacy> getAllWithMedicaments() {
 		return pharmacyRepository.getAllWithMedicaments();
   }
   @Override
