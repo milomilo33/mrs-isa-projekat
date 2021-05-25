@@ -107,6 +107,7 @@ export default {
             { key: "address", sortable: true, label: "Address", formatter: value => {
               return value.street + " "+ value.number;
             }},
+            { key: "rating", sortable: true, label: "Rating"},
             { key: "cost", sortable: true, label: "TotalPrice" },
             { key: "show_details", label: "Medicaments"}, 
             { key: "update", label: "Buy" }
