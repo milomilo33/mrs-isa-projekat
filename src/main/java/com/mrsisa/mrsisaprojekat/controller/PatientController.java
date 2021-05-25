@@ -669,7 +669,8 @@ public class PatientController {
 			}
 			if(nmb == itemSize) {
 				AddressDTO address = new AddressDTO(p.getAddress());
-				PharmacyDTO pharmacyDTO = new PharmacyDTO(p.getId(), p.getName(), p.getDescription(), value, address);
+				int rating = pharmacyService.getRating(p.getId());
+				PharmacyDTO pharmacyDTO = new PharmacyDTO(p.getId(), p.getName(), p.getDescription(), value, address, rating);
 				dtos.add(pharmacyDTO);
 				value = 0;
 				nmb = 0;
