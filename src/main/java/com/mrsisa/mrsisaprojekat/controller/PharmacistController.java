@@ -135,6 +135,33 @@ public class PharmacistController {
 		return false;
 	}
 
+	@PostMapping(value = "/update", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	@Transactional
+	public ResponseEntity<PharmacistDTO> updatePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception {
+		Pharmacist pharmacist = pharmacistService.findOne(pharmacistDTO.getEmail());
+
+		if (pharmacist != null) {
+			Address a = addressService.findOne(pharmacistDTO.getAddress().getId());
+
+			a.setCountry(pharmacistDTO.getAddress().getCountry());
+			a.setCity(pharmacistDTO.getAddress().getCity());
+			a.setStreet(pharmacistDTO.getAddress().getStreet());
+			a.setNumber(pharmacistDTO.getAddress().getNumber());
+//			a = addressService.update(a);
+			pharmacist.setName(pharmacistDTO.getName());
+			pharmacist.setLastName(pharmacistDTO.getLastName());
+			pharmacist.setPhoneNumber(pharmacistDTO.getPhoneNumber());
+
+//			pharmacist = pharmacistService.update(pharmacist);
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
 	public ResponseEntity<PharmacistDTO> savePharmacist(@RequestBody PharmacistDTO pharmacistDTO) throws Exception{
