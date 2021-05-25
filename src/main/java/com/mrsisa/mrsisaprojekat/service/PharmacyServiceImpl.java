@@ -178,6 +178,10 @@ public class PharmacyServiceImpl implements PharmacyService{
 	}
 
 	@Override
+	public List<Pharmacy> getAllWithMedicaments() {
+		return pharmacyRepository.getAllWithMedicaments();
+  }
+  @Override
 	public Pharmacy findOneWithRequests(Long id) {
 		Pharmacy pharmacy = pharmacyRepository.getOneWithRequests(id);
 		if (pharmacy == null) {

@@ -18,6 +18,7 @@ public interface PharmacyService {
 	
 	List<MedicamentItem> getAllMedicaments(Long id);
 	
+	List<Pharmacy> getAllWithMedicaments();
 	
 	Pharmacy findOneWithMedicaments(Long id);
 	

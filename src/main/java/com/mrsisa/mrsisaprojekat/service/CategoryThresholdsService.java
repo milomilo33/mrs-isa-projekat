@@ -12,5 +12,6 @@ public interface CategoryThresholdsService {
 	
 	CategoryThresholds update(CategoryThresholds categoryThresholds);
 	
+	CategoryThresholds getOneWithCategory(int category);
 	
 }

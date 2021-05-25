@@ -85,6 +85,10 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 	}
 
 	@Override
+	public PricelistItemMedicament findOneInPharmacy(Long medicamentId, Long pharmacyId) {
+		return pricelistItemRepository.findOnePricelistItemMedicamentInPharmacy(medicamentId, pharmacyId); }
+
+  @Override
 	public void checkPromotions(Set<PricelistItemMedicament> pricelistItems) throws Exception {
 
 		for(PricelistItemMedicament p :pricelistItems) {

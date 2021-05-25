@@ -218,6 +218,7 @@ public class ComplaintController {
 		c.setDeleted(false);
 		c.setDescription(complaint.getDescription());
 		c.setEmployee(employee);
+		c.setPatient(p);
 		c.setPharmacy(pharmacy);
 		c.setResponder(null);
 		c.setResponse(null);

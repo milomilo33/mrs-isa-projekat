@@ -29,4 +29,10 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 		return categoryThresholdsRepository.save(categoryThresholds);
 	}
 
+	@Override
+	public CategoryThresholds getOneWithCategory(int category) {
+		
+		return categoryThresholdsRepository.getOneWithCategory(category);
+	}
+
 }

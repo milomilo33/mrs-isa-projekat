@@ -51,4 +51,6 @@ public interface PatientService {
 	Patient findAllWithPurchasedMedicamentsAndAppointments(String email);
 
 	Patient getOneWithAddress(String email);
+	
+	Patient getOneWithCategory(String email);
 }

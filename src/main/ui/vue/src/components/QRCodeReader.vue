@@ -40,21 +40,11 @@
                 <input type="file" @change="fileSelected">
               </b-col>
             </b-row>
-            <div v-for="e in this.ePrescriptions" :key="e.id" :value="e" class="col-lg-12">
-                <b-row class="card-header eprescription-header" @click="log()" selectable>
-                    <b-col> 
-                        <div >ePrescription ID: {{e.id}}</div>
-                    </b-col>
-                    <b-col>
-                        <div style="text-align:center;">Expiry Date: {{formatDate(e.expiryDate)}}</div>
-                    </b-col>
-                    
-                </b-row>
                 <b-row class="mb-4">
                         <b-table
                         fixed
                         ref="table"
-                        :items="e.medicine"
+                        :items="items"
                         :fields="fields"
                         responsive="sm"
                         :sort-by.sync="sortBy"
@@ -64,11 +54,39 @@
                         :filter-included-fields="filterOn"
                         select-mode="single"
                         small
-                        @filtered="onFiltered"
                         style="border-bottom: 1px solid lightgrey">
+                        <template #cell(show_details)="row">
+                        <b-button size="sm" @click="row.toggleDetails" class="mr-2">
+                            {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
+                        </b-button>
+                        </template>
+                        <template #cell(update)="row">
+                        <b-button size="sm" @click="purchase(row)" class="mr-2">
+                            Purchase
+                        </b-button>
+                        </template>
+                        <template #row-details="row">
+                          <b-card> 
+                            <div  v-for="m in qrCodeItem.qrCode.prescriptionMedicaments" :value="m" :key="m.medicamentId">
+                            <b-row class="mb-2">
+                              <b-col sm="3" class="text-sm-right"><b>Medicament: </b></b-col>
+                              ({{m.medicamentId}}) {{m.name}}
+                            </b-row>
+
+                            <b-row class="mb-2">
+                              <b-col sm="3" class="text-sm-right"><b>Quantity: </b></b-col>
+                              {{m.quantity}}
+                            </b-row>
+                             <b-row class="mb-2">
+                              <b-col sm="3" class="text-sm-right"><b>Points: </b></b-col>
+                              {{m.points}}
+                            </b-row>
+                            </div>
+                            <b-button size="sm" @click="row.toggleDetails">Hide Details</b-button>
+                        </b-card>
+                      </template>
                         </b-table>
                 </b-row>
-            </div>
             <template slot="actions" slot-scope="row">
     <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
     <b-button size="sm" @click.stop="row.toggleDetails">
@@ -84,11 +102,16 @@ export default {
     
     data() {
         return {
-        fields: [
-            { key: "name", sortable: true, label: "Medicament" },
-            { key: "quantity", sortable: true, label: "Quantity" },
+        fields: [        
+            { key: "name", sortable: true, label: "Pharmacy" },
+            { key: "address", sortable: true, label: "Address", formatter: value => {
+              return value.street + " "+ value.number;
+            }},
+            { key: "cost", sortable: true, label: "TotalPrice" },
+            { key: "show_details", label: "Medicaments"}, 
+            { key: "update", label: "Buy" }
         ],
-        ePrescriptions: [],
+       
         items: [],
         selectMode: "single",
         sortBy: "date",
@@ -97,35 +120,31 @@ export default {
         filterOn: [],
         totalRows: 1,
         totalRows1: 1,
+        selectedFile: "",
         new: [],
-        
+        username: "",
+        qrCodeItem: null,
+        addressFormat: "",
     
         };
     },
 
-    mounted() {
-        this.loadePrescriptions();
-    },
-
     methods: {
-        loadePrescriptions() {
-            var username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
+        
+        fileSelected(event){
+          this.username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
+          this.selectedFile = event.target.files[0].name;
+          this.axios.get(`http://localhost:8080/api/patients/uploadQRCode/${this.selectedFile},${this.username}`)
+                .then(response => {this.qrCodeItem = response.data
+                this.items = this.qrCodeItem.pharmacySet;
+                console.log(this.qrCodeItem)
+                })
+                .catch(error => console.log(error));
 
-            this.axios.get(`http://localhost:8080/api/patients/eprescription/${username}`)
-                .then(response => {this.ePrescriptions = response.data
-                console.log(this.ePrescriptions)})
-                .catch(error => alert(error));
         },
-
-        formatDate(date) {
-            return `${date[0]}/${date[1]}/${date[2]}`
-        },
-        
-        onFiltered(filteredItems) {
-            self.totalRows = filteredItems.length;
-        },
-        
-        
+        purchase(row){
+          console.log(row.item);
+        }
     },
 }
 </script>
