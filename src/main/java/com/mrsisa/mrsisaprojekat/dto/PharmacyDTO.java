@@ -12,6 +12,8 @@ public class PharmacyDTO {
 	private String description;
 	
 	private AddressDTO address; 
+	
+	private double cost;
 
 	public PharmacyDTO() {}
 
@@ -27,6 +29,23 @@ public class PharmacyDTO {
 		this.address = address;
 		this.description = description;
 	}
+	
+	public PharmacyDTO(Long id, String name, String description, double cost, AddressDTO address) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.cost = cost;
+		this.address = address;
+	}
+	
+	public double getCost() {
+		return cost;
+	}
+
+	public void setCost(double cost) {
+		this.cost = cost;
+	}
+
 	public Long getId() {
 		return id;
 	}

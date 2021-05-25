@@ -27,6 +27,7 @@
           </b-nav-item-dropdown>
           <b-nav-item href="/PatientPage/ReservedMedicamentsTable"> Reserved Medicaments</b-nav-item>
           <b-nav-item href="/PatientPage/ePrescriptions"> ePrescriptions </b-nav-item>
+          <b-nav-item href="/PatientPage/QRCodeReader"> Upload QR Code </b-nav-item>
           
         </b-navbar-nav>
         

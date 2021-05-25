@@ -48,13 +48,13 @@ import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import PatientProfile from '../components/PatientProfile'
 
-//import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
+import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
 import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
 //import { component } from 'vue/types/umd'
-
+import QRCodeReader from '../components/QRCodeReader'
 import WorkCalendar from '../components/WorkCalendar'
 
 Vue.use(VueRouter)
@@ -583,6 +583,10 @@ const routes = [
 				component: MedicamentListPreview
 			},
 			{
+				path: "QRCodeReader",
+				component: QRCodeReader
+			},
+			{
 				path: "WriteComplaint",
 				meta: {
 					roles: [Role.Patient]
@@ -616,13 +620,13 @@ const routes = [
 			{
 				path: "PatientProfile",
 				component: PatientProfile
-			}
-			/*
+			},
+			
 			
 			{
 				path: "ePrescriptions",
 				component: ePrescriptionPreview
-			}*/
+			}
 		]
 	},
 	{

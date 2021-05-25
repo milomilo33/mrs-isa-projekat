@@ -335,4 +335,10 @@ public class PatientServiceImpl implements PatientService {
 		return patientRepository.getPatientWithePrescriptions(email);
 	}
 
+	@Override
+	public Patient getOneWithCategory(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

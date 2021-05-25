@@ -345,6 +345,8 @@ insert into price (date_from, date_to, deleted, points, value) values ('2021-01-
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 2500.00)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 1700.00)
 insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 2200.00)
+insert into price (date_from, date_to, deleted, points, value) values ('2021-01-01', '2022-01-01', false, 0, 220.00)
+
 
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 1)
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 2)
@@ -360,10 +362,13 @@ insert into pricelist_item_appointment (appointment, pharmacy_id) values (1, 3)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 1)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (3, 2)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 3)
+insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 2)
+
 
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (1,1)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (2,2)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (3,3)
+insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (4,11)
 
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (1,4)
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (2,5)

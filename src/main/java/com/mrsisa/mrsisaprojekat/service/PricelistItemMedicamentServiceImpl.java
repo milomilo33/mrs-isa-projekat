@@ -82,4 +82,9 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		return items;
 	}
 
+	@Override
+	public PricelistItemMedicament findOneInPharmacy(Long medicamentId, Long pharmacyId) {
+		return pricelistItemRepository.findOnePricelistItemMedicamentInPharmacy(medicamentId, pharmacyId);
+	}
+
 }

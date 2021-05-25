@@ -5,6 +5,8 @@ import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
+import com.mrsisa.mrsisaprojekat.util.QRCodeReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +34,9 @@ import java.util.*;
 public class PatientController {
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private PricelistItemMedicamentService pricelistService;
 	
 	@Autowired
 	private AddressService addressService;
@@ -594,8 +601,87 @@ public class PatientController {
 		return ResponseEntity.ok().body(appointmentDetails);
 	}
 
+	@GetMapping(value="/uploadQRCode/{qrPath},{patient}")
+	public ResponseEntity<QRCodePharmacyDTO> uploadQRCode(@PathVariable("qrPath") String qrPath, @PathVariable("patient") String patient ) throws IOException {
+		//File file = new File("C:"+ File.separator+ "Users" + File.separator+ "filip" + File.separator + "Downloads" + File.separator + "qr4.png");
+		Patient p = patientService.getOneWithAddress(patient);
+		String decodedText = QRCodeReader.decodeQRCode("C:"+ File.separator+ "Users" + File.separator+ "filip"+ File.separator + "Downloads" + File.separator + ""+qrPath);
+        if(decodedText == null) {
+            System.out.println("No QR Code found in the image");
+        } else {
+            System.out.println("Decoded text = " + decodedText);
+        }
+        
+        QRCodeDTO qrCode = getMedicamentsFromQRCode(decodedText);
+        Collection<QRItemDTO> items = qrCode.getPrescriptionMedicaments();
+        
+        if(items == null) {
+        	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+        Collection<PharmacyDTO> pharmacies = getAllPharmaciesWithMedicaments(items, p);
+        if(pharmacies == null) {
+        	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Set<PharmacyDTO> dtos = new HashSet<PharmacyDTO>();
+        for(PharmacyDTO pharmacy : pharmacies) {
+        	dtos.add(pharmacy);	
+        }
+        
+        QRCodePharmacyDTO dto = new QRCodePharmacyDTO(qrCode, dtos);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+		
+	}
+	private QRCodeDTO getMedicamentsFromQRCode(String decodedText) throws IOException{
+		ObjectMapper objectMapper = new ObjectMapper();
+        QRCodeDTO qrDTO = objectMapper.readValue(decodedText, QRCodeDTO.class); 
+        return qrDTO;
+        
+	}
 
-
+	private Collection<PharmacyDTO> getAllPharmaciesWithMedicaments(Collection<QRItemDTO> items, Patient patient){
+		Collection<Pharmacy> pharmacies = pharmacyService.getAllWithMedicaments();
+		if(pharmacies == null) {
+			return null;
+		}
+		int itemSize = items.size();
+		double value = 0;
+		int nmb = 0;
+		Set<PharmacyDTO> dtos = new HashSet<PharmacyDTO>();
+		for(Pharmacy p: pharmacies) {
+			for(MedicamentItem medicament : p.getMedicamentItems()) {
+				for(QRItemDTO item : items) {
+					if(medicament.getMedicament().getId() == item.getMedicamentId() && medicament.getQuantity() >= item.getQuantity()) {
+						nmb++;
+						item.setName(medicament.getMedicament().getName());
+						item.setPoints(medicament.getMedicament().getPoints());
+						PricelistItemMedicament plim = pricelistService.findOneInPharmacy(medicament.getMedicament().getId(), p.getId());
+						if(plim != null) {
+							for(Price price: plim.getPrice()) {
+								if(!price.isDeleted()) {
+									value+=(price.getValue()*item.getQuantity());
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			if(nmb == itemSize) {
+				AddressDTO address = new AddressDTO(p.getAddress());
+				PharmacyDTO pharmacyDTO = new PharmacyDTO(p.getId(), p.getName(), p.getDescription(), value, address);
+				dtos.add(pharmacyDTO);
+				value = 0;
+				nmb = 0;
+			}
+			else {
+				value = 0;
+				nmb = 0;
+			}
+		}
+		
+		return dtos;
+	}
 //	@GetMapping(value = "/{id}/appointments")
 //	public ResponseEntity<Collection<Appointment>> getUpcomingAppointmentsForUser(@PathVariable("id") String id, @RequestParam String type) {
 //		// dodati proveru tipa korisnika na osnovu tokena i dozvoliti samo ako je farmaceut ili dermatolog (ili admin?)

@@ -133,7 +133,8 @@ export default defineComponent({
           {
             employee: sendEmployee,
             pharmacy: sendPharmacy,
-            description: this.description
+            description: this.description,
+            patient: this.patient
           },
           {
             headers: {
