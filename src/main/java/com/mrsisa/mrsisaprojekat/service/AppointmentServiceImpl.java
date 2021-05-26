@@ -4,7 +4,6 @@ import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.MedicalReportRepositoryDB;
-import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,7 +96,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         for (PrescriptionMedicament pm : prescriptionMedicaments) {
             String medicineName = pm.getMedicament().getName();
             Integer quantity = pm.getQuantity();
-            medicineQuantity.put(medicineName, quantity);
+            if (!medicineQuantity.containsKey(medicineName)) {
+                medicineQuantity.put(medicineName, quantity);
+            }
+            else {
+                medicineQuantity.put(medicineName, medicineQuantity.get(medicineName) + quantity);
+            }
         }
 
         AppointmentDetailsDTO details = new AppointmentDetailsDTO(reportText, medicineQuantity);

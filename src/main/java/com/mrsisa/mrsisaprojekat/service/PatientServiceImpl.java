@@ -269,9 +269,7 @@ public class PatientServiceImpl implements PatientService {
 					requestMedicament.setEmployee(employee);
 					requestMedicament.setMedicament(medicament.getMedicament());
 					requestMedicament.setQuantity(medicament.getQuantity());
-					System.out.println("i get here1");
 					admin.getRequestMedicaments().add(requestMedicament);
-					System.out.println("i get here2");
 				}
 
 				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
