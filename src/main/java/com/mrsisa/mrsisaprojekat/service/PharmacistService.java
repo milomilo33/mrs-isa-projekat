@@ -48,4 +48,6 @@ public interface PharmacistService {
 	String createAndScheduleNewAppointment(String pharmacistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId);
 
 	Collection<Appointment> getAllExistingCounselingsForPharmacist(String email);
+
+	Appointment getUpcomingCounselingForPharmacist(String email, Long appointmentId);
 }

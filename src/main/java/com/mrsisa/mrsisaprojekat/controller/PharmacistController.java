@@ -424,4 +424,18 @@ public class PharmacistController {
 
 		return new ResponseEntity<Collection<Appointment>>(existingCounselings, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/counseling/{id}/upcoming")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// zakazani pregled za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Appointment> getUpcomingCounselingForPharmacist(@PathVariable("id") Long appointmentId) {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Appointment upcomingAppointment = pharmacistService.getUpcomingCounselingForPharmacist(currentPharmacist.getEmail(), appointmentId);
+
+		if (upcomingAppointment == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<Appointment>(upcomingAppointment, HttpStatus.OK);
+	}
 }

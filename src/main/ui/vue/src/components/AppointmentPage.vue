@@ -198,15 +198,16 @@ export default {
       let body = {
         reportText
       };
-      console.log(body);
+      
       this.axios.post(`/api/appointments/` + this.appointment.id + `/finish`, body, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
         })
       .then(() => {
+          let appointmentType = this.type === 'dermatologist' ? 'examination' : 'counseling session';
           this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}'s` +
-                                ` examination is now over.`;
+                                ` ${appointmentType} is now over.`;
           this.showSuccessModal();
       })
       .catch(error => {

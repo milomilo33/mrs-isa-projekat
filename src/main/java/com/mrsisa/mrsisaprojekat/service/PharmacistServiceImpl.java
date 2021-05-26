@@ -466,4 +466,29 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return existingCounselings;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Appointment getUpcomingCounselingForPharmacist(String email, Long appointmentId) {
+		Collection<Appointment> upcomingCounselings = this.getUpcomingCounselingsForPharmacist(email);
+
+		if (upcomingCounselings == null || upcomingCounselings.isEmpty()) {
+			return null;
+		}
+
+		upcomingCounselings = upcomingCounselings
+				.stream()
+				.filter(e -> !e.isDeleted() && e.getId().equals(appointmentId))
+				.collect(Collectors.toSet());
+		if (upcomingCounselings.size() != 1) {
+			return null;
+		}
+
+		Appointment upcomingApt = null;
+		for (Appointment a : upcomingCounselings) {
+			upcomingApt = a;
+		}
+
+		return upcomingApt;
+	}
+
 }
