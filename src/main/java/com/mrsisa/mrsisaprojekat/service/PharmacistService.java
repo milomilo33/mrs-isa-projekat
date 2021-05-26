@@ -38,4 +38,6 @@ public interface PharmacistService {
 	double getRating(String email);
 
 	Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail);
+
+	Collection<Appointment> getUpcomingCounselingsForPharmacist(String email);
 }

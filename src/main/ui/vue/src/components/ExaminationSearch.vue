@@ -1,6 +1,7 @@
 <template>
     <div>
-        <h1>Your upcoming examinations</h1>
+        <h1 v-if="type === 'dermatologist'">Your upcoming examinations</h1>
+        <h1 v-if="type === 'pharmacist'">Your upcoming counselings</h1>
         <br>
         <b-form inline>
             <b-form-input id="name"
@@ -71,7 +72,8 @@
                         label: 'To'
                     },
                     'action'
-                ]
+                ],
+                type: ''
             }
         },
         methods: {
@@ -81,9 +83,8 @@
                 }
 
                 let searchParams = { name: this.name, lastName: this.lastName };
-                // OVAJ ZAHTEV TREBA SLATI SA TOKENOM DERMATOLOGA KAKO BI SE DOBAVILI
-                // NJEGOVI PREGLEDI!
-                this.axios.get(`/api/dermatologist/examinations`,  {
+                let targetApi = this.type === 'dermatologist' ? 'dermatologist/examinations' : 'pharmacist/counselings'
+                this.axios.get(`/api/${targetApi}`,  {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -139,9 +140,12 @@
                                     row.item.medicalReportId = medicalReportId;
 
                                     // otvoriti stranicu pregleda
-                                    this.$router.push({ name: 'DermatologistPageAppointmentPage',
+                                    let name = this.type === 'dermatologist' ? 'DermatologistPageAppointmentPage' :
+                                                                               'PharmacistPageAppointmentPage';
+                                    this.$router.push({ name,
                                                         params: { appointment: row.item,
-                                                                  medicalReportId } });
+                                                                  medicalReportId,
+                                                                  type: this.type } });
                                 })
                                 .catch(error => {
                                     console.log(error);
@@ -150,6 +154,9 @@
         },
         mounted() {
             this.onSubmit();
+        },
+        created() {
+            this.type = this.$route.query.type;
         }
     }
 </script>

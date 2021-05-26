@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Examination of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
+    <h1 v-if="type === 'dermatologist'">Examination of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
+    <h1 v-if="type === 'pharmacist'">Counseling session of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
     <br>
 
     <h3>Prescribed medicines</h3>
@@ -170,7 +171,8 @@ export default {
   },
   props: {
     appointment: Object,
-    medicalReportId: Number
+    medicalReportId: Number,
+    type: String
   },
   methods: {
     onPatientAbsent() {

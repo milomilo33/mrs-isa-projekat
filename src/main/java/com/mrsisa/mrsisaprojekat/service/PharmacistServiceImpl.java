@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -254,6 +255,40 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		}
 
 		return calendarAppointments;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getUpcomingCounselingsForPharmacist(String email) {
+		Pharmacist pharmacist = this.findOne(email);
+
+		if (pharmacist == null) {
+			return null;
+		}
+
+		Collection<Appointment> counselings = pharmacist.getCounselings();
+
+		Collection<Appointment> upcomingAppointments = new ArrayList<Appointment>();
+		for (Appointment a : counselings) {
+			LocalDate appointmentDate = a.getDate();
+			LocalDate today = LocalDate.now();
+			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
+				if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
+					a.setMedicalReport(null);
+					a.setChosenEmployee(null);
+					a.getPatient().setSubscribedPharmacies(null);
+					a.getPatient().setAllergies(null);
+					a.getPatient().setAppointments(null);
+					a.getPatient().setComplaints(null);
+					a.getPatient().setePrescriptions(null);
+					a.getPatient().setReservedMedicaments(null);
+					a.setPatient((Patient) Hibernate.unproxy(a.getPatient()));
+					upcomingAppointments.add(a);
+				}
+			}
+		}
+
+		return upcomingAppointments;
 	}
 
 

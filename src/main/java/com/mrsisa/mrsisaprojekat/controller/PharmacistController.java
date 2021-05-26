@@ -362,4 +362,21 @@ public class PharmacistController {
 
 		return new ResponseEntity<>(appointments, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/counselings")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// pregledi za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Collection<Appointment>> getUpcomingCounselingsForPharmacist() {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> upcomingAppointments = pharmacistService.getUpcomingCounselingsForPharmacist(currentPharmacist.getEmail());
+
+		if (upcomingAppointments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (upcomingAppointments.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
+	}
 }

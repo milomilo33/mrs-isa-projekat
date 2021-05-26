@@ -12,7 +12,7 @@
                 <template #button-content>
                     Counseling
                 </template>
-                <b-dropdown-item href="#">Start a counseling session</b-dropdown-item>
+                <b-dropdown-item href="/PharmacistPage/ExaminationSearch?type=pharmacist">Start a counseling session</b-dropdown-item>
                 <b-dropdown-item href="#">Schedule a counseling session for a client</b-dropdown-item>
                 <b-dropdown-item href="/PharmacistPage/ExaminedPatients?type=pharmacist">Counseling history</b-dropdown-item>
                 <b-dropdown-item href="/PharmacistPage/SearchPatients">Search patients</b-dropdown-item>
