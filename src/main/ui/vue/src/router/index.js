@@ -256,6 +256,7 @@ const routes = [
 		children: [
 			{
 				path: "PharmacyList",
+				name: "PharmacistPagePharmacyList",
 				component: PharmacyListPreview
 			},
 			{

@@ -71,6 +71,8 @@ public class AppointmentController {
         }
         else {
             // farmaceut
+			Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			validAppointment = pharmacistService.pharmacistHasAppointment(currentPharmacist.getEmail(), appointmentId);
         }
 
         // 2) belezenje odsustva i zavrsavanje pregleda/savetovanja

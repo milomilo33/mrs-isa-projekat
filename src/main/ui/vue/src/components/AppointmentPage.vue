@@ -184,7 +184,7 @@ export default {
         .then(() => {
             this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}` +
                                   ` has successfully been marked as absent and has been added a penalty point.` +
-                                  ` The examination is now finished.`;
+                                  ` The ${this.type === 'dermatologist' ? 'examination' : 'counseling session'} is now finished.`;
             this.showSuccessModal();
         })
         .catch(error => {
@@ -364,7 +364,8 @@ export default {
     },
 
     goToHomePage() {
-        this.$router.push({ name: 'DermatologistPagePharmacyList' });
+        let name = this.type === 'dermatologist' ? 'DermatologistPagePharmacyList' : 'PharmacistPagePharmacyList';
+        this.$router.push({ name });
     },
 
     loadPrescriptionTable() {

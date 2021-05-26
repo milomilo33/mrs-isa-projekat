@@ -291,5 +291,22 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		return upcomingAppointments;
 	}
 
+	@Override
+	@Transactional
+	public boolean pharmacistHasAppointment(String email, Long appointmentId) {
+		Pharmacist pharmacist = this.findOne(email);
+
+		if (pharmacist == null) {
+			return false;
+		}
+
+		for (Appointment a : pharmacist.getCounselings()) {
+			if (a.getId().equals(appointmentId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 }
