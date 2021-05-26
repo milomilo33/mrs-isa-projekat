@@ -57,6 +57,7 @@ import Request from '../components/Request'
 //import { component } from 'vue/types/umd'
 import QRCodeReader from '../components/QRCodeReader'
 import WorkCalendar from '../components/WorkCalendar'
+import RequestDaysOff from '../components/RequestDaysOff'
 
 Vue.use(VueRouter)
 const Role = {
@@ -311,6 +312,14 @@ const routes = [
 				}
 			},
 			{
+				path: "RequestDaysOff",
+				name: "PharmacistRequestDaysOff",
+				component: RequestDaysOff,
+        meta: {
+					roles: [Role.Pharmacist]
+				}
+      },
+      {
 				path: "PatientProfile",
 				component: PatientProfile,
 				meta: {
@@ -392,6 +401,14 @@ const routes = [
 				}
 			},
 			{
+				path: "RequestDaysOff",
+				name: "DermatologistRequestDaysOff",
+				component: RequestDaysOff,
+        meta: {
+					roles: [Role.Dermatologist]
+				}
+      },
+      {
 				path: "PatientProfile",
 				component: PatientProfile,
 				meta: {
