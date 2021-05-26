@@ -181,7 +181,6 @@ public class MedicamentServiceImpl implements MedicamentService {
 		Pharmacy pharmacy = appointment.getMedicalReport().getEprescription().getPharmacy();
 
 		if (pharmacy == null) {
-			System.out.println("lulz");
 			return null;
 		}
 

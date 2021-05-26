@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacistDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -19,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -361,5 +364,78 @@ public class PharmacistController {
 		}
 
 		return new ResponseEntity<>(appointments, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/counselings")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// pregledi za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Collection<Appointment>> getUpcomingCounselingsForPharmacist() {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> upcomingAppointments = pharmacistService.getUpcomingCounselingsForPharmacist(currentPharmacist.getEmail());
+
+		if (upcomingAppointments == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (upcomingAppointments.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(upcomingAppointments, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/appointments/schedule-new/{medical-report-id}")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<String> createAndScheduleNewAppointment(@RequestBody AppointmentDTO appointmentDTO, @PathVariable("medical-report-id") Long medicalReportId) {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LocalDate date = appointmentDTO.getDate();
+		LocalTime timeFrom = appointmentDTO.getTermFrom();
+		LocalTime timeTo = appointmentDTO.getTermTo();
+		String patientEmail = appointmentDTO.getPatientEmail();
+
+		String message = pharmacistService.createAndScheduleNewAppointment(currentPharmacist.getEmail(), patientEmail, date, timeFrom, timeTo, medicalReportId);
+
+		if (message != null) {
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			emailService.appointmentScheduledMail(date,timeFrom, timeTo, currentPharmacist, patientEmail, "Pharmacist");
+		}
+		catch( Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/counselings/existing")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// svi slobodni termini pregleda za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Collection<Appointment>> getAllExistingCounselingsForPharmacist() {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Appointment> existingCounselings = pharmacistService.getAllExistingCounselingsForPharmacist(currentPharmacist.getEmail());
+
+		if (existingCounselings == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		else if (existingCounselings.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Collection<Appointment>>(existingCounselings, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/counseling/{id}/upcoming")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	// zakazani pregled za trenutno ulogovanog farmaceuta
+	public ResponseEntity<Appointment> getUpcomingCounselingForPharmacist(@PathVariable("id") Long appointmentId) {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Appointment upcomingAppointment = pharmacistService.getUpcomingCounselingForPharmacist(currentPharmacist.getEmail(), appointmentId);
+
+		if (upcomingAppointment == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<Appointment>(upcomingAppointment, HttpStatus.OK);
 	}
 }

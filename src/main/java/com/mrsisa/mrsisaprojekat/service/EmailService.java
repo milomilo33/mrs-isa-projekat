@@ -138,13 +138,13 @@ public class EmailService {
 	}
 	
 	@Async
-	public void appointmentScheduledMail(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Dermatologist dermatologist, String patientEmail) {
+	public void appointmentScheduledMail(LocalDate date, LocalTime timeFrom, LocalTime timeTo, Employee employee, String patientEmail, String employeeType) {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(patientEmail);
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Appointment created and scheduled");
-		mail.setText("Appointment scheduled.\nDermatologist: " + dermatologist.getName() + " " +
-					dermatologist.getLastName() + "\nDate: " + date + "\nFrom: " + timeFrom + "\nTo: " + timeTo);
+		mail.setText("Appointment scheduled.\n" + employeeType + ": " + employee.getName() + " " +
+					employee.getLastName() + "\nDate: " + date + "\nFrom: " + timeFrom + "\nTo: " + timeTo);
 		javaMailSender.send(mail);
 	}
 	

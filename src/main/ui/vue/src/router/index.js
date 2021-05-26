@@ -257,6 +257,7 @@ const routes = [
 		children: [
 			{
 				path: "PharmacyList",
+				name: "PharmacistPagePharmacyList",
 				component: PharmacyListPreview
 			},
 			{
@@ -278,6 +279,31 @@ const routes = [
 				meta: {
 					roles: [Role.Pharmacist]
 				},
+			},
+			{
+				path: "ExaminationSearch",
+				component: ExaminationSearch,
+				meta: {
+					roles: [Role.Pharmacist]
+				
+				},
+			},
+			{
+				path: "AppointmentPage",
+				name: "PharmacistPageAppointmentPage",
+				component: AppointmentPage,
+				props: true,
+				meta: {
+					roles: [Role.Pharmacist]
+				},
+			},
+			{
+				path: "ExaminedPatients",
+				component: ExaminedPatients,
+				props: true,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
 			},
 			{
 				path: "DispenseMedication",

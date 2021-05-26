@@ -195,9 +195,6 @@
             },
 
             startAppointment() {
-                // uraditi za zapocinjanje savetovanja
-                if (this.type === 'pharmacist')
-                    return;
                 let appointmentId = this.chosenAppointment.appointmentId;
                 this.axios.get(`/api/appointments/${appointmentId}/start`, {
                                     headers: {
@@ -207,7 +204,9 @@
                                 .then(response => {
                                     let medicalReportId = response.data;
 
-                                    this.axios.get(`/api/dermatologist/examination/${appointmentId}/upcoming`, {
+                                    let targetApi = this.type === 'dermatologist' ? 'dermatologist/examination' :
+                                                                                    'pharmacist/counseling';
+                                    this.axios.get(`/api/${targetApi}/${appointmentId}/upcoming`, {
                                                         headers: {
                                                             Authorization: "Bearer " + localStorage.getItem("token"),
                                                         },
@@ -217,7 +216,10 @@
                                                         appointment.medicalReportId = medicalReportId;
 
                                                         // otvoriti stranicu pregleda
-                                                        this.$router.push({ name: 'DermatologistPageAppointmentPage',
+                                                        let name = this.type === 'dermatologist' ?
+                                                                                 'DermatologistPageAppointmentPage' :
+                                                                                 'PharmacistPageAppointmentPage';
+                                                        this.$router.push({ name,
                                                                             params: { appointment, medicalReportId } });
                                                     })
                                                     .catch(nestedError => {

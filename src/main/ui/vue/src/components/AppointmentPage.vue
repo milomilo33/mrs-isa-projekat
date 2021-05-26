@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Examination of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
+    <h1 v-if="type === 'dermatologist'">Examination of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
+    <h1 v-if="type === 'pharmacist'">Counseling session of patient {{ appointment.patient.name }} {{ appointment.patient.lastName }}</h1>
     <br>
 
     <h3>Prescribed medicines</h3>
@@ -170,7 +171,8 @@ export default {
   },
   props: {
     appointment: Object,
-    medicalReportId: Number
+    medicalReportId: Number,
+    type: String
   },
   methods: {
     onPatientAbsent() {
@@ -182,7 +184,7 @@ export default {
         .then(() => {
             this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}` +
                                   ` has successfully been marked as absent and has been added a penalty point.` +
-                                  ` The examination is now finished.`;
+                                  ` The ${this.type === 'dermatologist' ? 'examination' : 'counseling session'} is now finished.`;
             this.showSuccessModal();
         })
         .catch(error => {
@@ -196,15 +198,16 @@ export default {
       let body = {
         reportText
       };
-      console.log(body);
+      
       this.axios.post(`/api/appointments/` + this.appointment.id + `/finish`, body, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
         })
       .then(() => {
+          let appointmentType = this.type === 'dermatologist' ? 'examination' : 'counseling session';
           this.successMessage = `Patient ${this.appointment.patient.name} ${this.appointment.patient.lastName}'s` +
-                                ` examination is now over.`;
+                                ` ${appointmentType} is now over.`;
           this.showSuccessModal();
       })
       .catch(error => {
@@ -214,7 +217,8 @@ export default {
     },
 
     onScheduleAnotherAppointment() {
-        this.axios.get(`/api/dermatologist/examinations/existing`, {
+        let targetApi = this.type === 'dermatologist' ? 'dermatologist/examinations' : 'pharmacist/counselings';
+        this.axios.get(`/api/${targetApi}/existing`, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -239,6 +243,7 @@ export default {
         })
         .catch(error => {
             console.log(error);
+            this.existingAppointments = [];
             this.showSchedulingModal();
         });
     },
@@ -286,7 +291,7 @@ export default {
             termTo: this.timeTo
         };
         let medicalReportId = this.appointment.medicalReportId;
-        this.axios.post(`/api/dermatologist/appointments/schedule-new/` + medicalReportId, body, {
+        this.axios.post(`/api/${this.type}/appointments/schedule-new/` + medicalReportId, body, {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -362,7 +367,8 @@ export default {
     },
 
     goToHomePage() {
-        this.$router.push({ name: 'DermatologistPagePharmacyList' });
+        let name = this.type === 'dermatologist' ? 'DermatologistPagePharmacyList' : 'PharmacistPagePharmacyList';
+        this.$router.push({ name });
     },
 
     loadPrescriptionTable() {
