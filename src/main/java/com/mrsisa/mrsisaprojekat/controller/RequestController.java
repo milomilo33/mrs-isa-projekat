@@ -1,28 +1,21 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
+import com.mrsisa.mrsisaprojekat.dto.SendRequestDTO;
+import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Request;
+import com.mrsisa.mrsisaprojekat.service.EmailService;
+import com.mrsisa.mrsisaprojekat.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
-import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
-import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
-import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Order;
-import com.mrsisa.mrsisaprojekat.model.OrderStatus;
-import com.mrsisa.mrsisaprojekat.model.Request;
-import com.mrsisa.mrsisaprojekat.service.DermatologistService;
-import com.mrsisa.mrsisaprojekat.service.EmailService;
-import com.mrsisa.mrsisaprojekat.service.RequestService;
+import java.util.Collection;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -58,6 +51,34 @@ public class RequestController {
 		}
 		
 		
+	}
+
+	@GetMapping(value = "/dermatologist")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<Collection<Request>> getRequestsForDermatologist() {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		Collection<Request> requests = requestService.getRequestsForDermatologist(currentDermatologist);
+
+		if (requests == null || requests.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(requests, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/dermatologist")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
+	public ResponseEntity<Object> makeRequestForDermatologist(@RequestBody SendRequestDTO sendRequestDTO) {
+		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String message = requestService.makeRequestForDermatologist(currentDermatologist.getEmail(), sendRequestDTO);
+
+		if (message != null) {
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
