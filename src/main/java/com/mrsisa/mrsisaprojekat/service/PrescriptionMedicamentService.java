@@ -10,7 +10,7 @@ public interface PrescriptionMedicamentService {
 
     PrescriptionMedicament findOne(Long id);
 
-    void create(PrescriptionMedicament medicamentItem) throws Exception;
+    PrescriptionMedicament create(PrescriptionMedicament medicamentItem) throws Exception;
 
     PrescriptionMedicament update(PrescriptionMedicament medicamentItem) throws Exception;
 

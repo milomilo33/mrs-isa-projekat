@@ -43,8 +43,7 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Override
 	public ePrescription create(ePrescription ePrescription) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return ePrescriptionRepository.save(ePrescription);
 	}
 
 	@Override

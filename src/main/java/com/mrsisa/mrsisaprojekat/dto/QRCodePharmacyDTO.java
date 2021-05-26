@@ -4,6 +4,7 @@ import java.util.Set;
 
 public class QRCodePharmacyDTO {
 
+	private Long id;
 	private Set<PharmacyDTO> pharmacySet;
 	private PharmacyDTO pharmacy;
 	private String datePhurchased;
@@ -52,6 +53,14 @@ public class QRCodePharmacyDTO {
 
 	public void setQrCode(QRCodeDTO qrCode) {
 		this.qrCode = qrCode;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

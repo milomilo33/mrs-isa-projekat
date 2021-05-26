@@ -1,36 +1,14 @@
 <template>
     <div>
-        <div class="card-header" style="background-color:#ccffbc;">ePrescriptions</div>
+      <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
+        Success! You purchased your medicaments.
+      </b-alert>
+      <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
+        Failed to purchase medicaments.
+      </b-alert>
+        <div class="card-header" style="background-color:#ccffbc;">QR Code Reader</div>
             <b-row>
-              <b-col lg="4" class="my-1">
-                <b-form-group
-                  label-for="filter-input"
-                  label-cols-sm="3"
-                  label-align-sm="right"
-                  label-size="sm"
-                  class="mb-0"
-                >
-                  <b-input-group size="md">
-                    <b-form-input
-                      id="filter-input"
-                      v-model="filter"
-                      type="search"
-                      placeholder="Search"
-                    >
-                    </b-form-input>
-                    <b-input-group-append>
-                      <b-button :disabled="!filter" @click="filter = ''"
-                        >Clear</b-button
-                      >
-                    </b-input-group-append>
-                  </b-input-group>
-                  
-                  
-                </b-form-group>
-                
-                  
-              </b-col>
-               <b-col lg="8" class="my-1">
+               <b-col lg="4" class="my-1">
                 <b-form-group
                   label-cols-sm="3"
                   label-align-sm="right"
@@ -108,11 +86,14 @@ export default {
               return value.street + " "+ value.number;
             }},
             { key: "rating", sortable: true, label: "Rating"},
-            { key: "cost", sortable: true, label: "TotalPrice" },
+            { key: "cost", sortable: true, label: "TotalPrice", formatter: value => {
+              return value.toFixed(2);
+            } },
             { key: "show_details", label: "Medicaments"}, 
             { key: "update", label: "Buy" }
         ],
-       
+        showSuccessAlert: false,
+        showFailedAlert: false,
         items: [],
         selectMode: "single",
         sortBy: "date",
@@ -144,7 +125,27 @@ export default {
 
         },
         purchase(row){
-          console.log(row.item);
+          var _this = this;
+          this.qrCodeItem.pharmacy = row.item;
+          this.qrCodeItem.qrCode.patient = this.username;
+          console.log(this.qrCodeItem);
+          this.axios
+          .post(`http://localhost:8080/api/patients/addEPrescription`, {
+            pharmacy: row.item,
+            qrCode: this.qrCodeItem.qrCode
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+          .then(function (response) {
+            _this.showFailedAlert = false;
+            _this.showSuccessAlert = true;
+            console.log(response);
+          })
+          .catch(function (error) {
+            _this.showFailedAlert = true;
+            _this.showSuccessAlert = false;
+            console.log(error);
+          });
         }
     },
 }
