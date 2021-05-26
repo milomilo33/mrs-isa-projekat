@@ -315,6 +315,13 @@ const routes = [
 				path: "RequestDaysOff",
 				name: "PharmacistRequestDaysOff",
 				component: RequestDaysOff,
+        meta: {
+					roles: [Role.Pharmacist]
+				}
+      },
+      {
+				path: "PatientProfile",
+				component: PatientProfile,
 				meta: {
 					roles: [Role.Pharmacist]
 				}
@@ -397,6 +404,13 @@ const routes = [
 				path: "RequestDaysOff",
 				name: "DermatologistRequestDaysOff",
 				component: RequestDaysOff,
+        meta: {
+					roles: [Role.Dermatologist]
+				}
+      },
+      {
+				path: "PatientProfile",
+				component: PatientProfile,
 				meta: {
 					roles: [Role.Dermatologist]
 				}

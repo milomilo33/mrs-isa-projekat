@@ -1,12 +1,11 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.Collection;
-
+import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.repository.AddressRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.repository.AddressRepositoryDB;
+import java.util.Collection;
 
 @Service
 public class AddressServiceImpl implements AddressService{
@@ -43,12 +42,11 @@ public class AddressServiceImpl implements AddressService{
 			return null;
 		}
 
+//		address = addressRepository.saveAndFlush(address);
+		Address newAddress = addressRepository.save(address);
 
-		address = addressRepository.saveAndFlush(address);
 
-
-
-		return address;
+		return newAddress;
 	}
 
 	@Override
