@@ -17,7 +17,7 @@
                 <b-dropdown-item href="/DermatologistPage/ExaminedPatients?type=dermatologist">Examination history</b-dropdown-item>
                 <b-dropdown-item href="/DermatologistPage/SearchPatients">Search patients</b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item href="/DermatologistPage/RequestDaysOff">Request days off</b-nav-item>
+            <b-nav-item href="/DermatologistPage/RequestDaysOff?type=dermatologist">Request days off</b-nav-item>
         </b-navbar-nav>
         
         <!-- Right aligned nav items -->

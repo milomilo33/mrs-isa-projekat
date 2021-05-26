@@ -66,7 +66,7 @@
                 <b-button class="mt-3" variant="outline-danger" block @click="hideErrorModal">Close</b-button>
             </b-modal>
             
-            <b-modal ref="success-modal" hide-footer title="Success" @hide="goToHomePage">
+            <b-modal ref="success-modal" hide-footer title="Success">
                 <div class="d-block text-center">
                     <p>Request successfully submitted.</p>
                 </div>
@@ -105,13 +105,14 @@ export default {
                     label: 'Status'
                 }
             ],
-            errorMessage: ""
+            errorMessage: "",
+            type: ""
         }
     },
 
     methods: {
         loadRequests() {
-            this.axios.get(`/api/request/dermatologist`,  {
+            this.axios.get(`/api/request/${this.type}`,  {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                 },
@@ -155,7 +156,7 @@ export default {
                 description: this.description
             };
 
-            this.axios.post(`/api/request/dermatologist`, body, {
+            this.axios.post(`/api/request/${this.type}`, body, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -188,6 +189,7 @@ export default {
     },
 
     mounted() {
+        this.type = this.$route.query.type;
         this.loadRequests();
     }
 }

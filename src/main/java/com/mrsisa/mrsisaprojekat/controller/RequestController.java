@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
 import com.mrsisa.mrsisaprojekat.dto.SendRequestDTO;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Request;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.RequestService;
@@ -73,6 +74,34 @@ public class RequestController {
 		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		String message = requestService.makeRequestForDermatologist(currentDermatologist.getEmail(), sendRequestDTO);
+
+		if (message != null) {
+			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/pharmacist")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<Collection<Request>> getRequestsForPharmacist() {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		Collection<Request> requests = requestService.getRequestsForPharmacist(currentPharmacist);
+
+		if (requests == null || requests.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(requests, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/pharmacist")
+	@PreAuthorize("hasAnyRole('PHARMACIST')")
+	public ResponseEntity<Object> makeRequestForPharmacist(@RequestBody SendRequestDTO sendRequestDTO) {
+		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String message = requestService.makeRequestForPharmacist(currentPharmacist.getEmail(), sendRequestDTO);
 
 		if (message != null) {
 			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);

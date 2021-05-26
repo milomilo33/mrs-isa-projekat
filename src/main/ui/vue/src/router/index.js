@@ -310,6 +310,14 @@ const routes = [
 				meta: {
 					roles: [Role.Pharmacist]
 				}
+			},
+			{
+				path: "RequestDaysOff",
+				name: "PharmacistRequestDaysOff",
+				component: RequestDaysOff,
+				meta: {
+					roles: [Role.Pharmacist]
+				}
 			}
 		]
 	},

@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.SendRequestDTO;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Request;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,10 @@ public interface RequestService {
 
 	Collection<Request> getRequestsForDermatologist(Dermatologist dermatologist);
 
+	Collection<Request> getRequestsForPharmacist(Pharmacist pharmacist);
+
 	String makeRequestForDermatologist(String dermatologistEmail, SendRequestDTO sendRequestDTO);
+
+	String makeRequestForPharmacist(String pharmacistEmail, SendRequestDTO sendRequestDTO);
 
 }

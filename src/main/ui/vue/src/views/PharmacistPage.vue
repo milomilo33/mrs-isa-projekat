@@ -18,7 +18,7 @@
                 <b-dropdown-item href="/PharmacistPage/SearchPatients">Search patients</b-dropdown-item>
             </b-nav-item-dropdown>
             <b-nav-item href="/PharmacistPage/DispenseMedication">Dispense medication</b-nav-item>
-            <b-nav-item href="#">Request days off</b-nav-item>
+            <b-nav-item href="/PharmacistPage/RequestDaysOff?type=pharmacist">Request days off</b-nav-item>
         </b-navbar-nav>
         
         <!-- Right aligned nav items -->
