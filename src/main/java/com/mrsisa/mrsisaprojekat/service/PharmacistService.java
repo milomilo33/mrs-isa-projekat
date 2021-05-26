@@ -5,7 +5,9 @@ import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Rating;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,4 +44,8 @@ public interface PharmacistService {
 	Collection<Appointment> getUpcomingCounselingsForPharmacist(String email);
 
 	boolean pharmacistHasAppointment(String email, Long appointmentId);
+
+	String createAndScheduleNewAppointment(String pharmacistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId);
+
+	Collection<Appointment> getAllExistingCounselingsForPharmacist(String email);
 }

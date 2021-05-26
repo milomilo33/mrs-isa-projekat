@@ -390,7 +390,7 @@ public class DermatologistController {
 		}
 
 		try {
-			emailService.appointmentScheduledMail(date,timeFrom, timeTo,currentDermatologist,patientEmail);
+			emailService.appointmentScheduledMail(date,timeFrom, timeTo, currentDermatologist, patientEmail, "Dermatologist");
 		}
 		catch( Exception e) {
 			System.out.println(e.getMessage());

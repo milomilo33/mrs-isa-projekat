@@ -219,7 +219,7 @@ public class PatientServiceImpl implements PatientService {
 	public Long updateWithAppointment(Patient patient, Appointment appointment) {
 		patient.getAppointments().add(appointment);
 		Appointment a = appointmentRepository.save(appointment);
-		patientRepository.save(patient);
+//		patientRepository.save(patient);
 
 		return a.getId();
 	}

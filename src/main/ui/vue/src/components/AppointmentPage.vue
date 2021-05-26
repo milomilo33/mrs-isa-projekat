@@ -216,7 +216,8 @@ export default {
     },
 
     onScheduleAnotherAppointment() {
-        this.axios.get(`/api/dermatologist/examinations/existing`, {
+        let targetApi = this.type === 'dermatologist' ? 'dermatologist/examinations' : 'pharmacist/counselings';
+        this.axios.get(`/api/${targetApi}/existing`, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -241,6 +242,7 @@ export default {
         })
         .catch(error => {
             console.log(error);
+            this.existingAppointments = [];
             this.showSchedulingModal();
         });
     },
@@ -288,7 +290,7 @@ export default {
             termTo: this.timeTo
         };
         let medicalReportId = this.appointment.medicalReportId;
-        this.axios.post(`/api/dermatologist/appointments/schedule-new/` + medicalReportId, body, {
+        this.axios.post(`/api/${this.type}/appointments/schedule-new/` + medicalReportId, body, {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },

@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacistRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +22,15 @@ public class PharmacistServiceImpl  implements PharmacistService {
 
 	@Autowired
 	private PharmacistRepositoryDB pharmacistRepository;
+
+	@Autowired
+	private PatientService patientService;
+
+	@Autowired
+	private MedicalReportService medicalReportService;
+
+	@Autowired
+	private AppointmentRepositoryDB appointmentRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -307,6 +318,152 @@ public class PharmacistServiceImpl  implements PharmacistService {
 		}
 
 		return false;
+	}
+
+	@Override
+	@Transactional
+	public String createAndScheduleNewAppointment(String pharmacistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId) {
+		// provera da li je datum validan
+		if (timeFrom.isAfter(timeTo) || timeFrom.equals(timeTo)) {
+			return "Invalid date!";
+		}
+		LocalDate today = LocalDate.now();
+		LocalTime timeNow = LocalTime.now();
+		if (date.isBefore(today) || (date.isEqual(today) && timeFrom.isBefore(timeNow))) {
+			return "Invalid date!";
+		}
+
+		Pharmacist pharmacist = this.findOne(pharmacistEmail);
+		Patient patient = patientService.findOne(patientEmail);
+		MedicalReport report = medicalReportService.findOne(medicalReportId);
+
+		if (patient == null || pharmacist == null) {
+			return "Invalid pharmacist or patient!";
+		}
+
+		if (patient.isDeleted() || pharmacist.isDeleted()) {
+			return "Invalid pharmacist or patient!";
+		}
+
+		if (report == null) {
+			return "Medical report does not exist!";
+		}
+
+		if (report.isDeleted()) {
+			return "Medical report does not exist!";
+		}
+
+		Pharmacy pharmacy = pharmacist.getPharmacy();
+
+		if (pharmacist.getWorkHour() == null) {
+			return "Pharmacist does not have work hours!";
+		}
+
+		// provera da li je termin u okviru radnog vremena farmaceuta
+		Set<WorkHour> workHoursInPharmacy = pharmacist.getWorkHour()
+				.stream()
+				.filter(wh -> !wh.isDeleted() && wh.getPharmacy().getId().equals(pharmacy.getId()))
+				.collect(Collectors.toSet());
+		boolean appointmentDuringWorkHours = false;
+		int dayInt = date.getDayOfWeek().getValue();
+		for (WorkHour wh : workHoursInPharmacy) {
+			LocalTime workHourFrom = wh.getWorkHourFrom();
+			LocalTime workHourTo = wh.getWorkHourTo();
+			// + 1 -- zato sto dayOfWeek pocinje od 1
+			int workHourDayInt = wh.getDay().ordinal() + 1;
+			if (workHourDayInt == dayInt && (workHourFrom.isBefore(timeFrom) || workHourFrom.equals(timeFrom)) &&
+					(workHourTo.isAfter(timeTo) || workHourTo.equals(timeTo))) {
+				appointmentDuringWorkHours = true;
+				break;
+			}
+		}
+
+		if (!appointmentDuringWorkHours) {
+			return "Appointment is not during pharmacist's working hours!";
+		}
+
+		// provera da li se termin preklapa sa postojecim terminom farmaceuta
+		if (pharmacist.getCounselings() != null) {
+			for (Appointment a : pharmacist.getCounselings()) {
+				if (!a.isDeleted()) {
+					// preklapanje
+					if (a.getDate().isEqual(date) && a.getTermFrom().isBefore(timeTo) && timeFrom.isBefore(a.getTermTo())) {
+						return "Appointment overlaps with another one of your appointments!";
+					}
+				}
+			}
+		}
+
+		// provera da li je termin u okviru neradnih dana farmaceuta
+		if (pharmacist.getCalendar() != null) {
+			for (Vacation v : pharmacist.getCalendar().getVacations()) {
+				if (!v.isDeleted()) {
+					if (date.isEqual(v.getDateFrom()) || date.isEqual(v.getDateTo()) || (date.isAfter(v.getDateFrom()) && date.isBefore(v.getDateTo()))) {
+						return "Appointment overlaps with vacation days!";
+					}
+				}
+			}
+		}
+
+		// provera da li se termin preklapa sa postojecim pregledom pacijenta
+		if (patient.getAppointments() != null) {
+			for (Appointment a : patient.getAppointments()) {
+				if (!a.isDeleted()) {
+					if (a.getDate().isEqual(date) && a.getTermFrom().isBefore(timeTo) && timeFrom.isBefore(a.getTermTo())) {
+						return "Appointment overlaps with another one of the patient's appointments!";
+					}
+				}
+			}
+		}
+
+		Appointment newAppointment = new Appointment();
+		newAppointment.setDeleted(false);
+		newAppointment.setPatient(patient);
+		newAppointment.setChosenEmployee(pharmacist);
+		newAppointment.setType(Appointment.AppointmentType.COUNSELING);
+		newAppointment.setDate(date);
+		newAppointment.setTermFrom(timeFrom);
+		newAppointment.setTermTo(timeTo);
+
+		appointmentRepository.save(newAppointment);
+
+		pharmacy.getAppointments().add(newAppointment);
+
+		return null;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Collection<Appointment> getAllExistingCounselingsForPharmacist(String email) {
+		Pharmacist pharmacist = this.findOne(email);
+
+		if (pharmacist == null) {
+			return null;
+		}
+
+		Collection<Appointment> counselings = pharmacist.getCounselings();
+		Collection<Appointment> existingCounselings = new ArrayList<Appointment>();
+		if (pharmacist == null) {
+			return existingCounselings;
+		}
+
+		LocalDate today = LocalDate.now();
+		for (Appointment a : counselings) {
+			LocalDate appointmentDate = a.getDate();
+			if (a.getPatient() == null) {
+				boolean isBeforeScheduledTime = false;
+				LocalTime timeFrom = a.getTermFrom();
+				LocalTime now = LocalTime.now();
+				isBeforeScheduledTime = now.isBefore(timeFrom);
+				if (today.isBefore(appointmentDate) || (today.isEqual(appointmentDate) && isBeforeScheduledTime)) {
+					a.setMedicalReport(null);
+					a.setChosenEmployee(null);
+					existingCounselings.add(a);
+				}
+			}
+		}
+
+		return existingCounselings;
 	}
 
 }
