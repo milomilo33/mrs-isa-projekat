@@ -55,7 +55,7 @@ public class SystemAdminServiceImpl implements SystemAdminService{
 
 	@Override
 	public void delete(String id) {
-		adminRepository.deleteById(id);
+		adminRepository.deleteOne(id);
 		
 	}
 
