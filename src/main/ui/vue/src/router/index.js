@@ -58,7 +58,7 @@ import Request from '../components/Request'
 import QRCodeReader from '../components/QRCodeReader'
 import WorkCalendar from '../components/WorkCalendar'
 import RequestDaysOff from '../components/RequestDaysOff'
-
+import DeleteUserTable from '../components/DeleteUserTable'
 Vue.use(VueRouter)
 const Role = {
 	AdminPharmacy: 'ROLE_PHARMACY_ADMIN',
@@ -214,6 +214,14 @@ const routes = [
 					roles: [Role.SystemAdmin]
 				},
 			},
+			{
+				path: "Users",
+				name: "Users",
+				component: DeleteUserTable,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
+			}
 		]
 	},
 	{

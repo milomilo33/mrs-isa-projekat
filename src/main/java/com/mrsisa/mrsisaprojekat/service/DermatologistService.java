@@ -19,7 +19,7 @@ public interface DermatologistService {
 	
 	Dermatologist update(Dermatologist dermatologist) throws Exception;
 	
-	boolean delete(String email);
+	void delete(String email);
 
 	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
 
