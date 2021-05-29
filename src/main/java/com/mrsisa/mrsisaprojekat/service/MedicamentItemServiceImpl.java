@@ -68,4 +68,11 @@ public class MedicamentItemServiceImpl implements MedicamentItemService{
 	public void restore(Long id) {
 		medicamentItemRepository.restoreOne(id);
 		
+	}
+
+	@Override
+	public void deleteMedicament(MedicamentItem mi) {
+		mi.setDeleted(true);
+		medicamentItemRepository.save(mi);
+		
 	}}

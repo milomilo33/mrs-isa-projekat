@@ -1,5 +1,7 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
+import java.util.Set;
+
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 
@@ -16,6 +18,8 @@ public class PharmacyDTO {
 	private double cost;
 	
 	private int rating;
+	
+	private Set<String> admins; 
 
 	public PharmacyDTO() {}
 
@@ -41,6 +45,12 @@ public class PharmacyDTO {
 		this.rating = rating;
 	}
 	
+	public PharmacyDTO(Long id, String name, AddressDTO address, Set<String> admins) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.admins = admins;
+	}
 	public double getCost() {
 		return cost;
 	}
@@ -72,5 +82,15 @@ public class PharmacyDTO {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
+
+	public Set<String> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(Set<String> admins) {
+		this.admins = admins;
+	}
+
+	
 
 }

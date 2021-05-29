@@ -42,5 +42,8 @@ public interface PharmacyService {
     
     Pharmacy findOneWithRequests(Long id);
     
+    Set<Pharmacy> findAllWithAdmin();
+
+	void deletePharmacy(Long id) throws Exception;
     
 }
