@@ -228,6 +228,8 @@ export default {
       error_message: "",
       showSuccessAlert: false,
       showFailedAlert: false,
+      latitude: 0,
+      longitude: 0
     };
   },
   methods: {
@@ -258,7 +260,9 @@ export default {
       }
       
       role = `/api/pharmacyAdmin`;
-     
+
+      this.guessCoordinatesFromLocation();
+      console.log("GEOS: ", this.latitude, this.longitude)
       if (errorFound == false) {
         this.axios
           .post(role, {
@@ -289,7 +293,38 @@ export default {
         this.success_message = "Uspesno ste registrovali korisnika.";
       }
     },
+
+    guessCoordinatesFromLocation: async function() {
+			const url =
+				"https://nominatim.openstreetmap.org/search/" +
+				this.city +
+				", " +
+				this.street +
+				" " +
+				this.number;
+      
+			await this.axios
+				.get(url, {
+					params: {
+						format: "json",
+						limit: 1,
+						"accept-language": "en",
+					},
+				})
+				.then((response) => {
+					if (response.data && response.data.lenght != 0) {
+						const { lon, lat } = response.data[0];
+            console.log(lon, lat);
+						this.longitude = lon;
+            this.latitude = lat;
+					}
+				})
+				.catch(() => {
+					alert('Could not find coordinates based on given info.', '');
+				});
+		},
   },
+
 };
 </script>
 <style scoped>

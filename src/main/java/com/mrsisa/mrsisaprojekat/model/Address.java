@@ -24,6 +24,12 @@ public class Address {
 	
 	@Column(name = "number", unique = false, nullable = false)
 	private int number;
+
+	@Column(name="longitude", unique = false, nullable = true)
+	private Double longitude;
+
+	@Column(name="latitude", unique = false, nullable = true)
+	private Double latitude;
 	
 	public Address() {}
 
@@ -76,5 +82,19 @@ public class Address {
 		this.number = number;
 	}
 
+	public double getLongitude() {
+		return longitude;
+	}
 
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 }

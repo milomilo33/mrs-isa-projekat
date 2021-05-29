@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.*;
 
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,7 +86,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		if (pharmacy == null) {
 			return null;
 		}
-	
+
 		return pharmacy;
 	}
 
@@ -192,5 +193,6 @@ public class PharmacyServiceImpl implements PharmacyService{
 	}
 
 
-	
+
+
 }
