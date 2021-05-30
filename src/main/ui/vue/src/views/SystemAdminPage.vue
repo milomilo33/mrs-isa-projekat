@@ -25,7 +25,13 @@
           <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">Write answer</b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
-        <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+           Medicament CRUD
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/CrudMedicament">Change and delete medicament</b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item href="/SystemAdminPage/Users">System users</b-nav-item>
       </b-navbar-nav>
       

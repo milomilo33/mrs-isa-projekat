@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class MedicamentServiceImpl implements MedicamentService {
@@ -220,6 +221,26 @@ public class MedicamentServiceImpl implements MedicamentService {
 		}
 
 		return dtos;
+	}
+	@Override
+	public void deleteMedicament(Long id) throws Exception {
+		Medicament med = this.findOne(id);
+		med.setDeleted(true);
+		medicamentRepository.save(med);
+		
+		Collection<Pharmacy> pharmacies = pharmacyService.getAllWithMedicaments();
+		
+		for(Pharmacy p : pharmacies) {
+			Set<MedicamentItem> items = p.getMedicamentItems();
+			for(MedicamentItem mi : items) {
+				if(mi.getMedicament().getId() == id) {
+					mi.setDeleted(true);
+					break;
+				}
+			}
+			pharmacyService.update(p);
+		}
+		
 	}
 
 }

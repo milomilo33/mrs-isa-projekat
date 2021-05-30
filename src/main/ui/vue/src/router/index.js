@@ -47,7 +47,7 @@ import PastAppointmentsPage from '../components/PastAppointmentsPage'
 import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import PatientProfile from '../components/PatientProfile'
-
+import MedicamenTableCRUD from '../components/MedicamenTableCRUD'
 import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
@@ -202,6 +202,13 @@ const routes = [
 			{
 				path: "MedicamentRegistration",
 				component: MedicamentRegistration,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
+			},
+			{
+				path: "CrudMedicament",
+				component: MedicamenTableCRUD,
 				meta: {
 					roles: [Role.SystemAdmin]
 				},
