@@ -106,6 +106,8 @@ export default {
     created() {
         if (this.$route.query.type)
             this.type = this.$route.query.type;
+
+        console.log(this.type);
     },
 
     methods: {
