@@ -221,6 +221,13 @@ const routes = [
 				meta: {
 					roles: [Role.SystemAdmin]
 				},
+			},
+			{
+				path: "PatientProfile",
+				component: PatientProfile,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
 			}
 		]
 	},

@@ -39,7 +39,7 @@
           <template #button-content>
             <em class="pl-2">User</em>
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/PatientProfile?type=systemAdmin">Profile</b-dropdown-item>
            <b-dropdown-item href="/SystemAdminPage/ChangePassword">Change password</b-dropdown-item>
           <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
