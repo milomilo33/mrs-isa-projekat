@@ -66,7 +66,7 @@
                    v-bind:class="{ bronze: loyalty.category === 'REGULAR', silver: loyalty.category === 'SILVER', gold: loyalty.category === 'GOLD'}"> 
                        {{loyalty.category}} </b-col>
                 </b-row>
-                <b-row class="mb-3" v-if="type === 'patient'"> 
+                <b-row class="mb-3" v-if="type === 'patient'">
                     <b-col class="col-lg-2 label"> Loyalty points: </b-col>
                     <b-col> {{loyalty.points}} </b-col>
                 </b-row>
@@ -162,7 +162,7 @@ export default {
 
             this.showErrorAlert = false;
             this.showSuccessAlert = false;
-            if (this.type === "patient") 
+            if (this.type === "patient")
                 alert(this.addressToString(this.patient.address))
 
             let targetApi = this.type === "patient" ? "patients" : this.type + "/update";

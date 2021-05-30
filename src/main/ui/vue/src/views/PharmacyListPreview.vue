@@ -51,6 +51,8 @@ export default defineComponent({
         })
           .then(response => {
               this.pharmacies = response.data;
+              this.all = response.data;
+              console.log("ALL", this.all);
           }).catch(error => console.log(error));
       } else {
         console.log(this.query);

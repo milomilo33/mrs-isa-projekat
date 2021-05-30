@@ -64,6 +64,9 @@ public class PharmacyController {
 	
 	@Autowired
 	private ReportService reportService;
+
+	@Autowired
+	private PatientService patientService;
 	
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,12 +108,12 @@ public class PharmacyController {
 
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
+    //@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
 		Address address = addressService.create(pharmacy.getAddress());
 		pharmacy.setAddress(address);
 		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
-		return new ResponseEntity<>(savedPharmacy, HttpStatus.CREATED);
+		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -225,20 +228,14 @@ public class PharmacyController {
 	
 	
 	
-	@GetMapping(value = "filter/rating={rating}")
-	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("rating") int rating) {
-		Collection<Pharmacy> pharmacies = pharmacyService.findAll();
-		List<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
-
-		if(rating != -1) {
-			for (Pharmacy p : pharmacies) {
-
-				if (pharmacyService.getRating(p.getId()) == rating)
-					pharmaciesDTO.add(new PharmacyDTO(p));
-			}
+	@GetMapping(value = "filter/rating={rating}&subscribed={username}")
+	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("rating") int rating, @PathVariable("username") String username) {
+		Collection<Pharmacy> pharmacies = patientService.filterPharmacy(username, rating);
+		Collection<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
+		for(Pharmacy p : pharmacies) {
+			pharmaciesDTO.add(new PharmacyDTO(p));
 		}
-
-		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
+		return ResponseEntity.ok().body(pharmaciesDTO);
 	}
 	
 	

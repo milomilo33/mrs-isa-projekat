@@ -145,7 +145,8 @@ export default {
         })
       .then(response => {
         this.pharmacy = response.data;
-        this.guessCoordinatesFromLocation();
+        console.log("PHAR", this.pharmacy);
+        this.updateCoordinatesHandler();
         })
       .catch(error => console.log(error));
       }
@@ -204,42 +205,41 @@ export default {
           Authorization: "Bearer " + localStorage.getItem('token'),
       }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.data));
     },
-    guessCoordinatesFromLocation: function() {
-      console.log("APOTEKA", this.pharmacy);
-			const url =
-				"https://nominatim.openstreetmap.org/search/" +
-				this.pharmacy.address.city +
-				", " +
-				this.pharmacy.address.street +
-				" " +
-				this.pharmacy.address.number;
+    // guessCoordinatesFromLocation: function() {
+    //   console.log("APOTEKA", this.pharmacy);
+		// 	const url =
+		// 		"https://nominatim.openstreetmap.org/search/" +
+		// 		this.pharmacy.address.city +
+		// 		", " +
+		// 		this.pharmacy.address.street +
+		// 		" " +
+		// 		this.pharmacy.address.number;
       
-			this.axios
-				.get(url, {
-					params: {
-						format: "json",
-						limit: 1,
-						"accept-language": "en",
-					},
-				})
-				.then((response) => {
-					if (response.data && response.data.lenght != 0) {
-						const { lon, lat } = response.data[0];
-            console.log(lon, lat);
-						this.updateCoordinatesHandler([lon, lat]);
-					}
-				})
-				.catch(() => {
-                    //console.log(error);
-					alert('Could not find coordinates based on given info.', '');
-				});
-		},
+		// 	this.axios
+		// 		.get(url, {
+		// 			params: {
+		// 				format: "json",
+		// 				limit: 1,
+		// 				"accept-language": "en",
+		// 			},
+		// 		})
+		// 		.then((response) => {
+		// 			if (response.data && response.data.lenght != 0) {
+		// 				const { lon, lat } = response.data[0];
+    //         console.log(lon, lat);
+		// 				this.updateCoordinatesHandler([lon, lat]);
+		// 			}
+		// 		})
+		// 		.catch(() => {
+    //                 //console.log(error);
+		// 			alert('Could not find coordinates based on given info.', '');
+		// 		});
+		// },
 
-        updateCoordinatesHandler: function(coordinates) {
-			this.coordinates[0] = coordinates[0];
-			this.coordinates[1] = coordinates[1];
-      
-            
+    updateCoordinatesHandler: function() {
+      console.log("AAAAAAAAA", this.pharmacy.latitude);
+			this.coordinates[0] = this.pharmacy.address.longitude;
+			this.coordinates[1] = this.pharmacy.address.latitude;     
 		},
 
     subscribe: function(){
@@ -294,7 +294,8 @@ export default {
         })
       .then(response => {
         _this.pharmacy = response.data;
-        _this.guessCoordinatesFromLocation();
+        _this.updateCoordinatesHandler();
+        console.log("PHAR2", this.pharmacy);
         })
       .catch(error => console.log(error));
     },
