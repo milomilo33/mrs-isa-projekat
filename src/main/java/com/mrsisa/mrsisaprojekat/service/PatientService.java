@@ -55,4 +55,7 @@ public interface PatientService {
 	Patient getOneWithAddress(String email);
 	
 	Patient getOneWithCategory(String email);
+
+	boolean checkIfTermFilled(Patient patient, Appointment appointment);
+
 }

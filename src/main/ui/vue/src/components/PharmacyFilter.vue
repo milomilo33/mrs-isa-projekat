@@ -36,13 +36,13 @@
               <input type="radio" id="star1" name="rate" value="1" @click="rating = 1"/>
               <label for="star1" title="text">1 star</label>
             </b-col>
-            <b-col class="pt-2">
+            <b-col class="ml-5 pt-2">
               <b-form-checkbox
                   v-model="isSubscribed"
                   size="lg"
                   switch
               >
-                <h4>Subscribed </h4>
+                <h4>Only subscribed </h4>
 
               </b-form-checkbox>
             </b-col>
@@ -114,7 +114,7 @@ export default {
       if(this.maxDistance === undefined) this.maxDistance = Infinity
 
       this.pharmacies = this.allPharmacies;
-      
+
       var tempUsername;
       if(this.isSubscribed) {
         tempUsername = JSON.parse(
@@ -127,7 +127,7 @@ export default {
         if(this.rating != -1) {
           await this.axios.get(`http://localhost:8080/api/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
             headers: {Authorization: "Bearer " + localStorage.getItem('token')}
-        })
+            })
             .then(response => {
               if(response.data.length === 0) {
                 this.showFailedAlert = true;
@@ -137,13 +137,12 @@ export default {
               }
               else {
                 this.pharmacies = response.data;
-                this.filterByDistance();
               }
             }).catch(error => console.log(error));
       }
 
-      
-      //this.filterByDistance();
+
+      this.filterByDistance();
       //await this.filterBySubscription();
       this.$emit('childToParent', this.pharmacies);
     },
@@ -167,13 +166,11 @@ export default {
                 this.filterByDistance();
               }
             }).catch(error => console.log(error.data));
-        
+
       }
-      
     },
 
     filterByDistance() {
-      console.log("Filter", this.pharmacies);
       var i;
       if(this.minDistance >= 0 && this.minDistance <= this.maxDistance) {
         console.log(this.pharmacies)
@@ -189,6 +186,7 @@ export default {
               const lat = pharmacy.address.latitude;
               const lon = pharmacy.address.longitude;
 
+              console.log("lat lon", lat, lon);
               var distance = this.euclideanDistance([lat, lon], this.myPosition);
               console.log(this.minDistance, this.maxDistance);
               if(distance >= this.minDistance && distance <= this.maxDistance) {
@@ -202,7 +200,7 @@ export default {
                 } else {
                   this.pharmacies = this.temp;
                 }
-                this.$emit('childToParent', this.pharmacies);
+                //this.$emit('childToParent', this.pharmacies);
               }
     },
 

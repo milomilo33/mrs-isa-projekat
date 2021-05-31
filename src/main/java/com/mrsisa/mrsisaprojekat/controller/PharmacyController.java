@@ -69,14 +69,14 @@ public class PharmacyController {
 
 	@Autowired
 	private PatientService patientService;
-	
+
 	@Autowired
 	private MedicamentItemService medicamentService;
-	
+
 	@Autowired
 	private AppointmentService appointmentService;
-	
-	
+
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<PharmacyDTO>> getPharmacies(){
 		
@@ -116,12 +116,12 @@ public class PharmacyController {
 
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
+    @PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
 		Address address = addressService.create(pharmacy.getAddress());
 		pharmacy.setAddress(address);
 		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
-		return new ResponseEntity<>(null, HttpStatus.CREATED);
+		return new ResponseEntity<>(savedPharmacy, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -241,6 +241,7 @@ public class PharmacyController {
 		Collection<Pharmacy> pharmacies = patientService.filterPharmacy(username, rating);
 		Collection<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
 		for(Pharmacy p : pharmacies) {
+			System.out.println("EEEEEEEEEEEEE" + p.getName());
 			pharmaciesDTO.add(new PharmacyDTO(p));
 		}
 		return ResponseEntity.ok().body(pharmaciesDTO);
@@ -435,7 +436,7 @@ public class PharmacyController {
 			PharmacyDTO pharmacy = new PharmacyDTO(p.getId(), p.getName(), address, admins );
 			pharmaciesDTO.add(pharmacy);
 		}
-		
+
 		return new ResponseEntity<Collection<PharmacyDTO>>(pharmaciesDTO, HttpStatus.OK);
 	}
 	@GetMapping(value = "/delete/{id}")

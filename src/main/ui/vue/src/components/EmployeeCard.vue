@@ -130,7 +130,7 @@ export default {
 
     parseAppointment(a) {
       let retval = "";
-      let date = new Date(a.date[0], a.date[1], a.date[2]);
+      let date = new Date(a.date[0], a.date[1] - 1, a.date[2]);
 
       let from = new Date();
       from.setHours(a.termFrom[0]);
@@ -176,11 +176,7 @@ export default {
         this.employee.appointments = this.employee.appointments.filter(el => el.id !== this.appointment.id);
         x.selectedIndex = -1;
         alert("Rezervacija uspesno izvrsena!");
-      })
-        .catch(function (error) {
-          console.log(error);
-          alert("Error!")
-        });
+      }).catch(() => alert("termin koji ste odabrali preklapa se sa vec rezervisanim terminom"));
     },
 
     setAppointment(a) {
