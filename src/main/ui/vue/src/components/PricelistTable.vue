@@ -366,7 +366,7 @@ export default {
         this.medicamentss.splice(idx, 1);
          var self = this;
          self.axios.put(
-          `/api/pricelistItems/promotion/`+self.selected[0].id+`/`+self.pharmacyId,
+          `/api/pricelistItems/promotion/`+self.selected[0].medId+`/`+self.pharmacyId,
           {
             price:[{
                 id :self.priceid,
