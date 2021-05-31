@@ -626,7 +626,8 @@ public class PatientController {
 		if(p.getPenaltyPoints() == 3) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-		String decodedText = QRCodeReader.decodeQRCode("C:"+ File.separator+ "Users" + File.separator+ "filip"+ File.separator + "Downloads" + File.separator + ""+qrPath);
+		String path = System.getProperty("user.dir")+"\\src\\main\\resources\\qrCodes\\"+qrPath;
+		String decodedText = QRCodeReader.decodeQRCode(path);
         if(decodedText == null) {
             System.out.println("No QR Code found in the image");
         } else {

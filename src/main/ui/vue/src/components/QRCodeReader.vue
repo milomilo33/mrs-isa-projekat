@@ -121,8 +121,10 @@ export default {
                 this.items = this.qrCodeItem.pharmacySet;
                 console.log(this.qrCodeItem)
                 })
-                .catch(error => console.log(error), this.showFailedAlert = true,
-            this.showSuccessAlert = false);
+                .catch(error => {
+                  console.log(error);
+                  this.showFailedAlert = true;
+                  this.showSuccessAlert = false});
 
         },
         purchase(row){
