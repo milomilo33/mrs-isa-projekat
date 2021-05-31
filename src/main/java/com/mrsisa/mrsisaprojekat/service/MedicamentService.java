@@ -32,4 +32,6 @@ public interface MedicamentService {
 								Long medicamentId, String patientEmail, int quantity, Long pharmacyId);
 
 	Collection<MedicamentDTO> getNonallergicMedicinesForPatientInPharmacyOfAppointment(String patientEmail, Long appointmentId);
+
+	void deleteMedicament(Long id) throws Exception;
 }

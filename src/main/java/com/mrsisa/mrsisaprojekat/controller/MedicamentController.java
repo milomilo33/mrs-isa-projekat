@@ -1,7 +1,9 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
+import com.mrsisa.mrsisaprojekat.model.IssuanceMode;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.MedicamentForm;
 import com.mrsisa.mrsisaprojekat.model.Rating;
 import com.mrsisa.mrsisaprojekat.service.MedicamentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,6 @@ public class MedicamentController {
 		if(temp != null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
 		medicament = service.create(medicament);
 		return new ResponseEntity<>(new MedicamentDTO(medicament), HttpStatus.CREATED); 
 		
@@ -153,5 +154,19 @@ public class MedicamentController {
 		}
 
 		return new ResponseEntity<>(medicines, HttpStatus.OK);
+	}
+	
+	@GetMapping(value= "/deleteMedicament/{id}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<MedicamentDTO> deleteMedicament(@PathVariable("id") Long id) throws Exception{
+		service.deleteMedicament(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value= "/updateMedicament")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<MedicamentDTO> updateMedicament(@RequestBody Medicament medicament){
+		medicament = service.update(medicament);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
