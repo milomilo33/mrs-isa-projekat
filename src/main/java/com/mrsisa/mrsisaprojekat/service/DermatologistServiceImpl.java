@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -302,7 +303,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public String createAndScheduleNewAppointment(String dermatologistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId) {
 		// provera da li je datum validan
 		if (timeFrom.isAfter(timeTo) || timeFrom.equals(timeTo)) {

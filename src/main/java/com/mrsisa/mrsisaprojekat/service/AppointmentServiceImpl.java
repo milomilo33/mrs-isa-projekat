@@ -139,6 +139,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             return report.getId();
         }
         else {
+            if (appointment.getChosenEmployee().isCurrentlyInAppointment()) {
+                return null;
+            }
             appointment.getChosenEmployee().setCurrentlyInAppointment(true);
 
             Patient patient = appointment.getPatient();
