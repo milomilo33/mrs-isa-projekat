@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,4 +26,7 @@ public interface PharmacyAdminRepositoryDB extends JpaRepository<AdminPharmacy, 
 	
 	@Query("select a from AdminPharmacy a join fetch a.requestMedicaments where a.email=?1 and a.deleted = false")
 	AdminPharmacy getOneWithRequestMedicaments(String id);
+	
+	@Query("select a from AdminPharmacy a join fetch a.pharmacy where a.pharmacy.id=?1")
+	Set<AdminPharmacy> getAllEmployeedInPharmacy(Long id);
 }

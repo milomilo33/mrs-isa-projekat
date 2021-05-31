@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -42,5 +43,9 @@ public interface PharmacyService {
     
     Pharmacy findOneWithRequests(Long id);
     
+    Set<Pharmacy> findAllWithAdmin();
+
+	void deletePharmacy(Long id) throws Exception;
     
+
 }

@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.*;
 
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,15 @@ public class PharmacyServiceImpl implements PharmacyService{
 
 	@Autowired
 	private PharmacyRepositoryDB pharmacyRepository;
+	
+	@Autowired
+	private MedicamentItemService medicamentService;
+	
+	@Autowired
+	private PharmacyAdminService pharmacyAdminService;
+	
+	@Autowired
+	private AppointmentService appointmentService;
 	
 	@Override
 	public List<Pharmacy> findAll() {
@@ -85,7 +95,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		if (pharmacy == null) {
 			return null;
 		}
-	
+
 		return pharmacy;
 	}
 
@@ -191,6 +201,36 @@ public class PharmacyServiceImpl implements PharmacyService{
 		return pharmacy;
 	}
 
+@Override
+public Set<Pharmacy> findAllWithAdmin() {
+	return pharmacyRepository.getAllWithAdmins();
+}
 
+@Override
+public void deletePharmacy(Long id) throws Exception {
+	Pharmacy pharmacy = this.findOneWithAppointments(id);
+	pharmacy.setDeleted(true);
+	pharmacyRepository.save(pharmacy);
 	
+	Collection<MedicamentItem> medicaments = this.getAllMedicaments(pharmacy.getId());
+	for(MedicamentItem mi : medicaments) {
+		medicamentService.deleteMedicament(mi);
+	}
+	
+	Collection<Appointment> appointments = pharmacy.getAppointments();
+	for(Appointment a : appointments) {
+		appointmentService.delete(a);
+	}
+	
+	Set<AdminPharmacy> admins = pharmacyAdminService.getAllAdminsInPharmacy(pharmacy.getId());
+	for(AdminPharmacy ap : admins) {
+		ap.setPharmacy(null);
+		pharmacyAdminService.update(ap);
+	}
+	
+}
+
+
+
+
 }

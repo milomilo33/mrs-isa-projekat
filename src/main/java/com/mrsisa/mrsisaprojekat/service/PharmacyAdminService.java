@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 
@@ -18,5 +19,7 @@ public interface PharmacyAdminService {
 	AdminPharmacy findOneWithRequestMedicaments(String email);
 	
 	boolean check(String password1, String password);
+	
+	Set<AdminPharmacy> getAllAdminsInPharmacy(Long id);
 }
 

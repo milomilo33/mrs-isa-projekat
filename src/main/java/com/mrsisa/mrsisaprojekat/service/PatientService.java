@@ -8,6 +8,8 @@ import java.util.Collection;
 public interface PatientService {
 	Collection<Patient> findAll();
 
+	Collection<Pharmacy> filterPharmacy(String user, int rating);
+
 	Patient findOne(String id);
 
 	Patient create(Patient patient) throws Exception;

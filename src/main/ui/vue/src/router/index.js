@@ -48,6 +48,9 @@ import AllAnsweredComplaints from '../components/AllAnsweredComplaints'
 //import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import PatientProfile from '../components/PatientProfile'
 import MedicamenTableCRUD from '../components/MedicamenTableCRUD'
+
+import PharmacyTable from '../components/PharmacyTable'
+
 import ePrescriptionPreview from '../components/ePrescriptionPreview.vue'
 import LoyaltyProgram from '../components/LoyaltyProgram'
 import ReportAppointments from '../components/ReportAppointments'
@@ -198,6 +201,13 @@ const routes = [
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
+			},
+			{
+				path: "deletePharmacy",
+				component: PharmacyTable,
+				meta: {
+					roles: [Role.SystemAdmin]
+				},
 			},
 			{
 				path: "MedicamentRegistration",
@@ -499,6 +509,7 @@ const routes = [
 					roles: [Role.AdminPharmacy]
 				},
 			},
+			
 			{
 				path:"PharmacistRegistration",
 				component:PharmacistRegistration,

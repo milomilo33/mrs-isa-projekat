@@ -24,4 +24,6 @@ public interface MedicamentItemService {
 	
 	void restore(Long id);
 
+	void deleteMedicament(MedicamentItem mi);
+
 }

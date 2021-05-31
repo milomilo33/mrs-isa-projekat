@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.mrsisa.mrsisaprojekat.dto.AddressDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentItemDTO;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.model.Address;
+import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
@@ -64,6 +66,15 @@ public class PharmacyController {
 	
 	@Autowired
 	private ReportService reportService;
+
+	@Autowired
+	private PatientService patientService;
+	
+	@Autowired
+	private MedicamentItemService medicamentService;
+	
+	@Autowired
+	private AppointmentService appointmentService;
 	
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,12 +116,12 @@ public class PharmacyController {
 
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
+    //@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SYSTEM_ADMIN')")
 	public ResponseEntity<Pharmacy> createPharmacy(@RequestBody Pharmacy pharmacy) throws Exception {
 		Address address = addressService.create(pharmacy.getAddress());
 		pharmacy.setAddress(address);
 		Pharmacy savedPharmacy = pharmacyService.create(pharmacy);
-		return new ResponseEntity<>(savedPharmacy, HttpStatus.CREATED);
+		return new ResponseEntity<>(null, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value = "/medicamentItems/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -225,20 +236,14 @@ public class PharmacyController {
 	
 	
 	
-	@GetMapping(value = "filter/rating={rating}")
-	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("rating") int rating) {
-		Collection<Pharmacy> pharmacies = pharmacyService.findAll();
-		List<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
-
-		if(rating != -1) {
-			for (Pharmacy p : pharmacies) {
-
-				if (pharmacyService.getRating(p.getId()) == rating)
-					pharmaciesDTO.add(new PharmacyDTO(p));
-			}
+	@GetMapping(value = "filter/rating={rating}&subscribed={username}")
+	public ResponseEntity<Collection<PharmacyDTO>> filterPharmacies(@PathVariable("rating") int rating, @PathVariable("username") String username) {
+		Collection<Pharmacy> pharmacies = patientService.filterPharmacy(username, rating);
+		Collection<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
+		for(Pharmacy p : pharmacies) {
+			pharmaciesDTO.add(new PharmacyDTO(p));
 		}
-
-		return new ResponseEntity<>(pharmaciesDTO, HttpStatus.OK);
+		return ResponseEntity.ok().body(pharmaciesDTO);
 	}
 	
 	
@@ -415,5 +420,28 @@ public class PharmacyController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(returns,HttpStatus.OK);
+	}
+	@GetMapping(value = "/getAllWithAdmins")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<Collection<PharmacyDTO>> getAllWithAdmins(){
+		Collection<Pharmacy> pharmacies = pharmacyService.findAllWithAdmin();
+		Collection<PharmacyDTO> pharmaciesDTO = new ArrayList<PharmacyDTO>();
+		for(Pharmacy p : pharmacies) {
+			AddressDTO address = new AddressDTO(p.getAddress());
+			Set<String> admins = new HashSet<String>();
+			for(AdminPharmacy a: p.getAdmins()) {
+				admins.add(a.getEmail());
+			}
+			PharmacyDTO pharmacy = new PharmacyDTO(p.getId(), p.getName(), address, admins );
+			pharmaciesDTO.add(pharmacy);
+		}
+		
+		return new ResponseEntity<Collection<PharmacyDTO>>(pharmaciesDTO, HttpStatus.OK);
+	}
+	@GetMapping(value = "/delete/{id}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<PharmacyDTO> deletePharmacy(@PathVariable("id") Long id) throws Exception{
+		pharmacyService.deletePharmacy(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
