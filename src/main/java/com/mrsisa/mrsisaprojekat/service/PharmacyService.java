@@ -42,6 +42,10 @@ public interface PharmacyService {
     ArrayList<Appointment> findAvailableAppointmentsDeramtologist(String email, Long id);
     
     Pharmacy findOneWithRequests(Long id);
+    
+    Set<Pharmacy> findAllWithAdmin();
 
+	void deletePharmacy(Long id) throws Exception;
+    
 
 }

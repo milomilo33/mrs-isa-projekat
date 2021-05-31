@@ -50,6 +50,10 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 	
 	@Query("select p from Pharmacy p join fetch p.requests where p.id=?1")
 	Pharmacy getOneWithRequests(Long id);
+	
+	@Query("select p from Pharmacy p join fetch p.admins")
+	Set<Pharmacy> getAllWithAdmins();
+
 
 	@Query("select p from Pharmacy p join fetch p.ratings")
 	Collection<Pharmacy> findWithRating();
