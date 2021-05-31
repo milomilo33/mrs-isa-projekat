@@ -95,8 +95,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 			LocalDate today = LocalDate.now();
 			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
 				if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
-					a.setMedicalReport(null);
-					a.setChosenEmployee(null);
+					if (a.getMedicalReport() != null) {
+						a.setMedicalReport(new MedicalReport());
+					}
 					a.getPatient().setSubscribedPharmacies(null);
 					a.getPatient().setAllergies(null);
 					a.getPatient().setAppointments(null);
@@ -104,6 +105,14 @@ public class DermatologistServiceImpl implements DermatologistService {
 					a.getPatient().setePrescriptions(null);
 					a.getPatient().setReservedMedicaments(null);
 					a.setPatient((Patient) Hibernate.unproxy(a.getPatient()));
+					Dermatologist d = (Dermatologist) a.getChosenEmployee();
+					d.setMedicalExaminations(null);
+					d.setPharmacy(null);
+					d.setPharmacies(null);
+					d.setCalendar(null);
+					d.setRatings(null);
+					d.setRequests(null);
+					d.setWorkHour(null);
 					upcomingAppointments.add(a);
 				}
 			}

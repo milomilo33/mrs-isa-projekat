@@ -1,7 +1,5 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,7 +35,7 @@ public class Appointment {
 	private AppointmentType type;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonIgnore
+//	@JsonIgnore
 	private Employee chosenEmployee;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)

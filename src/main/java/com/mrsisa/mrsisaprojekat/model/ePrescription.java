@@ -41,6 +41,14 @@ public class ePrescription {
 	@Column(name = "version")
 	private Long version;
 
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
 	public ePrescription(Patient patient, LocalDate date, Set<PrescriptionMedicament> prescriptionMedicaments, Pharmacy pharmacy, LocalDate takenDate, double price) {
 		this.patient = patient;
 		this.date = date;
