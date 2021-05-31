@@ -57,7 +57,7 @@ public class SupplierServiceImpl implements SupplierService{
 
 	@Override
 	public void delete(String id) {
-		supplierRepository.deleteById(id);
+		supplierRepository.deleteOne(id);
 		
 	}
 

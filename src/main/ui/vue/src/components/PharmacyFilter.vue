@@ -23,7 +23,7 @@
           </div>
 
           <div class="d-flex justify-content-start p-2">
-            <b-col lg="2" class="pt-2"><h4 style="text-align: right;">Rating:</h4></b-col>
+            <b-col lg="2" class="pt-2"><h4 style="text-align: right;">Min rating:</h4></b-col>
             <b-col cols="3"  class="rate" align-h="start">
               <input type="radio" id="star5" name="rate" value="5" @click="rating = 5"/>
               <label for="star5" title="text">5 stars</label>
@@ -51,7 +51,7 @@
 
 
           <div lg="2">
-            <button class="btn btn-light" @click="filterPharmacy()">Filtriraj</button>
+            <button class="btn btn-light" @click="filterPharmacy()">Apply</button>
           </div>
 
         </div> <!-- card-body.// -->
@@ -71,12 +71,12 @@ export default {
   },
 
   props: {
-    allPharmacies: [],
+    allPharmacies: Array,
   },
 
   data() {
     return {
-      minDistance: -Infinity,
+      minDistance: 0,
       maxDistance: Infinity,
       pharmacyLocation: null,
       myPosition: null,
@@ -90,6 +90,8 @@ export default {
   },
 
   mounted() {
+      this.pharmacies = this.allPharmacies;
+      navigator.geolocation.getCurrentPosition(pos => this.myPosition = [pos.coords.latitude, pos.coords.longitude]);
 
   },
 
@@ -104,87 +106,88 @@ export default {
       }
     },
 
-    filterPharmacy() {
+    async filterPharmacy() {
       this.showFailedAlert = false;
       this.temp = [];
       if(this.rating === undefined) this.rating = -1
       if(this.minDistance === undefined) this.minDistance = 0
       if(this.maxDistance === undefined) this.maxDistance = Infinity
 
-      navigator.geolocation.getCurrentPosition(pos => this.myPosition = [pos.coords.latitude, pos.coords.longitude]);
+      this.pharmacies = this.allPharmacies;
+      
+      var tempUsername;
+      if(this.isSubscribed) {
+        tempUsername = JSON.parse(
+            atob(localStorage.getItem('token').split(".")[1])
+        ).sub;
+      } else {
+        tempUsername = null;
+      }
 
-
-      if(this.rating != -1) {
-        this.axios.get(`http://localhost:8080/api/pharmacy/filter/rating=${this.rating}`, {
-          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        if(this.rating != -1) {
+          await this.axios.get(`http://localhost:8080/api/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
+            headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
             .then(response => {
-              console.log(response.data.length);
               if(response.data.length === 0) {
                 this.showFailedAlert = true;
                 this.pharmacies = this.allPharmacies;
+                console.log(this.pharmacies);
+
               }
               else {
                 this.pharmacies = response.data;
+                this.filterByDistance();
               }
-
-              this.filterByDistance();
-
-
             }).catch(error => console.log(error));
       }
-      this.filterBySubscription();
+
+      
+      //this.filterByDistance();
+      //await this.filterBySubscription();
+      this.$emit('childToParent', this.pharmacies);
     },
 
-    filterBySubscription() {
+    async filterBySubscription() {
 
       if(this.isSubscribed) {
         var username = JSON.parse(
             atob(localStorage.getItem('token').split(".")[1])
         ).sub;
-        this.axios.get(`http://localhost:8080/api/patients/allSubscribed/${username}`)
+        await this.axios.get(`http://localhost:8080/api/patients/allSubscribed/${username}`)
             .then(response => {
-            this.pharmacies = response.data
-            //this.showSubscribedAlert = true;
-            //this.isSubscribed = false;
-            }).catch(error => console.log(error.data));
-        this.$emit('childToParent', this.pharmacies);
+            if(response.data.length === 0) {
+                this.showFailedAlert = true;
+                this.pharmacies = this.allPharmacies;
+                console.log(this.pharmacies);
 
+              }
+              else {
+                this.pharmacies = response.data;
+                this.filterByDistance();
+              }
+            }).catch(error => console.log(error.data));
+        
       }
-      else {
-        this.pharmacies = this.allPharmacies;
-      }
+      
     },
 
     filterByDistance() {
+      console.log("Filter", this.pharmacies);
       var i;
-      for(i = 0; i < this.pharmacies.length; i++) {
-        this.measureDistance(this.pharmacies[i], i)
+      if(this.minDistance >= 0 && this.minDistance <= this.maxDistance) {
+        console.log(this.pharmacies)
+        for(i = 0; i < this.pharmacies.length; i++) {
+
+          this.measureDistance(this.pharmacies[i], i)
+        }
       }
     },
 
 
     measureDistance(pharmacy, index) {
-
-      const url =
-          "https://nominatim.openstreetmap.org/search/" +
-          pharmacy.address.city +
-          ", " +
-          pharmacy.address.street +
-          " " +
-          pharmacy.address.number;
-      this.axios
-          .get(url, {
-            params: {
-              format: "json",
-              limit: 1,
-              "accept-language": "en",
-            },
-          })
-          .then((response) => {
-            if (response.data && response.data.lenght != 0) {
-
-              const { lat, lon } = response.data[0];
+              const lat = pharmacy.address.latitude;
+              const lon = pharmacy.address.longitude;
 
               var distance = this.euclideanDistance([lat, lon], this.myPosition);
               console.log(this.minDistance, this.maxDistance);
@@ -201,15 +204,10 @@ export default {
                 }
                 this.$emit('childToParent', this.pharmacies);
               }
-            }
-          })
-          .catch(() => {
-            //console.log(error);
-            alert('Could not find coordinates based on given info.', '');
-          });
     },
 
     euclideanDistance(c1, c2) {
+      console.log("DISTANCE", c1,  c2);
       const R = 6371e3; // metres
       const x1 = c1[0] * Math.PI/180; // φ, λ in radians
       const x2 = c2[0] * Math.PI/180;

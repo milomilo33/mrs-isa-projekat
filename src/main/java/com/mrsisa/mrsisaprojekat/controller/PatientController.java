@@ -8,6 +8,7 @@ import com.mrsisa.mrsisaprojekat.service.*;
 import com.mrsisa.mrsisaprojekat.util.QRCodeReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class PatientController {
 	
 	@Autowired
 	private ePrescriptionService ePrescriptionService;
-	
+
 	@Autowired
 	private PricelistItemMedicamentService pricelistService;
 	
@@ -571,6 +572,7 @@ public class PatientController {
 	@GetMapping(value = "/eprescription/{email}")
 	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
 		Patient patient = patientService.getOneWithePrescriptions(email);
+		System.out.println(patient.getEmail());
 		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
 		for(ePrescription ep : patient.getePrescriptions()) {
 			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));

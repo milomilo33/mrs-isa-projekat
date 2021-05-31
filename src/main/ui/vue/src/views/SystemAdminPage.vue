@@ -33,11 +33,12 @@
         </b-nav-item-dropdown>
         
         <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/Users">System users</b-nav-item>
       </b-navbar-nav>
       
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <Search :path="'/SystemAdminPage'" />
+        <!--<Search :path="'/SystemAdminPage'" /> -->
 
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
@@ -59,11 +60,11 @@
 </template>
 
 <script>
-import Search from '../components/Search'
+//import Search from '../components/Search'
 
 export default {
   components: {
-    Search
+    //Search
   }
 }
 </script>

@@ -86,10 +86,12 @@ export default {
       success_message: "",
       showSuccessAlert: false,
       showFailedAlert: false,
+      latitude: 0,
+      longitude: 0
     };
   },
   methods: {
-    formSubmit(e) {
+    async formSubmit(e) {
       
       e.preventDefault();
       let _this = this;
@@ -100,8 +102,10 @@ export default {
         errorFound = true;
         this.error_message = "Niste uneli validne podatke!";
       }
+      
+      var locationFound = await this.guessCoordinatesFromLocation();
 
-      if(errorFound==false){
+      if(errorFound==false && locationFound==true){
          this.axios
         .post(`/api/pharmacy`, {
           name: this.name,
@@ -111,6 +115,8 @@ export default {
             city: this.city,
             street: this.street,
             number: this.number,
+            latitude: this.latitude,
+            longitude: this.longitude
           },
         },{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
@@ -126,6 +132,39 @@ export default {
         
       }
     },
+
+    guessCoordinatesFromLocation: async function() {
+      console.log(this.city, this.street, this.number);
+			const url =
+				"https://nominatim.openstreetmap.org/search/" +
+				this.city +
+				", " +
+				this.street +
+				" " +
+				this.number;
+      
+			await this.axios
+				.get(url, {
+					params: {
+						format: "json",
+						limit: 1,
+						"accept-language": "en",
+					},
+				})
+				.then((response) => {
+					if (response.data && response.data.lenght != 0) {
+						const { lon, lat } = response.data[0];
+            console.log(lon, lat);
+						this.longitude = lon;
+            this.latitude = lat;
+            return true;
+					}
+				})
+				.catch(() => {
+          this.showFailedAlert = true;
+          return false;
+				});
+		},
   },
 };
 </script>

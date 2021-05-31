@@ -61,7 +61,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 		dermatologist.setRoles(roles);
 		return dermatologistRepository.save(dermatologist);
 	}
-
+	
 	@Override
 	public Dermatologist update(Dermatologist dermatologist) throws Exception {
 		Dermatologist dermatologistToUpdate = dermatologistRepository.findById(dermatologist.getEmail()).orElseGet(null);
@@ -73,9 +73,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	public boolean delete(String email) {
+	public void delete(String email) {
 		// TODO Auto-generated method stub
-		return false;
+		 dermatologistRepository.deleteOne(email);
 	}
 
 	@Override

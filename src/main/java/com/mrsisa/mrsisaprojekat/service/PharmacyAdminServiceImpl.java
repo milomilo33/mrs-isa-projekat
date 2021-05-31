@@ -55,7 +55,7 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 
 	@Override
 	public void delete(String id) {
-		adminRepository.deleteById(id);
+		adminRepository.deleteOne(id);;
 	}
 
 	@Override

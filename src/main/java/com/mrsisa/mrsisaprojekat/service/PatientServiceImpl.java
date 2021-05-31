@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -285,7 +286,47 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Collection<Pharmacy> findAllSubscribed(String user) {
-		return patientRepository.findAllSubscribedPharmacies(user);}
+		return patientRepository.findAllSubscribedPharmacies(user);
+	}
+
+	@Override
+	public Collection<Pharmacy> filterPharmacy(String user, int rating) {
+		Collection<Pharmacy> pharmacies;
+		if(!user.equals("null")) {
+			pharmacies = patientRepository.findAllSubscribedPharmacies(user);
+		} else {
+			pharmacies = pharmacyRepository.findAll();
+		}
+
+		Collection<Pharmacy> retval = new ArrayList<>();
+
+		int avgRating;
+
+		List<Rating> ratings;
+
+		if(rating != -1) {
+			for(Pharmacy p : pharmacies) {
+				ratings = pharmacyRepository.getRatings(p.getId());
+				int i = 0;
+				int sum = 0;
+
+				for(Rating r : ratings) {
+					sum += r.getValue();
+					i++;
+				}
+				if(i == 0) avgRating = 0;
+
+				avgRating = Math.round(sum / i);
+				if(avgRating >= rating) {
+					retval.add(p);
+				}
+			}
+		} else {
+			retval = pharmacies;
+		}
+
+		return retval;
+	}
 
 	@Override
 	public void addAllergy(String patientEmail, Long medicamentId) throws Exception {

@@ -25,6 +25,8 @@ public class PharmacyDTO {
 
 	public PharmacyDTO(Pharmacy pharmacy) {
 		this(pharmacy.getId(),pharmacy.getName(),pharmacy.getDescription(),new AddressDTO(pharmacy.getAddress()));
+		address.setLatitude(pharmacy.getAddress().getLatitude());
+		address.setLongitude(pharmacy.getAddress().getLongitude());
 	}
 	
 	
