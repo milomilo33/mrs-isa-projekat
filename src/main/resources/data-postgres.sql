@@ -63,12 +63,14 @@ insert into patient (email, deleted, active, last_name, name, password, phone_nu
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0658563255',20 , 'SILVER', 56, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 21, 'GOLD', 220, 0)
 
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 'REGULAR', 33, 0)
+
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 'REGULAR', 33, 3)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0616258776', 23, 'SILVER', 99, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','true','Markov','Ivica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0626258776', 10, 'GOLD', 299, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','true','Perić','Pera','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0646258776', 15, 'REGULAR', 33, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','true','Batinica','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0633434343', 16, 'SILVER', 65, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','true','Stupar','Anja','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0637676767', 17, 'GOLD', 243, 0)
+
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('anjastupar@gmail.com', 6)
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('teodorabatinica@gmail.com', 6)

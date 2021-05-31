@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -285,13 +286,17 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Object> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
 
+		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
+		if(p.getPenaltyPoints() == 3) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN); 
+		}
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
 		medicamentToReserve.setDeleted(false);
 		medicamentToReserve.setPurchased(false);
 		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
-		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
+		//Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
 		try {
 			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {
@@ -427,7 +432,12 @@ public class PatientController {
 	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
-
+		Patient patient = patientService.findOne(appointment.getPatientEmail());
+		if(patient.getPenaltyPoints() == 3) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		
+		
 		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
 		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
 
@@ -613,6 +623,9 @@ public class PatientController {
 	public ResponseEntity<QRCodePharmacyDTO> uploadQRCode(@PathVariable("qrPath") String qrPath, @PathVariable("patient") String patient ) throws IOException {
 		//File file = new File("C:"+ File.separator+ "Users" + File.separator+ "filip" + File.separator + "Downloads" + File.separator + "qr4.png");
 		Patient p = patientService.getOneWithAddress(patient);
+		if(p.getPenaltyPoints() == 3) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 		String decodedText = QRCodeReader.decodeQRCode("C:"+ File.separator+ "Users" + File.separator+ "filip"+ File.separator + "Downloads" + File.separator + ""+qrPath);
         if(decodedText == null) {
             System.out.println("No QR Code found in the image");
@@ -834,5 +847,19 @@ public class PatientController {
 		}
 
 		return ResponseEntity.ok().body(loyaltyDTO);
+	}
+	
+	@Scheduled(cron = "0 * * 1 * *")
+	public void checkPenaults() throws Exception {
+		ArrayList<Patient> allPatients = (ArrayList<Patient>) patientService.findAll();
+		for(Patient p : allPatients) {
+			if(p.getPenaltyPoints() == 3) {
+				p.setPenaltyPoints(0);
+				patientService.update(p);
+			}
+		}
+		
+		
+		
 	}
 }

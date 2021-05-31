@@ -176,7 +176,11 @@ export default {
         this.employee.appointments = this.employee.appointments.filter(el => el.id !== this.appointment.id);
         x.selectedIndex = -1;
         alert("Rezervacija uspesno izvrsena!");
-      });
+      })
+        .catch(function (error) {
+          console.log(error);
+          alert("Error!")
+        });
     },
 
     setAppointment(a) {
