@@ -362,7 +362,6 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
-		System.out.println("LEEEEEEEEEEEEK:" + medicament.getId());
 		if(medicament != null) {
 			if(LocalDate.now().plusDays(1).isBefore(medicament.getExpiryDate())) {
 				prescriptionMedicamentService.delete(id);

@@ -241,7 +241,6 @@ public class PharmacyController {
 		Collection<Pharmacy> pharmacies = patientService.filterPharmacy(username, rating);
 		Collection<PharmacyDTO> pharmaciesDTO = new ArrayList<>();
 		for(Pharmacy p : pharmacies) {
-			System.out.println("EEEEEEEEEEEEE" + p.getName());
 			pharmaciesDTO.add(new PharmacyDTO(p));
 		}
 		return ResponseEntity.ok().body(pharmaciesDTO);
