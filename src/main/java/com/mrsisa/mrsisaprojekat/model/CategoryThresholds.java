@@ -17,10 +17,13 @@ public class CategoryThresholds {
 	private Integer threshold;
 	
 	@Column(name = "category", unique = true, nullable = false)
-	private Category category;
+	private String category;
 	
 	@Column(name = "discount", unique = true, nullable = false)
 	private Integer discount;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
+	private boolean deleted;
 	
 	public CategoryThresholds() {}
 	
@@ -36,10 +39,10 @@ public class CategoryThresholds {
 	public void setThreshold(Integer threshold) {
 		this.threshold = threshold;
 	}
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
@@ -49,6 +52,14 @@ public class CategoryThresholds {
 
 	public void setDiscount(Integer discount) {
 		this.discount = discount;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 }

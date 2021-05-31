@@ -10,7 +10,7 @@ import com.mrsisa.mrsisaprojekat.model.CategoryThresholds;
 public interface CategoryThresholdRepositoryDB extends JpaRepository<CategoryThresholds, Long>{
 
 	@Query("select c from CategoryThresholds c where c.category=?1")
-	CategoryThresholds getOneWithCategory(int category);
+	CategoryThresholds getOneWithCategory(String category);
 	
-	List<CategoryThresholds> findByOrderByCategoryAsc();
+	List<CategoryThresholds> findByOrderByThresholdAsc();
 }

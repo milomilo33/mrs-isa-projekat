@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,6 @@ import com.mrsisa.mrsisaprojekat.dto.CategoryDTO;
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.AppointmentPoints;
 import com.mrsisa.mrsisaprojekat.model.AppointmentPoints.AppointmentType;
-import com.mrsisa.mrsisaprojekat.model.Category;
 import com.mrsisa.mrsisaprojekat.model.CategoryThresholds;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.service.AppointmentPointsService;
@@ -76,7 +76,7 @@ public class LoyaltyProgramController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		category.setCategory(Category.valueOf(categoryDTO.getCategory()));
+		category.setCategory(categoryDTO.getCategory());
 		category.setThreshold(categoryDTO.getThreshold());
 		category.setDiscount(categoryDTO.getDiscount());
 		CategoryThresholds saved = thresholdService.update(category);
@@ -87,8 +87,6 @@ public class LoyaltyProgramController {
 	@PostMapping(value = "/updatePoints")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<AppointmentPointsDTO> updatePoints(@RequestBody AppointmentPointsDTO pointDTO){
-		System.out.println(pointDTO.getId());
-
 		
 		AppointmentPoints points = pointService.findOne(pointDTO.getId());
 		if(points == null) {
@@ -117,4 +115,41 @@ public class LoyaltyProgramController {
 		return new ResponseEntity<>(new MedicamentDTO(saved), HttpStatus.OK);
 	}
 
+	@PostMapping(value="/add")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO category){
+		CategoryThresholds thresholds = new CategoryThresholds();
+		
+		thresholds.setCategory(category.getCategory());
+		thresholds.setDiscount(category.getDiscount());
+		thresholds.setThreshold(category.getThreshold());
+		thresholds.setDeleted(false);
+		thresholds = thresholdService.create(thresholds);
+		return new ResponseEntity<>(new CategoryDTO(thresholds), HttpStatus.OK);
+		
+	}
+	
+	@DeleteMapping(value="/delete")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<CategoryDTO> deleteCategory(@RequestBody CategoryDTO category){
+		CategoryThresholds c = new CategoryThresholds();
+		c.setId(category.getId());
+		c.setCategory(category.getCategory());
+		c.setDeleted(true);
+		c.setDiscount(category.getDiscount());
+		c.setDiscount(category.getDiscount());
+		boolean deleted = false;
+		try {
+			deleted = thresholdService.delete(c);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(deleted) {
+			return new ResponseEntity<>(new CategoryDTO(c), HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+		}
+	}
 }

@@ -32,7 +32,7 @@ public class Patient extends User {
 	private Integer penaltyPoints;
 	
 	@Column(name = "category", unique = false, nullable = false)
-	private Category category;
+	private String category;
 
 	@OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Appointment> appointments;
@@ -75,13 +75,13 @@ public class Patient extends User {
 	}
 
 
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
 
 
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
