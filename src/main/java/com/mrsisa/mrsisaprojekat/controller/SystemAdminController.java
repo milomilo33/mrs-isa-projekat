@@ -11,7 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminSystemDTO;
+import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
@@ -64,6 +67,16 @@ public class SystemAdminController {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@GetMapping(value="/{email}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<AdminSystemDTO> getAdmin(@PathVariable("email") String email){
+		AdminSystem admin = sysAdminService.findOne(email);
+		if(admin == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new AdminSystemDTO(admin), HttpStatus.OK);
+	}
 	
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<AdminSystemDTO> saveAdmin(@RequestBody AdminSystemDTO adminDTO) throws Exception{
@@ -143,4 +156,29 @@ public class SystemAdminController {
 	}
 
 
+	@PostMapping(value = "/update", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	@Transactional
+	public ResponseEntity<AdminSystemDTO> updateDermatologist(@RequestBody AdminSystemDTO adminSystemDTO) throws Exception {
+		AdminSystem adminSystem = sysAdminService.findOne(adminSystemDTO.getEmail());
+		if (adminSystem != null) {
+			Address a = addressService.findOne(adminSystemDTO.getAddress().getId());
+
+			a.setCountry(adminSystemDTO.getAddress().getCountry());
+			a.setCity(adminSystemDTO.getAddress().getCity());
+			a.setStreet(adminSystemDTO.getAddress().getStreet());
+			a.setNumber(adminSystemDTO.getAddress().getNumber());
+			a = addressService.update(a);
+			adminSystem.setName(adminSystemDTO.getName());
+			adminSystem.setLastName(adminSystemDTO.getLastName());
+			adminSystem.setPhoneNumber(adminSystemDTO.getPhoneNumber());
+
+			adminSystem = sysAdminService.update(adminSystem);
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

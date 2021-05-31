@@ -24,6 +24,7 @@ public class AdminSystemDTO {
 		this.lastName = lastName;
 		this.name = name;
 		this.address = address;
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getEmail() {
