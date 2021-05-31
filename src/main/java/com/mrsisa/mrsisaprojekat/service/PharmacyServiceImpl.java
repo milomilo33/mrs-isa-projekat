@@ -179,6 +179,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		for(Appointment a : pharmacy.getAppointments()) {
 			if(a.getChosenEmployee().getEmail().equals(email) && a.getPatient() == null) {
+				a.setChosenEmployee(null);
 				System.out.println("DA");
 				appointments.add(a);
 			}

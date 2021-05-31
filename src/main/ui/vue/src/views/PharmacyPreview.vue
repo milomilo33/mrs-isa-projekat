@@ -118,7 +118,7 @@ export default defineComponent({
       });
 
       self.axios
-      .get(`/api/pharmacy/pharmacists/`+parseInt(self.pharmacyId),{
+      .get(`http://localhost:8080/api/pharmacy/pharmacists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
 
@@ -144,7 +144,7 @@ export default defineComponent({
         }
   });
   self.axios
-      .get(`/api/pharmacy/dermatologists/`+parseInt(self.pharmacyId),{
+      .get(`http://localhost:8080/api/pharmacy/dermatologists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
      

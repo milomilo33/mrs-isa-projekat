@@ -56,7 +56,7 @@
               </b-row>
             </b-row>
             <b-row class="h-75" cols="8" align-h="start" style="min-height:150px; max-height:150px;">
-              <p class="text-left"> {{ pharmacy.description }}</p>
+              <p class="text-left">{{ pharmacy.description }}</p>
             </b-row>
             <b-row class="">
               <b-link v-b-modal.modal-map><h5>{{ this.addressToString(pharmacy.address) }}</h5></b-link>

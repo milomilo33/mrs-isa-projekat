@@ -106,9 +106,9 @@ insert into pharmacist (email, deleted, active, last_name, name, password, phone
 insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false,'true', 'Micić', 'Milica', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0609879879', 24, 3, 3)
 
 
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-25 10:00','anasimic@gmail.com', false, true, 2, '2021-04-23', 2500.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-06-30 10:00','teodorabozic@gmail.com', false, false, 1, null, 3000.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-07 10:00','lukamarkovic@gmail.com', false, true, 2, '2021-04-07', 1000.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-25 10:00','anasimic@gmail.com', false, false, 2, '2021-04-23', 2500.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-06-30 10:00','anasimic@gmail.com', false, false, 1, null, 3000.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-07 10:00','anasimic@gmail.com', false, false, 2, '2021-04-07', 1000.00)
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-08 10:00','anjastupar@gmail.com', false, false, 3, null, 700.00)
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-09 10:00','teodorabatinica@gmail.com', false, false, 3, null, 1800.00)

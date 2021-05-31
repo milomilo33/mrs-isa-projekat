@@ -165,6 +165,12 @@ const routes = [
 				},
 			},
 			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true
+			},
+			{
 				path: "answeredComplaints",
 				component: AllAnsweredComplaints,
 				meta: {
@@ -293,6 +299,12 @@ const routes = [
 				component: PharmacyListPreview
 			},
 			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true,
+			},
+			{
 				path: "MedicamentList",
 				component: MedicamentListPreview
 			},
@@ -398,6 +410,12 @@ const routes = [
 				component: PharmacyListPreview
 			},
 			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true
+			},
+			{
 				path: "MedicamentInPharmacy/:id",
 				component: MedicamentInPharmacy
 			},
@@ -485,6 +503,12 @@ const routes = [
 				path: "pharmacyList/:query",
 				component: PharmacyListPreview
 				
+			},
+			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true
 			},
 			{
 				path: "medicamentList",
@@ -634,6 +658,12 @@ const routes = [
 				component: PharmacyListPreview
 			},
 			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true
+			},
+			{
 				path: "MedicamentList",
 				meta: {
 					roles: [ Role.Supplier ]
@@ -683,6 +713,12 @@ const routes = [
 			{
 				path: "PharmacyList",
 				component: PharmacyListPreview
+			},
+			{
+				path: "PharmacyPreview/:id",
+				name: "PharmacyPreview",
+				component: PharmacyPreview,
+				props: true
 			},
 			{
 				path: "MedicamentList",
@@ -748,10 +784,10 @@ const routes = [
 			}
 		]
 	},
-	{
-		path: '*',
-		redirect: "/Login"
-	}
+	// {
+	// 	path: '*',
+	// 	redirect: "/Login"
+	// }
 
 ]
 

@@ -282,7 +282,7 @@ export default defineComponent({
       console.log(this.date);
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
-          patientEmail: "anasimic@gmail.com",
+          patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
           medicament: this.medicament,
           expiryDate: this.date,
           quantity: this.amount,
