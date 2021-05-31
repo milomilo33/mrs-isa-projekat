@@ -22,6 +22,7 @@ insert into address (city, country, number, street) values('Novi Sad','Srbija','
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '22', 'Balzakova')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '25', 'Seljačkih buna')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Bulevar Vojvode Stepe')
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '29', 'Seljačkih buna')
 
 
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Boze Kuzmanovica')
@@ -61,6 +62,7 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES ('kristinamisic@gmail.com', 1)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anasimic@gmail.com','false','true','Simič','Ana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0603258476', 19 , 0, 0, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0658563255',20 , 1, 56, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 21, 2, 220, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('user.isa.mrs.@gmail.com','false','true','User','IsaMrs','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 25, 2, 222, 0)
 
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 0, 33, 0)
 insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0616258776', 23, 1, 99, 0)
