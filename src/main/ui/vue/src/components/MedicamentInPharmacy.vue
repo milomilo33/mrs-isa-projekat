@@ -290,10 +290,17 @@ export default defineComponent({
         },{headers: {
             Authorization: "Bearer " + localStorage.getItem('token')
             }
+        }).then(function (response) {
+          console.log(response);
+          alert("Rezervacija izvršena!");
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert("Error!")
         });
         //console.log(this.medicament.id);
         //console.log(this.date)
-        alert("Rezervacija izvršena!");
+        
       }
     },
 

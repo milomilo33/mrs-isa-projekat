@@ -58,6 +58,7 @@ import ReportMedicaments from '../components/ReportMedicaments'
 import ReportPharmacy from '../components/ReportPharmacy'
 import Request from '../components/Request'
 //import { component } from 'vue/types/umd'
+import AddCategory from '../components/AddCategory'
 import QRCodeReader from '../components/QRCodeReader'
 import WorkCalendar from '../components/WorkCalendar'
 import RequestDaysOff from '../components/RequestDaysOff'
@@ -248,6 +249,13 @@ const routes = [
 			{
 				path: "PatientProfile",
 				component: PatientProfile,
+				meta: {
+					roles: [Role.SystemAdmin]
+				}
+			},
+			{
+				path: "AddCategory",
+				component: AddCategory,
 				meta: {
 					roles: [Role.SystemAdmin]
 				}
