@@ -776,6 +776,7 @@ public class PatientController {
 		}
 		
 		dto.setId(prescription.getId());
+		emailService.sendMedicineTakenConfirmationMail(prescription);
 		return new ResponseEntity<QRCodePharmacyDTO>(dto, HttpStatus.OK);
 		
 	}

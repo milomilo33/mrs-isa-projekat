@@ -52,7 +52,8 @@ public class EmailService {
 		System.out.println("Slanje emaila...");
 		
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(ePrescription.getPatient().getEmail());
+		//mail.setTo(ePrescription.getPatient().getEmail());
+		mail.setTo("filipovic.dada@gmail.com");
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Potvrda preuzimanja leka");
 		String text = "Preuzeti lekovi:\n";
