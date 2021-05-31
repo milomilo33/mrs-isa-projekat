@@ -105,7 +105,6 @@ export default {
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      console.log("ALO", this.pharmacy);
       this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
         .then(response => 
         this.rating = response.data
@@ -115,7 +114,6 @@ export default {
 
     postRatingEmployee(rating) {
       this.rating = rating
-      console.log("ZAPOSLENMI", this.employee);
       this.axios.post('http://localhost:8080/api/patients/rating', {
         rateType: this.employee.e === "Pharmacist" ? 2 : 3,
         ratedEmployeeEmail: this.employee.email,

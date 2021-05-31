@@ -262,7 +262,6 @@ export default {
       role = `/api/pharmacyAdmin`;
 
       this.guessCoordinatesFromLocation();
-      console.log("GEOS: ", this.latitude, this.longitude)
       if (errorFound == false) {
         this.axios
           .post(role, {

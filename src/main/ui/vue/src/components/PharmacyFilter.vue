@@ -186,7 +186,6 @@ export default {
               const lat = pharmacy.address.latitude;
               const lon = pharmacy.address.longitude;
 
-              console.log("lat lon", lat, lon);
               var distance = this.euclideanDistance([lat, lon], this.myPosition);
               console.log(this.minDistance, this.maxDistance);
               if(distance >= this.minDistance && distance <= this.maxDistance) {
@@ -205,7 +204,6 @@ export default {
     },
 
     euclideanDistance(c1, c2) {
-      console.log("DISTANCE", c1,  c2);
       const R = 6371e3; // metres
       const x1 = c1[0] * Math.PI/180; // φ, λ in radians
       const x2 = c2[0] * Math.PI/180;

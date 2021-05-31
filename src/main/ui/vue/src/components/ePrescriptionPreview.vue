@@ -117,8 +117,9 @@ export default {
             var username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
             console.log(username);
             this.axios.get(`http://localhost:8080/api/patients/eprescription/${username}`)
-                .then(response => {this.ePrescriptions = response.data
-                console.log("PRESCRIPTIONS", this.ePrescriptions)})
+                .then(response => {
+                  this.ePrescriptions = response.data
+                })
                 .catch(() => this.showNoPrescription = true);
         },
 

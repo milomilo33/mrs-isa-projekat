@@ -145,7 +145,6 @@ export default {
         })
       .then(response => {
         this.pharmacy = response.data;
-        console.log("PHAR", this.pharmacy);
         this.updateCoordinatesHandler();
         })
       .catch(error => console.log(error));
@@ -183,7 +182,6 @@ export default {
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      console.log("ALO", this.pharmacy);
       this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
         .then(response => 
         this.rating = response.data
@@ -237,7 +235,6 @@ export default {
 		// },
 
     updateCoordinatesHandler: function() {
-      console.log("AAAAAAAAA", this.pharmacy.latitude);
 			this.coordinates[0] = this.pharmacy.address.longitude;
 			this.coordinates[1] = this.pharmacy.address.latitude;     
 		},
@@ -295,7 +292,6 @@ export default {
       .then(response => {
         _this.pharmacy = response.data;
         _this.updateCoordinatesHandler();
-        console.log("PHAR2", this.pharmacy);
         })
       .catch(error => console.log(error));
     },

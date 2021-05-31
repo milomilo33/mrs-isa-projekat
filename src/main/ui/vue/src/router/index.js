@@ -792,10 +792,10 @@ const routes = [
 			}
 		]
 	},
-	// {
-	// 	path: '*',
-	// 	redirect: "/Login"
-	// }
+	{
+		path: '*',
+		redirect: "/Login"
+	}
 
 ]
 
