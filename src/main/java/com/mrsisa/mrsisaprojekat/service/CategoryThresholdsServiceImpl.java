@@ -63,6 +63,7 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 		if(category.getCategory().equalsIgnoreCase("REGULAR")) {
 			return false;
 		}
+		System.out.println(category.getThreshold());
 		category.setDeleted(true);
 		categoryThresholdsRepository.save(category);
 		
