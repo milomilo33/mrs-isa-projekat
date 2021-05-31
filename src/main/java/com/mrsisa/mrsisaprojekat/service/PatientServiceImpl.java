@@ -295,6 +295,7 @@ public class PatientServiceImpl implements PatientService {
 		if(!user.equals("null")) {
 			pharmacies = patientRepository.findAllSubscribedPharmacies(user);
 		} else {
+			System.out.println("AAAAAAAAAAAaa");
 			pharmacies = pharmacyRepository.findAll();
 		}
 
@@ -316,8 +317,11 @@ public class PatientServiceImpl implements PatientService {
 				}
 				if(i == 0) avgRating = 0;
 
+
 				avgRating = Math.round(sum / i);
+
 				if(avgRating >= rating) {
+					System.out.println("OOOOOOOOO " + avgRating);
 					retval.add(p);
 				}
 			}
@@ -378,6 +382,26 @@ public class PatientServiceImpl implements PatientService {
 	public Patient getOneWithCategory(String email) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean checkIfTermFilled(Patient patient, Appointment appointment) {
+		boolean isFilled = false;
+		for(Appointment a : patient.getAppointments()) {
+			if(a.getDate().isEqual(appointment.getDate())) {
+				if(a.getTermFrom().equals(appointment.getTermFrom()))
+					isFilled = true;
+				if(a.getTermTo().equals(appointment.getTermTo()))
+					isFilled = true;
+				if(a.getTermFrom().isAfter(appointment.getTermFrom()) && a.getTermFrom().isBefore(appointment.getTermTo()))
+					isFilled = true;
+				if(a.getTermTo().isAfter(appointment.getTermFrom()) && a.getTermTo().isBefore(appointment.getTermTo()))
+					isFilled = true;
+				if(a.getTermFrom().isBefore(appointment.getTermFrom()) && a.getTermTo().isAfter(appointment.getTermTo()))
+					isFilled = true;
+			}
+		}
+		return isFilled;
 	}
 
 }

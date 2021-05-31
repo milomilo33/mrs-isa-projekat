@@ -1,6 +1,10 @@
 <template>
     <div>
+      
         <div class="card-header" style="background-color:#ccffbc;">ePrescriptions</div>
+        <b-alert v-model="showNoPrescription" dismissible fade variant="success">
+          You have no ePrescriptions.
+        </b-alert>
             <b-row>
               <b-col lg="4" class="my-1">
                 <b-form-group
@@ -37,7 +41,7 @@
                   label-size="sm"
                   class="mb-0">
                 </b-form-group>
-                <input type="file" @change="fileSelected">
+                <input type="file" >
               </b-col>
             </b-row>
             <div v-for="e in this.ePrescriptions" :key="e.id" :value="e" class="col-lg-12">
@@ -98,6 +102,7 @@ export default {
         totalRows: 1,
         totalRows1: 1,
         new: [],
+        showNoPrescription: false
         
     
         };
@@ -112,9 +117,10 @@ export default {
             var username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
             console.log(username);
             this.axios.get(`http://localhost:8080/api/patients/eprescription/${username}`)
-                .then(response => {this.ePrescriptions = response.data
-                console.log(this.ePrescriptions)})
-                .catch(error => alert(error));
+                .then(response => {
+                  this.ePrescriptions = response.data
+                })
+                .catch(() => this.showNoPrescription = true);
         },
 
         formatDate(date) {

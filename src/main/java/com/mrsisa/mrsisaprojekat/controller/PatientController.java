@@ -362,7 +362,6 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
-		System.out.println("LEEEEEEEEEEEEK:" + medicament.getId());
 		if(medicament != null) {
 			if(LocalDate.now().plusDays(1).isBefore(medicament.getExpiryDate())) {
 				prescriptionMedicamentService.delete(id);
@@ -441,7 +440,6 @@ public class PatientController {
 		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
 		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
 
-		appointmentService.update(appointmentToReserve);
 //		if(appointmentToReserve.getType() == Appointment.AppointmentType.EXAMINATION) {
 //			Dermatologist d = dermatologistService.findOneExaminations(appointmentToReserve.getChosenEmployee().getEmail());
 //
@@ -457,19 +455,24 @@ public class PatientController {
 //		}
 //
 		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
+		boolean isReserved = patientService.checkIfTermFilled(p, appointmentToReserve);
 
-		Long id = patientService.updateWithAppointment(p, appointmentToReserve);
-
-
-
-		try {
-			emailService.ReserveExaminationMail(p, id);
+		if(!isReserved) {
+			appointmentService.update(appointmentToReserve);
+			Long id = patientService.updateWithAppointment(p, appointmentToReserve);
+			try {
+				emailService.ReserveExaminationMail(p, id);
+			}
+			catch( Exception e) {
+				System.out.println(e.getMessage());
+			}
+			return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+		} else {
+			return ResponseEntity.badRequest().body(null);
 		}
-		catch( Exception e) {
-			System.out.println(e.getMessage());
-		}
 
-		return new ResponseEntity<>(appointment, HttpStatus.CREATED);
+
+
 
 	}
 
@@ -582,6 +585,7 @@ public class PatientController {
 	@GetMapping(value = "/eprescription/{email}")
 	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
 		Patient patient = patientService.getOneWithePrescriptions(email);
+		if(patient == null) return ResponseEntity.badRequest().body(null);
 		System.out.println(patient.getEmail());
 		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
 		for(ePrescription ep : patient.getePrescriptions()) {

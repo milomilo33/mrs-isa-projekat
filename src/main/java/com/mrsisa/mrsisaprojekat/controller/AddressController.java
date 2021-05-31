@@ -50,7 +50,6 @@ public class AddressController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN', 'DERMATOLOGIST', 'PHARMACIST', 'PATIENT', 'SUPPLIER')")
 	public ResponseEntity<Address> createAddress(@RequestBody Address address) throws Exception {
-		System.out.println("ALO");
 		Address savedAddress = addressService.create(address);
 		return new ResponseEntity<Address>(savedAddress, HttpStatus.CREATED);
 	}
