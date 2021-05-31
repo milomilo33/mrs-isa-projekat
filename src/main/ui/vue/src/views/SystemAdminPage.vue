@@ -30,8 +30,6 @@
           <b-dropdown-item href="/SystemAdminPage/answeredComplaints">See all complaints</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">Write answer</b-dropdown-item>
         </b-nav-item-dropdown>
-
-        <b-nav-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-nav-item>
         <b-nav-item-dropdown right>
            <template #button-content>
            Medicament CRUD
@@ -47,8 +45,6 @@
           <b-dropdown-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-dropdown-item>
           <b-dropdown-item href="/SystemAdminPage/deletePharmacy">View and delete pharmacy</b-dropdown-item>
         </b-nav-item-dropdown>
-        
-        <b-nav-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-nav-item>
         <b-nav-item href="/SystemAdminPage/Users">System users</b-nav-item>
       </b-navbar-nav>
       

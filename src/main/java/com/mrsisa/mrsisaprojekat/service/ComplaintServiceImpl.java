@@ -69,6 +69,12 @@ public class ComplaintServiceImpl implements ComplaintService{
 		return complaintRepository.findOneWithPharmacy(id);
 	}
 
+	@Override
+	public Collection<Complaint> findPatientnsUnasnswered(String email) {
+		// TODO Auto-generated method stub
+		return complaintRepository.findByPatient(email);
+	}
+
 
 
 }

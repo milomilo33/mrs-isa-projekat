@@ -25,10 +25,10 @@ public class Address {
 	@Column(name = "number", unique = false, nullable = false)
 	private int number;
 
-	@Column(name="longitude", unique = false, nullable = true)
+	@Column(name="longitude", unique = false, nullable = true, columnDefinition = "decimal default -1")
 	private Double longitude;
 
-	@Column(name="latitude", unique = false, nullable = true)
+	@Column(name="latitude", unique = false, nullable = true, columnDefinition = "decimal default -1")
 	private Double latitude;
 	
 	public Address() {}

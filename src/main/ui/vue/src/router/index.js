@@ -721,6 +721,13 @@ const routes = [
 				}
 			},
 			{
+				path: "ComplaintUnansweredReview",
+				component: UnansweredComplaint,
+				meta: {
+					roles: [Role.Patient]
+				}
+			},
+			{
 				path: "PharmacyList/:query",
 				component: PharmacyListPreview,
 				props: true
