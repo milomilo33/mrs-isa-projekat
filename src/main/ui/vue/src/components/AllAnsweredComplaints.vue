@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Complaint History</h3>
+    <h3>Answered Complaint History</h3>
     <hr />
     <b-alert v-model="showDismissibleAlert" dismissible fade variant="danger">
       Could not send answer.

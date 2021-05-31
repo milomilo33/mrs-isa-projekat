@@ -21,7 +21,8 @@
                 <template #button-content>
                     Complaints
                 </template>
-                <b-dropdown-item href="/PatientPage/ComplaintReview"> See all complaints</b-dropdown-item>
+                <b-dropdown-item href="/PatientPage/ComplaintUnansweredReview"> See all unanswered complaints</b-dropdown-item>
+                <b-dropdown-item href="/PatientPage/ComplaintReview"> See all answered complaints</b-dropdown-item>
                 <b-dropdown-item href="/PatientPage/WriteComplaint">Write complaint</b-dropdown-item>
                 
           </b-nav-item-dropdown>
