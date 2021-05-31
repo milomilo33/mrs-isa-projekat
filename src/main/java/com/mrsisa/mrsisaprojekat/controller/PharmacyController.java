@@ -196,7 +196,7 @@ public class PharmacyController {
 		List<PharmacistDTO> returns = new ArrayList<>();
 		for(Pharmacist p: pharmacy.getPharmacists()) {
 			if(!p.isDeleted()) {
-				ArrayList<Appointment> list = pharmacyService.findAvailableAppointmentsDeramtologist(p.getEmail(),pharmacy.getId());
+				ArrayList<Appointment> list = pharmacyService.findAvailableAppointmentsPharmacist(p.getEmail(),pharmacy.getId());
 				ArrayList<WorkHourDTO> hours = new ArrayList<WorkHourDTO>();
 				for(WorkHour h : p.getWorkHour()) {
 					WorkHourDTO wd = new WorkHourDTO(h);

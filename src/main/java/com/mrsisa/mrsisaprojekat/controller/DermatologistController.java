@@ -186,8 +186,9 @@ public class DermatologistController {
 	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}/{i}")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'PHARMACY_ADMIN')")
-	public ResponseEntity<DermatologistDTO> deleteDermatologist(@PathVariable("id") String email, @PathVariable("i") Long i) {
+	public ResponseEntity<DermatologistDTO> deleteDermatologist(@PathVariable("id") String email, @PathVariable("i") Long i) throws Exception {
 		Dermatologist dermatologist = dermatologistService.findOne(email);	
+		Pharmacy pharmacy = pharmacyService.findOneWithDermatologists(i);
 		if (dermatologist != null) {
 			try {
 				if(dermatologist.getMedicalExaminations().size()== 0) {	
@@ -196,6 +197,11 @@ public class DermatologistController {
 							workHourService.delete(w.getId());
 							}
 					}
+					dermatologist.getPharmacies().remove(pharmacy);
+					dermatologistService.removeDermatlogistFromPharmacy(email, i);
+					dermatologistService.update(dermatologist);
+					pharmacyService.update(pharmacy);
+					
 					return new ResponseEntity<>(new DermatologistDTO(dermatologist),HttpStatus.OK);
 				}else {
 					return new ResponseEntity<>(HttpStatus.FORBIDDEN);

@@ -269,7 +269,7 @@ public class PharmacistController {
 	@Transactional(readOnly = false)
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'PHARMACIST')")
-	public ResponseEntity<PharmacistDTO> deletePharmacist(@PathVariable("id") String email) {
+	public ResponseEntity<PharmacistDTO> deletePharmacist(@PathVariable("id") String email) throws Exception {
 
 		Pharmacist pharmacist = pharmacistService.findOne(email);
 		if (pharmacist != null) {
@@ -279,7 +279,7 @@ public class PharmacistController {
 						workHourService.delete(w.getId());
 							
 					}
-					return new ResponseEntity<>(new PharmacistDTO(pharmacist),HttpStatus.OK);
+					
 				}else {
 					return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 				}
@@ -288,6 +288,9 @@ public class PharmacistController {
 			}catch(NullPointerException e) {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
+			pharmacist.setPharmacy(null);
+			pharmacistService.update(pharmacist);
+			return new ResponseEntity<>(HttpStatus.OK);
 			
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

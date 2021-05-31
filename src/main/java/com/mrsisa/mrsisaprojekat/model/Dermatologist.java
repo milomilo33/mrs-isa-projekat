@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +19,18 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@SQLDelete(sql
+	    = "UPDATE dermatologist "
+	    + "SET deleted = true "
+	    + "WHERE email = ?")
+@Where(clause = "deleted = false")
 public class Dermatologist extends Employee {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// potencijalno kaskadiranje
 	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY, cascade= CascadeType.MERGE)
 	private Set<Appointment> medicalExaminations;

@@ -26,7 +26,7 @@ public class Pharmacist extends Employee {
 	@OneToMany(mappedBy = "chosenEmployee", fetch = FetchType.LAZY)
 	private Set<Appointment> counselings;
 	
-	@ManyToOne(fetch = FetchType.EAGER,cascade =CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.EAGER,cascade =CascadeType.MERGE, optional = true)
 	private Pharmacy pharmacy;
 	
 	public Pharmacist() {}

@@ -34,6 +34,8 @@ public interface PharmacyService {
 	int getRating(Long id);
 	
 	ArrayList<Appointment> findAllAppointmentsDeramtologist(String email, Long id);
+	
+	ArrayList<Appointment> findAvailableAppointmentsPharmacist(String email, Long id);
 
     void addRating(Rating rating, Long ratedEntityId);
 
