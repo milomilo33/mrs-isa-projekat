@@ -285,8 +285,9 @@ public class PharmacistServiceImpl  implements PharmacistService {
 			LocalDate today = LocalDate.now();
 			if (!a.isDeleted() && !a.isDone() && a.getPatient() != null) {
 				if (today.isBefore(appointmentDate) || today.isEqual(appointmentDate)) {
-					a.setMedicalReport(null);
-					a.setChosenEmployee(null);
+					if (a.getMedicalReport() != null) {
+						a.setMedicalReport(new MedicalReport());
+					}
 					a.getPatient().setSubscribedPharmacies(null);
 					a.getPatient().setAllergies(null);
 					a.getPatient().setAppointments(null);
@@ -294,6 +295,13 @@ public class PharmacistServiceImpl  implements PharmacistService {
 					a.getPatient().setePrescriptions(null);
 					a.getPatient().setReservedMedicaments(null);
 					a.setPatient((Patient) Hibernate.unproxy(a.getPatient()));
+					Pharmacist p = (Pharmacist) a.getChosenEmployee();
+					p.setCounselings(null);
+					p.setPharmacy(null);
+					p.setCalendar(null);
+					p.setRatings(null);
+					p.setRequests(null);
+					p.setWorkHour(null);
 					upcomingAppointments.add(a);
 				}
 			}

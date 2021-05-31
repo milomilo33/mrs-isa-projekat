@@ -49,6 +49,13 @@
             </div>
             <b-button class="mt-3" variant="outline-primary" block @click="hideReportInfoModal">Close</b-button>
         </b-modal>
+
+        <b-modal ref="error-modal" hide-footer title="Error">
+            <div class="d-block text-center">
+                <p>Error! Another appointment most likely in progress.</p>
+            </div>
+            <b-button class="mt-3" variant="outline-danger" block @click="hideErrorModal">Close</b-button>
+        </b-modal>
     </div>
 </template>
 
@@ -227,6 +234,7 @@
                                                     });
                                 })
                                 .catch(error => {
+                                    this.showErrorModal();
                                     console.log(error);
                                 })
             },
@@ -245,6 +253,14 @@
 
             showReportInfoModal() {
                 this.$refs['report-info-modal'].show()
+            },
+
+            showErrorModal() {
+                this.$refs['error-modal'].show()
+            },
+
+            hideErrorModal() {
+                this.$refs['error-modal'].hide()
             }
         },
 

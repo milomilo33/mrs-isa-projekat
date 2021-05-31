@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,13 @@ public class ePrescriptionController {
 	@PreAuthorize("hasAnyRole('PHARMACIST')")
 	public ResponseEntity<String> dispensePrescription(@PathVariable("id") Long id) {
 		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		boolean dispensed = ePrescriptionService.dispensePrescription(id, currentPharmacist);
-		if (!dispensed) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		try {
+			boolean dispensed = ePrescriptionService.dispensePrescription(id, currentPharmacist);
+			if (!dispensed) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (ObjectOptimisticLockingFailureException oolfe) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.OK);

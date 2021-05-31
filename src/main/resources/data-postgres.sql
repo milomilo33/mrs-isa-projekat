@@ -22,6 +22,7 @@ insert into address (city, country, number, street) values('Novi Sad','Srbija','
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '22', 'Balzakova')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '25', 'Seljačkih buna')
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Bulevar Vojvode Stepe')
+insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '29', 'Seljačkih buna')
 
 
 insert into address (city, country, number, street) values('Novi Sad', 'Srbija', '33', 'Boze Kuzmanovica')
@@ -33,9 +34,9 @@ insert into roles (name) values ('ROLE_PHARMACIST')
 insert into roles (name) values ('ROLE_SUPPLIER')
 insert into roles (name) values ('ROLE_PATIENT')
 
-insert into category_thresholds (category, threshold, discount) values (0, 50, 0)
-insert into category_thresholds (category, threshold, discount) values (1, 100, 2)
-insert into category_thresholds (category, threshold, discount) values (2, 200, 5)
+insert into category_thresholds (category, threshold, discount, deleted) values ('REGULAR', 50, 0, false)
+insert into category_thresholds (category, threshold, discount, deleted) values ('SILVER', 100, 2, false)
+insert into category_thresholds (category, threshold, discount, deleted) values ('GOLD', 200, 5, false)
 
 
 insert into pharmacy (deleted, description, income, name, address_id) values('false','Ono po čemu se BENU izdvaja na tržištu jeste konstantan rad sa zaposlenim farmaceutima na usavršavanju i upoznavanju najnovijih dostignuća medicine i farmakologije.', 0, 'Benu', 1)
@@ -58,16 +59,18 @@ INSERT INTO USER_ROLE (user_id, role_id) VALUES ('milicamaric@gmail.com', 1)
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('petarsavic@gmail.com', 1)
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('kristinamisic@gmail.com', 1)
 
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anasimic@gmail.com','false','true','Simič','Ana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0603258476', 19 , 0, 0, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0658563255',20 , 1, 56, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 21, 2, 220, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anasimic@gmail.com','false','true','Simič','Ana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0603258476', 19 , 'REGULAR', 0, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabozic@gmail.com','false','true','Božić','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0658563255',20 , 'SILVER', 56, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('lukamarkovic@gmail.com','false','true','Marković','Luka','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0636258776', 21, 'GOLD', 220, 0)
 
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 0, 33, 3)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0616258776', 23, 1, 99, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','true','Markov','Ivica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0626258776', 10, 2, 299, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','true','Perić','Pera','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0646258776', 15, 0, 33, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','true','Batinica','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0633434343', 16, 1, 65, 0)
-insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','true','Stupar','Anja','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0637676767', 17, 2, 243, 0)
+
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('darkomilev@gmail.com','false','true','Milev','Darko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0606258776', 22, 'REGULAR', 33, 3)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('milosmilosevic@gmail.com','false','true','Milošević','Miloš','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0616258776', 23, 'SILVER', 99, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('ivicamarkov@gmail.com','false','true','Markov','Ivica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0626258776', 10, 'GOLD', 299, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('peraperic@gmail.com','false','true','Perić','Pera','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0646258776', 15, 'REGULAR', 33, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('teodorabatinica@gmail.com','false','true','Batinica','Teodora','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0633434343', 16, 'SILVER', 65, 0)
+insert into patient (email, deleted, active, last_name, name, password, phone_number, address_id, category, loyalty_points, penalty_points) values ('anjastupar@gmail.com','false','true','Stupar','Anja','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0637676767', 17, 'GOLD', 243, 0)
+
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('anjastupar@gmail.com', 6)
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('teodorabatinica@gmail.com', 6)
@@ -105,12 +108,12 @@ insert into pharmacist (email, deleted, active, last_name, name, password, phone
 
 
 insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-25 10:00','anasimic@gmail.com', false, true, 2, '2021-04-23', 2500.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-30 10:00','teodorabozic@gmail.com', false, false, 1, null, 3000.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-07 10:00','lukamarkovic@gmail.com', false, false, 2, '2021-04-07', 1000.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-06-30 10:00','teodorabozic@gmail.com', false, false, 1, null, 3000.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-07 10:00','lukamarkovic@gmail.com', false, true, 2, '2021-04-07', 1000.00)
 
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-08 10:00','anjastupar@gmail.com', false, false, 3, null, 700.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-09 10:00','teodorabatinica@gmail.com', false, false, 3, null, 1800.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-10 10:00','peraperic@gmail.com', false, false, 3, null, 650.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-08 10:00','anjastupar@gmail.com', false, false, 3, null, 700.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-09 10:00','teodorabatinica@gmail.com', false, false, 3, null, 1800.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-10 10:00','peraperic@gmail.com', false, false, 3, null, 650.00)
 
 
 insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-01 14:28', 'false','Izvestaj..' ,1)
@@ -147,10 +150,10 @@ insert into appointment (date, deleted, term_from, term_to, type, medical_report
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-17',false,'14:00','15:00', 1, null, 'aleksandarstevanovic@gmail.com', 'lukamarkovic@gmail.com')
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'09:00','09:45', 1, null, 'aleksandarstevanovic@gmail.com', 'darkomilev@gmail.com')
 
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-26',false,'16:30','17:00', 1, null, 'aleksandarstevanovic@gmail.com', 'teodorabozic@gmail.com')
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-17',false,'13:00','14:00', 1, null, 'aleksandarstevanovic@gmail.com', 'lukamarkovic@gmail.com')
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'08:45','09:00', 1, null, 'aleksandarstevanovic@gmail.com', 'darkomilev@gmail.com')
-insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-07',false,'18:00','19:00', 1, null, 'aleksandarstevanovic@gmail.com', null)
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-07-26',false,'16:30','17:00', 1, null, 'aleksandarstevanovic@gmail.com', 'teodorabozic@gmail.com')
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-07-17',false,'13:00','14:00', 1, null, 'aleksandarstevanovic@gmail.com', 'lukamarkovic@gmail.com')
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-24',false,'08:45','09:00', 1, null, 'aleksandarstevanovic@gmail.com', 'darkomilev@gmail.com')
+insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-07-07',false,'18:00','19:00', 1, null, 'aleksandarstevanovic@gmail.com', null)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'08:45','09:00', 1, null, 'janatot@gmail.com', null)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-07',false,'18:00','19:00', 0, null, 'svetozartodorovic@gmail.com', null)
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-05-24',false,'08:45','09:00', 0, null, 'micicmilica@gmail.com', null)

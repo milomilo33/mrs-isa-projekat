@@ -171,7 +171,7 @@ public class PatientController {
 				patient.setPhoneNumber(patientDTO.getPhoneNumber());
 
 				patient.setActive(false);
-				patient.setCategory(Category.REGULAR);
+				patient.setCategory("REGULAR");
 				patient.setLoyaltyPoints(0);
 				patient.setPenaltyPoints(0);
 				patient = patientService.update(patient);
@@ -215,7 +215,7 @@ public class PatientController {
 		patient.setPhoneNumber(patientDTO.getPhoneNumber());
 		patient.setAddress(saved);
 		patient.setActive(false);
-		patient.setCategory(Category.REGULAR);
+		patient.setCategory("REGULAR");
 		patient.setLoyaltyPoints(0);
 		patient.setPenaltyPoints(0);
 		patient = patientService.create(patient);
@@ -761,13 +761,15 @@ public class PatientController {
 				index = index + 1;
 			}	
 		}
-		
+		if(index == cts.size()) {
+			index = index - 1;
+		}
 		ct = cts.get(index);
 		p.setCategory(ct.getCategory());
 		int discount = ct.getDiscount();
 		
 		double totalPrice = dto.getPharmacy().getCost() - ((dto.getPharmacy().getCost() * discount)/100);
-		p = patientService.update(p);
+		
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDate localDate = LocalDate.parse(dto.getQrCode().getDate(), formatter);
@@ -789,6 +791,7 @@ public class PatientController {
 		}
 		
 		dto.setId(prescription.getId());
+		emailService.sendMedicineTakenConfirmationMail(prescription);
 		return new ResponseEntity<QRCodePharmacyDTO>(dto, HttpStatus.OK);
 		
 	}

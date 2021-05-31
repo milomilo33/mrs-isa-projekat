@@ -8,16 +8,18 @@ public class CategoryDTO {
 	private int threshold;
 	private int discount;
 	private Long id;
+	private boolean deleted;
 	
 	public CategoryDTO() {
 		
 	}
 	
 	public CategoryDTO(CategoryThresholds category) {
-		this.category = category.getCategory().name();
+		this.category = category.getCategory();
 		this.threshold = category.getThreshold();
 		this.id = category.getId();
 		this.discount = category.getDiscount();
+		this.deleted = category.isDeleted();
 	}
 
 	public String getCategory() {
@@ -50,6 +52,14 @@ public class CategoryDTO {
 
 	public void setDiscount(int discount) {
 		this.discount = discount;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 	

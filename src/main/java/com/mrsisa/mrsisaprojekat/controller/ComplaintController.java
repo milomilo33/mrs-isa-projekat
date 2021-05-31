@@ -328,6 +328,19 @@ public class ComplaintController {
 		
 		return new ResponseEntity<>(complaintsDTO, HttpStatus.ACCEPTED);
 	}
+	@GetMapping(value="/getAllUnansweredForPatient/{email}")
+	@PreAuthorize("hasAnyRole('PATIENT', 'SYSTEM_ADMIN')")
+	public ResponseEntity<Collection<ComplaintDTO>> getAllPatientsUnanswered(@PathVariable("email") String email){
+		Collection<Complaint> complaints = complaintService.findPatientnsUnasnswered(email);
+		Collection<ComplaintDTO> complaintsDTO = new ArrayList<ComplaintDTO>();
+		for(Complaint c : complaints) {
+			ComplaintDTO dto = new ComplaintDTO(c);
+			complaintsDTO.add(dto);
+			
+		}
+		
+		return new ResponseEntity<>(complaintsDTO, HttpStatus.ACCEPTED);
+	}
 	
 	private boolean isPharmacyAvaiable(Set<Appointment> appointments, Long id) {
 		boolean appointmentFound = false;

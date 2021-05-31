@@ -4,7 +4,6 @@ import com.mrsisa.mrsisaprojekat.dto.JwtAuthenticationRequest;
 import com.mrsisa.mrsisaprojekat.dto.PatientDTO;
 import com.mrsisa.mrsisaprojekat.dto.UserTokenState;
 import com.mrsisa.mrsisaprojekat.model.Address;
-import com.mrsisa.mrsisaprojekat.model.Category;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.User;
 import com.mrsisa.mrsisaprojekat.service.*;
@@ -62,6 +61,7 @@ public class AuthenticationController {
 			@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
 		// Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
 		// AuthenticationException
+		System.out.println(authenticationRequest.getUsername()+" "+ authenticationRequest.getPassword());
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		
@@ -112,7 +112,7 @@ public class AuthenticationController {
 		patient.setLastName(patientDTO.getLastName());
 		patient.setPhoneNumber(patientDTO.getPhoneNumber());
 		patient.setAddress(saved);
-		patient.setCategory(Category.REGULAR);
+		patient.setCategory("REGULAR");
 		patient.setLoyaltyPoints(0);
 		patient.setPenaltyPoints(0);
 		patient = patientService.create(patient);

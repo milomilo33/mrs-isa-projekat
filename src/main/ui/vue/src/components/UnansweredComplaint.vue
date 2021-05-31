@@ -8,12 +8,14 @@
     </b-alert>
       <h5 class="card-text">{{complaint.description}}</h5>
       <p class="card-text" id="colorIt">{{objectOfComplaint}}</p>
+       <div v-show="seen" id="hide">
       <hr/>
       <label>Your answer:</label>
       <input v-model="response" class="form-control">
        <button type="button" class="btn btn-secondary" @click="sendResponse">
               Send
             </button>
+      </div>
   </div>
 </template>
 
@@ -35,6 +37,8 @@ export default defineComponent({
       response: "",
       showSuccessAlert: false,
       showDismissibleAlert: false,
+      seen: true,
+      role: "",
     }
   },
   mounted(){
@@ -42,6 +46,14 @@ export default defineComponent({
     this.user = JSON.parse(
       atob(localStorage.getItem("token").split(".")[1])
     ).sub;
+
+    this.role = JSON.parse(
+      atob(localStorage.getItem("token").split(".")[1])
+    ).role;
+
+    if(this.role=="ROLE_PATIENT"){
+      this.seen = false;
+    }
 
     if(this.complaint.employee == null){
       this.axios

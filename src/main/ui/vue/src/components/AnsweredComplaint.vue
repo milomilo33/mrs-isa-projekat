@@ -10,7 +10,6 @@
       <p class="card-text" id="colorIt">{{objectOfComplaint}}</p>
       <hr/>
       <p>Answer: {{complaint.response}}</p>
-      
   </div>
 </template>
 
@@ -39,7 +38,7 @@ export default defineComponent({
     this.user = JSON.parse(
       atob(localStorage.getItem("token").split(".")[1])
     ).sub;
-
+    
     if(this.complaint.employee == null){
       this.axios
         .get(`/api/pharmacy/` + parseInt(this.complaint.pharmacy), {
@@ -50,9 +49,6 @@ export default defineComponent({
           this.objectOfComplaint = this.pharmacy.name;
         })
         .catch((error) => console.log(error.response.data));
-
-      
-      
     }
     else{
        this.axios
@@ -76,9 +72,8 @@ export default defineComponent({
             })
             .catch((error) => console.log(error.response.data));
         }
+      }
 
-      
-  }
 },
 })
 </script>

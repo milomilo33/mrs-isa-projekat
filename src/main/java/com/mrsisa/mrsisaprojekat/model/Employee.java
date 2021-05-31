@@ -1,14 +1,9 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import javax.persistence.*;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
 @Entity
 @Inheritance(strategy=TABLE_PER_CLASS)
@@ -30,7 +25,18 @@ public abstract class Employee extends User {
 	
 	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
 	private Set<WorkHour> workHour;
-	
+
+	@Column(name = "currentlyInAppointment", nullable = false, columnDefinition = "boolean default false")
+	private boolean currentlyInAppointment;
+
+	public boolean isCurrentlyInAppointment() {
+		return currentlyInAppointment;
+	}
+
+	public void setCurrentlyInAppointment(boolean currentlyInAppointment) {
+		this.currentlyInAppointment = currentlyInAppointment;
+	}
+
 	public Employee() {}
 
 	

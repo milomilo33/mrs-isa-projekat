@@ -13,6 +13,8 @@ public interface ComplaintService {
 	
 	Collection<Complaint> findAllAnswered();
 	
+	Collection<Complaint> findPatientnsUnasnswered(String email);
+	
 	Complaint findOne(Long id);
 	
 	Set<Complaint> getResponderComplaint(String email);

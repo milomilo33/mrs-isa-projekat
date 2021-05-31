@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Answer Complaint</h3>
+    <h3>Unanswered Complaints</h3>
     <hr />
     <b-alert v-model="showDismissibleAlert" dismissible fade variant="danger">
       Could not send answer.
@@ -38,6 +38,7 @@ export default defineComponent({
       showSuccessAlert: false,
       complaints: [],
       user: "",
+      role: "",
     };
   },
   mounted() {
@@ -45,15 +46,31 @@ export default defineComponent({
       atob(localStorage.getItem("token").split(".")[1])
     ).sub;
 
-    this.axios
-      .get(`/api/complaints/getAllUnanswered/`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-      })
-      .then((response) => {
-        this.complaints = response.data;
-        console.log(this.complaints);
-      })
-      .catch((error) => console.log(error.response.data));
+    this.role = JSON.parse(
+      atob(localStorage.getItem("token").split(".")[1])
+    ).role;
+
+    if(this.role == "ROLE_PATIENT"){
+      this.axios
+        .get(`/api/complaints/getAllUnansweredForPatient/`+this.user, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((response) => {
+          this.complaints = response.data;
+          console.log(this.complaints);
+        })
+        .catch((error) => console.log(error.response.data));
+    }else {
+      this.axios
+        .get(`/api/complaints/getAllUnanswered/`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((response) => {
+          this.complaints = response.data;
+          console.log(this.complaints);
+        })
+        .catch((error) => console.log(error.response.data));
+    }
   },
 });
 </script>
