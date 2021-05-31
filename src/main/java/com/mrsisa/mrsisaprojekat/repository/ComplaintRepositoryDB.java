@@ -26,4 +26,6 @@ public interface ComplaintRepositoryDB extends JpaRepository<Complaint, Long>{
 	@Query("select c from Complaint c join fetch c.responder where c.responder.email=?1")
 	Set<Complaint> findByResponder(String email);
 
+	@Query("select c from Complaint c join fetch c.patient where c.response is null and c.patient.email=?1")
+	Collection<Complaint> findByPatient(String email);
 }
