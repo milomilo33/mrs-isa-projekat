@@ -7,7 +7,13 @@
       <b-navbar-nav>
         <b-nav-item href="/SystemAdminPage/MedicamentList">Medicaments</b-nav-item>
         <b-nav-item href="/SystemAdminPage/PharmacyList"> Pharmacies</b-nav-item>
-        <b-nav-item href="/SystemAdminPage/LoyaltyProgram"> Loyalty Program</b-nav-item>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+            Loyalty Program
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/LoyaltyProgram">Categories Review</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/AddCategory">Add Category</b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item-dropdown right>
            <template #button-content>
             User Registration

@@ -1,15 +1,13 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
-import com.mrsisa.mrsisaprojekat.model.Category;
-
 public class PatientLoyaltyDTO {
     private Integer points;
-    private Category category;
+    private String category;
 
     public PatientLoyaltyDTO() {
     }
 
-    public PatientLoyaltyDTO(Integer points, Category category) {
+    public PatientLoyaltyDTO(Integer points, String category) {
         this.points = points;
         this.category = category;
     }
@@ -22,11 +20,11 @@ public class PatientLoyaltyDTO {
         this.points = points;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 }
