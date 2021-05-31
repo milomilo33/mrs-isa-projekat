@@ -73,6 +73,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         // dodaj 1 penalty poen pacijentu
         appointment.getPatient().setPenaltyPoints(appointment.getPatient().getPenaltyPoints() + 1);
 
+        appointment.getChosenEmployee().setCurrentlyInAppointment(false);
+
         return true;
     }
 
@@ -137,6 +139,11 @@ public class AppointmentServiceImpl implements AppointmentService {
             return report.getId();
         }
         else {
+            if (appointment.getChosenEmployee().isCurrentlyInAppointment()) {
+                return null;
+            }
+            appointment.getChosenEmployee().setCurrentlyInAppointment(true);
+
             Patient patient = appointment.getPatient();
             LocalDate date = LocalDate.now().plusDays(7);
             Set<PrescriptionMedicament> prescriptionMedicaments = new HashSet<>();
@@ -193,6 +200,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         report.setDescription(reportText);
 
         appointment.setDone(true);
+
+        appointment.getChosenEmployee().setCurrentlyInAppointment(false);
 
         return true;
     }

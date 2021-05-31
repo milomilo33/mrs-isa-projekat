@@ -9,6 +9,7 @@ import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,7 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Override
 	@Transactional
-	public boolean dispensePrescription(Long id, Pharmacist pharmacist) {
+	public boolean dispensePrescription(Long id, Pharmacist pharmacist) throws ObjectOptimisticLockingFailureException {
 		ePrescription ePrescription = this.findOne(id);
 		if (ePrescription == null) {
 			return false;

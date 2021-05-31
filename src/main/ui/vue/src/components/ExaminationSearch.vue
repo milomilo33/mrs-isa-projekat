@@ -24,8 +24,14 @@
         <br>
         <b-table striped hover :items="appointments" :fields="appointmentFields">
             <template #cell(action)="row">
-                <button class="btn btn-dark" @click="startAppointment(row)"
-                    :ref="'btn' + row.index">Start appointment</button>
+                <div v-if="row.item.chosenEmployee.currentlyInAppointment">
+                    <button class="btn btn-dark" @click="startAppointment(row)"
+                        :ref="'btn' + row.index" v-if="row.item.medicalReport">Resume appointment</button>
+                </div>
+                <div v-if="!row.item.chosenEmployee.currentlyInAppointment">
+                    <button class="btn btn-dark" @click="startAppointment(row)"
+                        :ref="'btn' + row.index">Start appointment</button>
+                </div>
             </template>
         </b-table>
     </div>
