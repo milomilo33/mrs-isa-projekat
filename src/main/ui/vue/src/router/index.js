@@ -642,6 +642,13 @@ const routes = [
 				component: SupplierOrderList,
 			},
 			{
+				path: "PatientProfile",
+				component: PatientProfile,
+				meta: {
+					roles: [Role.Supplier]
+				}
+			},
+			{
 
 				path: "ChangePassword",
 				name: "ChangePassword",
@@ -654,6 +661,9 @@ const routes = [
 
 				path: "OfferList",
 				component: SupplierOfferList,
+				meta: {
+					roles: [Role.Supplier]
+				}
 			}
 
 		]
@@ -676,7 +686,10 @@ const routes = [
 			},
 			{
 				path: "QRCodeReader",
-				component: QRCodeReader
+				component: QRCodeReader,
+				meta: {
+					roles: [Role.Patient]
+				}
 			},
 			{
 				path: "WriteComplaint",
