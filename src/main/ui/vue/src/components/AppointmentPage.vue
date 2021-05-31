@@ -46,8 +46,10 @@
         <b-button class="mt-3" variant="outline-success" block @click="goToHomePage">Close</b-button>
     </b-modal>
 
-    <b-modal size="xl" ref="prescription-modal" hide-footer title="Prescription">
-        <MedicamentListPreview :prescriptionMode=true :appointment="appointment" @prescribed="onPrescribed"></MedicamentListPreview>
+    <b-modal size="xl" ref="prescription-modal" scrollable hide-footer title="Prescription">
+        <b-container fluid>
+        <MedicamentListPreviewAppointment :prescriptionMode=true :appointment="appointment" @prescribed="onPrescribed"></MedicamentListPreviewAppointment>
+        </b-container>
         <br>
         <b-button class="mt-3" style="margin-top: 5rem;" variant="outline-success" block @click="hidePrescriptionModal">Done</b-button>
     </b-modal>
@@ -118,12 +120,12 @@
 </template>
 
 <script>
-import MedicamentListPreview from '../components/MedicamentListPreview';
+import MedicamentListPreviewAppointment from '../components/MedicamentListPreviewAppointment';
 
 export default {
   name: 'AppointmentPage',
   components: {
-    MedicamentListPreview
+    MedicamentListPreviewAppointment
   },
   data() {
     return {
