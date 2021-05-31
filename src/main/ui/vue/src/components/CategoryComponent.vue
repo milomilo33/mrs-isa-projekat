@@ -12,10 +12,10 @@
       </div>
         
       <b-alert v-model="showDismissibleAlert" dismissible fade variant="danger">
-        Failed to edit category
+        {{message}}
       </b-alert>
       <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
-        Category has been edited
+        {{message}}
       </b-alert>
       <label>Threshold</label>
       <input v-model="category.threshold" class="form-control">
@@ -25,7 +25,11 @@
     <div class="card-footer">
       <small><button type="button" class="btn btn-secondary" @click="editCategory">
             Edit
+      </button></small> &nbsp;&nbsp;&nbsp;
+       <small><button type="button" class="btn btn-secondary" @click="deleteCategory">
+            Delete
       </button></small>
+
     </div>
   </div>
 </template>
@@ -42,6 +46,7 @@ export default defineComponent({
     return{
       showDismissibleAlert: false,
       showSuccessAlert: false,
+      message: "",
     }
   },
   methods: {
@@ -49,7 +54,6 @@ export default defineComponent({
       
 
       if(this.category.threshold > 0 && this.category.discount > 0){
-        console.log("sssssssssss");
          this.axios
         .post(
           `/api/loyaltyProgram/updateCategory`,
@@ -67,7 +71,7 @@ export default defineComponent({
         )
         .then((response) => {
           if (response.data != null) {
-            console.log("sssssssssssssssssssssssssss")
+            this.message = "Success! Category has been updated.";
             this.showSuccessAlert = true;
             this.showDismissibleAlert = false;
            
@@ -75,12 +79,42 @@ export default defineComponent({
         })
         .catch((error) => {
           console.log(error);
+          this.message = "Category failed to update."
           this.showDismissibleAlert = true;
         });
       }
-     
-
     },
+    deleteCategory(){
+       this.axios
+        .post(
+          `/api/loyaltyProgram/delete`,
+          {
+            id: this.category.id,
+            category: this.category.category,
+            threshold: this.category.threshold,
+            discount: this.category.discount
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data != null) {
+            this.message = "Category has been deleted";
+            this.showSuccessAlert = true;
+            this.showDismissibleAlert = false;
+            window.location.reload();
+           
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.message = "Category failed to delete."
+          this.showDismissibleAlert = true;
+        });
+    }
   }
 })
 </script>

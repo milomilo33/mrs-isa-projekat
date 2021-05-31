@@ -48,7 +48,9 @@ public class LoyaltyProgramController {
 		Collection<CategoryDTO> categoriesDTO = new ArrayList<CategoryDTO>();
 		
 		for(CategoryThresholds c : categories) {
-			categoriesDTO.add(new CategoryDTO(c));
+			if(!c.isDeleted()) {
+				categoriesDTO.add(new CategoryDTO(c));
+			}
 		}
 		
 		return new ResponseEntity<>(categoriesDTO, HttpStatus.OK);
@@ -129,7 +131,7 @@ public class LoyaltyProgramController {
 		
 	}
 	
-	@DeleteMapping(value="/delete")
+	@PostMapping(value="/delete")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<CategoryDTO> deleteCategory(@RequestBody CategoryDTO category){
 		CategoryThresholds c = new CategoryThresholds();
@@ -137,7 +139,7 @@ public class LoyaltyProgramController {
 		c.setCategory(category.getCategory());
 		c.setDeleted(true);
 		c.setDiscount(category.getDiscount());
-		c.setDiscount(category.getDiscount());
+		c.setThreshold(category.getThreshold());
 		boolean deleted = false;
 		try {
 			deleted = thresholdService.delete(c);
