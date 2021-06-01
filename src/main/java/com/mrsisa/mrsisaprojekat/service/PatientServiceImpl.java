@@ -404,4 +404,19 @@ public class PatientServiceImpl implements PatientService {
 		return isFilled;
 	}
 
+	@Override
+	public Patient getMedicamentIfPurchased(String email, Long id) {
+		return patientRepository.getPatientPurchasedMedication(email, id);
+	}
+
+	@Override
+	public Patient getPatientExaminationIfDone(String email, String ratedEmployeeEmail) {
+		return patientRepository.getPatientDoneExamination(email, ratedEmployeeEmail);
+	}
+
+	@Override
+	public Patient getPatientExaminationMedicationDone(String email) {
+		return patientRepository.getPatientExaminationMedicationDone(email);
+	}
+
 }

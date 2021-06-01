@@ -193,7 +193,7 @@ export default {
       this.rating = rating
       console.log(this.rating);
       this.axios.post('http://localhost:8080/api/patients/rating', {
-        rateType: 1,
+        rateType: 0,
         ratedEntityId: this.$route.params.id,
         rating: this.rating,
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
@@ -201,7 +201,7 @@ export default {
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
-      }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.data));
+      }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.response.data));
     },
     // guessCoordinatesFromLocation: function() {
     //   console.log("APOTEKA", this.pharmacy);

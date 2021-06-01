@@ -1,5 +1,6 @@
 <template>
   <b-col align-h="start" class="border pt-2 ml-2">
+    
     <a href="#">
       <img class="img" src="../doctors.jpg" alt="" />
     </a>
@@ -29,6 +30,9 @@
         <b-alert v-model="showRatingAlert" dismissible fade variant="success">
             Success! You gave this {{employee.e.toLowerCase()}} {{rating}} stars.
         </b-alert>
+        <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
+        Failed to rate this employee as you do not have any past appointment with him/her.
+      </b-alert>
         <b-row class="mb-1 text-center colorIt">
           <p>
             <b class="colorHeaders">Name:</b>
@@ -98,7 +102,8 @@ export default {
       app:"",
       role: '',
       rating: null,
-      showRatingAlert: false
+      showRatingAlert: false,
+      showFailedAlert: false
     };
   },
   methods: {
@@ -114,6 +119,7 @@ export default {
 
     postRatingEmployee(rating) {
       this.rating = rating
+      this.showFailedAlert = false;
       this.axios.post('http://localhost:8080/api/patients/rating', {
         rateType: this.employee.e === "Pharmacist" ? 2 : 3,
         ratedEmployeeEmail: this.employee.email,
@@ -123,7 +129,11 @@ export default {
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
-      }}).then(() => this.showRatingAlert = true).catch(error => console.log(error.data));
+      }}).then(() => this.showRatingAlert = true)
+        .catch(() => {
+          this.showFailedAlert = true;
+          this.rating = -1;
+          });
     },
 
     parseAppointment(a) {

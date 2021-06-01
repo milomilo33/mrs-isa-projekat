@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
+import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Rating;
@@ -34,7 +35,7 @@ public interface DermatologistService {
 	
 	Dermatologist getRatings(String email);
 
-	void addRating(Rating rating, String ratedEmployeeEmail);
+	void addRating(Rating rating, String ratedEmployeeEmail) throws RatingException;
 
 	Integer getRatingOfUser(String dermatologistEmail, String patientEmail);
   
