@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyAdminRepositoryDB;
 
@@ -22,6 +25,9 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@Override
 	public List<AdminPharmacy> findAll() {
@@ -75,5 +81,49 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	@Override
 	public Set<AdminPharmacy> getAllAdminsInPharmacy(Long id) {
 		return adminRepository.getAllEmployeedInPharmacy(id);
+	}
+
+	@Override
+	public List<AdminPharmacy> getAllUnemployedAdmins() {
+
+		List<AdminPharmacy> retVal = adminRepository.getAllWithAddress();
+		List<AdminPharmacy> returnAdmins = new ArrayList<>();
+		for(AdminPharmacy a : retVal) {
+			if(a.getPharmacy() == null) {
+				returnAdmins.add(a);
+			}
+		}
+		return returnAdmins;
+	}
+
+	@Override
+	public AdminPharmacy updatePharmacy(AdminPharmacyDTO adminDTO) {
+		AdminPharmacy admin = adminRepository.getOneLogin(adminDTO.getEmail());
+
+		if(admin == null) {
+			return null;
+		}
+		
+		Pharmacy pharmacy = pharmacyService.findOne(adminDTO.getPharmacy().getId());
+		if(pharmacy == null) {
+			return null;
+		}
+		
+		admin.setPharmacy(pharmacy);
+		admin.setRequestMedicaments(null);
+		admin = adminRepository.save(admin);
+
+		Set<AdminPharmacy> admins = adminRepository.getAllEmployeedInPharmacy(pharmacy.getId());
+		admins.add(admin);
+		
+		pharmacy.setAdmins(admins);
+		try {
+			pharmacyService.update(pharmacy);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return admin;
 	}
 }

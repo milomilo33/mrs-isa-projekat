@@ -46,10 +46,12 @@ insert into pharmacy (deleted, description, income, name, address_id) values('fa
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('jovanpetrovic@gmail.com','false','true','Petrović','Jovan','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','060915893', 9, 1)
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('sarajovic@gmail.com','false','true','Jović','Sara','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0645515823', 4, 2)
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('markoperic@gmail.com','false','true','Perić','Marko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0654123692', 14, 3)
+insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('filipovic.dada@gmail.com','false','true','Dragana','Filipovic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0654123692', 25, null)
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('jovanpetrovic@gmail.com', 2) 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('sarajovic@gmail.com', 2) 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('markoperic@gmail.com', 2)
+INSERT INTO USER_ROLE (user_id, role_id) VALUES ('filipovic.dada@gmail.com', 2)
 
 insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('milicamaric@gmail.com','false','true','Marić','Milica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0635124793', 10)
 insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('petarsavic@gmail.com','false','true','Savić','Petar','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0693206589', 5)

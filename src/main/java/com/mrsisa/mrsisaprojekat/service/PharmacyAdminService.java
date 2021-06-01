@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.List;
 import java.util.Set;
 
+import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 
 public interface PharmacyAdminService {
@@ -21,5 +22,9 @@ public interface PharmacyAdminService {
 	boolean check(String password1, String password);
 	
 	Set<AdminPharmacy> getAllAdminsInPharmacy(Long id);
+	
+	List<AdminPharmacy> getAllUnemployedAdmins();
+
+	AdminPharmacy updatePharmacy(AdminPharmacyDTO adminDTO);
 }
 
