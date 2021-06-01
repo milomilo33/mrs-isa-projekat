@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 
 public interface PharmacyAdminService {
@@ -26,5 +27,7 @@ public interface PharmacyAdminService {
 	List<AdminPharmacy> getAllUnemployedAdmins();
 
 	AdminPharmacy updatePharmacy(AdminPharmacyDTO adminDTO);
+
+	AdminPharmacy firePharmacyAdmin(PharmacyDTO pharmacyDTO);
 }
 

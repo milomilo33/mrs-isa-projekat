@@ -3,7 +3,6 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.AddressDTO;
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.RequestMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
@@ -258,5 +258,17 @@ public class PharmacyAdminController {
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
+	@PostMapping(value = "/firePharmacyAdmin")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<AdminPharmacyDTO> firePharmacyAdin(@RequestBody PharmacyDTO pharmacyDTO){
+		System.out.println("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+		AdminPharmacy admin = adminService.firePharmacyAdmin(pharmacyDTO);
+		if(admin == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		AdminPharmacyDTO dto = new AdminPharmacyDTO(admin.getEmail(), admin.getName(), admin.getLastName(), admin.getPhoneNumber(), new AddressDTO(admin.getAddress()));
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
 
 }
