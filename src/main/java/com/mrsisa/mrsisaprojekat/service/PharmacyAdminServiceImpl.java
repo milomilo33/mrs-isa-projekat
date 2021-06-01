@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Role;
@@ -115,6 +116,48 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 
 		Set<AdminPharmacy> admins = adminRepository.getAllEmployeedInPharmacy(pharmacy.getId());
 		admins.add(admin);
+		
+		pharmacy.setAdmins(admins);
+		try {
+			pharmacyService.update(pharmacy);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return admin;
+	}
+
+	@Override
+	public AdminPharmacy firePharmacyAdmin(PharmacyDTO pharmacyDTO) {
+		
+		Pharmacy pharmacy = pharmacyService.findOne(pharmacyDTO.getId());
+		if(pharmacy == null || pharmacyDTO.getAdmins() == null) {
+			return null;
+		}
+		
+		String adminEmail = "";
+		for(String a : pharmacyDTO.getAdmins()) {
+			adminEmail = a;
+			break;
+		}
+		
+		AdminPharmacy admin = adminRepository.getOnePharmacyAdmin(adminEmail);
+		if(admin == null) {
+			return null;
+		}
+		
+		admin.setPharmacy(null);
+		admin.setRequestMedicaments(null);
+		admin = adminRepository.save(admin);
+
+		Set<AdminPharmacy> admins = adminRepository.getAllEmployeedInPharmacy(pharmacy.getId());
+		for(AdminPharmacy a : admins) {
+			if(a.getEmail().equalsIgnoreCase(admin.getEmail())) {
+				admins.remove(a);
+				break;
+			}
+		}
 		
 		pharmacy.setAdmins(admins);
 		try {
