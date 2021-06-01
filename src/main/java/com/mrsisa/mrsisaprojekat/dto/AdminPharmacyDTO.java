@@ -33,6 +33,13 @@ public class AdminPharmacyDTO {
 		this.phoneNumber = phoneNumber;
 		this.pharmacy = pharmacy;
 	}
+	public AdminPharmacyDTO(String email, String name, String lastName, String phoneNumber, AddressDTO address) {
+		this.email = email;
+		this.lastName = lastName;
+		this.name = name;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+	}
 
 	public String getEmail() {
 		return email;

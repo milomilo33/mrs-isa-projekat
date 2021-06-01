@@ -1,7 +1,9 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrsisa.mrsisaprojekat.dto.AddressDTO;
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.RequestMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Address;
@@ -84,7 +87,7 @@ public class PharmacyAdminController {
 		
 		List<AdminPharmacyDTO> adminsDTO = new ArrayList<>();
 		for(AdminPharmacy a : admins) {
-			adminsDTO.add(new AdminPharmacyDTO(a));
+			adminsDTO.add(new AdminPharmacyDTO(a.getEmail(), a.getName(), a.getLastName(), a.getPhoneNumber(), new AddressDTO(a.getAddress())));
 			
 		}
 		return new ResponseEntity<>(adminsDTO, HttpStatus.OK);
@@ -227,8 +230,33 @@ public class PharmacyAdminController {
 		return new ResponseEntity<AdminPharmacyDTO>(a, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/getUnemployedAdmins")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<Collection<AdminPharmacyDTO>> getAllUnemployed(){
+		List<AdminPharmacy> admins = adminService.getAllUnemployedAdmins();
+		if(admins == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Collection<AdminPharmacyDTO> adminsDTO = new ArrayList<AdminPharmacyDTO>();
+		for(AdminPharmacy a : admins) {
+			AdminPharmacyDTO admin = new AdminPharmacyDTO(a.getEmail(), a.getName(), a.getLastName(), a.getPhoneNumber(), new AddressDTO(a.getAddress()));
+			adminsDTO.add(admin);
+		}
+		
+		return new ResponseEntity<>(adminsDTO, HttpStatus.OK);
+	}
 	
-	
+	@PostMapping(value = "/updatePharmacyToAdmin")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
+	public ResponseEntity<AdminPharmacyDTO> setPharmacy(@RequestBody AdminPharmacyDTO adminDTO){
+		
+		AdminPharmacy admin = adminService.updatePharmacy(adminDTO);
+		if(admin == null ) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		AdminPharmacyDTO dto = new AdminPharmacyDTO(admin);
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
 	
 
 }

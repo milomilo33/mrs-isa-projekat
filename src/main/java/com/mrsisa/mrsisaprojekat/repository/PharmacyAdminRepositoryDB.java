@@ -29,4 +29,7 @@ public interface PharmacyAdminRepositoryDB extends JpaRepository<AdminPharmacy, 
 	
 	@Query("select a from AdminPharmacy a join fetch a.pharmacy where a.pharmacy.id=?1")
 	Set<AdminPharmacy> getAllEmployeedInPharmacy(Long id);
+	
+//	@Query("select a from AdminPharmacy a left join fetch a.pharmacy where a.pharmacy is null")
+	Set<AdminPharmacy> findByPharmacyIsNull();
 }
