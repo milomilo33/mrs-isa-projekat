@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
+import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.Rating;
 
@@ -24,11 +25,11 @@ public interface MedicamentService {
 
 	Collection<Medicament> findAllFilter(int mode, int form);
 
-  void addRating(Rating rating, Long id);
+  	void addRating(Rating rating, Long id) throws RatingException;
 
-  Integer getRatingOfUser(Long id, String email);
+  	Integer getRatingOfUser(Long id, String email);
   
-	Collection<MedicamentDTO> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
+  	Collection<MedicamentDTO> getNonallergicSubstituteMedicinesForPatientInPharmacyWithQuantity(
 								Long medicamentId, String patientEmail, int quantity, Long pharmacyId);
 
 	Collection<MedicamentDTO> getNonallergicMedicinesForPatientInPharmacyOfAppointment(String patientEmail, Long appointmentId);

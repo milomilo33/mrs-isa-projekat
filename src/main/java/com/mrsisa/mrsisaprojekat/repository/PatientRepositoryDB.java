@@ -1,13 +1,10 @@
 package com.mrsisa.mrsisaprojekat.repository;
 
-import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 
 import java.util.Collection;
@@ -47,4 +44,13 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 
 	@Query("select p from Patient p join fetch p.address where p.email = ?1")
     Patient getOneWithAddress(String email);
+
+	@Query("select p from Patient p join fetch p.reservedMedicaments prm where p.email = ?1 and prm.id = ?2 and prm.purchased = true")
+	Patient getPatientPurchasedMedication(String email, Long id);
+
+	@Query("select p from Patient p join fetch p.appointments pa where p.email = ?1 and pa.chosenEmployee.email = ?2 and pa.done = true")
+	Patient getPatientDoneExamination(String email, String ratedEmployeeEmail);
+
+	@Query("select p from Patient p join fetch p.appointments pa join fetch p.reservedMedicaments prm where p.email = ?1 and pa.done = true and prm.purchased = true")
+	Patient getPatientExaminationMedicationDone(String email);
 }

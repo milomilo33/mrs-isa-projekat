@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
 import com.mrsisa.mrsisaprojekat.dto.*;
+import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
@@ -536,25 +537,30 @@ public class PatientController {
 	}
 
 	@PostMapping(value = "/rating", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> addRating(@RequestBody RatingDTO ratingDTO) {
+	public ResponseEntity<Object> addRating(@RequestBody RatingDTO ratingDTO) throws RatingException {
 		Rating rating = new Rating();
 		rating.setValue(ratingDTO.getRating());
 		rating.setPatient(patientService.findOne(ratingDTO.getPatientEmail()));
 
-		switch (ratingDTO.getRateType()) {
-			case MEDICAMENT:
-				medicamentService.addRating(rating, ratingDTO.getRatedEntityId());
-				break;
-			case DERMATOLOGIST:
-				dermatologistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
-				break;
-			case PHARMACIST:
-				pharmacistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
-				break;
-			case PHARMACY:
-				pharmacyService.addRating(rating, ratingDTO.getRatedEntityId());
-				break;
+		try {
+			switch (ratingDTO.getRateType()) {
+				case MEDICAMENT:
+					medicamentService.addRating(rating, ratingDTO.getRatedEntityId());
+					break;
+				case DERMATOLOGIST:
+					dermatologistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+					break;
+				case PHARMACIST:
+					pharmacistService.addRating(rating, ratingDTO.getRatedEmployeeEmail());
+					break;
+				case PHARMACY:
+					pharmacyService.addRating(rating, ratingDTO.getRatedEntityId());
+					break;
+			}
+		} catch(NullPointerException | RatingException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Can't rate this entity.");
 		}
+
 		return ResponseEntity.ok().body("Ocenili ste ovaj entitet");
 	}
 

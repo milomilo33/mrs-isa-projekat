@@ -58,4 +58,9 @@ public interface PatientService {
 
 	boolean checkIfTermFilled(Patient patient, Appointment appointment);
 
+    Patient getMedicamentIfPurchased(String email, Long id);
+
+	Patient getPatientExaminationIfDone(String email, String ratedEmployeeEmail);
+
+	Patient getPatientExaminationMedicationDone(String email);
 }

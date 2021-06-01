@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.MedicamentDTO;
+import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.MedicamentRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,13 @@ public class MedicamentServiceImpl implements MedicamentService {
 	}
 
 	@Override
-	public void addRating(Rating rating, Long id) {
+	public void addRating(Rating rating, Long id) throws RatingException {
 		Medicament medicament = medicamentRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
+		Patient p = patientService.getMedicamentIfPurchased(rating.getPatient().getEmail(), id);
+
+		if(p.getReservedMedicaments() == null) {
+			throw new RatingException("You have never purchased this medicament. You can't rate it.");
+		}
 
 		if(medicament == null) {
 			medicament = medicamentRepository.loadWithRatings(id);

@@ -11,6 +11,9 @@
 <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
             Success! You gave this medicament {{rating}} stars.
     </b-alert>
+    <b-alert v-model="showFailedRating" dismissible fade variant="danger">
+            You have never purchased this medicament. You can't rate it.
+    </b-alert>
           <div class="card-body">
             <b-row class="mb-4">
               <b-col>
@@ -194,7 +197,8 @@ export default defineComponent({
       showSuccessAlert: false,
 
       pharmacy: {},
-      therapyLength: ""
+      therapyLength: "",
+      showFailedRating: false,
     }
   },
   computed: {
@@ -262,6 +266,7 @@ export default defineComponent({
     },
 
     postRating(rating) {
+      this.showFailedRating = false;
       this.rating = rating
       console.log(this.rating);
       this.axios.post('http://localhost:8080/api/patients/rating', {
@@ -273,7 +278,10 @@ export default defineComponent({
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
-      }}).then(() => this.showSuccess());
+      }}).then(() => this.showSuccess()).catch(() => {
+          this.showFailedRating = true;
+          this.rating = -1;
+        });
     },
 
     

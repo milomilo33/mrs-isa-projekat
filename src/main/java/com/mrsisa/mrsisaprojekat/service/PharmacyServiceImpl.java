@@ -2,7 +2,6 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.util.*;
 
-import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,10 @@ public class PharmacyServiceImpl implements PharmacyService{
 
 	@Autowired
 	private PharmacyRepositoryDB pharmacyRepository;
-	
+
+	@Autowired
+	private PatientService patientService;
+
 	@Autowired
 	private MedicamentItemService medicamentService;
 	
@@ -144,8 +146,11 @@ public class PharmacyServiceImpl implements PharmacyService{
 	public void addRating(Rating rating, Long id) {
 		Pharmacy pharmacy = pharmacyRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
 
+		Patient p = patientService.getPatientExaminationMedicationDone(rating.getPatient().getEmail());
+
 		if (pharmacy == null) {
 			pharmacy = pharmacyRepository.loadWithRatings(id);
+
 			try {
 				pharmacy.getRatings().add(rating);
 			} catch (NullPointerException e) {
@@ -157,8 +162,10 @@ public class PharmacyServiceImpl implements PharmacyService{
 			pharmacy.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
 		}
 
-		pharmacyRepository.save(pharmacy);
+		ArrayList<Employee> employees = new ArrayList<>(pharmacy.getDermatologists());
+		employees.addAll(pharmacy.getPharmacists());
 
+		pharmacyRepository.save(pharmacy);
 	}
 
 	@Override

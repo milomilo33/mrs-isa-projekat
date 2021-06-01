@@ -241,8 +241,9 @@ public class DermatologistServiceImpl implements DermatologistService {
 	@Override
 	public void addRating(Rating rating, String ratedEmployeeEmail) {
 		Dermatologist dermatologist = dermatologistRepository.loadWithRatingOfUser(ratedEmployeeEmail, rating.getPatient().getEmail());
+		Patient p = patientService.getPatientExaminationIfDone(rating.getPatient().getEmail(), ratedEmployeeEmail);
 
-		if (dermatologist == null) {
+		if (dermatologist == null && p.getAppointments() != null) {
 			dermatologist = dermatologistRepository.getRatings(ratedEmployeeEmail);
 			try {
 				dermatologist.getRatings().add(rating);

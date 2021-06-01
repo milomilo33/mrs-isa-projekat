@@ -146,8 +146,8 @@ public class PharmacistServiceImpl  implements PharmacistService {
 	@Override
 	public void addRating(Rating rating, String ratedEmployeeEmail) {
 		Pharmacist pharmacist = pharmacistRepository.loadWithRatingOfUser(ratedEmployeeEmail, rating.getPatient().getEmail());
-
-		if (pharmacist == null) {
+		Patient p = patientService.getPatientExaminationIfDone(rating.getPatient().getEmail(), ratedEmployeeEmail);
+		if (pharmacist == null && p.getAppointments() != null) {
 			pharmacist = pharmacistRepository.getRatings(ratedEmployeeEmail);
 			try {
 				pharmacist.getRatings().add(rating);
