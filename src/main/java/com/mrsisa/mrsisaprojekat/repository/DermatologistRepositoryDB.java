@@ -5,6 +5,7 @@ import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, 
 	@Query("select d from Dermatologist d join fetch d.address where d.deleted = false")
 	List<Dermatologist> getAllWithAddress();
 	
-	@Query("select d from Dermatologist d join fetch d.address join fetch d.medicalExaminations where d.email=?1")
+	@Query("select d from Dermatologist d join fetch d.address join fetch d.medicalExaminations join fetch d.pharmacies where d.email=?1")
 	Dermatologist getOneDermatologist(String id);
 		
 	@Modifying
@@ -38,5 +39,9 @@ public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, 
 
 	@Query("select d from Dermatologist d join fetch d.address join fetch d.medicalExaminations where d.email = ?1")
 	Dermatologist getDermatologistWithExaminations(String email);
+	@Transactional
+	@Modifying
+	@Query(value="delete from  dermatologists_pharmacies d where d.dermatologist_id=?1  and d.pharmacy_id=?2", nativeQuery = true)
+	void removeDermatologistFromPharmacy(String email, Long id);
 
 }

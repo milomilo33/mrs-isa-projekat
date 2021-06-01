@@ -88,7 +88,7 @@ public class UserController {
 		Dermatologist dermatologist = dermatologistService.findOne(email);
 		try {
 			if(dermatologist != null) {
-				dermatologistService.delete(email);
+				dermatologistService.delete(dermatologist);
 				deleted = new UserDTO(dermatologist.getName(), dermatologist.getLastName(), dermatologist.getEmail(), "Dermatologist", dermatologist.getPhoneNumber());
 				for(Appointment a : dermatologist.getMedicalExaminations()) {
 					appointmentService.delete(a);

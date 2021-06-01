@@ -73,10 +73,11 @@ public class DermatologistServiceImpl implements DermatologistService {
 		return dermatologist;
 	}
 
+	@Transactional(readOnly = false)
 	@Override
-	public void delete(String email) {
+	public void delete(Dermatologist dermatologist) {
 		// TODO Auto-generated method stub
-		 dermatologistRepository.deleteOne(email);
+		 dermatologistRepository.delete(dermatologist);
 	}
 
 	@Override
@@ -516,5 +517,11 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 
 		return calendarAppointments;
+	}
+
+	@Override
+	public void removeDermatlogistFromPharmacy(String email, Long id) {
+		dermatologistRepository.removeDermatologistFromPharmacy(email, id);
+		
 	}
 }

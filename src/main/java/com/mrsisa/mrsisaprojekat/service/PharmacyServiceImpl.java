@@ -186,8 +186,10 @@ public class PharmacyServiceImpl implements PharmacyService{
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		for(Appointment a : pharmacy.getAppointments()) {
 			if(a.getChosenEmployee().getEmail().equals(email) && a.getPatient() == null) {
+				
 				a.setChosenEmployee(null);
 				System.out.println("DA");
+
 				appointments.add(a);
 			}
 		}
@@ -236,6 +238,23 @@ public void deletePharmacy(Long id) throws Exception {
 		pharmacyAdminService.update(ap);
 	}
 	
+}
+
+@Override
+public ArrayList<Appointment> findAvailableAppointmentsPharmacist(String email, Long id) {
+	Pharmacy pharmacy = pharmacyRepository.getOneWithAppointments(id);
+	if (pharmacy == null) {
+		return null;
+	}
+	ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+	for(Appointment a : pharmacy.getAppointments()) {
+		if(a.getChosenEmployee().getEmail().equals(email) && a.getPatient() == null) {
+			a.setChosenEmployee(null);
+			appointments.add(a);
+		}
+	}
+
+	return appointments;
 }
 
 

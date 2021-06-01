@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
 public interface DermatologistService {
 	List<Dermatologist> findAll();
 	
@@ -20,7 +22,8 @@ public interface DermatologistService {
 	
 	Dermatologist update(Dermatologist dermatologist) throws Exception;
 	
-	void delete(String email);
+	@Transactional(readOnly = false)
+	void delete(Dermatologist dermatologist);
 
 	Collection<Appointment> getUpcomingExaminationsForDermatologist(String email);
 
@@ -48,4 +51,7 @@ public interface DermatologistService {
 	double getRating(String email);
 
 	Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail);
+	
+	void removeDermatlogistFromPharmacy(String email, Long id);
+	
 }
