@@ -62,6 +62,11 @@
                   Edit
                 </b-button>
               </template>
+              <template v-slot:cell(promotion)="data">
+                <div v-if="data.item.promotion === true">
+                  <fa icon="check"/>
+                </div>
+              </template>
             </b-table>
             <b-modal
               :id="errorModal.id"
@@ -152,6 +157,7 @@
 <script>
 import moment from 'moment'
 
+
 export default {
   data() {
     return {
@@ -161,7 +167,7 @@ export default {
         { key: "points", sortable: true, label: "Points" },
         { key: "date1", sortable: true, label: "Date from" },
         { key: "date2", sortable: true, label: "Date to" },
-        { key: "promotion", sortable: true, label: "Promotion" },
+        { key: "promotion", label: "Promotion" },
         {key :"edit", label:""},
       ],
       fields2: [
@@ -313,9 +319,9 @@ export default {
             item.date2 = self.datum(response.data[i].price[0].dateTo);
           }
           if(response.data[i].price[0].promotion == true){
-            item.promotion = "promotion";
+            item.promotion = true;
           }else{
-            item.promotion = "";
+            item.promotion = false;
           }
 
           item.points =  response.data[i].price[0].points;
@@ -366,7 +372,7 @@ export default {
         this.medicamentss.splice(idx, 1);
          var self = this;
          self.axios.put(
-          `/api/pricelistItems/promotion/`+self.selected[0].id+`/`+self.pharmacyId,
+          `/api/pricelistItems/promotion/`+self.selected[0].medId+`/`+self.pharmacyId,
           {
             price:[{
                 id :self.priceid,

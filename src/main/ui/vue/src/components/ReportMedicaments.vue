@@ -1,6 +1,7 @@
 <template >
     <div class="Filter">
-        <b-col lg="4" class="my-1">
+         <b-row>
+         <b-col lg="2" class="my-1">
         <b-form-group
           label="Choose period"
           label-cols-sm="3"
@@ -11,6 +12,19 @@
           <b-form-select v-model="f" :options="o" v-on:change="findFilter"></b-form-select>
         </b-form-group>
       </b-col>
+
+      <b-col lg="2" class="my-1">
+        <b-form-group
+          label="Choose year"
+          label-cols-sm="3"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-0"
+        >
+          <b-form-select v-model="y" :options="years" v-on:change="findFilter"></b-form-select>
+        </b-form-group>
+      </b-col>
+      </b-row>
   <div class="large" v-if="value === true">
     <line-chart :chartData="chartData" :options="options"></line-chart>
   </div>
@@ -34,7 +48,9 @@
         tip:"",
         pharmacyId:"",
         o:["January","February","March","April","May","June","July","August","September","October","November","December", "Quarter","Year"],
+        years:['2021','2020', '2019','2018','2017'],
         f:0,
+        y:0,
       }
     },
     mounted () {
@@ -79,11 +95,12 @@
             var self = this;
             self.l = [];
             self.d =[];
+            if(self.y != 0 && self.f != 0){
              if(self.f =="January" || self.f =="February" || self.f =="March" || self.f =="April" || self.f =="May" || self.f =="June"
             || self.f =="July" || self.f =="August" || self.f =="September"|| self.f =="October" || self.f =="November"
             || self.f =="December"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments/` + parseInt(self.pharmacyId)+"/"+self.f, {
+                    .get(`/api/pharmacy/reportMedicaments/` + parseInt(self.pharmacyId)+"/"+self.f+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -101,7 +118,7 @@
                
             }else if(self.f == "Year"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments1/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportMedicaments1/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -119,7 +136,7 @@
                 
             }else if(self.f == "Quarter"){
                  self.axios
-                    .get(`/api/pharmacy/reportMedicaments2/` + parseInt(self.pharmacyId), {
+                    .get(`/api/pharmacy/reportMedicaments2/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -135,7 +152,7 @@
                     console.log(error);
                 });
             }
-             
+            }
         }
     }
   }
