@@ -15,11 +15,11 @@ public interface ReportService {
 	
 	 ArrayList<MonthAppointmentDTO> makeReport();
 	    
-	 ArrayList<MonthAppointmentDTO> subValues(Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list);
+	 ArrayList<MonthAppointmentDTO> subValues(Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list,String year);
 	 
 	 ArrayList<MonthAppointmentDTO> findByMonth(ArrayList<MonthAppointmentDTO> appointmentsReturned);
 	 
-	 ArrayList<MonthAppointmentDTO> subValues1(Set<ePrescriptionPreviewDTO> dtos,ArrayList<MonthAppointmentDTO> list);
+	 ArrayList<MonthAppointmentDTO> subValues1(Set<ePrescriptionPreviewDTO> dtos,ArrayList<MonthAppointmentDTO> list, String year);
 	 
 	 ArrayList<MonthAppointmentDTO> findByDay(ArrayList<MonthAppointmentDTO> appointmentsReturned);
 	 
@@ -29,7 +29,7 @@ public interface ReportService {
 	 
 	 ArrayList<PricelistItemAppointmentDTO> findPricelistItemsAppointments(Long id);
 	 
-	 ArrayList<MonthAppointmentDTO>  subPriceAppointments(ArrayList<PricelistItemAppointmentDTO>l,Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list, Set<ePrescriptionPreviewDTO> ePrescriptions, Set<OrderDTO> ordersInPharmacy);
+	 ArrayList<MonthAppointmentDTO>  subPriceAppointments(ArrayList<PricelistItemAppointmentDTO>l,Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list, Set<ePrescriptionPreviewDTO> ePrescriptions, Set<OrderDTO> ordersInPharmacy, String year);
 
 	 Set<ePrescriptionPreviewDTO>  findePrescriptionsPrice(Set<ePrescription> ePrescriptions);
 	 

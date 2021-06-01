@@ -73,11 +73,12 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public ArrayList<MonthAppointmentDTO> subValues(Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list ){
+	public ArrayList<MonthAppointmentDTO> subValues(Set<Appointment> pharmacyList,ArrayList<MonthAppointmentDTO> list,String year ){
+		int y = Integer.parseInt(year);
 			for(Appointment a : pharmacyList) {
 				for(MonthAppointmentDTO aa : list) {
 					//is Done fali
-					if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth())) {
+					if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth()) && a.getDate().getYear() == y) {
 						int val = aa.getValues().get(a.getDate().getDayOfMonth());
 						aa.getValues().put(a.getDate().getDayOfMonth(),val+1);
 					}
@@ -105,11 +106,12 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public ArrayList<MonthAppointmentDTO> subValues1(Set<ePrescriptionPreviewDTO> dtos,ArrayList<MonthAppointmentDTO> list){
+	public ArrayList<MonthAppointmentDTO> subValues1(Set<ePrescriptionPreviewDTO> dtos,ArrayList<MonthAppointmentDTO> list, String year){
+		int y = Integer.parseInt(year);
 		for(ePrescriptionPreviewDTO a : dtos) {
 			for(MedicamentInePrescriptionDTO pmd: a.getMedicine())
 				for(MonthAppointmentDTO aa : list) {
-					if(a.getExpiryDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getExpiryDate().getDayOfMonth())) {
+					if(a.getExpiryDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getExpiryDate().getDayOfMonth()) && a.getExpiryDate().getYear() == y) {
 						int val = aa.getValues().get(a.getExpiryDate().getDayOfMonth());
 						aa.getValues().put(a.getExpiryDate().getDayOfMonth(),val+ pmd.getQuantity());
 				}
@@ -242,12 +244,13 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public ArrayList<MonthAppointmentDTO> subPriceAppointments(ArrayList<PricelistItemAppointmentDTO> l,
-			Set<Appointment> pharmacyList, ArrayList<MonthAppointmentDTO> list, Set<ePrescriptionPreviewDTO> ePrescriptions, Set<OrderDTO> ordersInPharmacy) {
+			Set<Appointment> pharmacyList, ArrayList<MonthAppointmentDTO> list, Set<ePrescriptionPreviewDTO> ePrescriptions, Set<OrderDTO> ordersInPharmacy, String year) {
+		int y = Integer.parseInt(year);
 		for(Appointment a : pharmacyList) {
 			for(MonthAppointmentDTO aa : list) {
 				for(PricelistItemAppointmentDTO p: l) {
 				//is Done fali
-				if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth()) && a.getType() == p.getApointment()) {
+				if(a.getDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getDate().getDayOfMonth()) && a.getType() == p.getApointment() && a.getDate().getYear() == y) {
 					int val = aa.getValues().get(a.getDate().getDayOfMonth());
 					aa.getValues().put(a.getDate().getDayOfMonth(),(int)(val+p.getPrice().get(0).getValue()));
 					}
@@ -257,7 +260,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		for(ePrescriptionPreviewDTO a : ePrescriptions) {
 				for(MonthAppointmentDTO aa : list) {
-					if(a.getExpiryDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getExpiryDate().getDayOfMonth())) {
+					if(a.getExpiryDate().getMonth() == aa.getMonth() && aa.getValues().containsKey(a.getExpiryDate().getDayOfMonth()) && a.getExpiryDate().getYear() == y) {
 						int val = aa.getValues().get(a.getExpiryDate().getDayOfMonth());
 						aa.getValues().put(a.getExpiryDate().getDayOfMonth(),(int)(val+ a.getPrice()));
 				}
@@ -267,7 +270,7 @@ public class ReportServiceImpl implements ReportService {
 		for(OrderDTO o : ordersInPharmacy) {
 				for(OfferDTO oo : o.getOffers()) {
 					for(MonthAppointmentDTO aa : list) {
-						if(oo.getDeadline().getMonth() == aa.getMonth() && aa.getValues().containsKey(oo.getDeadline().getDayOfMonth())) {
+						if(oo.getDeadline().getMonth() == aa.getMonth() && aa.getValues().containsKey(oo.getDeadline().getDayOfMonth()) && oo.getDeadline().getYear() == y) {
 							int val = aa.getValues().get(oo.getDeadline().getDayOfMonth());
 							aa.getValues().put(oo.getDeadline().getDayOfMonth(),(int)(val- oo.getTotalPrice()));
 					}

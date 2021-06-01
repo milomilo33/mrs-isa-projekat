@@ -219,7 +219,7 @@ export default {
             item.date1 = self.datum(response.data[i].dateFrom);
             item.date2 = self.datum(response.data[i].dateTo);
             if(response.data[i].accepted == false && response.data[i].deleted == false){
-                item.status = "WAITING FOR ANSWER";
+                item.status = "PENDING";
             }else if(response.data[i].accepted == false && response.data[i].deleted == true){
                 item.status = "REJECTED";
             }else if(response.data[i].accepted == true && response.data[i].deleted == true){
