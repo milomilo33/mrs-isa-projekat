@@ -192,6 +192,7 @@ insert into medicament_item (deleted, quantity, medicament_id) values ('false', 
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 6, 2)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 20, 1)
 insert into medicament_item (deleted, quantity, medicament_id) values ('false', 2, 1)
+insert into medicament_item (deleted, quantity, medicament_id) values ('false', 50, 3)
 
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (1, 5)
 insert into medicament_substitute_medicaments (medicament_id, substitute_medicaments_id) values (5, 1)
@@ -270,8 +271,7 @@ insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values 
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (2, 4)
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (3, 5)
 insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (3, 6)
-
-
+insert into pharmacy_medicament_items (pharmacy_id, medicament_items_id) values (2, 13)
 
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('mikaantic@gmail.com', 'false','true', 'Antic', 'Mika', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0624354231', 21)
 insert into supplier (email, deleted, active, last_name, name, password, phone_number, address_id) values ('svetlanaraznatovic@gmail.com', 'false', 'true', 'Raznatovic', 'Svetlana', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0604354231', 20)
@@ -334,7 +334,7 @@ insert into prescription_medicament (deleted, expiry_date, purchased, quantity, 
 
 
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 5, 899.99, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 6, 1199.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 6, 1199.99, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 7, 999.99, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 1500.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 1, 99.99, false)
@@ -344,8 +344,8 @@ insert into price (date_from, date_to, deleted, points, value, promotion) values
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 1700.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 2200.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-05-24', null, false, 0, 550.00, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 220.00, false)
-
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 500.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 350.00, false)
 
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 1)
 insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values ('anasimic@gmail.com', 2)
@@ -363,13 +363,13 @@ insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (3, 2)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 3)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (2, 1)
 insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (1, 2)
-
+insert into pricelist_item_medicament (medicament_id, pharmacy_id) values (4, 2)
 
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (1,1)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (2,2)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (3,3)
 insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (5,12)
-
+insert into pricelist_item_medicament_price(pricelist_item_medicament_id, price_id) values (6,13)
 
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (1,4)
 insert into pricelist_item_appointment_price(pricelist_item_appointment_id, price_id) values (2,5)
