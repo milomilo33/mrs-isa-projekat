@@ -54,10 +54,10 @@
           <!-- card-body.// -->
       <!-- card-group-item.// -->
     </div>
-    <div class="justify-content">
-    <div class="row row-cols-4 row-cols-md-3 g-2">
+    <div class="justify-content-center">
+    <div class="row row-cols-6 row-cols-md-2">
       <div
-        class="col-lg-3 col-md-6 col-sm-8 offset-md-1 offset-sm-0" style="height: 25rem;"
+        class="col-lg-3 col-md-6 col-sm-8 offset-md-1 offset-sm-1" style="height: 25rem;"
         v-for="o in this.offers"
         :key="o.id"
       >
@@ -98,7 +98,7 @@ export default defineComponent({
       })
       .then((response) => {
         this.offers = response.data;
-        //console.log(this.medicaments);
+        console.log(this.offers);
       })
       .catch((error) => console.log(error.response.data));
   },
@@ -134,6 +134,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+
 input[type="radio"] {
   position: absolute;
   left: -9999px;
