@@ -114,6 +114,7 @@ public class OfferController {
 	ResponseEntity<OfferDTO> updateOffer(@RequestBody OfferDTO offer){
 		
 		if(offer.getOrder().getDeadline().isBefore( LocalDate.now())) {
+			System.out.println(offer.getOrder().getDeadline());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Supplier supplier = supplierService.findOne(offer.getSupplier());

@@ -5,7 +5,7 @@
         Success! You deleted user.
       </b-alert>
       <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
-        Failed to delete user.
+        {{message}}
       </b-alert>
     <!-- User Interface controls -->
     <b-row>
@@ -36,6 +36,7 @@
 
     <!-- Main table element -->
     <b-table
+      id="my-table"
       :items="items"
       :fields="fields"
       :filter="filter"
@@ -59,9 +60,6 @@
 
       
     </b-table>
-    <b-row>
-      
-    </b-row>
   </b-container>
 </template>
 <script>
@@ -80,7 +78,6 @@ export default defineComponent({
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
-      pageOptions: [5, 10, 15, {value: 100, text: "Show all"}],
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
@@ -91,6 +88,7 @@ export default defineComponent({
       showSuccessAlert: false,
       showFailedAlert: false,
       headVariant: "dark",
+      message: "",
    }
  },
  
@@ -115,9 +113,7 @@ export default defineComponent({
         },
       })
       .then(function (response) {
-        //console.log(response.data);
         _this.items = response.data;
-       // console.log(_this.items);
       })
       .catch(function (error) {
         console.log(error);
@@ -126,6 +122,7 @@ export default defineComponent({
   } , 
   methods: {
       deleteUser(row){
+        console.log(row.item.email);
         var _this = this;
         this.axios
       .get(`/api/users/deleteUser/`+row.item.email, {
@@ -134,7 +131,6 @@ export default defineComponent({
         },
       })
       .then(function (response) {
-       // console.log(response.data);
         _this.deleted = response.data;
         _this.showFailedAlert = false;
         _this.showSuccessAlert = true;
@@ -143,7 +139,13 @@ export default defineComponent({
         _this.items.splice(idx, 1);
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response.status == 403){
+          _this.message = "This dermatologist cannot be deleted";
+        }
+        else{
+          _this.message = "Failed to delete user.";
+        }
+        _this.showFailedAlert = true;
       });
       },
       onFiltered(filteredItems) {

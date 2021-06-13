@@ -79,6 +79,9 @@ export default {
       if (isNaN(this.id)) {
         error_found = true;
       }
+      if(this.threshold < 0){
+        error_found = true;
+      }
 
       if (error_found == false) {
         this.axios

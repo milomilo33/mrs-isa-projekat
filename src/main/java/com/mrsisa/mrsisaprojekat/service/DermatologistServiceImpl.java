@@ -77,7 +77,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 	@Override
 	public void delete(Dermatologist dermatologist) {
 		// TODO Auto-generated method stub
-		 dermatologistRepository.delete(dermatologist);
+		dermatologist.setDeleted(true);
+		 dermatologistRepository.save(dermatologist);
 	}
 
 	@Override

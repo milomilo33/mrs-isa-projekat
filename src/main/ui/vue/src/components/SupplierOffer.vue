@@ -139,7 +139,7 @@ data() {
 },
 mounted(){
 
-  if(moment()<moment(this.offer.order.deadline).toDate()){
+  if(moment().format('DD. MMM YYYY.') < this.convertDate(this.offer.order.deadline)){
     this.editPossible = false;
   }
   else{
@@ -150,6 +150,9 @@ mounted(){
     ).sub;
 },
 methods: {
+  convertDate : function(date){
+            return moment(date).format('DD. MMM YYYY.');
+        },
   frontEndDateFormat: function (date) {
       return moment(date, "YYYY-MM-DD").format("DD.MM.YYYY");
     },
@@ -159,6 +162,7 @@ methods: {
     editOffer: function(){
      
       var dd = this.deadline+ "T00:00:00";
+      console.log(this.deadline);
       if(this.deadline==""){
         dd = this.backEndDateFormat(this.offer.deadline)+"T00:00:00";
       }

@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -88,11 +89,16 @@ public class UserController {
 		Dermatologist dermatologist = dermatologistService.findOne(email);
 		try {
 			if(dermatologist != null) {
+				
+				for(Appointment a : dermatologist.getMedicalExaminations()) {
+					if(a.getDate().isAfter(LocalDate.now())) 
+					{
+						return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+					}
+					
+				}
 				dermatologistService.delete(dermatologist);
 				deleted = new UserDTO(dermatologist.getName(), dermatologist.getLastName(), dermatologist.getEmail(), "Dermatologist", dermatologist.getPhoneNumber());
-				for(Appointment a : dermatologist.getMedicalExaminations()) {
-					appointmentService.delete(a);
-				}
 				return new ResponseEntity<UserDTO>(deleted, HttpStatus.OK);
 			}
 		}
