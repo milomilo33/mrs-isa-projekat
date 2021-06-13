@@ -73,8 +73,7 @@
               :title="errorModal.title"
               ok-only
               @ended="errModal"
-              :header-bg-variant="headerErrorVariant"
-              :footer-bg-variant="headerErrorVariant"
+            
             >
               <pre>{{ errorModal.content }}</pre>
             </b-modal>
@@ -85,8 +84,7 @@
               :title="editModal.title"
               @ok= "check"
               @ended="resetInfoModal"
-              :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant">
+              >
               <pre> 
               <b-form inline>
               <label> Price:     </label>
@@ -114,8 +112,7 @@
               :title="addModal.title"
               ok-only
               @ended="resetInfoModal"
-              :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant"
+              
             >
               <pre> 
                   <b-table
@@ -201,8 +198,6 @@ export default {
         title: "",
         content: "",
       },
-      headerBgVariant: "success",
-      headerErrorVariant: "warning",
       all: [],
       medicamentss: [],
       old: [],

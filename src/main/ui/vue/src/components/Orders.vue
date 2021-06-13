@@ -162,7 +162,7 @@
       :title="errorModal.title"
       ok-only
       @ended="errModal"
-      :header-bg-variant="headerErrorVariant"
+     
     >
       <pre>{{ errorModal.content }}</pre>
     </b-modal>
@@ -172,8 +172,6 @@
       :title="addModal.title"
       @ok="AddAll"
       @ended="resetInfoModal"
-      :header-bg-variant="headerBgVariant"
-      :footer-bg-variant="headerBgVariant"
     >
       <template>
         <div>
@@ -222,8 +220,6 @@
       :title="offersModal.title"
       @ok="OfferOk"
       @ended="resetOfferModal"
-      :header-bg-variant="headerBgVariant"
-      :footer-bg-variant="headerBgVariant"
     >
       <template>
         <div>
@@ -252,6 +248,40 @@
                 >   Accept
                 </b-button>
       </template>
+    </b-modal>
+    <b-modal
+      size="lg"
+      :id="priceModal.id"
+      :title="priceModal.title"
+      @ok="PriceSave"
+      @ended="resetPriceModal"
+    >
+      <div>
+            <b-alert v-model="showEditAlert" dismissible fade :variant="varian">
+            {{message}}
+    </b-alert>
+          <form name="myform">
+              <div class="form-group row">
+                        <label class="col-md-3 col-form-label text-md-right">Medicament </label>
+                        <label class="col-md-3 col-form-label text-md-right">Price </label>
+                        <label class="col-md-3 col-form-label text-md-right">Points </label>
+                    </div>
+              <div v-for="item in newMeds" :key="item.name">
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                        <input type="text" class="form-control" v-model="item.name" disabled=true >
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control"  v-model="item.price"  >
+                        </div>
+                         <div class="col-md-4">
+                            <input type="number" class="form-control"  v-model="item.points">
+                        </div>
+                    </div>
+            </div>
+            </form>
+            <br>
+      </div>
     </b-modal>
 
   </div>
@@ -325,6 +355,11 @@ export default {
         title: "",
         content: "",
       },
+      priceModal: {
+        id: "price-modal",
+        title: "",
+        content: "",
+      },
       headerBgVariant: "success",
       headerErrorVariant: "warning",
       pharmacyId: 0,
@@ -348,6 +383,9 @@ export default {
        showSuccessAlert:false,
        varian:"success",
        showEditAlert:false,
+       meds :[],
+       newMeds: [],
+       names:[],
     };
   },
   mounted() {
@@ -365,6 +403,7 @@ export default {
         self.pharmacyId = response.data.pharmacy.id;
         self.adminU = AdminUsername;
         self.GetAllMedicaments();
+        self.GetAllMedicamentItems();
         self.refresh();
       })
       .catch(function (error) {
@@ -397,6 +436,10 @@ export default {
       this.editModal.title = "";
       this.editModal.content = "";
     },
+    resetPriceModal() {
+      this.priceModal.title = "";
+      this.priceModal.content = "";
+    },
 
     errModal() {
       this.errorModal.title = "";
@@ -412,11 +455,17 @@ export default {
         this.$root.$emit("bv::show::modal", this.detailsModal.id, button);
     },
     Edit(data,button) {
+      if(data.status == "PROCESSED"){
+           this.message = "You cannot edit processed order!";
+         
+           this.$root.$emit("bv::show::modal", this.errModal.id, button);
+      }else{
          this.allmeds = data.allmeds;
          this.orderId = data.id;
          this.da = data.date;
       (this.editModal.title = "Edit"),
         this.$root.$emit("bv::show::modal", this.editModal.id, button);
+      }
     },
     onRowSelected(item) {
       this.selected = item;
@@ -427,6 +476,7 @@ export default {
       
     },
     ShowOffers(data, button){
+      this.selected[0] = data;
       if(data.status == "WAITINGFOROFFERS"){
         this.processed =true;
       }else{
@@ -546,9 +596,75 @@ export default {
         this.selected =[];
         this.quantity = 0;
       }
+      this.items = [];
+      this.refresh();
+      
+    },
+    PriceSave(){
+
+      for(var k = 0;k<this.newMeds.length;k++){
+        console.log(this.newMeds[k].id);
+        this.axios.post(
+            `/api/pricelistItems/`,
+            {
+              price: [{
+                value: this.newMeds[k].price,
+                
+                points: this.newMeds[k].points,
+              },],
+              pharmacy: {
+                id: this.pharmacyId,
+              },
+              medicament: {
+                id: this.newMeds[k].id,
+              },
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem('token'),
+              },
+            }
+          );
+        }
+        this.newMeds = [];
       
     },
     Accept(){
+      this.newMeds = [];
+      for(var j = 0;j<this.selected[0].allmeds.length;j++){
+          if(this.meds.includes(this.selected[0].allmeds[j].name)){
+                console.log("d");
+          }else{
+               var item = {};
+               item.id = this.selected[0].allmeds[j].idMed;
+              item.name =this.selected[0].allmeds[j].name;
+              this.newMeds.push(item);
+         
+          }
+
+      }
+      console.log(this.newMeds);
+      /*  for(var j = 0;j<this.selected[0].allmeds.length;j++){
+           this.meds.forEach(element => {
+              if(element.name == this.selected[0].allmeds[j].name){
+                console.log("yes");
+          return true;
+        }else{
+          if(this.names.includes(this.selected[0].allmeds[j].name)){
+            console.log("d");
+          }else{
+         var item = {};
+          item.name =this.selected[0].allmeds[j].name;
+          this.newMeds.push(item);
+          this.names.push(this.selected[0].allmeds[j].name);
+          return false;
+          }
+        }
+      });
+        }*/
+       
+
+        
       var self = this;
       var d = self.selectedOffer[0];
       console.log(d.id);
@@ -565,8 +681,14 @@ export default {
             
           ).then(function (response) {
           console.log(response);
-          self.message = "Successfuly accepted!";
-          self.showSuccessAlert = true;
+          //self.message = "Successfuly accepted!";
+          //self.showSuccessAlert = true;
+           if(self.newMeds.length >0){
+            self.$root.$emit("bv::show::modal", self.priceModal.id);
+          }else{
+            self.message = "Successfuly accepted!";
+            self.showSuccessAlert = true;
+          }
          
         })
         .catch(function (error) {
@@ -575,7 +697,7 @@ export default {
           self.varian="danger";
           console.log(error);
         });
-
+    
     },
     OfferOk(){
       this.items =[];
@@ -604,7 +726,7 @@ export default {
           self.allmeds =[];
           self.items = [];
           self.refresh();
-
+          self.refresh();
 
     },
     
@@ -637,6 +759,7 @@ export default {
                 med.name = response.data[i].medicamentItems[j].medicament.name;
                 med.quantity = response.data[i].medicamentItems[j].quantity;
                 med.id = response.data[i].medicamentItems[j].id;
+                med.idMed = response.data[i].medicamentItems[j].medicament.id;
                 allM.push(med);
             }
             item.allmeds = allM;
@@ -704,6 +827,24 @@ export default {
             (self.errorModal.content = "You cannot delete!");
           self.$root.$emit("bv::show::modal", self.errorModal.id, button);
           console.log(error);
+        });
+    },
+    GetAllMedicamentItems() {
+      var self = this;
+      self.axios
+        .get(`/api/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+            //var item = {};
+            //item.id = response.data[i].medicament.id;
+            //item.name = response.data[i].medicament.name;
+            self.meds.push(response.data[i].medicament.name);
+           
+          }
         });
     },
   },

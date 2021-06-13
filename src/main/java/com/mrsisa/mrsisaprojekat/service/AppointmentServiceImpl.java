@@ -238,4 +238,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return pharmacy;
     }
+
+	@Override
+	public Set<Appointment> getAppointmentWithEmployee(String email) {
+		Set<Appointment> appointments = appointmentRepository.getOneAppointmentWithEmployee(email);
+		if(appointments == null) {
+			return null;
+		}
+		return appointments;
+	}
 }

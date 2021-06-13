@@ -287,9 +287,9 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Object> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
 
-		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
-		if(p.getPenaltyPoints() == 3) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN); 
+		Patient pp = patientService.getOneWithAddress(medicament.getPatientEmail());
+		if(pp.getPenaltyPoints() == 3) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
 		}
 		PrescriptionMedicament medicamentToReserve = new PrescriptionMedicament();
 		medicamentToReserve.setDeleted(false);
@@ -297,7 +297,7 @@ public class PatientController {
 		medicamentToReserve.setExpiryDate(medicament.getExpiryDate());
 		medicamentToReserve.setQuantity(medicament.getQuantity());
 		medicamentToReserve.setMedicament(medicament.getMedicament());
-		//Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
+		Patient p = patientService.getOneWithReservedMeds(medicament.getPatientEmail());
 		try {
 			patientService.checkMedicamentReservationQuantity(medicamentToReserve, medicament.getPharmacyId());
 		} catch(ReservationQuantityException e) {

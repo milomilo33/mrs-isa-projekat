@@ -5,6 +5,7 @@ import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface AppointmentService {
     Collection<Appointment> findAll();
@@ -28,4 +29,6 @@ public interface AppointmentService {
     Boolean finishAppointment(Long appointmentId, String employeeEmail, String reportText);
 
     Pharmacy getPharmacyOfAppointment(Long appointmentId);
+    
+    Set<Appointment> getAppointmentWithEmployee(String email);
 }

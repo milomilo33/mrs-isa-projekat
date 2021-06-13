@@ -107,7 +107,6 @@
       :title="infoModal.title"
       ok-only
       @ended="$emit('resetInfoModal')"
-      :header-bg-variant="headerBgVariant"
       footer-bg-variant="light"
     >
       <pre>{{ infoModal.content }}</pre>
@@ -117,7 +116,6 @@
       :title="errorModal.title"
       ok-only
       @ended="$emit('errModal')"
-      :header-bg-variant="errorModal.varning"
       footer-bg-variant="light"
     >
       <pre>{{ errorModal.content }}</pre>
@@ -128,7 +126,6 @@
       :title="addModal.title"
       @ok="check"
       @ended="$emit('resetInfoModal')"
-      :header-bg-variant="headerBgVariant"
       :footer-bg-variant="headerBgVariant"
     >
       <pre> 

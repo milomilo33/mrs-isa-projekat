@@ -192,6 +192,8 @@ public class PharmacyAdminController {
 			ad.setCity(admin.getAddress().getCity());
 			ad.setStreet(admin.getAddress().getStreet());
 			ad.setNumber(admin.getAddress().getNumber());
+			ad.setLatitude(admin.getAddress().getLatitude());
+			ad.setLongitude(admin.getAddress().getLongitude());
 			
 			Address saved = addressService.create(ad);
 			adminUpdate.setAddress(saved);

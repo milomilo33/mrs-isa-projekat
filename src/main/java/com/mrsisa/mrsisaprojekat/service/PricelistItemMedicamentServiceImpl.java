@@ -98,6 +98,7 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 					priceService.update(pp);
 					priceService.findPrice(p.getPrice(), pp.getDateFrom());
 					
+					
 				}
 				
 			}
@@ -111,6 +112,15 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 			return null;
 		}
 		return pMed;
+	}
+
+	@Override
+	public Set<PricelistItemMedicament> findAllPricelistItems() {
+		Set<PricelistItemMedicament> items = pricelistItemRepository.findAllPricelistItems();
+		if(items == null) {
+			return null;
+		}
+		return items;
 	}
 
 }

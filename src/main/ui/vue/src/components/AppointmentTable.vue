@@ -1,9 +1,14 @@
 <template>
   <div class="my-form">
     <div class="card-header">Appointments</div>
-    <b-alert v-model="showAlert" dismissible fade variant="danger">
-      {{ message }}
-    </b-alert>
+    <b-modal
+        :id="errorModal.id"
+        :title="errorModal.title"
+        ok-only
+        @ended="errModal"
+      >
+        <pre>{{ errorModal.content }}</pre>
+      </b-modal>
     <b-row>
       <b-col lg="4" class="my-1">
         <b-form-group
@@ -58,23 +63,11 @@
     >
     </b-table>
     <b-modal
-      :id="errorModal.id"
-      :title="errorModal.title"
-      ok-only
-      @ended="errModal"
-      :header-bg-variant="headerErrorVariant"
-      :footer-bg-variant="headerErrorVariant"
-    >
-      <pre>{{ errorModal.content }}</pre>
-    </b-modal>
-    <b-modal
       size="lm"
       :id="addModal.id"
       :title="addModal.title"
       @ok="AddOne"
       @ended="resetInfoModal"
-      :header-bg-variant="headerBgVariant"
-      :footer-bg-variant="headerBgVariant"
     >
       <template>
         <div>
@@ -155,8 +148,6 @@ export default {
         content: "",
       },
       showAlert: false,
-      headerBgVariant: "success",
-      headerErrorVariant: "warning",
       pharmacy: {},
       pharmacyId: 0,
       e: {},
@@ -263,15 +254,15 @@ export default {
           }
         )
         .then(function (response) {
-          self.message = "Successfully created appointment! ";
-          self.showAlert = true;
+           self.errorModal.content ="Successfully created appointment! ";
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
           console.log(response);
           self.items = [];
           self.refresh();
         })
         .catch(function (error) {
-          self.message = "Error! ";
-          self.showAlert = true;
+           self.errorModal.content ="Error! ";
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
           console.log(error);
         });
     },

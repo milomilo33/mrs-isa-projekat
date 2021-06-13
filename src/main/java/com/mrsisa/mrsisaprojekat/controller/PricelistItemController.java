@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
@@ -56,7 +58,7 @@ public class PricelistItemController {
 		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findPharmacyForMedicament(id);
 		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
 		
-		pricelistItemService.checkPromotions(items);
+		//pricelistItemService.checkPromotions(items);
 		// samo aktivne cene (odnosne one kod kojih je deleted = false)
 		for(PricelistItemMedicament p :items) {
 			ArrayList<Price> prices = new ArrayList<>();
@@ -229,4 +231,37 @@ public class PricelistItemController {
 		return new ResponseEntity<PricelistItemMedicamentDTO>(new PricelistItemMedicamentDTO(pricelistUpdate), HttpStatus.OK);
 	}
 	
+	@Scheduled(cron = "0 * * * * *")
+	public void checkPenaults() throws Exception {
+		Set<PricelistItemMedicament> items = pricelistItemService.findAllPricelistItems();
+		pricelistItemService.checkPromotions(items);
+	}
+	
+	
+	@GetMapping(value = "/availablePharmacy/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<PricelistItemMedicamentDTO>> getPriceListItemsAvailablePharmacy(@PathVariable("id") Long id) throws Exception{
+		
+		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findAllPricelistItems();
+		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
+		
+		//pricelistItemService.checkPromotions(items);
+		// samo aktivne cene (odnosne one kod kojih je deleted = false)
+		for(PricelistItemMedicament p :items) {
+			if(p.getMedicament().getId() == id) {
+				ArrayList<Price> prices = new ArrayList<>();
+				for(Price pp : p.getPrice()) {
+					if(pp.isDeleted()) {
+						continue;	
+					}
+					prices.add(pp);
+				}
+				PricelistItemMedicamentDTO pmdt = new PricelistItemMedicamentDTO(p);
+				pmdt.setPrice(prices);
+				list.add(pmdt);
+			}
+			
+		}
+		
+		return new ResponseEntity<Collection<PricelistItemMedicamentDTO>>(list, HttpStatus.OK);
+	}
 }

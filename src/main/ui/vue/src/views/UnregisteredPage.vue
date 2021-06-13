@@ -13,15 +13,16 @@
       <b-navbar-nav class="ml-auto">
         <Search :path="'/UnregisteredPage'" />
 
-        <b-nav-item-dropdown right>
+        <b-nav-item right href="/Login">Login</b-nav-item>
+        <b-nav-item right href="/UnregisteredPage/PatientRegistration">Sign In</b-nav-item>
           <!-- Using 'button-content' slot -->
           
-          <template #button-content>
+         <!-- <template #button-content>
             <em class="pl-2">User</em>
-          </template>
-          <b-dropdown-item v-show="false" href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="/UnregisteredPage/PatientRegistration">Sign In</b-dropdown-item>
-        </b-nav-item-dropdown>
+          </template>-->
+          <!--<b-dropdown-item href="/Login">Login</b-dropdown-item>-->
+          <!--<b-dropdown-item href="/UnregisteredPage/PatientRegistration">Sign In</b-dropdown-item>-->
+        <!--</b-nav-item-dropdown>-->
       </b-navbar-nav>
     </b-collapse>
     </b-navbar>

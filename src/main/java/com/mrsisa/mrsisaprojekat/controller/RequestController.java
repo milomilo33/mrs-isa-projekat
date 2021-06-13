@@ -37,7 +37,8 @@ public class RequestController {
 		if(r !=null) {
 			try {
 					r.setAccepted(request.isAccepted());
-					r.setDeleted(true);;
+					r.setDeleted(true);
+					r.setRejectionReason(request.getRejectionReason());
 					requestService.update(r);
 					mailService.sendEmployeeMail(r.getEmployee(), r);
 					return new ResponseEntity<>(new RequestDTO(r),HttpStatus.OK);

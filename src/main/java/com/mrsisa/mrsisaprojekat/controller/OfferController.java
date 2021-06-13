@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,7 @@ import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
 import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
+import com.mrsisa.mrsisaprojekat.model.Medicament;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Offer;
 import com.mrsisa.mrsisaprojekat.model.OfferStatus;
@@ -39,6 +41,7 @@ import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.MedicamentItemService;
+import com.mrsisa.mrsisaprojekat.service.MedicamentService;
 import com.mrsisa.mrsisaprojekat.service.OfferService;
 import com.mrsisa.mrsisaprojekat.service.OrderService;
 import com.mrsisa.mrsisaprojekat.service.PharmacyAdminService;
@@ -64,6 +67,8 @@ public class OfferController {
 	
 	@Autowired
 	private PharmacyService pharmacyService;
+	@Autowired
+	private MedicamentService medicamentService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -155,7 +160,7 @@ public class OfferController {
 		Order order = orderService.findOneWithMedicaments(id);
 		//if(LocalDate.now().compareTo(order.getDeadline()) <=0){
 		//	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		//}
+	//	}
 		Supplier supplier = supplierService.findOne(email);
 		Set<Offer> offers = offerService.offersForOrder(id);
 		for(Offer of: offers) {
@@ -176,16 +181,40 @@ public class OfferController {
 		
 		AdminPharmacy admin =pharmacyAdminService.findOne(order.getAdmin().getEmail());
 		Pharmacy pharmacy = pharmacyService.findOneWithMedicaments(admin.getPharmacy().getId());
+		ArrayList<MedicamentItem> newMeds = new ArrayList<MedicamentItem>();
+		ArrayList<Long> ids = new ArrayList<Long>();
 		for(MedicamentItem mi: pharmacy.getMedicamentItems()) {
+			if(ids.contains(mi.getMedicament().getId())) {
+				break;
+			}
 			for(MedicamentItem mm: order.getMedicamentItems()) {
+				if(ids.contains(mm.getMedicament().getId())) {
+					break;
+				}
 				if(mi.getMedicament().getId() == mm.getMedicament().getId()) {
 					MedicamentItem medicamentUpdate = medicamentItemService.findOne(mi.getId());
 					int q = medicamentUpdate.getQuantity();
 					medicamentUpdate.setQuantity(q+mm.getQuantity());
 					medicamentUpdate = medicamentItemService.update(medicamentUpdate);
+				}else {
+					System.out.println("DAAAAAAAAAAAA");
+					MedicamentItem mitem = new MedicamentItem();
+					mitem.setDeleted(false);
+					Medicament med = medicamentService.findOne(mm.getMedicament().getId());
+					
+					mitem.setMedicament(med);
+					mitem.setQuantity(mm.getQuantity());
+					MedicamentItem s = medicamentItemService.create(mitem);
+					newMeds.add(s);
+					ids.add(med.getId());
+					
 				}
 			}
 		}
+		for(MedicamentItem newMed: newMeds) {
+			pharmacy.getMedicamentItems().add(newMed);
+		}
+		pharmacyService.update(pharmacy);	
 		//proci kroz medicamentItems u apoteci i azurirati
 		order.setStatus(OrderStatus.PROCESSED);
 		order = orderService.update(order);
