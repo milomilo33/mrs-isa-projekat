@@ -334,7 +334,7 @@ insert into prescription_medicament (deleted, expiry_date, purchased, quantity, 
 
 
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 5, 899.99, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 6, 1199.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 6, 1199.99, true)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 7, 999.99, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 1500.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 1, 99.99, false)

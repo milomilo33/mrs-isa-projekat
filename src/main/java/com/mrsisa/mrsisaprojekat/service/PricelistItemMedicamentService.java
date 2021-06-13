@@ -34,5 +34,7 @@ public interface PricelistItemMedicamentService {
 	
 	PricelistItemMedicament findByPharmacyAndMed(Long id, Long pId);
 	
+	Set<PricelistItemMedicament> findAllPricelistItems();
+	
 
 }

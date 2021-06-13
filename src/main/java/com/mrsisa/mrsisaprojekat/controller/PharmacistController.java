@@ -205,6 +205,8 @@ public class PharmacistController {
 		address.setCity(pharmacistDTO.getAddress().getCity());
 		address.setStreet(pharmacistDTO.getAddress().getStreet());
 		address.setNumber(pharmacistDTO.getAddress().getNumber());
+		address.setLongitude(pharmacistDTO.getAddress().getLongitude());
+		address.setLatitude(pharmacistDTO.getAddress().getLatitude());
 		Address saved = addressService.create(address);
 		
 		Pharmacy pharmacy = pharmacyService.findOne(pharmacistDTO.getPharmacy().getId());

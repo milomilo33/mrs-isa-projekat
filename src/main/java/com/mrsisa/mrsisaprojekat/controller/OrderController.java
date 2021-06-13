@@ -176,15 +176,15 @@ public class OrderController {
 			
 		}
 		for(MedicamentItemDTO mi: newMeds) {
-			MedicamentItem mitem = new MedicamentItem();
-			mitem.setDeleted(false);
+			//MedicamentItem mitem = new MedicamentItem();
+			//mitem.setDeleted(false);
 			Medicament med = medicamentService.findOne(mi.getMedicament().getId());
-			mitem.setMedicament(med);
-			mitem.setQuantity(0);
-			MedicamentItem s = medicamentItemService.create(mitem);
-			medsInPharmacy.add(s);
-			pharmacy.setMedicamentItems(medsInPharmacy);
-			pharmacyService.update(pharmacy);
+			//mitem.setMedicament(med);
+			//mitem.setQuantity(0);
+			//MedicamentItem s = medicamentItemService.create(mitem);
+			//medsInPharmacy.add(s);
+			//pharmacy.setMedicamentItems(medsInPharmacy);
+			//pharmacyService.update(pharmacy);
 			MedicamentItem mitem2 = new MedicamentItem();
 			mitem2.setDeleted(false);
 			mitem2.setMedicament(med);

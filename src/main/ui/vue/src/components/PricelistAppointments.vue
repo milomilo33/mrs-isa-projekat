@@ -39,8 +39,7 @@
               :title="errorModal.title"
               ok-only
               @ended="errModal"
-              :header-bg-variant="headerErrorVariant"
-              :footer-bg-variant="headerErrorVariant"
+              
             >
               <pre>{{ errorModal.content }}</pre>
             </b-modal>
@@ -50,8 +49,7 @@
               :title="addModal.title"
               ok-only
               @ended="resetInfoModal"
-              :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant">
+              >
             </b-modal>
              <b-modal
               size="sm"
@@ -59,8 +57,7 @@
               :title="editModal.title"
               @ok= "check"
               @ended="resetInfoModal"
-              :header-bg-variant="headerBgVariant"
-              :footer-bg-variant="headerBgVariant">
+              >
               <pre> 
               <b-form inline>
               <label> Price:     </label>
@@ -111,8 +108,6 @@ export default {
         title: "",
         content: "",
       },
-      headerBgVariant: "success",
-      headerErrorVariant: "warning",
       all: [],
       old: [],
       price: 0,

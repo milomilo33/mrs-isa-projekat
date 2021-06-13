@@ -45,7 +45,7 @@
           label-size="sm"
           class="mb-0"
         >
-          <b-button @click="Reject($event.target)" variant="danger"
+          <b-button @click="reasonModal($event.target)" variant="danger"
             >Reject</b-button
           >
         </b-form-group>
@@ -72,10 +72,29 @@
               :title="errorModal.title"
               ok-only
               @ended="errModal"
-              :header-bg-variant="headerErrorVariant"
+              @reset="resetModal"
             >
               <pre>{{ errorModal.content }}</pre>
             </b-modal>
+
+            <b-modal
+          :id="reasonM.id"
+          @ok="Reject"
+          >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <b-form-group
+          label="Reason for rejection"
+          label-for="name-input"
+          invalid-feedback="Reason is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="reason"
+            required
+          ></b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
             </div>
 </template>
 
@@ -105,11 +124,13 @@ export default {
         title: "",
         content: "",
       },
-     
-      headerBgVariant: "success",
-      headerErrorVariant: "danger",
+      reasonM: {
+        id: "reason-modal",
+        
+      },
       pharmacyId:0,
       selected:[],
+      reason:"",
     };
   },
   mounted() {
@@ -141,6 +162,9 @@ export default {
       this.errorModal.title = "";
       this.errorModal.content = "";
     },
+    resetModal(){
+      this.reason =""
+    },
      datum: function(date){
       return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
     },
@@ -149,6 +173,11 @@ export default {
     },
     Accept(){
        var self = this;
+       if(self.selected.length == 0){
+            (self.errorModal.title = "Error"),
+            (self.errorModal.content = "You need to select employee!");
+             self.$root.$emit("bv::show::modal", self.errorModal.id);
+        }else{
         if(self.selected[0].status == "REJECTED" || self.selected[0].status=="ACCEPTED"){
              (self.errorModal.title = "Error"),
             (self.errorModal.content = "You cannot accept this request!");
@@ -173,10 +202,20 @@ export default {
         });
         
        
+        }}
+    },
+    reasonModal(button){
+      if(this.selected.length == 0){
+            (this.errorModal.title = "Error"),
+            (this.errorModal.content = "You need to select employee!");
+             this.$root.$emit("bv::show::modal", this.errorModal.id);
+        }else{
+        this.$root.$emit("bv::show::modal", this.reasonM.id, button);
         }
     },
     Reject(){
         var self = this;
+        
         if(self.selected[0].status == "REJECTED" || self.selected[0].status=="ACCEPTED"){
              (self.errorModal.title = "Error"),
             (self.errorModal.content = "You cannot accept this request!");
@@ -187,6 +226,7 @@ export default {
           {
             id: self.selected[0].id,
             accepted: false,
+            rejectionReason: self.reason
           },
           {
             headers: {

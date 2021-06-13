@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.dto.ReportTextDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
@@ -112,38 +113,47 @@ public class AppointmentController {
     	for(WorkHour w : workHours) {
     		int val = time1.compareTo(w.getWorkHourFrom());
     		int val2 = w.getWorkHourTo().compareTo(time2);
-    		if(w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() && val>=0
-    				&& val2>=0) {
-				return true;
+    		if(w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() && time1.compareTo(w.getWorkHourFrom())<0 &&
+    				w.getWorkHourTo().compareTo(time2) >0 || time2.compareTo(w.getWorkHourFrom()) <0 ||
+    				w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() &&  w.getWorkHourFrom().compareTo(time1)>0 && w.getWorkHourTo().compareTo(time2)>0 && time2.compareTo(w.getWorkHourFrom())>0 ||	
+    				w.getDay().ordinal()+1 == date.getDayOfWeek().getValue()  && time1.compareTo(w.getWorkHourFrom())>0 && time2.compareTo(w.getWorkHourTo())>0 && time1.compareTo(w.getWorkHourTo())<0 || 
+    				w.getDay().ordinal()+1 != date.getDayOfWeek().getValue() ) {
+				
+    			return true;
 			}
     	}
+			
+						
     	return  false;
     }
     public boolean checkAppointment(Set<Appointment> appointments, LocalDate date, LocalTime time1, LocalTime time2) {
     	for(Appointment a : appointments) {
+    		if(!a.isDeleted()) {
     		int val = time1.compareTo(a.getTermFrom());
     		int val2 = time2.compareTo(a.getTermTo());
-    		int val3 = time2.compareTo(a.getTermFrom());
-    		if(a.getDate() == date && val == 0
-    				&& val2 == 0 || a.getDate() == date && val<0 && val2 <0 && val3>0
-    				|| a.getDate() == date && val>0 && val2>0 && val3 <0) {
+    		if(a.getDate().equals(date) && time1.compareTo(a.getTermFrom()) == 0
+    				&& time2.compareTo(a.getTermTo()) == 0 ||a.getDate().equals(date) && a.getTermFrom().compareTo(time1)<=0 && a.getTermTo().compareTo(time2) >=0 && time2.compareTo(a.getTermFrom())<=0
+    				|| a.getDate().equals(date) && a.getTermFrom().compareTo(time1)>=0 && a.getTermTo().compareTo(time2)>=0 && time2.compareTo(a.getTermFrom()) >=0 ||
+    				a.getDate().equals(date)  && time1.compareTo(a.getTermFrom())>=0 &&  time2.compareTo(a.getTermTo())>=0 && time1.compareTo(a.getTermTo())<=0) {
 				return true;
 			}
+    	}
+    	
     	}
     	return  false;
     }
         
     @PostMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     //@PreAuthorize("hasAnyRole('PHARMACY_ADMIN)")
-	public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment,@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody Appointment appointment,@PathVariable("id") Long id) throws Exception {
 		Appointment a = new Appointment();
 		a.setMedicalReport(null);
 		a.setDeleted(false);
 		a.setPatient(null);
 		Dermatologist d = dermatologistService.findOne(appointment.getPatient().getEmail());
 		if(d!= null) {
-			if(!check(d.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			if(check(d.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 			if(checkAppointment(d.getMedicalExaminations(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -151,33 +161,18 @@ public class AppointmentController {
 			d.setRatings(null);
 			d.setRequests(null);
 			a.setChosenEmployee(d);
-			
-    	
-		}else {
-			Pharmacist p = pharmacistService.findOne(appointment.getPatient().getEmail());
-			if(!check(p.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-			}
-			if(checkAppointment(p.getCounselings(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-			}
-			p.setRatings(null);
-			p.setRequests(null);
-			a.setChosenEmployee(p);
-		}
-		a.setDate(appointment.getDate());
-		a.setTermFrom(appointment.getTermFrom());
-		a.setTermTo(appointment.getTermTo());
-		if(appointment.getType().name().equals("EXAMINATION")){
+			a.setDate(appointment.getDate());
+			a.setTermFrom(appointment.getTermFrom());
+			a.setTermTo(appointment.getTermTo());
 			a.setType(AppointmentType.EXAMINATION);
-		}else {
-			a.setType(AppointmentType.COUNSELING);
 		}
+		
+	
 		Appointment savedAppointment = appointmentService.create(a);
 		Pharmacy p = pharmacyService.findOneWithAppointments(id);
 		p.getAppointments().add(savedAppointment);
 		pharmacyService.update(p);
-		return new ResponseEntity<>(savedAppointment,HttpStatus.OK);
+		return new ResponseEntity<>(new AppointmentDTO(savedAppointment), HttpStatus.OK);
     }
 
 	@GetMapping(value = "/{id}/details")

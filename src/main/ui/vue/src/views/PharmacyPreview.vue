@@ -24,6 +24,36 @@
         All Employees
       </b-button>
     </b-row>
+    <br>
+    <b-row>
+      <div class="d-flex justify-content-center align-items-center container ">
+      <b-form inline>
+        <b-form-input
+          id="name"
+          name="name"
+          placeholder="Name"
+          class="mb-2 mr-sm-2 mb-sm-0"
+          v-model="name"
+        >
+        </b-form-input>
+
+        <b-form-input
+          id="lastName"
+          name="lastName"
+          placeholder="Last name"
+          class="mb-2 mr-sm-2 mb-sm-0"
+          v-model="lastName"
+        >
+        </b-form-input>
+
+        <b-button @click="onSubmit" class="mb-2 mr-sm-2 mb-sm-0"
+          >Search</b-button
+        >
+       
+      </b-form>
+      </div>
+       </b-row>
+       <br>
     <b-row  class="empl" v-for="p in this.employees" :key="p.id">
       <EmployeeCard :employee="p"> </EmployeeCard>
     </b-row> 
@@ -62,6 +92,9 @@ export default defineComponent({
       medicaments :[],
       employees :[],
       pharmacyId: "",
+      name:"",
+      lastName:"",
+      all:[],
     };
   },
 
@@ -96,6 +129,25 @@ export default defineComponent({
    }
    },
    methods:{
+     onSubmit(e){
+      if(e){
+        e.preventDefault();
+        //var self = this;
+      var filtered = [];
+      for (var i = 0; i < this.all.length; i++) {
+        var namee  = this.all[i].name.toLowerCase();
+        var lastNamee = this.all[i].lastName.toLowerCase()
+        if (
+          namee.includes(this.name.toLowerCase()) &&
+         lastNamee.includes(this.lastName.toLowerCase())
+        ) {
+          filtered.push(this.all[i]);
+        }
+      }
+      this.employees =[];
+      this.employees = filtered;
+      }
+    },
    FinAll(){
      
     var self = this;
@@ -140,6 +192,7 @@ export default defineComponent({
           item.e = "Pharmacist";
           item.appointments = response.data[i].appointments;
           self.employees.push(item);
+          self.all.push(item);
         }
         }
   });
@@ -167,6 +220,7 @@ export default defineComponent({
           item.address = response.data[i].address.street + " " + response.data[i].address.number + ", " + response.data[i].address.city;
           item.appointments = response.data[i].appointments;
           self.employees.push(item);
+          self.all.push(item);
         }
       }
       });

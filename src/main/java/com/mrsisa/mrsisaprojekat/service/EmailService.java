@@ -159,9 +159,9 @@ public class EmailService {
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Information about your request");
 		if(request.isAccepted()) {
-			mail.setText("Your request for absence that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is accepted!");
+			mail.setText("Your request for days off that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is accepted!");
 		}else {
-			mail.setText("Your request for absence that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is rejected!");
+			mail.setText("Your request for days off that start from " + request.getDateFrom()+" to "+ request.getDateTo()+ " is rejected! Rejection reason: "+ request.getRejectionReason());
 		}
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");

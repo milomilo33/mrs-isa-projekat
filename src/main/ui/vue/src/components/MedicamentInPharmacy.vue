@@ -57,10 +57,17 @@
                 />
               <div class="card-body">
               <h5 class="card-title">{{item.pharmacy.name}}</h5>
-              <p class="card-text">
+              <div class="card-text">
                 {{item.pharmacy.description}}
-                {{item.price[0].value}}
-              </p>
+                <br>
+               <b> {{"Price"}} </b>
+                <div v-if="item.price[0].promotion === false">
+                 {{item.price[0].value}} 
+                </div>
+                <div v-if="item.price[0].promotion === true" :style="myStyle">
+                <b > {{"PROMOTION "}} </b> <fa icon="percent"/> {{item.price[0].value}}
+                </div>
+              </div>
               <b-button v-if="role === 'ROLE_PATIENT'" v-b-modal="'id' + item.id"
                 >Reserve</b-button
               >
@@ -87,6 +94,9 @@
                       Close
                     </b-button>
                   </template>
+                   <b-alert v-model="showFailedReserve" dismissible fade variant="danger">
+                          {{message}}
+                  </b-alert>
                 <b-row>
                   <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
                   <datepicker class="m-2" placeholder="Date" v-model="date" @selected="date = $event.target.value"></datepicker>
@@ -133,8 +143,9 @@
                 body-text-variant="dark"
                 :hide-footer="true"
               >
+             
                 <b-container fluid>
-              
+               
                 </b-container>
                 <template #modal-header="{ close }">
                     <b-button
@@ -144,6 +155,7 @@
                       Close
                     </b-button>
                   </template>
+                  
                 <b-row>
                   <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
                   <input type="number" placeholder="Length of therapy" class="m-2" :value="therapyLength" @input="therapyLength = $event.target.value">
@@ -195,10 +207,14 @@ export default defineComponent({
       role: '',
       rating: null,
       showSuccessAlert: false,
-
+      myStyle:{
+            color:"red" 
+            },
       pharmacy: {},
       therapyLength: "",
       showFailedRating: false,
+      showFailedReserve: false,
+      message:"",
     }
   },
   computed: {
@@ -241,7 +257,7 @@ export default defineComponent({
 
     this.axios
       .get(
-        `/api/pricelistItems/` +
+        `/api/pricelistItems/availablePharmacy/` +
           parseInt(this.$route.params.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
           }
@@ -279,6 +295,7 @@ export default defineComponent({
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
       }}).then(() => this.showSuccess()).catch(() => {
+         this.message = " You have never purchased this medicament. You can't rate it.";
           this.showFailedRating = true;
           this.rating = -1;
         });
@@ -302,10 +319,18 @@ export default defineComponent({
           console.log(response);
           alert("Rezervacija izvršena!");
         })
-        .catch(function (error) {
-          console.log(error);
-          alert("Error!")
-        });
+        .catch((error => {
+         
+          if(error.response.status == "400"){
+           
+            this.message = " You have 3 penaults You can't reserve it.";
+               this.showFailedReserve = true;
+          }else{
+           this.message = " You can't reserve it";
+           this.showFailedReserve= true;
+          }
+         
+        }));
         //console.log(this.medicament.id);
         //console.log(this.date)
         

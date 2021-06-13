@@ -78,7 +78,8 @@ const routes = [
 	{
 		path: "/",
 		name: UnregisteredPage,
-		component: UnregisteredPage
+		component: UnregisteredPage,
+		redirect: "/UnregisteredPage/PharmacyList",
 	},
 	{
 		path: "/Login",

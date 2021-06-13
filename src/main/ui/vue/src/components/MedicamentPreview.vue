@@ -85,6 +85,7 @@ export default {
       nameM: "",
       success: false,
       isAllergic: false,
+      role:"",
     };
   },
   methods: {
@@ -110,8 +111,23 @@ export default {
         this.$emit('seeMoreClicked', this.medicament);
         return;
       }
+       this.role = JSON.parse(
+        atob(localStorage.getItem("token").split(".")[1])
+      ).role;
+      if(this.role == "ROLE_PATIENT"){
+        this.$router.replace("/PatientPage/MedicamentInPharmacy/"+this.medicament.id);
+      }else if(this.role == "ROLE_PHARMACY_ADMIN"){
+         this.$router.replace("/PharmacyAdminPage/MedicamentInPharmacy/"+this.medicament.id);
+      }else if(this.role == "ROLE_SYSTEM_ADMIN"){
+         this.$router.replace("/SystemAdminPage/MedicamentInPharmacy/"+this.medicament.id);
+      }else if(this.role == "ROLE_DERMATOLOGIST"){
+         this.$router.replace("/DermatologistPage/MedicamentInPharmacy/"+this.medicament.id);
+      }else if(this.role == "ROLE_PHARMACIST"){
+         this.$router.replace("/PharmacistPage/MedicamentInPharmacy/"+this.medicament.id);
+      }else if(this.role == "ROLE_SUPPLIER"){
+         this.$router.replace("/SupplierPage/MedicamentInPharmacy/"+this.medicament.id);
+      }
       
-      this.$router.push("MedicamentInPharmacy/"+this.medicament.id)
     },
 
     addAllergy() {

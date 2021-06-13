@@ -1,9 +1,14 @@
 <template>
     <main class="my-form">
        <div class="cotainer">
-           <b-alert v-model="showSuccessAlert" dismissible fade :variant="v">
-     {{ message}}
-    </b-alert>
+    <b-modal
+        :id="errorModal.id"
+        :title="errorModal.title"
+        ok-only
+        @ended="errModal"
+      >
+        <pre>{{ errorModal.content }}</pre>
+      </b-modal>
            <div class="row justify-content-center">
                <div class="col-md-6">
                        <div class="card">
@@ -57,10 +62,13 @@ export default defineComponent({
       user: {},
       role:"",
       showSuccessAlert:false,
-      message:"",
-      v:"success",
       username:"",
       rolepath:"",
+      errorModal: {
+        id: "error-modal",
+        title: "",
+        content: "",
+      },
     };
   },
   mounted(){
@@ -73,39 +81,38 @@ export default defineComponent({
     
   },
   methods:{
+     errModal() {
+      this.errorModal.title = "";
+      this.errorModal.content = "";
+    },
         onSubmit(e){
             e.preventDefault();
             var self = this;
              if(!self.oldone|| !self.password || !self.password_confirmation ){
-                self.v ="warning";
-                self.message = "You must enter all data";
                 self.showSuccessAlert = true;
+                self.errorModal.content = "You must enter all data.";
+                self.$root.$emit("bv::show::modal", self.errorModal.id);
              }
              if(self.password !=self.password_confirmation){
                 self.showSuccessAlert = true;
-                self.v ="warning";
-                self.message = "The password confirmation does not match";
-              }
-              if(self.role == "ROLE_PHARMACY_ADMIN"){
-                self.rolepath ="pharmacyAdmin";
-            
-              }else if(self.role == "ROLE_SUPPLIER"){
-                self.rolepath ="supplier";
-              }else if(self.role == "ROLE_PHARMACIST"){
-                self.rolepath="pharmacist";
-              }else if(self.role =="ROLE_DERMATOLOGIST"){
-                self.rolepath ="dermatologist";
-  
-              }else if(self.role == "ROLE_PATIENT"){
-                self.rolepath="patients";
- 
-              }else if(self.role =="ROLE_SYSTEM_ADMIN"){
-                self.rolepath ="systemAdmin";
-              }
-
-
+                self.errorModal.content = "The password confirmation does not match.";
+                self.$root.$emit("bv::show::modal", self.errorModal.id);
+              }else{
+                if(self.role == "ROLE_PHARMACY_ADMIN"){
+                  self.rolepath ="pharmacyAdmin";
+                }else if(self.role == "ROLE_SUPPLIER"){
+                  self.rolepath ="supplier";
+                }else if(self.role == "ROLE_PHARMACIST"){
+                  self.rolepath="pharmacist";
+                }else if(self.role =="ROLE_DERMATOLOGIST"){
+                  self.rolepath ="dermatologist";
+                }else if(self.role == "ROLE_PATIENT"){
+                  self.rolepath="patients";
+                }else if(self.role =="ROLE_SYSTEM_ADMIN"){
+                  self.rolepath ="systemAdmin";
+                }
                 self.axios.put(`/api/`+self.rolepath+`/changePassword/` +
-                self.oldone,
+                  self.oldone,
               {
               email: self.username,
               password:self.password,
@@ -117,17 +124,20 @@ export default defineComponent({
           }
         ).then(function (response){
           console.log(response);
-           self.v ="success";
-            self.message = "Successfully changed password!";
-            self.showSuccessAlert = true;
+          self.showSuccessAlert = true;
+          self.errorModal.content = "Successfully changed password!";
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
+            
         }).catch(function(error){
           console.log(error);
-            self.v ="danger";
-            self.message = "Error! You enter wrong old password!";
-            self.showSuccessAlert = true;
+          self.showSuccessAlert = true;
+          self.errorModal.content = "Error! You enter wrong old password!";
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
+            
         });
-           
+              }      
   }},
+  
   
 });
 </script>

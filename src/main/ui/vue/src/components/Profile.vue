@@ -1,9 +1,14 @@
 <template>
     <main class="my-form">
        <div class="cotainer">
-           <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
-      Success!
-    </b-alert>
+            <b-modal
+        :id="errorModal.id"
+        :title="errorModal.title"
+        ok-only
+        @ended="errModal"
+      >
+        <pre>{{ errorModal.content }}</pre>
+      </b-modal>
            <div class="row justify-content-center">
                <div class="col-md-6">
                        <div class="card">
@@ -105,6 +110,13 @@ export default defineComponent({
       role:"",
       pharmacyId:0,
       showSuccessAlert:false,
+      lon:0,
+      lat:0,
+       errorModal: {
+        id: "error-modal",
+        title: "",
+        content: "",
+      },
     };
   },
   mounted(){
@@ -145,8 +157,42 @@ export default defineComponent({
         onEdit(){
             this.d = false;
         },
+        errModal() {
+      this.errorModal.title = "";
+      this.errorModal.content = "";
+    },
+        guessCoordinatesFromLocation() {
+      const url =
+        "https://nominatim.openstreetmap.org/search/" +
+        this.city +
+        ", " +
+        this.street +
+        " " +
+        this.number;
+
+      this.axios
+        .get(url, {
+          params: {
+            format: "json",
+            limit: 1,
+            "accept-language": "en",
+          },
+        })
+        .then((response) => {
+          if (response.data && response.data.lenght != 0) {
+            this.lon  = response.data[0].lon;
+            this.lat = response.data[0].lat;
+            
+            
+          }
+        })
+        .catch(() => {
+        
+        });
+  },
         onSubmit(e){
             e.preventDefault();
+            this.guessCoordinatesFromLocation();
             var self = this;
             if(self.role == "ROLE_PHARMACY_ADMIN"){
                 self.axios.put(`/api/pharmacyAdmin/updatePharmacyAdmin/` +
@@ -164,7 +210,9 @@ export default defineComponent({
                 country: self.country,
                 city:self.city,
                 street: self.street,
-                number:self.number
+                number:self.number,
+                longitude:self.lon,
+                latitude:self.lat,
             }
           },
           {
@@ -174,11 +222,14 @@ export default defineComponent({
           }).then(function(response){
               console.log(response);
               self.showSuccessAlert =true;
+              self.errorModal.content = "Successfully changed personal informations!";
+              self.$root.$emit("bv::show::modal", self.errorModal.id);
           });
       }
             }
            
   },
+  
   
 });
 </script>
