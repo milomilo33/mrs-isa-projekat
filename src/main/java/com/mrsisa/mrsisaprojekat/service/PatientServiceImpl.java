@@ -76,7 +76,7 @@ public class PatientServiceImpl implements PatientService {
 		if (patientToUpdate == null) {
 			return null;
 		}
-
+		patientToUpdate.setePrescriptions(patient.getePrescriptions());
 		return patientRepository.save(patient);
 	}
 
@@ -247,8 +247,7 @@ public class PatientServiceImpl implements PatientService {
 				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
 				medicamentItemRepository.save(medicamentItem);
 			}
-		} else
-			System.out.println("AAAAAAAAAAAAAAAAAAAA");
+		} 
 	}
 
 	@Override
@@ -295,7 +294,6 @@ public class PatientServiceImpl implements PatientService {
 		if(!user.equals("null")) {
 			pharmacies = patientRepository.findAllSubscribedPharmacies(user);
 		} else {
-			System.out.println("AAAAAAAAAAAaa");
 			pharmacies = pharmacyRepository.findAll();
 		}
 

@@ -34,15 +34,6 @@
                 
                   
               </b-col>
-               <b-col lg="8" class="my-1">
-                <b-form-group
-                  label-cols-sm="3"
-                  label-align-sm="right"
-                  label-size="sm"
-                  class="mb-0">
-                </b-form-group>
-                <input type="file" >
-              </b-col>
             </b-row>
             <div v-for="e in this.ePrescriptions" :key="e.id" :value="e" class="col-lg-12">
                 <b-row class="card-header eprescription-header" @click="log()" selectable>

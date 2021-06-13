@@ -5,6 +5,8 @@ import java.util.*;
 import com.mrsisa.mrsisaprojekat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 
 @Service
@@ -46,6 +48,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		Pharmacy savedPharmacy = pharmacyRepository.save(pharmacy);
 		return savedPharmacy;
 	}
+	
 	@Override
 	public Pharmacy update(Pharmacy pharmacy) throws Exception {
 		Pharmacy pharmacyToUpdate = pharmacyRepository.findById(pharmacy.getId()).orElseGet(null);
@@ -71,6 +74,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		return items;
 	}
 
+	@Transactional(readOnly = false)
 	@Override
 	public Pharmacy findOneWithMedicaments(Long id) {
 		Pharmacy pharmacy = pharmacyRepository.getOneWithMedicaments(id);

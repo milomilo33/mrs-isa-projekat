@@ -4,9 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
+
 import com.mrsisa.mrsisaprojekat.model.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
@@ -21,7 +26,9 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 	@Query("select p.medicamentItems from Pharmacy p where p.id=?1")
 	List<MedicamentItem> getAllMedicaments(Long id);
 	
+	@Lock(LockModeType.PESSIMISTIC_READ)
 	@Query("select p from Pharmacy p join fetch p.medicamentItems where p.id=?1")
+	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
 	Pharmacy getOneWithMedicaments(Long id);
 
 	@Query("select p from Pharmacy p join fetch p.medicamentItems")

@@ -9,7 +9,6 @@ import com.mrsisa.mrsisaprojekat.service.*;
 import com.mrsisa.mrsisaprojekat.util.QRCodeReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 //import javafx.application.Application;
@@ -592,7 +590,6 @@ public class PatientController {
 	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
 		Patient patient = patientService.getOneWithePrescriptions(email);
 		if(patient == null) return ResponseEntity.badRequest().body(null);
-		System.out.println(patient.getEmail());
 		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
 		for(ePrescription ep : patient.getePrescriptions()) {
 			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));
@@ -636,9 +633,14 @@ public class PatientController {
 		if(p.getPenaltyPoints() == 3) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-		String decodedText = QRCodeReader.decodeQRCode("C:"+ File.separator+ "Users" + File.separator+ "filip"+ File.separator + "Downloads" + File.separator + ""+qrPath);
-        if(decodedText == null) {
+		
+		String qrCodePath = System.getProperty("user.dir") + "\\src\\main\\resources\\qrCodes\\" + qrPath;
+		String decodedText = QRCodeReader.decodeQRCode(qrCodePath);
+		
+        if(decodedText == null) 
+        {
             System.out.println("No QR Code found in the image");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             System.out.println("Decoded text = " + decodedText);
         }
@@ -729,79 +731,10 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<QRCodePharmacyDTO> createePrescription(@RequestBody QRCodePharmacyDTO dto) throws Exception{
 		
-		Patient p = patientService.getOneWithAddress(dto.getQrCode().getPatient());
-		if(p == null) {
+		QRCodePharmacyDTO retVal = ePrescriptionService.createePrescription(dto);
+		if(retVal == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		Pharmacy pharmacy = pharmacyService.findOneWithMedicaments(dto.getPharmacy().getId());
-		if(pharmacy == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		for(MedicamentItem m : pharmacy.getMedicamentItems()) {
-			for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
-				if(m.getMedicament().getId() == item.getMedicamentId()) {
-					m.setQuantity(m.getQuantity()-item.getQuantity());
-				}
-			}
-		}
-		pharmacy = pharmacyService.update(pharmacy);
-		
-		int points = 0;
-		Set<PrescriptionMedicament> prescribedMeds = new HashSet<PrescriptionMedicament>();
-		for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
-			PrescriptionMedicament pm = new PrescriptionMedicament();
-			pm.setPurchased(true);
-			pm.setDeleted(false);
-			pm.setExpiryDate(LocalDate.now());
-			pm.setQuantity(item.getQuantity());
-			pm.setMedicament(medicamentService.findOne(item.getMedicamentId()));
-			prescribedMeds.add(pm);
-			points += (item.getPoints()*item.getQuantity());
-		}
-		
-		p.setLoyaltyPoints(p.getLoyaltyPoints()+points);
-		
-		CategoryThresholds ct = new CategoryThresholds();
-		List<CategoryThresholds> cts = categoryService.findAll();
-		int index = 0;
-		for(CategoryThresholds c: cts) {
-			if(p.getLoyaltyPoints() > c.getThreshold()) {
-				index = index + 1;
-			}	
-		}
-		if(index == cts.size()) {
-			index = index - 1;
-		}
-		ct = cts.get(index);
-		p.setCategory(ct.getCategory());
-		int discount = ct.getDiscount();
-		
-		double totalPrice = dto.getPharmacy().getCost() - ((dto.getPharmacy().getCost() * discount)/100);
-		
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		LocalDate localDate = LocalDate.parse(dto.getQrCode().getDate(), formatter);
-		
-		ePrescription prescription = new ePrescription();
-		prescription.setDate(localDate);
-		prescription.setDeleted(false);
-		prescription.setDone(true);
-		prescription.setPatient(p);
-		prescription.setPrescriptionMedicaments(prescribedMeds);
-		prescription.setPrice(totalPrice);
-		prescription.setTakenDate(LocalDate.now());
-		prescription.setPharmacy(pharmacy);
-		
-		prescription = ePrescriptionService.create(prescription);
-		
-		if(prescription == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		dto.setId(prescription.getId());
-		emailService.sendMedicineTakenConfirmationMail(prescription);
 		return new ResponseEntity<QRCodePharmacyDTO>(dto, HttpStatus.OK);
 		
 	}

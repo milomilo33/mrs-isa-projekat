@@ -145,6 +145,13 @@ const routes = [
 		component: SystemAdminPage,
 		children: [
 			{
+				path: "",
+				meta: {
+					roles: [ Role.SystemAdmin]
+				},
+				component: MedicamentListPreview
+			},
+			{
 				path: "LoyaltyProgram",
 				component: LoyaltyProgram,
 				meta: {
@@ -662,6 +669,13 @@ const routes = [
 		name: SupplierPage,
 		component: SupplierPage,
 		children: [
+			{
+				path: "",
+				meta: {
+					roles: [ Role.Supplier ]
+				},
+				component: MedicamentListPreview
+			},
 			{
 				path: "PharmacyList",
 				component: PharmacyListPreview

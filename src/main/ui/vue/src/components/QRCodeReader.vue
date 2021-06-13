@@ -39,7 +39,7 @@
                         </b-button>
                         </template>
                         <template #cell(update)="row">
-                        <b-button size="sm" @click="purchase(row)" class="mr-2">
+                        <b-button :disabled="isActive" size="sm" @click="purchase(row)" class="mr-2">
                             Purchase
                         </b-button>
                         </template>
@@ -92,6 +92,7 @@ export default {
             { key: "show_details", label: "Medicaments"}, 
             { key: "update", label: "Buy" }
         ],
+        isActive: false,
         showSuccessAlert: false,
         showFailedAlert: false,
         items: [],
@@ -117,13 +118,19 @@ export default {
           this.username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
           this.selectedFile = event.target.files[0].name;
           this.axios.get(`http://localhost:8080/api/patients/uploadQRCode/${this.selectedFile},${this.username}`)
-                .then(response => {this.qrCodeItem = response.data
-                this.items = this.qrCodeItem.pharmacySet;
-                console.log(this.qrCodeItem)
+                .then(response => 
+                {
+                  this.qrCodeItem = response.data
+                  this.items = this.qrCodeItem.pharmacySet;
+                  this.isActive = false;
+                  console.log(this.qrCodeItem)
                 })
-                .catch(error => {console.log(error);
-                 this.showFailedAlert = true;
-            this.showSuccessAlert = false;})
+                .catch(error => 
+                {
+                  console.log(error);
+                  this.showFailedAlert = true;
+                  this.showSuccessAlert = false;
+                  })
 
         },
         purchase(row){
@@ -141,6 +148,7 @@ export default {
           .then(function (response) {
             _this.showFailedAlert = false;
             _this.showSuccessAlert = true;
+            _this.isActive = true;
             console.log(response);
           })
           .catch(function (error) {
