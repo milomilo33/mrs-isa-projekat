@@ -198,6 +198,8 @@ export default defineComponent({
         self.showAlert = false;
         self.showSuccess = true;
         self.showAdminAcceptance = false;
+
+        //self.refreshData();
       })
       .catch(function (error) {
         console.log(error);
@@ -223,17 +225,48 @@ export default defineComponent({
         this.infoModal.title = ''
         this.infoModal.content = ''
       },
+      refreshData(){
+        var self = this;
+        self.axios
+      .get(`/api/pharmacy/getAllWithAdmins`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(function (response) {
+        self.items = response.data;
+        self.totalRows = self.items.length;
+        console.log(self.items);
+        
+      })
+      .catch(function (error) {
+        console.log(error);
+       
+      });
+
+      self.axios
+      .get(`/api/pharmacyAdmin/getUnemployedAdmins`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(function (response){
+        self.admins = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      },
     fireAdmins(){
       var self = this;
-     console.log(this.fired);
       
-       this.axios
+       self.axios
           .post(
             `/api/pharmacyAdmin/firePharmacyAdmin`,
             {
-              id: this.pharmacy.id,
-              name: this.pharmacy.name,
-              admins: [this.fired],
+              id: self.pharmacy.id,
+              name: self.pharmacy.name,
+              admins: [self.fired],
             },
             {
               headers: {
@@ -247,13 +280,15 @@ export default defineComponent({
               var idx = 0;
               for(let i = 0; i < self.allAdmins.length; i++){
                 
-                if(self.admins[i].email== self.fired){
+                if(self.allAdmins[i].email== self.fired){
                   break;
                 }
                 idx++;
               }
               self.allAdmins.splice(idx, 1);
               self.fired = null;
+
+              self.refreshData();
             }
           })
           .catch(function (error) {
@@ -263,17 +298,17 @@ export default defineComponent({
     },
     setAdmins(){
       var self = this;
-       this.axios
+       self.axios
           .post(
             `/api/pharmacyAdmin/updatePharmacyToAdmin`,
             {
-              name: this.added.name,
-              email: this.added.email,
-              lastName: this.added.lastName,
-              phoneNumber: this.added.phoneNumber,
+              name: self.added.name,
+              email: self.added.email,
+              lastName: self.added.lastName,
+              phoneNumber: self.added.phoneNumber,
               pharmacy: {
-                id: this.pharmacy.id,
-                name: this.pharmacy.name}
+                id: self.pharmacy.id,
+                name: self.pharmacy.name}
             },
             {
               headers: {
@@ -294,6 +329,7 @@ export default defineComponent({
               }
               self.admins.splice(idx, 1);
               self.added = [];
+              self.refreshData();
             }
           })
           .catch(function (error) {
