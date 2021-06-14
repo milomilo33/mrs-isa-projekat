@@ -6,7 +6,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 import com.mrsisa.mrsisaprojekat.repository.PricelistItemMedicamentRepositoryDB;
@@ -121,6 +123,64 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 			return null;
 		}
 		return items;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public PricelistItemMedicament makePromotion(Long id, Long pId, PricelistItemMedicamentDTO pricelistItem) {
+		PricelistItemMedicament pricelistUpdate = this.findByPharmacyAndMed(id,pId);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (pricelistUpdate == null) {
+			return null;
+		}
+		
+		for(Price p : pricelistUpdate.getPrice()) {
+			if(!p.isDeleted()) {
+				p.setDeleted(true);
+				p.setDateTo(LocalDate.now());
+				try {
+					priceService.update(p);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return null;
+				}
+				
+			}
+		}
+		Price p = new Price();
+		p.setValue(pricelistItem.getPrice().get(0).getValue());
+		p.setDateFrom(pricelistItem.getPrice().get(0).getDateFrom());
+		p.setDateTo(pricelistItem.getPrice().get(0).getDateTo());
+		p.setDeleted(false);
+		p.setPoints(0);
+		p.setPromotion(true);
+		Price saved;
+		try {
+			saved = priceService.create(p);
+			Set<Price> pr = pricelistUpdate.getPrice();
+			pr.add(saved);
+			pricelistUpdate.setPrice(pr);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		try {
+			pricelistUpdate = this.update(pricelistUpdate);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		return pricelistUpdate;
 	}
 
 }

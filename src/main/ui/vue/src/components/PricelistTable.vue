@@ -384,7 +384,16 @@ export default {
           self.items = [];
           self.medicamentss = [];
           self.refresh();
-        });
+        }).catch((error => {
+         
+          if(error.response.status == "400"){
+           this.errorModal.title = "Error";
+           this.errorModal.content = "You can't make promotion for this medicament! "
+
+          this.$root.$emit("bv::show::modal", this.errorModal.id);
+          }
+         
+        }));
         
       }
     },
