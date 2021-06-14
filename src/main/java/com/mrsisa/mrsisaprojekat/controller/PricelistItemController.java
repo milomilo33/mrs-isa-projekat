@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -203,8 +205,16 @@ public class PricelistItemController {
 	
 	@PutMapping(value= "/promotion/{id}/{pId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PricelistItemMedicamentDTO> makePromotion(@RequestBody PricelistItemMedicamentDTO pricelistItem,@PathVariable("id") Long id, @PathVariable("pId") Long pId) throws Exception {
-		PricelistItemMedicament pricelistUpdate = pricelistItemService.findByPharmacyAndMed(id,pId);
-		if (pricelistUpdate == null) {
+		
+		try {
+			PricelistItemMedicament pricelistUpdate = pricelistItemService.makePromotion(id,pId, pricelistItem);
+			return new ResponseEntity<PricelistItemMedicamentDTO>(new PricelistItemMedicamentDTO(pricelistUpdate), HttpStatus.OK);
+		}catch(PessimisticLockingFailureException e) {
+			return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+			
+		}
+		//PricelistItemMedicament pricelistUpdate = pricelistItemService.findByPharmacyAndMed(id,pId);
+		/*if (pricelistUpdate == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
@@ -227,8 +237,8 @@ public class PricelistItemController {
 		Set<Price> pr = pricelistUpdate.getPrice();
 		pr.add(saved);
 		pricelistUpdate.setPrice(pr);
-		pricelistUpdate = pricelistItemService.update(pricelistUpdate);
-		return new ResponseEntity<PricelistItemMedicamentDTO>(new PricelistItemMedicamentDTO(pricelistUpdate), HttpStatus.OK);
+		pricelistUpdate = pricelistItemService.update(pricelistUpdate);*/
+		
 	}
 	
 	@Scheduled(cron = "0 * * * * *")

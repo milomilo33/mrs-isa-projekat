@@ -237,12 +237,6 @@ public class RequestServiceImpl implements RequestService{
 	@Transactional(readOnly = false)
 	public Request setRequestStatus(Long id, RequestDTO request) {
 		Request r =  requestRepository.getOneWithEmployee(id);
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		if(r == null) {
 			return null;
 		}
