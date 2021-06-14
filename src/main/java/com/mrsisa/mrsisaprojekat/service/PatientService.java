@@ -63,4 +63,6 @@ public interface PatientService {
 	Patient getPatientExaminationIfDone(String email, String ratedEmployeeEmail);
 
 	Patient getPatientExaminationMedicationDone(String email);
+
+	Patient findOneWithLock(String email);
 }

@@ -149,6 +149,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             return null;
         }
 
+        LocalDate appointmentDate = appointment.getDate();
+        LocalDate today = LocalDate.now();
+        if (today.isAfter(appointmentDate)) {
+            return null;
+        }
+
         MedicalReport report = appointment.getMedicalReport();
         if (report != null) {
             return report.getId();

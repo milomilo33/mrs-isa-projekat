@@ -1,12 +1,15 @@
 package com.mrsisa.mrsisaprojekat.repository;
 
-import com.mrsisa.mrsisaprojekat.model.*;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import com.mrsisa.mrsisaprojekat.model.Patient;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,4 +56,9 @@ public interface PatientRepositoryDB extends JpaRepository<Patient, String> {
 
 	@Query("select p from Patient p join fetch p.appointments pa join fetch p.reservedMedicaments prm where p.email = ?1 and pa.done = true and prm.purchased = true")
 	Patient getPatientExaminationMedicationDone(String email);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select p from Patient p where p.email = :email")
+	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
+	Patient findOneWithLock(@Param("email") String email);
 }

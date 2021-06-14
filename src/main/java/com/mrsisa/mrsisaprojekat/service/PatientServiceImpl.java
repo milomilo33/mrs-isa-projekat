@@ -420,4 +420,10 @@ public class PatientServiceImpl implements PatientService {
 		return patientRepository.getPatientExaminationMedicationDone(email);
 	}
 
+	@Override
+	@Transactional
+	public Patient findOneWithLock(String email) {
+		return patientRepository.findOneWithLock(email);
+	}
+
 }
