@@ -253,46 +253,11 @@ public class ComplaintController {
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<ComplaintDTO> saveResponse(@RequestBody ComplaintDTO complaintDTO) throws Exception{
 		
-		AdminSystem admin = adminService.findOneWithCompalints(complaintDTO.getResponder());
-		if (admin == null ) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		Patient patient = patientService.findOne(complaintDTO.getPatient());
-		if (patient == null ) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
-		Complaint complaint = null;
-		if(complaintDTO.getEmployee()!= null) {
-			complaint = complaintService.findOneWithEmployee(complaintDTO.getId());
-		}
-		else {
-			complaint = complaintService.findOneWithPharmacy(complaintDTO.getId());
-		}
-		
+		ComplaintDTO complaint = complaintService.writeResponse(complaintDTO);
 		if(complaint == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		System.out.println(complaint.getDescription()+ "   "+ complaint.getId());
-		complaint.setResponder(admin);
-		complaint.setPatient(patient);
-		complaint.setResponse(complaintDTO.getResponse());
-		
-		Complaint saved = complaintService.update(complaint);
-		
-		Set<Complaint> responseComplaints = complaintService.getResponderComplaint(admin.getEmail());
-		if(responseComplaints == null) {
-			responseComplaints = new HashSet<Complaint>();
-		}
-		responseComplaints.add(saved);
-		adminService.update(admin);
-		
-		
-		emailService.sendComplaintAnswer(complaint);
-		
-		return new ResponseEntity<ComplaintDTO>(new ComplaintDTO(saved.getId(), saved.getDescription(), saved.getResponder().getEmail(), saved.getResponse()), HttpStatus.OK);
+		return new ResponseEntity<ComplaintDTO>(complaint, HttpStatus.OK);
 	}
 	
 	@GetMapping(value ="/getAllAnswered/{email}")

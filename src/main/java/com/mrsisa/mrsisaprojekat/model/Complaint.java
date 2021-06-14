@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Complaint {
@@ -36,6 +37,19 @@ public class Complaint {
 	@ManyToOne(fetch=FetchType.LAZY, optional = true)
 	private Patient patient;
 	
+	@Version
+	@Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
+	
+	
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
 	public Complaint() {}
 
 	public String getDescription() {
