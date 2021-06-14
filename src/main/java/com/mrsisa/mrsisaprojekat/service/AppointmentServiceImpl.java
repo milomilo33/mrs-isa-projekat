@@ -1,11 +1,15 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.MedicalReportRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Autowired
     private MedicalReportRepositoryDB medicalReportRepository;
+    
+    
+    @Autowired
+    private PatientRepositoryDB patientRepository;
+    
+    @Autowired
+    private PatientService patientService;
+    
+    @Autowired
+    private EmailService mailService;
+
 
 
     @Override
@@ -246,5 +261,33 @@ public class AppointmentServiceImpl implements AppointmentService {
 			return null;
 		}
 		return appointments;
+	}
+
+	@Override
+	@Transactional
+	public Appointment reserveAppointment(AppointmentDTO appointment) {
+		Appointment appointmentToReserve = appointmentRepository.findOneAppointment(appointment.getAppointmentId());
+		Patient p = patientRepository.findById(appointment.getPatientEmail()).orElse(null);
+		if(p == null) {
+			return null;
+		}
+		Patient patient = patientService.getOneWithAppointments(appointment.getPatientEmail());
+		boolean isReserved = patientService.checkIfTermFilled(patient, appointmentToReserve);
+		appointmentToReserve.setPatient(p);
+		
+		if(!isReserved) {
+			System.out.println("DAAAAAAAAAAAAAAAAA"+patient.getEmail());
+			//appointmentService.update(appointmentToReserve);
+			Long id = patientService.updateWithAppointment(patient, appointmentToReserve);
+			try {
+				mailService.ReserveExaminationMail(patient, id);
+			}
+			catch( Exception e) {
+				System.out.println(e.getMessage());
+			}
+			return appointmentToReserve;
+		} else {
+			return null;
+		}
 	}
 }

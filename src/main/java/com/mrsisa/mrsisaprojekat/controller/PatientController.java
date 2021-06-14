@@ -9,6 +9,8 @@ import com.mrsisa.mrsisaprojekat.service.*;
 import com.mrsisa.mrsisaprojekat.util.QRCodeReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -429,15 +431,28 @@ public class PatientController {
 
 	@PostMapping(path = "/reserve_appointment", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
-	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) throws Exception {
+	public ResponseEntity<AppointmentDTO> reserveExamination(@RequestBody AppointmentDTO appointment) {
 		Patient patient = patientService.findOne(appointment.getPatientEmail());
 		if(patient.getPenaltyPoints() == 3) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+		}
+		
+		try {
+			Appointment a = appointmentService.reserveAppointment(appointment);
+			if(a == null) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+			return new ResponseEntity<AppointmentDTO>(appointment, HttpStatus.CREATED);
+			
+		}catch(PessimisticLockingFailureException e) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		
 		
-		Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
-		appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
+		
+		
+		//Appointment appointmentToReserve = appointmentService.findOne(appointment.getAppointmentId());
+		//appointmentToReserve.setPatient(patientService.findOne(appointment.getPatientEmail()));
 
 //		if(appointmentToReserve.getType() == Appointment.AppointmentType.EXAMINATION) {
 //			Dermatologist d = dermatologistService.findOneExaminations(appointmentToReserve.getChosenEmployee().getEmail());
@@ -453,11 +468,11 @@ public class PatientController {
 //			pharmacistService.update(p);
 //		}
 //
-		Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
+		/*Patient p = patientService.getOneWithAppointments(appointment.getPatientEmail());
 		boolean isReserved = patientService.checkIfTermFilled(p, appointmentToReserve);
 
 		if(!isReserved) {
-			appointmentService.update(appointmentToReserve);
+			//appointmentService.update(appointmentToReserve);
 			Long id = patientService.updateWithAppointment(p, appointmentToReserve);
 			try {
 				emailService.ReserveExaminationMail(p, id);
@@ -468,7 +483,9 @@ public class PatientController {
 			return new ResponseEntity<>(appointment, HttpStatus.CREATED);
 		} else {
 			return ResponseEntity.badRequest().body(null);
-		}
+		}*/
+		
+		
 
 
 

@@ -32,6 +32,17 @@ public class Request {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Employee employee;
 	
+	@Version
+	@Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 	public Request() {}
 	
 	public Request(Long id, String description, LocalDate dateFrom, LocalDate dateTo, boolean accepted,
@@ -109,6 +120,8 @@ public class Request {
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
+	
+
 	
 	
 

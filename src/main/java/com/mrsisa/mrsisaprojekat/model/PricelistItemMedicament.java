@@ -28,6 +28,18 @@ public class PricelistItemMedicament  {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Medicament medicament;
 	
+	/*@Version
+	@Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}*/
+	
 	public PricelistItemMedicament() {}
 
 

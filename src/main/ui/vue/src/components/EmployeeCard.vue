@@ -31,7 +31,7 @@
             Success! You gave this {{employee.e.toLowerCase()}} {{rating}} stars.
         </b-alert>
         <b-alert v-model="showFailedAlert" dismissible fade variant="danger">
-        Failed! You have  3 penaults!
+        {{message}}
       </b-alert>
         <b-row class="mb-1 text-center colorIt">
           <p>
@@ -103,7 +103,10 @@ export default {
       role: '',
       rating: null,
       showRatingAlert: false,
-      showFailedAlert: false
+      showFailedAlert: false,
+      showFailedReserve:false,
+      message:"",
+      
     };
   },
   methods: {
@@ -184,9 +187,18 @@ export default {
         this.employee.appointments = this.employee.appointments.filter(el => el.id !== this.appointment.id);
         x.selectedIndex = -1;
         alert("Rezervacija uspesno izvrsena!");
-      }).catch(() => //alert("termin koji ste odabrali preklapa se sa vec rezervisanim terminom")
-        this.showFailedAlert = true
-      );
+      }).catch((error => {
+         
+          if(error.response.status == "400"){
+           
+            this.message = " You have 3 penaults You can't reserve it.";
+               this.showFailedAlert = true;
+          }else if(error.response.status == "403"){
+           this.message = " You can't reserve it";
+           this.showFailedAlert =true;
+          }
+         
+        }));
     },
 
     setAppointment(a) {

@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
 import com.mrsisa.mrsisaprojekat.dto.SendRequestDTO;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
@@ -29,5 +30,7 @@ public interface RequestService {
 	String makeRequestForDermatologist(String dermatologistEmail, SendRequestDTO sendRequestDTO);
 
 	String makeRequestForPharmacist(String pharmacistEmail, SendRequestDTO sendRequestDTO);
+	
+	Request setRequestStatus(Long id, RequestDTO request);
 
 }

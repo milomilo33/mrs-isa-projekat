@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+
+import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
 
 
@@ -35,6 +37,9 @@ public interface PricelistItemMedicamentService {
 	PricelistItemMedicament findByPharmacyAndMed(Long id, Long pId);
 	
 	Set<PricelistItemMedicament> findAllPricelistItems();
+	
+	PricelistItemMedicament makePromotion(Long id, Long pId, PricelistItemMedicamentDTO pricelistItem);
+	
 	
 
 }

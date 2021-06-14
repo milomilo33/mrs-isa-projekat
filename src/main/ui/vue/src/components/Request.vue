@@ -188,6 +188,7 @@ export default {
           {
             id: self.selected[0].id,
             accepted: true,
+            rejectionReason:"",
           },
           {
             headers: {
@@ -199,7 +200,15 @@ export default {
            self.selected = [];
             self.items = [];
             self.refresh();
-        });
+        }).catch((error => {
+         
+          if(error.response.status == "400"){
+           
+             (self.errorModal.content = "You cannot accept this request!");
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
+          }
+         
+        }));
         
        
         }}
@@ -238,7 +247,15 @@ export default {
            self.selected = [];
             self.items = [];
             self.refresh();
-        });
+        }).catch((error => {
+         
+          if(error.response.status == "400"){
+           
+             (self.errorModal.content = "You cannot accept this request!");
+          self.$root.$emit("bv::show::modal", self.errorModal.id);
+          }
+         
+        }));
         }
         
     }
