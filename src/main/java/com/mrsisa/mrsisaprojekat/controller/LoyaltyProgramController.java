@@ -3,13 +3,11 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.mrsisa.mrsisaprojekat.dto.PatientLoyaltyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,16 +70,11 @@ public class LoyaltyProgramController {
 	@PostMapping(value = "updateCategory")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO){
-		CategoryThresholds category = thresholdService.findOne(categoryDTO.getId());
+		CategoryThresholds saved = thresholdService.update(categoryDTO);
 		
-		if(category == null) {
+		if(saved == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		category.setCategory(categoryDTO.getCategory());
-		category.setThreshold(categoryDTO.getThreshold());
-		category.setDiscount(categoryDTO.getDiscount());
-		CategoryThresholds saved = thresholdService.update(category);
 		return new ResponseEntity<>(new CategoryDTO(saved), HttpStatus.OK);
 		
 	}
@@ -120,13 +113,10 @@ public class LoyaltyProgramController {
 	@PostMapping(value="/add")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO category){
-		CategoryThresholds thresholds = new CategoryThresholds();
-		
-		thresholds.setCategory(category.getCategory());
-		thresholds.setDiscount(category.getDiscount());
-		thresholds.setThreshold(category.getThreshold());
-		thresholds.setDeleted(false);
-		thresholds = thresholdService.create(thresholds);
+		CategoryThresholds thresholds = thresholdService.create(category);
+		if(thresholds == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new CategoryDTO(thresholds), HttpStatus.OK);
 		
 	}
