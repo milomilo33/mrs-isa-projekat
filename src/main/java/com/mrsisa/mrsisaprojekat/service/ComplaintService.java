@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import java.util.Collection;
 import java.util.Set;
 
+import com.mrsisa.mrsisaprojekat.dto.ComplaintDTO;
 import com.mrsisa.mrsisaprojekat.model.Complaint;
 
 public interface ComplaintService {
@@ -28,5 +29,7 @@ public interface ComplaintService {
 	Complaint findOneWithEmployee(Long id);
 
 	Complaint findOneWithPharmacy(Long id);
+
+	ComplaintDTO writeResponse(ComplaintDTO complaintDTO);
 	
 }

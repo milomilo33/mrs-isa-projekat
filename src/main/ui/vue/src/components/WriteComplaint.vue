@@ -3,7 +3,7 @@
      <h3>Write Complaint</h3>
     <hr />
     <b-alert v-model="showDismissibleAlert" dismissible fade variant="danger">
-        Could not send complaint.
+        Could not send complaint. {{message}}
       </b-alert>
       <b-alert v-model="showSuccessAlert" dismissible fade variant="success">
         Your complaint has been sent.
@@ -82,6 +82,7 @@ export default defineComponent({
       description: "",
       showDismissibleAlert: false,
       showSuccessAlert: false,
+      message: "",
     }
   },
   mounted() {
@@ -122,37 +123,52 @@ export default defineComponent({
       sendComplaint(){
         var sendPharmacy = this.pharmacy;
         var sendEmployee = this.employee;
+        var error_found = false;
+
         if(this.employee != null){
           sendEmployee = this.employee.email;
         }
         if(this.pharmacy != null){
           sendPharmacy = this.pharmacy.id;
         }
-        this.axios.post(
-          `/api/complaints/save/`+this.patient,
-          {
-            employee: sendEmployee,
-            pharmacy: sendPharmacy,
-            description: this.description,
-            patient: this.patient
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
+        if(this.description == ""){
+          error_found = true;
+        }
+
+        if(error_found == false){
+            this.axios.post(
+            `/api/complaints/save/`+this.patient,
+            {
+              employee: sendEmployee,
+              pharmacy: sendPharmacy,
+              description: this.description,
+              patient: this.patient
             },
-          }
-        )
-        .then((response) => {
-          if (response.data != null) {
-            this.showSuccessAlert = true;
-            this.showDismissibleAlert = false;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          )
+          .then((response) => {
+            if (response.data != null) {
+              this.showSuccessAlert = true;
+              this.showDismissibleAlert = false;
+              this.updateData();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            this.message = "";
+            this.showDismissibleAlert = true;
+            this.showSuccessAlert= false;
+          });
+        }
+        else{
+          this.message = " Complaint cannot be empty";
           this.showDismissibleAlert = true;
-          this.showSuccessAlert= false;
-        });
+        }
+       
       }
   ,
   setNullPharmacy(){
@@ -162,6 +178,36 @@ export default defineComponent({
   setNullEmployee(){
     this.employee = null;
     console.log(this.pharmacy+ " " + this.employee)
+  },
+  updateData(){
+    this.axios
+      .get(`/api/complaints/allPharmacist/` + this.patient, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+      .then((response) => {
+        this.pharmacists = response.data;
+        console.log(this.pharmacists);
+      })
+      .catch((error) => console.log(error.response.data));
+
+    this.axios
+      .get(`/api/complaints/allDermatologists/` + this.patient, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+      .then((response) => {
+        this.dermatologist = response.data;
+      })
+      .catch((error) => console.log(error.response.data));
+
+    this.axios
+      .get(`/api/complaints/allPharmacies/` + this.patient, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      })
+      .then((response) => {
+        this.pharmacies = response.data;
+        console.log(this.pharmacies);
+      })
+      .catch((error) => console.log(error.response.data));
   }
 },
 });
