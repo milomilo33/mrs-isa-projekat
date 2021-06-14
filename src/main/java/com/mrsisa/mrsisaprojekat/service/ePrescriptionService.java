@@ -19,7 +19,7 @@ public interface ePrescriptionService {
 	
 	boolean delete(Long id);
 	
-	boolean dispensePrescription(Long id, Pharmacist pharmacist);
+	boolean dispensePrescription(Long id, String pharmacistEmail);
 	
 	ePrescription findPrescriptionForPharmacist(Long id, Pharmacist pharmacist);
 

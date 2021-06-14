@@ -1,10 +1,14 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
-import com.mrsisa.mrsisaprojekat.dto.*;
+import com.mrsisa.mrsisaprojekat.dto.AppointmentCalendarDTO;
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
+import com.mrsisa.mrsisaprojekat.dto.DermatologistDTO;
+import com.mrsisa.mrsisaprojekat.dto.WorkHourDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.model.WorkHour.Day;
 import com.mrsisa.mrsisaprojekat.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -383,17 +388,32 @@ public class DermatologistController {
 	@PostMapping(value = "/appointments/schedule-new/{medical-report-id}")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST')")
 	public ResponseEntity<String> createAndScheduleNewAppointment(@RequestBody AppointmentDTO appointmentDTO, @PathVariable("medical-report-id") Long medicalReportId) {
-		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		Dermatologist currentDermatologist = (Dermatologist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String currentDermatologistEmail;
+		if (principal instanceof UserDetails) {
+			currentDermatologistEmail = ((UserDetails)principal).getUsername();
+		} else {
+			currentDermatologistEmail = principal.toString();
+		}
+
 		LocalDate date = appointmentDTO.getDate();
 		LocalTime timeFrom = appointmentDTO.getTermFrom();
 		LocalTime timeTo = appointmentDTO.getTermTo();
 		String patientEmail = appointmentDTO.getPatientEmail();
 
-		String message = dermatologistService.createAndScheduleNewAppointment(currentDermatologist.getEmail(), patientEmail, date, timeFrom, timeTo, medicalReportId);
+		String message;
+		try {
+			message = dermatologistService.createAndScheduleNewAppointment(currentDermatologistEmail, patientEmail, date, timeFrom, timeTo, medicalReportId);
+		} catch (PessimisticLockingFailureException plfe) {
+			return new ResponseEntity<>("Concurrent access error.", HttpStatus.CONFLICT);
+		}
 
 		if (message != null) {
 			return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 		}
+
+		Dermatologist currentDermatologist = dermatologistService.findOne(currentDermatologistEmail);
 
 		try {
 			emailService.appointmentScheduledMail(date,timeFrom, timeTo, currentDermatologist, patientEmail, "Dermatologist");

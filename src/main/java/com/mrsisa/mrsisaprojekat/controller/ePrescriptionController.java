@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -31,9 +32,16 @@ public class ePrescriptionController {
 	@GetMapping(value="/{id}/dispense")
 	@PreAuthorize("hasAnyRole('PHARMACIST')")
 	public ResponseEntity<String> dispensePrescription(@PathVariable("id") Long id) {
-		Pharmacist currentPharmacist = (Pharmacist) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String currentPharmacistEmail;
+		if (principal instanceof UserDetails) {
+			currentPharmacistEmail = ((UserDetails)principal).getUsername();
+		} else {
+			currentPharmacistEmail = principal.toString();
+		}
+
 		try {
-			boolean dispensed = ePrescriptionService.dispensePrescription(id, currentPharmacist);
+			boolean dispensed = ePrescriptionService.dispensePrescription(id, currentPharmacistEmail);
 			if (!dispensed) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}

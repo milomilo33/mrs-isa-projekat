@@ -7,9 +7,9 @@ import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -306,8 +306,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 	}
 
 	@Override
-	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public String createAndScheduleNewAppointment(String dermatologistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId) {
+	@Transactional
+	public String createAndScheduleNewAppointment(String dermatologistEmail, String patientEmail, LocalDate date, LocalTime timeFrom, LocalTime timeTo, Long medicalReportId) throws PessimisticLockingFailureException {
 		// provera da li je datum validan
 		if (timeFrom.isAfter(timeTo) || timeFrom.equals(timeTo)) {
 			return "Invalid date!";
@@ -319,7 +319,7 @@ public class DermatologistServiceImpl implements DermatologistService {
 		}
 
 		Dermatologist dermatologist = this.findOne(dermatologistEmail);
-		Patient patient = patientService.findOne(patientEmail);
+		Patient patient = patientService.findOneWithLock(patientEmail);
 		MedicalReport report = medicalReportService.findOne(medicalReportId);
 
 		if (patient == null || dermatologist == null) {

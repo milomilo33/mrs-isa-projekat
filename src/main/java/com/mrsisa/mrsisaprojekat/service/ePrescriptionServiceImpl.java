@@ -66,7 +66,7 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Override
 	@Transactional
-	public boolean dispensePrescription(Long id, Pharmacist pharmacist) throws ObjectOptimisticLockingFailureException {
+	public boolean dispensePrescription(Long id, String pharmacistEmail) throws ObjectOptimisticLockingFailureException {
 		ePrescription ePrescription = this.findOne(id);
 		if (ePrescription == null) {
 			return false;
@@ -74,7 +74,7 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 		boolean pharmacistInPrescriptionPharmacy = false;
 		for (Pharmacist ph : ePrescription.getPharmacy().getPharmacists()) {
-			if (ph.getEmail().equals(pharmacist.getEmail())) {
+			if (ph.getEmail().equals(pharmacistEmail)) {
 				pharmacistInPrescriptionPharmacy = true;
 				break;
 			}
