@@ -8,6 +8,8 @@ import com.mrsisa.mrsisaprojekat.model.Request;
 import com.mrsisa.mrsisaprojekat.service.EmailService;
 import com.mrsisa.mrsisaprojekat.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,30 +30,19 @@ public class RequestController {
 	@Autowired
 	private EmailService mailService;
 	
-	@Transactional(readOnly = false)
+	
 	@PutMapping(value= "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN')")
-	public ResponseEntity<RequestDTO> updateRequest(@RequestBody RequestDTO request,@PathVariable("id") Long id) throws Exception {
-		Request r = requestService.findOneRequest(id);
-	
-		if(r !=null) {
-			try {
-					r.setAccepted(request.isAccepted());
-					r.setDeleted(true);
-					r.setRejectionReason(request.getRejectionReason());
-					requestService.update(r);
-					mailService.sendEmployeeMail(r.getEmployee(), r);
+	public ResponseEntity<?> updateRequest(@RequestBody RequestDTO request,@PathVariable("id") Long id) throws Exception {
+		try {
+					Request r = requestService.setRequestStatus(id, request);
+					if(r == null) {
+						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					}
 					return new ResponseEntity<>(new RequestDTO(r),HttpStatus.OK);
-				
-				
-			}catch (NullPointerException e) {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-			}
-			
-		}else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}catch(OptimisticLockingFailureException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
 		
 	}
 

@@ -393,12 +393,15 @@ public class PatientServiceImpl implements PatientService {
 					isFilled = true;
 				if(a.getTermTo().equals(appointment.getTermTo()))
 					isFilled = true;
+				
 				if(a.getTermFrom().isAfter(appointment.getTermFrom()) && a.getTermFrom().isBefore(appointment.getTermTo()))
 					isFilled = true;
+				
 				if(a.getTermTo().isAfter(appointment.getTermFrom()) && a.getTermTo().isBefore(appointment.getTermTo()))
 					isFilled = true;
 				if(a.getTermFrom().isBefore(appointment.getTermFrom()) && a.getTermTo().isAfter(appointment.getTermTo()))
 					isFilled = true;
+				
 			}
 		}
 		return isFilled;

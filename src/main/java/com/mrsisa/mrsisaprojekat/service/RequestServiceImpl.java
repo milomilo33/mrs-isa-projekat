@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.RequestDTO;
 import com.mrsisa.mrsisaprojekat.dto.SendRequestDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
@@ -7,7 +8,9 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Request;
 import com.mrsisa.mrsisaprojekat.repository.RequestRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -26,6 +29,9 @@ public class RequestServiceImpl implements RequestService{
 
 	@Autowired
 	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private EmailService mailService;
 
 	@Override
 	@Transactional
@@ -56,6 +62,7 @@ public class RequestServiceImpl implements RequestService{
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public Request findOneRequest(Long id) {
 		Request r = requestRepository.getOneWithEmployee(id);
 		
@@ -224,6 +231,34 @@ public class RequestServiceImpl implements RequestService{
 		requestRepository.save(request);
 
 		return null;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public Request setRequestStatus(Long id, RequestDTO request) {
+		Request r =  requestRepository.getOneWithEmployee(id);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(r == null) {
+			return null;
+		}
+		r.setAccepted(request.isAccepted());
+		r.setDeleted(true);
+		r.setRejectionReason(request.getRejectionReason());
+		requestRepository.save(r);
+		try {
+			mailService.sendEmployeeMail(r.getEmployee(), r);
+		} catch (MailException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return r;
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
@@ -31,4 +32,6 @@ public interface AppointmentService {
     Pharmacy getPharmacyOfAppointment(Long appointmentId);
     
     Set<Appointment> getAppointmentWithEmployee(String email);
+    
+    Appointment reserveAppointment(AppointmentDTO appointment);
 }
