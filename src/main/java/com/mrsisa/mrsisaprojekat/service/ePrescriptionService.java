@@ -1,6 +1,7 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.dto.QRCodePharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
@@ -26,4 +27,6 @@ public interface ePrescriptionService {
 	Collection<PrescriptionMedicamentDTO> getPrescriptionMedicamentsForMedicalReport(Long medicalReportId);
 	
 	Set<ePrescription> findAllePrescriptionsInPharmacy(Long id);
+
+	QRCodePharmacyDTO createePrescription(QRCodePharmacyDTO dto);
 }

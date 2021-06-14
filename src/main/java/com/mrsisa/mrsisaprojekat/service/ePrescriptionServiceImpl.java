@@ -1,8 +1,14 @@
 package com.mrsisa.mrsisaprojekat.service;
 
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.dto.QRCodePharmacyDTO;
+import com.mrsisa.mrsisaprojekat.dto.QRItemDTO;
+import com.mrsisa.mrsisaprojekat.model.CategoryThresholds;
 import com.mrsisa.mrsisaprojekat.model.MedicalReport;
+import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
+import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
@@ -15,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +38,19 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Autowired
 	private MedicalReportService medicalReportService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
+	 
+	@Autowired
+	private PatientService patientService;
+	
+	@Autowired
+	private MedicamentService medicamentService;
+
+	@Autowired
+	private CategoryThresholdsService categoryService;
+	
 	
 	@Override
 	public List<ePrescription> findAll() {
@@ -192,6 +212,124 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 			return null;
 		}
 		return ePrescriptions;
+	}
+	
+	@Override
+	@Transactional
+	public QRCodePharmacyDTO createePrescription(QRCodePharmacyDTO dto) {
+		Patient p = patientService.getOneWithePrescriptions(dto.getQrCode().getPatient());
+		if(p == null) {
+			return null;
+		}
+		
+		Pharmacy pharmacy = pharmacyService.findOneWithMedicaments(dto.getPharmacy().getId());
+		if(pharmacy == null) {
+			return null;
+		}
+		
+		for(MedicamentItem m : pharmacy.getMedicamentItems()) {
+			for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
+				if(m.getMedicament().getId() == item.getMedicamentId()) {
+					m.setQuantity(m.getQuantity()-item.getQuantity());
+				}
+			}
+		}
+		
+		
+		int points = 0;
+		Set<PrescriptionMedicament> prescribedMeds = new HashSet<PrescriptionMedicament>();
+		for(QRItemDTO item : dto.getQrCode().getPrescriptionMedicaments()) {
+			PrescriptionMedicament pm = new PrescriptionMedicament();
+			pm.setPurchased(true);
+			pm.setDeleted(false);
+			pm.setExpiryDate(LocalDate.now());
+			pm.setQuantity(item.getQuantity());
+			pm.setMedicament(medicamentService.findOne(item.getMedicamentId()));
+			prescribedMeds.add(pm);
+			points += (item.getPoints()*item.getQuantity());
+		}
+		
+		p.setLoyaltyPoints(p.getLoyaltyPoints()+points);
+		
+		CategoryThresholds ct = new CategoryThresholds();
+		List<CategoryThresholds> cts = categoryService.findAll();
+		int index = 0;
+		for(CategoryThresholds c: cts) {
+			if(p.getLoyaltyPoints() > c.getThreshold()) {
+				index = index + 1;
+			}	
+		}
+		if(index == cts.size()) {
+			index = index - 1;
+		}
+		ct = cts.get(index);
+		
+		int discount = ct.getDiscount();
+		
+		double totalPrice = dto.getPharmacy().getCost() - ((dto.getPharmacy().getCost() * discount)/100);
+		
+		p.setCategory(ct.getCategory());
+		
+		
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate localDate = LocalDate.parse(dto.getQrCode().getDate(), formatter);
+		LocalDate now = LocalDate.now();
+		
+		Period period = Period.between(now, localDate);
+		if (period.getDays() < 1) {
+			return null;
+		}
+		
+		ePrescription prescription = new ePrescription();
+		prescription.setDate(localDate);
+		prescription.setDeleted(false);
+		prescription.setDone(true);
+		prescription.setPatient(p);
+		prescription.setPrescriptionMedicaments(prescribedMeds);
+		prescription.setPrice(totalPrice);
+		prescription.setTakenDate(LocalDate.now());
+		prescription.setPharmacy(pharmacy);
+		
+		try {
+			prescription = this.create(prescription);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		if(prescription == null) {
+			return null;
+		}
+		
+		try {
+			pharmacy = pharmacyService.update(pharmacy);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Set<ePrescription> prescriptions = p.getePrescriptions();
+		prescriptions.add(prescription);
+		
+		p.setePrescriptions(prescriptions);
+		
+		p.setCategory(ct.getCategory());
+		
+		try {
+			patientService.update(p);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		dto.setId(prescription.getId());
+		
+		try {
+			emailService.sendMedicineTakenConfirmationMail(prescription);
+		} catch (MailException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 }
