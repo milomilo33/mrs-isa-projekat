@@ -38,8 +38,6 @@ import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
-import com.mrsisa.mrsisaprojekat.model.Price;
-import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.Request;
 import com.mrsisa.mrsisaprojekat.model.WorkHour;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;

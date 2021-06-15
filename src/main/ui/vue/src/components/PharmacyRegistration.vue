@@ -104,8 +104,8 @@ export default {
       }
       
       var locationFound = await this.guessCoordinatesFromLocation();
-
-      if(errorFound==false && locationFound==true){
+      console.log(locationFound);
+      if(errorFound==false){
          this.axios
         .post(`/api/pharmacy`, {
           name: this.name,

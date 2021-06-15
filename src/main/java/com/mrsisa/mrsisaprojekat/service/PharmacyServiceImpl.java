@@ -223,25 +223,59 @@ public Set<Pharmacy> findAllWithAdmin() {
 
 @Override
 public void deletePharmacy(Long id) throws Exception {
-	Pharmacy pharmacy = this.findOneWithAppointments(id);
+	
+	Pharmacy pharmacy = null;
+	
+	try{
+		pharmacy = this.findOneWithAppointments(id);
+		
+	}catch(NullPointerException e) {
+		
+	}
+	if(pharmacy == null) {
+		pharmacy = this.findOne(id);
+		
+		pharmacy.setDeleted(true);
+		pharmacyRepository.save(pharmacy);
+		return;
+	}
 	pharmacy.setDeleted(true);
+	
+	try {
+		Collection<MedicamentItem> medicaments = this.getAllMedicaments(pharmacy.getId());
+		if(medicaments != null) {
+			for(MedicamentItem mi : medicaments) {
+				medicamentService.deleteMedicament(mi);
+			}
+		}
+	}
+	catch(Exception e) {
+		
+	}
+	try {
+		Collection<Appointment> appointments = pharmacy.getAppointments();
+		if(appointments != null) {
+			for(Appointment a : appointments) {
+				appointmentService.delete(a);
+			}
+		}
+	}
+	catch(Exception e) {
+		
+	}
+	try {
+		Set<AdminPharmacy> admins = pharmacyAdminService.getAllAdminsInPharmacy(pharmacy.getId());
+		if(admins != null) {
+			for(AdminPharmacy ap : admins) {
+				ap.setPharmacy(null);
+				pharmacyAdminService.update(ap);
+			}
+		}
+	}
+	catch(Exception e) {
+		
+	}
 	pharmacyRepository.save(pharmacy);
-	
-	Collection<MedicamentItem> medicaments = this.getAllMedicaments(pharmacy.getId());
-	for(MedicamentItem mi : medicaments) {
-		medicamentService.deleteMedicament(mi);
-	}
-	
-	Collection<Appointment> appointments = pharmacy.getAppointments();
-	for(Appointment a : appointments) {
-		appointmentService.delete(a);
-	}
-	
-	Set<AdminPharmacy> admins = pharmacyAdminService.getAllAdminsInPharmacy(pharmacy.getId());
-	for(AdminPharmacy ap : admins) {
-		ap.setPharmacy(null);
-		pharmacyAdminService.update(ap);
-	}
 	
 }
 
