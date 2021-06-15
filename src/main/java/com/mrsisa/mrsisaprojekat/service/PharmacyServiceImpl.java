@@ -225,12 +225,11 @@ public Set<Pharmacy> findAllWithAdmin() {
 public void deletePharmacy(Long id) throws Exception {
 	
 	Pharmacy pharmacy = null;
-	boolean err = false;
+	
 	try{
 		pharmacy = this.findOneWithAppointments(id);
 		
 	}catch(NullPointerException e) {
-		err = true;
 		
 	}
 	if(pharmacy == null) {
