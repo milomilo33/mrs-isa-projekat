@@ -130,7 +130,7 @@ export default defineComponent({
     var self = this;
     self.role = userRole;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -195,7 +195,7 @@ export default defineComponent({
             this.guessCoordinatesFromLocation();
             var self = this;
             if(self.role == "ROLE_PHARMACY_ADMIN"){
-                self.axios.put(`/api/pharmacyAdmin/updatePharmacyAdmin/` +
+                self.axios.put(process.env.VUE_APP_API_URL + `/pharmacyAdmin/updatePharmacyAdmin/` +
                 self.email,
           {
             email: self.email,

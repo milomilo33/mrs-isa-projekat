@@ -110,7 +110,7 @@ export default defineComponent({
 
       if(userRole == "ROLE_PHARMACY_ADMIN" && self.id == null){
           self.axios
-          .get(`/api/pharmacyAdmin/` + AdminUsername, {
+          .get( process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
             headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -152,7 +152,7 @@ export default defineComponent({
      
     var self = this;
     self.axios
-      .get(`/api/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
+      .get(process.env.VUE_APP_API_URL +`/pharmacy/medicamentItems/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
@@ -170,7 +170,7 @@ export default defineComponent({
       });
 
       self.axios
-      .get(`http://localhost:8080/api/pharmacy/pharmacists/`+parseInt(self.pharmacyId),{
+      .get(process.env.VUE_APP_API_URL + `/pharmacy/pharmacists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
 
@@ -197,7 +197,7 @@ export default defineComponent({
         }
   });
   self.axios
-      .get(`http://localhost:8080/api/pharmacy/dermatologists/`+parseInt(self.pharmacyId),{
+      .get(process.env.VUE_APP_API_URL+`/pharmacy/dermatologists/`+parseInt(self.pharmacyId),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
      

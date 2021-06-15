@@ -58,7 +58,7 @@
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -99,7 +99,7 @@
             || self.f =="July" || self.f =="August" || self.f =="September"|| self.f =="October" || self.f =="November"
             || self.f =="December"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments/` + parseInt(self.pharmacyId)+"/"+self.f+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL + `/pharmacy/reportAppointments/` + parseInt(self.pharmacyId)+"/"+self.f+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -117,7 +117,7 @@
                
             }else if(self.f == "Year"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments1/` + parseInt(self.pharmacyId)+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL + `/pharmacy/reportAppointments1/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -135,7 +135,7 @@
                 
             }else if(self.f == "Quarter"){
                  self.axios
-                    .get(`/api/pharmacy/reportAppointments2/` + parseInt(self.pharmacyId)+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL + `/pharmacy/reportAppointments2/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },

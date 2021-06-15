@@ -172,8 +172,8 @@ methods: {
       else{
         console.log(dd);
           this.axios
-        .post(
-          `/api/offers/update`,
+        .post(process.env.VUE_APP_API_URL+
+          `/offers/update`,
           {
             id: this.offer.id,
             deadline: dd,

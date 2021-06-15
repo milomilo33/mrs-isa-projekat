@@ -145,8 +145,8 @@ export default defineComponent({
       }
       else{
           this.axios
-        .post(
-          `/api/offers/save`,
+        .post(process.env.VUE_APP_API_URL +
+          `/offers/save`,
           {
             deadline: this.deadline + "T00:00:00",
             status: this.status,

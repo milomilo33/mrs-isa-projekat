@@ -153,7 +153,7 @@ export default defineComponent({
  mounted(){
     var self = this;
     self.axios
-      .get(`/api/pharmacy/getAllWithAdmins`, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacy/getAllWithAdmins`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -170,7 +170,7 @@ export default defineComponent({
       });
 
       self.axios
-      .get(`/api/pharmacyAdmin/getUnemployedAdmins`, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/getUnemployedAdmins`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -186,7 +186,7 @@ export default defineComponent({
     deletePharmacy(row){
      var self = this;
     self.axios
-      .get(`/api/pharmacy/delete/`+parseInt(row.item.id), {
+      .get(process.env.VUE_APP_API_URL + `/pharmacy/delete/`+parseInt(row.item.id), {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -228,8 +228,8 @@ export default defineComponent({
      console.log(this.fired);
       
        this.axios
-          .post(
-            `/api/pharmacyAdmin/firePharmacyAdmin`,
+          .post(process.env.VUE_APP_API_URL +
+            `/pharmacyAdmin/firePharmacyAdmin`,
             {
               id: this.pharmacy.id,
               name: this.pharmacy.name,
@@ -264,8 +264,8 @@ export default defineComponent({
     setAdmins(){
       var self = this;
        this.axios
-          .post(
-            `/api/pharmacyAdmin/updatePharmacyToAdmin`,
+          .post(process.env.VUE_APP_API_URL+
+            `/pharmacyAdmin/updatePharmacyToAdmin`,
             {
               name: this.added.name,
               email: this.added.email,

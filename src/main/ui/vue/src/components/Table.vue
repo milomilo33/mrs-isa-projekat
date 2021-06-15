@@ -91,7 +91,7 @@
           Delete
         </b-button>
       </template>
-      <template v-slot:cell(update)="data">
+      <!-- <template v-slot:cell(update)="data">
         <b-button
           size="sm"
           @click="$emit('UpdateOne', data.item)"
@@ -100,7 +100,7 @@
         >
           Edit
         </b-button>
-      </template>
+      </template>-->
     </b-table>
     <b-modal
       :id="infoModal.id"

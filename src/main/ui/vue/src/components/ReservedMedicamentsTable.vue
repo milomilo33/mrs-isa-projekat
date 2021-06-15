@@ -150,7 +150,7 @@ components: {
     ).sub;
     var self = this;
     self.axios
-      .get(`http://localhost:8080/api/patients/reservedMedication/` + username, {
+      .get(process.env.VUE_APP_API_URL + `/patients/reservedMedication/` + username, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -203,7 +203,7 @@ components: {
     cancelAppointment() {
         this.showFailedAlert = false;
         this.showSuccessAlert = false;
-        this.axios.delete(`http://localhost:8080/api/patients/cancelReservation/`+this.selectedMedicament.reservationId,  {
+        this.axios.delete(process.env.VUE_APP_API_URL + `/patients/cancelReservation/`+this.selectedMedicament.reservationId,  {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },

@@ -100,7 +100,7 @@
             || self.f =="July" || self.f =="August" || self.f =="September"|| self.f =="October" || self.f =="November"
             || self.f =="December"){
                  self.axios
-                    .get(`/api/pharmacy/reportPharmacy/` + parseInt(self.pharmacyId)+"/"+self.f+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL +  `/pharmacy/reportPharmacy/` + parseInt(self.pharmacyId)+"/"+self.f+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -118,7 +118,7 @@
                
             }else if(self.f == "Year"){
                  self.axios
-                    .get(`/api/pharmacy/reportPharmacy1/` + parseInt(self.pharmacyId)+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL + `/pharmacy/reportPharmacy1/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
@@ -136,7 +136,7 @@
                 
             }else if(self.f == "Quarter"){
                  self.axios
-                    .get(`/api/pharmacy/reportPharmacy2/` + parseInt(self.pharmacyId)+"/"+self.y, {
+                    .get(process.env.VUE_APP_API_URL + `/pharmacy/reportPharmacy2/` + parseInt(self.pharmacyId)+"/"+self.y, {
                     headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                     },
