@@ -26,9 +26,6 @@ public class CategoryThresholds {
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
-	@Version
-	@Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)	
-	private Long version;
 	
 	public CategoryThresholds() {}
 	
