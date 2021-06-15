@@ -1,18 +1,12 @@
 package com.mrsisa.mrsisaprojekat.repository;
 
-import java.util.List;
-import java.util.Set;
+import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import org.springframework.data.jpa.repository.*;
 
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
-
-import com.mrsisa.mrsisaprojekat.model.AdminPharmacy;
+import java.util.List;
+import java.util.Set;
 
 public interface PharmacyAdminRepositoryDB extends JpaRepository<AdminPharmacy, String>{
 	@Query("select a from AdminPharmacy a join fetch a.address where a.deleted = false")
