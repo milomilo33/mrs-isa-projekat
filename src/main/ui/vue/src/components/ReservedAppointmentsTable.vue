@@ -212,8 +212,8 @@ components: {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
-          }).then(() => {
-              
+          }).then(response => {
+              console.log(response.data);
               this.allAppointments.splice(this.selectedIndex, 1);
               this.items.splice(this.selectedIndex, 1);
               console.log(this.allAppointments);

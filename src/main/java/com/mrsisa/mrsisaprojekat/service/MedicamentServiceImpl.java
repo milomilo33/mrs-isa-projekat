@@ -51,6 +51,9 @@ public class MedicamentServiceImpl implements MedicamentService {
 	@Override
 	public Medicament update(Medicament medicament) {
 		Medicament temp = medicamentRepository.findById(medicament.getId()).orElse(null);
+		if(temp == null) {
+			return null;
+		}
 		temp.setDeleted(false);
 		temp.setAnnotations(medicament.getAnnotations());
 		temp.setIssuanceMode(medicament.getIssuanceMode());
@@ -81,6 +84,7 @@ public class MedicamentServiceImpl implements MedicamentService {
 	}
 
 	@Override
+	@Transactional
 	public void addRating(Rating rating, Long id) throws RatingException {
 		Medicament medicament = medicamentRepository.loadWithRatingOfUser(id, rating.getPatient().getEmail());
 		Patient p = patientService.getMedicamentIfPurchased(rating.getPatient().getEmail(), id);
@@ -101,7 +105,6 @@ public class MedicamentServiceImpl implements MedicamentService {
 		}
 		else {
 			medicament.getRatings().stream().findFirst().ifPresent(r -> r.setValue(rating.getValue()));
-
 		}
 
 		medicamentRepository.save(medicament);

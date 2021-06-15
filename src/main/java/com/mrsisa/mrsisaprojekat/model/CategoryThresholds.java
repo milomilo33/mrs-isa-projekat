@@ -25,6 +25,7 @@ public class CategoryThresholds {
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
 	
+	
 	public CategoryThresholds() {}
 	
 	public Long getId() {

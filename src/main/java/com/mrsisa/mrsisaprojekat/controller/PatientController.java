@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrsisa.mrsisaprojekat.dto.*;
 import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
@@ -7,9 +8,7 @@ import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.ConfirmationTokenRepositoryDB;
 import com.mrsisa.mrsisaprojekat.service.*;
 import com.mrsisa.mrsisaprojekat.util.QRCodeReader;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,11 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 //import javafx.application.Application;
@@ -88,6 +85,7 @@ public class PatientController {
 	private CategoryThresholdsService categoryService;
 	
 	@GetMapping(value="/reservedMedication/{id}")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Collection<PrescriptionMedicamentDTO>> getReservedMedication(@PathVariable("id") String id) {
 		Patient patient = patientService.getOneWithReservedMeds(id);
 
@@ -111,6 +109,7 @@ public class PatientController {
 
 
 	@GetMapping(value="/reservedAppointments/{id}")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Collection<AppointmentDTO>> getReservedAppointments(@PathVariable("id") String id) {
 		Patient patient = patientService.getOneWithAppointments(id);
 
@@ -131,6 +130,7 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/allSubscribed/{email}")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Collection<PharmacyDTO>> getAllSubscribedPharmacies(@PathVariable("email") String email) {
 		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(email);
 		Collection<PharmacyDTO> subPharmaciesDTO = new ArrayList<>();
@@ -148,7 +148,7 @@ public class PatientController {
 	}
 
 	@PostMapping(consumes = "application/json")
-	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
+	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
 		try {
 			AdminPharmacy savedAdmin = adminService.findOne(patientDTO.getEmail());
@@ -253,6 +253,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<PatientDTO> getPatientDetalis(@PathVariable("email") String email) {
 		
 		Patient p = patientService.getOneWithAddress(email);
@@ -286,6 +287,9 @@ public class PatientController {
 	@PostMapping(path = "/reserve", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Object> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
+		if(medicament.getQuantity() < 1) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 
 		Patient pp = patientService.getOneWithAddress(medicament.getPatientEmail());
 		if(pp.getPenaltyPoints() == 3) {
@@ -313,6 +317,10 @@ public class PatientController {
 			System.out.println(e.getMessage());
 		}
 
+		boolean isCreated = ePrescriptionService.createePrescriptionPatient(medicament);
+		if(!isCreated) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 		return new ResponseEntity<>(medicament, HttpStatus.CREATED);
 
 	}
@@ -363,10 +371,11 @@ public class PatientController {
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Long> cancelMedicamentReservation(@PathVariable("id") Long id) {
 		PrescriptionMedicament medicament = prescriptionMedicamentService.findOne(id);
+
+		ePrescription ep = ePrescriptionService.returnToPharmacyStock(medicament, medicament.getQuantity());
 		if(medicament != null) {
 			if(LocalDate.now().plusDays(1).isBefore(medicament.getExpiryDate())) {
-				prescriptionMedicamentService.delete(id);
-
+				prescriptionMedicamentService.delete(id, medicament.getQuantity());
 				return new ResponseEntity<>(id, HttpStatus.OK);
 			}
 		}
@@ -392,29 +401,29 @@ public class PatientController {
 		return new ResponseEntity<>(pharmacyDTO, HttpStatus.CREATED);
 	} 
 
-	@PostMapping(value="/unsubscribe")
+	/*@PostMapping(value="/unsubscribe")
 	@PreAuthorize("hasAnyRole('PATIENT')")
-	public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception{
-		Patient patient = patientService.findOne(pharmacyDTO.getUser());
-		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(pharmacyDTO.getUser());
-		if(subscribedPharmacies == null) {
-			return new ResponseEntity<>(pharmacyDTO, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception
+	{
+		pharmacyDTO = patientService.unsubsribe(pharmacyDTO);
+		if(pharmacyDTO == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		for(Pharmacy p: subscribedPharmacies) {
-			if(p.getId() == pharmacyDTO.getPharmacy().getId()) {
-				subscribedPharmacies.remove(p);
-				break;
-			}
-		}
-		patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
-		patient = patientService.update(patient);
-		
-		
 		return new ResponseEntity<>(pharmacyDTO, HttpStatus.OK);
-	}
+	}*/
+	@PostMapping(value="/unsubscribe")
+    @PreAuthorize("hasAnyRole('PATIENT')")
+    public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception
+    {
+        pharmacyDTO = patientService.unsubsribe(pharmacyDTO);
+        if(pharmacyDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(pharmacyDTO, HttpStatus.OK);
+    }
 	
 	@GetMapping(value="/subscribedPharmacies/{id},{pharmacy}")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<String> getSubscribedPharmacies(@PathVariable("id") String id, @PathVariable("pharmacy") Long pharmacy){
 		
 		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(id);
@@ -538,20 +547,17 @@ public class PatientController {
 	@DeleteMapping(value = "/delete_examination/{id}")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelExamination(@PathVariable("id") Long id) {
-		Appointment a = appointmentService.findOne(id);
-		LocalDateTime now = LocalDateTime.now().plusDays(1);
+		boolean success = appointmentService.cancelExamination(id);
 
-		if(a != null) {
-			if(now.isBefore(a.getDate().atTime(a.getTermFrom()))) {
-				appointmentService.cancelExamination(a);
-				return new ResponseEntity<>(id, HttpStatus.OK);
-			}
+		if(success) {
+			return new ResponseEntity<>(id, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
 	@PostMapping(value = "/rating", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<Object> addRating(@RequestBody RatingDTO ratingDTO) throws RatingException {
 		Rating rating = new Rating();
 		rating.setValue(ratingDTO.getRating());
@@ -606,7 +612,11 @@ public class PatientController {
 	@GetMapping(value = "/eprescription/{email}")
 	public ResponseEntity<Collection<ePrescriptionPreviewDTO>> ePrescriptionsOfPatient(@PathVariable("email") String email) {
 		Patient patient = patientService.getOneWithePrescriptions(email);
-		if(patient == null) return ResponseEntity.badRequest().body(null);
+		if(patient == null) {
+			System.out.println("Nije pronasao");
+
+			return ResponseEntity.badRequest().body(null);
+		}
 		Collection<ePrescriptionPreviewDTO> ePrescriptionPreviewDTOS = new ArrayList<>();
 		for(ePrescription ep : patient.getePrescriptions()) {
 			ePrescriptionPreviewDTOS.add(new ePrescriptionPreviewDTO(ep));

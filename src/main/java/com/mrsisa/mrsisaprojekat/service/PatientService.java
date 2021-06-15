@@ -1,5 +1,6 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 
@@ -50,6 +51,8 @@ public interface PatientService {
 
 	Patient getOneWithePrescriptions(String email);
 
+	Patient getOneOnlyePrescription(String email);
+
 	Patient findAllWithPurchasedMedicamentsAndAppointments(String email);
 
 	Patient getOneWithAddress(String email);
@@ -65,4 +68,6 @@ public interface PatientService {
 	Patient getPatientExaminationMedicationDone(String email);
 
 	Patient findOneWithLock(String email);
+
+	SubscribedPharmacyDTO unsubsribe(SubscribedPharmacyDTO pharmacyDTO);
 }

@@ -329,7 +329,7 @@ insert into pharmacy_vacations (pharmacy_id, vacations_id) values (1, 1)
 insert into pharmacy_vacations (pharmacy_id, vacations_id) values (2, 2)
 insert into pharmacy_vacations (pharmacy_id, vacations_id) values (3, 3)
 
-insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2021-04-28', false, 200, 1)
+insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2021-07-28', false, 200, 1)
 insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2023-02-02', false, 300, 2)
 insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2022-06-12', false, 130, 3)
 

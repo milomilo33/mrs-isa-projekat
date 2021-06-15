@@ -1,5 +1,7 @@
 package com.mrsisa.mrsisaprojekat.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +16,14 @@ public class Rating {
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Patient patient;
+
+	@Version
+	@ColumnDefault("0")
+	private short version;
+
+	public short getVersion() {
+		return version;
+	}
 	
 	public Rating() {}
 

@@ -11,6 +11,7 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
+import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,10 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Autowired
 	private ePrescriptionRepositoryDB ePrescriptionRepository;
-	
+
+	@Autowired
+	private PharmacyRepositoryDB pharmacyRepository;
+
 	@Autowired
 	private EmailService emailService;
 
@@ -330,6 +334,70 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 			e.printStackTrace();
 		}
 		return dto;
+	}
+
+	@Override
+	public boolean createePrescriptionPatient(PrescriptionMedicamentDTO medicament) {
+		Patient p = patientService.findOne(medicament.getPatientEmail());
+		p.setePrescriptions(new HashSet<>());
+		p.setePrescriptions(ePrescriptionRepository.findByPatient(medicament.getPatientEmail()));
+		System.out.println("Velicina " + p.getePrescriptions().size());
+
+		ePrescription e = new ePrescription();
+		e.setPatient(p);
+		e.setTakenDate(LocalDate.now());
+		e.setDate(medicament.getExpiryDate());
+		e.setPharmacy(pharmacyService.findOne(medicament.getPharmacyId()));
+		e.setDone(false);
+		e.setDeleted(false);
+		e.setPrice(medicament.getPrice());
+		PrescriptionMedicament pm = new PrescriptionMedicament();
+		pm.setDeleted(false);
+		pm.setExpiryDate(medicament.getExpiryDate());
+		pm.setMedicament(medicament.getMedicament());
+		pm.setQuantity(medicament.getQuantity());
+		pm.setPurchased(false);
+
+		if(e.getPrescriptionMedicaments() == null)
+			e.setPrescriptionMedicaments(new HashSet<>());
+
+
+		System.out.println(p.getEmail());
+		System.out.println(p.getePrescriptions());
+		System.out.println(e.getDate());
+		e.getPrescriptionMedicaments().add(pm);
+		p.getePrescriptions().add(e);
+
+		try {
+
+			pharmacyService.update(pharmacyService.findOne(medicament.getPharmacyId()));
+			e = this.create(e);
+			patientService.update(p);
+			return true;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return false;
+		}
+
+	}
+
+	@Override
+	@Transactional
+	public ePrescription returnToPharmacyStock(PrescriptionMedicament medicament, int quantity) {
+		ePrescription ep = ePrescriptionRepository.findePrescriptionWherePrescriptionMedicament(medicament.getId());
+
+		//System.out.println("aj nesto " + medicament.getId());
+		Pharmacy pharmacy = pharmacyRepository.getOneWithMedicamentsPatient(ep.getPharmacy().getId());
+		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream()
+				.filter(mi -> mi.getMedicament().getId().equals(medicament.getId())).findFirst().orElse(null);
+				if (medicamentItem != null)
+					medicamentItem.setQuantity(medicamentItem.getQuantity() + medicament.getQuantity());
+//				pharmacyService.update(pharmacy);
+				pharmacyRepository.save(pharmacy);
+
+
+
+		return null;
 	}
 
 }

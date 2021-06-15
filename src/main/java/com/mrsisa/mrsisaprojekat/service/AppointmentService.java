@@ -4,7 +4,10 @@ import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
+import com.mrsisa.mrsisaprojekat.model.WorkHour;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -23,7 +26,7 @@ public interface AppointmentService {
 
     AppointmentDetailsDTO getAppointmentDetails(Long appointmentId);
 
-    void cancelExamination(Appointment appointment);
+    boolean cancelExamination(Long id);
 
     Long startAppointment(Long appointmentId, String employeeEmail);
 
@@ -34,4 +37,11 @@ public interface AppointmentService {
     Set<Appointment> getAppointmentWithEmployee(String email);
     
     Appointment reserveAppointment(AppointmentDTO appointment);
+    
+    
+    Appointment makeAppointmentDermatologist(Appointment appointment, Long id,String email);
+
+	boolean checkAppointment(Set<Appointment> appointments, LocalDate date, LocalTime time1, LocalTime time2);
+
+	boolean check(Set<WorkHour> workHours, LocalDate date, LocalTime time1, LocalTime time2);
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.dto.AdminPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.dto.PharmacyDTO;
@@ -85,6 +86,7 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	}
 
 	@Override
+	@Transactional
 	public List<AdminPharmacy> getAllUnemployedAdmins() {
 
 		List<AdminPharmacy> retVal = adminRepository.getAllWithAddress();
@@ -98,8 +100,9 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	}
 
 	@Override
+	@Transactional
 	public AdminPharmacy updatePharmacy(AdminPharmacyDTO adminDTO) {
-		AdminPharmacy admin = adminRepository.getOneLogin(adminDTO.getEmail());
+		AdminPharmacy admin = adminRepository.getOneForConcurrent(adminDTO.getEmail());
 
 		if(admin == null) {
 			return null;

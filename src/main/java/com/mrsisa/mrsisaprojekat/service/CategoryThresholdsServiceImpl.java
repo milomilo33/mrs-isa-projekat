@@ -1,12 +1,13 @@
 package com.mrsisa.mrsisaprojekat.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.mrsisa.mrsisaprojekat.dto.CategoryDTO;
 import com.mrsisa.mrsisaprojekat.model.CategoryThresholds;
 import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.repository.CategoryThresholdRepositoryDB;
@@ -31,8 +32,23 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 	}
 
 	@Override
-	public CategoryThresholds update(CategoryThresholds categoryThresholds) {
-		CategoryThresholds ct = categoryThresholdsRepository.save(categoryThresholds);
+	@Transactional
+	public CategoryThresholds update(CategoryDTO category) {
+		CategoryThresholds thresholds = this.findOne(category.getId());
+		
+		if(thresholds == null) {
+			return null;
+		}
+
+		thresholds.setCategory(category.getCategory());
+		thresholds.setDiscount(category.getDiscount());
+		thresholds.setThreshold(category.getThreshold());
+		thresholds.setDeleted(false);
+		CategoryThresholds ct = categoryThresholdsRepository.save(thresholds);
+		
+		if(ct == null) {
+			return null;
+		}
 		try {
 			this.checkPatientsCategories();
 		} catch (Exception e) {
@@ -48,8 +64,18 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 	}
 
 	@Override
-	public CategoryThresholds create(CategoryThresholds category) {
-		CategoryThresholds ct = categoryThresholdsRepository.save(category);
+	@Transactional
+	public CategoryThresholds create(CategoryDTO category) {
+		CategoryThresholds thresholds = new CategoryThresholds();
+		thresholds.setCategory(category.getCategory());
+		thresholds.setDiscount(category.getDiscount());
+		thresholds.setThreshold(category.getThreshold());
+		thresholds.setDeleted(false);
+		
+		CategoryThresholds ct = categoryThresholdsRepository.save(thresholds);
+		if(ct == null) {
+			return null;
+		}
 		try {
 			this.checkPatientsCategories();
 		} catch (Exception e) {
@@ -63,7 +89,6 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 		if(category.getCategory().equalsIgnoreCase("REGULAR")) {
 			return false;
 		}
-		System.out.println(category.getThreshold());
 		category.setDeleted(true);
 		categoryThresholdsRepository.save(category);
 		

@@ -1,8 +1,5 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
-
-import java.util.Set;
-
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 
 public class MedicamentDTO {
@@ -64,6 +61,33 @@ public class MedicamentDTO {
 	}
 	public int getPoints() {
 		return points;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public void setForm(String form) {
+		this.form = form;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
+	}
+	public void setStructure(String structure) {
+		this.structure = structure;
+	}
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+	public void setPoints(int points) {
+		this.points = points;
 	}
 	
 	

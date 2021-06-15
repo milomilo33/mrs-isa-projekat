@@ -51,6 +51,19 @@ public class PricelistItemMedicamentDTO {
 		this.price = price;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setPharmacy(PharmacyDTO pharmacy) {
+		this.pharmacy = pharmacy;
+	}
+
+	public void setMedicament(MedicamentDTO medicament) {
+		this.medicament = medicament;
+	}
+
+	
 	
 
 	

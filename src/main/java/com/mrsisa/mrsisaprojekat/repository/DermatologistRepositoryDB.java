@@ -2,11 +2,12 @@ package com.mrsisa.mrsisaprojekat.repository;
 
 
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 import java.util.List;
 
 public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, String>{
@@ -44,4 +45,8 @@ public interface DermatologistRepositoryDB extends JpaRepository<Dermatologist, 
 	@Query(value="delete from  dermatologists_pharmacies d where d.dermatologist_id=?1  and d.pharmacy_id=?2", nativeQuery = true)
 	void removeDermatologistFromPharmacy(String email, Long id);
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select d from Dermatologist d where d.email = :email")
+	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
+	Dermatologist findOneWithLock(@Param("email") String email);
 }

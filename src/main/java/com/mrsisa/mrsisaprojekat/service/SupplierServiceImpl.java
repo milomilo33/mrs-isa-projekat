@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mrsisa.mrsisaprojekat.model.Patient;
 import com.mrsisa.mrsisaprojekat.model.Role;
 import com.mrsisa.mrsisaprojekat.model.Supplier;
 import com.mrsisa.mrsisaprojekat.repository.SupplierRepositoryDB;

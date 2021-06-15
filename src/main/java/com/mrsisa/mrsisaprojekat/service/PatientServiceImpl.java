@@ -1,9 +1,12 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +122,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public PrescriptionMedicament updateWithReservation(Patient p, PrescriptionMedicament medicamentToReserve) {
 		Patient patientToUpdate = patientRepository.getPatientWithReservedMedicaments(p.getEmail());
 
@@ -132,6 +136,7 @@ public class PatientServiceImpl implements PatientService {
 		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
 		PrescriptionMedicament pm = prescriptionRepository.save(medicamentToReserve);
 		patientRepository.save(p);
+
 		prescriptionRepository.updatePatientReservation(p.getEmail(), medicamentToReserve.getId());
 
 		return medicamentToReserve;
@@ -233,21 +238,37 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException {
 		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
 
 		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
 				.equals(medicament.getMedicament().getId())).findFirst().orElse(null);
 
+		try {
+			if (medicamentItem != null) {
+				if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
+					try {
+						throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
+					} catch (ReservationQuantityException e) {
+						e.printStackTrace();
+					}
+				} else {
+					//medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+					medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+					medicamentItemRepository.save(medicamentItem);
 
-		if (medicamentItem != null) {
-			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
-				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
-			} else {
-				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
-				medicamentItemRepository.save(medicamentItem);
+
+//				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+//				medicamentItemRepository.save(medicamentItem);
+
+
+				}
 			}
-		} 
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	@Override
@@ -377,6 +398,11 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	public Patient getOneOnlyePrescription(String email) {
+		return patientRepository.getOneOnlyePrescription(email);
+	}
+
+	@Override
 	public Patient getOneWithCategory(String email) {
 		// TODO Auto-generated method stub
 		return null;
@@ -425,5 +451,32 @@ public class PatientServiceImpl implements PatientService {
 	public Patient findOneWithLock(String email) {
 		return patientRepository.findOneWithLock(email);
 	}
+
+	@Override
+    public SubscribedPharmacyDTO unsubsribe(SubscribedPharmacyDTO pharmacyDTO) {
+        Patient patient = this.findOne(pharmacyDTO.getUser());
+        Collection<Pharmacy> subscribedPharmacies = this.findAllSubscribed(pharmacyDTO.getUser());
+        if(subscribedPharmacies == null) {
+            return null;
+        }
+
+        for(Pharmacy p: subscribedPharmacies) {
+            if(p.getId() == pharmacyDTO.getPharmacy().getId()) {
+                subscribedPharmacies.remove(p);
+                break;
+            }
+        }
+
+        patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
+
+        try {
+            patient = this.update(patient);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return pharmacyDTO;
+    }
 
 }

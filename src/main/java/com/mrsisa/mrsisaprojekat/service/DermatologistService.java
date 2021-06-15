@@ -5,14 +5,13 @@ import com.mrsisa.mrsisaprojekat.exceptions.RatingException;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
 import com.mrsisa.mrsisaprojekat.model.Dermatologist;
 import com.mrsisa.mrsisaprojekat.model.Rating;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
-
-import org.springframework.transaction.annotation.Transactional;
 public interface DermatologistService {
 	List<Dermatologist> findAll();
 	
@@ -53,5 +52,7 @@ public interface DermatologistService {
 	Collection<AppointmentCalendarDTO> getAllAppointmentsBetweenDatesForCalendar(LocalDateTime startDate, LocalDateTime endDate, String dermatologistEmail);
 	
 	void removeDermatlogistFromPharmacy(String email, Long id);
+
+	Dermatologist findOneWithLock(String dermatologistEmail);
 	
 }

@@ -3,16 +3,15 @@ package com.mrsisa.mrsisaprojekat.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
-import com.mrsisa.mrsisaprojekat.model.Medicament;
-import com.mrsisa.mrsisaprojekat.model.Patient;
-import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
-import com.mrsisa.mrsisaprojekat.service.MedicamentService;
-import com.mrsisa.mrsisaprojekat.service.PharmacyService;
 import com.mrsisa.mrsisaprojekat.service.PriceService;
 import com.mrsisa.mrsisaprojekat.service.PricelistItemAppointmentService;
 import com.mrsisa.mrsisaprojekat.service.PricelistItemMedicamentService;
@@ -46,11 +40,6 @@ public class PricelistItemController {
 	private PricelistItemMedicamentService pricelistItemService;
 	@Autowired
 	private PriceService priceService;
-	@Autowired
-	private MedicamentService medicamentService;
-	@Autowired
-	private PharmacyService pharmacyService;
-	
 	@Autowired
 	private PricelistItemAppointmentService pricelistItemAppointmentService;
 	
@@ -104,26 +93,10 @@ public class PricelistItemController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('PHARMACY_ADMIN')")
 	public ResponseEntity<PricelistItemMedicamentDTO> savePricelistItemMedicament(@RequestBody PricelistItemMedicamentDTO pricelistItem) throws Exception{
 		
-		Price price = new Price();
-		price.setDeleted(false);
-		price.setValue(pricelistItem.getPrice().get(0).getValue());
-		price.setDateFrom(LocalDate.now());
-		price.setDateTo(null);
-		price.setPoints(pricelistItem.getPrice().get(0).getPoints());
-		
-		Price saved = priceService.create(price);
-		Medicament medicament = medicamentService.findOne(pricelistItem.getMedicament().getId());
-		Pharmacy pharmacy = pharmacyService.findOne(pricelistItem.getPharmacy().getId());
-		PricelistItemMedicament p = new PricelistItemMedicament();
-		p.setMedicament(medicament);
-		Set<Price> pp = new HashSet<>();
-		pp.add(saved);
-		p.setPrice(pp);
-		p.setPharmacy(pharmacy);
-		
-		PricelistItemMedicament savedP = pricelistItemService.create(p);
+		PricelistItemMedicament savedP = pricelistItemService.savePricelistItemMedicament(pricelistItem);
 		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP),HttpStatus.CREATED);
 	
 	}
@@ -213,31 +186,6 @@ public class PricelistItemController {
 			return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
 			
 		}
-		//PricelistItemMedicament pricelistUpdate = pricelistItemService.findByPharmacyAndMed(id,pId);
-		/*if (pricelistUpdate == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		for(Price p : pricelistUpdate.getPrice()) {
-			if(!p.isDeleted()) {
-				p.setDeleted(true);
-				p.setDateTo(LocalDate.now());
-				priceService.update(p);
-				
-			}
-		}
-		Price p = new Price();
-		p.setValue(pricelistItem.getPrice().get(0).getValue());
-		p.setDateFrom(pricelistItem.getPrice().get(0).getDateFrom());
-		p.setDateTo(pricelistItem.getPrice().get(0).getDateTo());
-		p.setDeleted(false);
-		p.setPoints(0);
-		p.setPromotion(true);
-		Price saved = priceService.create(p);
-		Set<Price> pr = pricelistUpdate.getPrice();
-		pr.add(saved);
-		pricelistUpdate.setPrice(pr);
-		pricelistUpdate = pricelistItemService.update(pricelistUpdate);*/
 		
 	}
 	
@@ -253,9 +201,7 @@ public class PricelistItemController {
 		
 		Set<PricelistItemMedicament> items = (Set<PricelistItemMedicament>) pricelistItemService.findAllPricelistItems();
 		ArrayList<PricelistItemMedicamentDTO> list = new ArrayList<>();
-		
-		//pricelistItemService.checkPromotions(items);
-		// samo aktivne cene (odnosne one kod kojih je deleted = false)
+	
 		for(PricelistItemMedicament p :items) {
 			if(p.getMedicament().getId() == id) {
 				ArrayList<Price> prices = new ArrayList<>();

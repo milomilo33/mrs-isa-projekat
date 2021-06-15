@@ -237,11 +237,8 @@ export default {
       }
       self.axios
         .post(
-          process.env.VUE_APP_API_URL+`/appointments/` + parseInt(self.pharmacyId),
+          process.env.VUE_APP_API_URL+ `/appointments/` + parseInt(self.pharmacyId)+"/"+self.e.email,
           {
-            patient: {
-              email: self.e.email,
-            },
             date: self.date,
             termFrom: self.timefrom,
             termTo: self.timeto,

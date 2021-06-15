@@ -318,8 +318,8 @@ public class DermatologistServiceImpl implements DermatologistService {
 			return "Invalid date!";
 		}
 
-		Dermatologist dermatologist = this.findOne(dermatologistEmail);
-		Patient patient = patientService.findOneWithLock(patientEmail);
+		Dermatologist dermatologist = this.findOneWithLock(dermatologistEmail);
+		Patient patient = patientService.findOne(patientEmail);
 		MedicalReport report = medicalReportService.findOne(medicalReportId);
 
 		if (patient == null || dermatologist == null) {
@@ -429,6 +429,12 @@ public class DermatologistServiceImpl implements DermatologistService {
 		pharmacy.getAppointments().add(newAppointment);
 
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public Dermatologist findOneWithLock(String dermatologistEmail) {
+		return dermatologistRepository.findOneWithLock(dermatologistEmail);
 	}
 
 	@Override
