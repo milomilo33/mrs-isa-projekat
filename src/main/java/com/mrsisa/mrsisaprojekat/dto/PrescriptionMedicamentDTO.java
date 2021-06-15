@@ -13,7 +13,15 @@ public class PrescriptionMedicamentDTO {
     private LocalDate expiryDate;
     private int quantity;
     private Long id;
+    private double price;
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public PrescriptionMedicamentDTO() {
 
@@ -30,11 +38,13 @@ public class PrescriptionMedicamentDTO {
         this.quantity = pm.getQuantity();
     }
 
-    public PrescriptionMedicamentDTO(String patientEmail, Medicament medicament, LocalDate expiryDate, int quantity) {
+    public PrescriptionMedicamentDTO(String patientEmail, Medicament medicament, LocalDate expiryDate, int quantity, Long pharmacyId, double price) {
         this.patientEmail = patientEmail;
         this.medicament = medicament;
         this.expiryDate = expiryDate;
         this.quantity = quantity;
+        this.price = price;
+        this.pharmacyId = pharmacyId;
     }
 
     public String getPatientEmail() {
