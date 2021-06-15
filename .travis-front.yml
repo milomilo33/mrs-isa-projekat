@@ -1,0 +1,18 @@
+dist: xenial
+sudo: false
+install: true
+ 
+matrix:
+  include:
+    - language: node_js
+      node_js:
+      - "node"
+      cache: npm
+      script:
+        - cd src/main/ui/vue
+      deploy:
+        provider: heroku
+        api_key: $HEROKU_API_KEY
+        on:
+          branch: main
+        app: mrs-isa-projekat-frontend
