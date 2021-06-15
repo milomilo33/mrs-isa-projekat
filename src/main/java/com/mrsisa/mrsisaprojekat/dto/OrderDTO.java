@@ -1,12 +1,10 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.mrsisa.mrsisaprojekat.model.MedicamentItem;
-import com.mrsisa.mrsisaprojekat.model.Offer;
 import com.mrsisa.mrsisaprojekat.model.Order;
 
 public class OrderDTO {

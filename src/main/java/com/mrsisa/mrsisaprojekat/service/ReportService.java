@@ -8,7 +8,6 @@ import com.mrsisa.mrsisaprojekat.dto.OrderDTO;
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemAppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.ePrescriptionPreviewDTO;
 import com.mrsisa.mrsisaprojekat.model.Appointment;
-import com.mrsisa.mrsisaprojekat.model.PricelistItemAppointment;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 public interface ReportService {

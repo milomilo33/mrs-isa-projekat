@@ -4,7 +4,6 @@ import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.dto.ReportTextDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
-import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.service.AppointmentService;
 import com.mrsisa.mrsisaprojekat.service.DermatologistService;
 import com.mrsisa.mrsisaprojekat.service.PharmacistService;
@@ -18,10 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collection;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -34,8 +30,6 @@ public class AppointmentController {
     @Autowired
     private DermatologistService dermatologistService;
 
-    @Autowired
-    private PharmacyService pharmacyService;
     
     @Autowired
     private PharmacistService pharmacistService;
