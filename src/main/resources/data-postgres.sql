@@ -397,7 +397,6 @@ insert into medicament_ratings (medicament_id, ratings_id) values (2, 5)
 insert into medicament_ratings (medicament_id, ratings_id) values (3, 6)
 insert into medicament_ratings (medicament_id, ratings_id) values (4, 7)
 insert into medicament_ratings (medicament_id, ratings_id) values (4, 8)
-insert into medicament_ratings (medicament_id, ratings_id) values (1, 15)
 
 
 insert into employee_ratings (employee_email, ratings_id ) values ('janatot@gmail.com', 9)
