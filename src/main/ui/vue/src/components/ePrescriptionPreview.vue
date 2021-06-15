@@ -111,7 +111,10 @@ export default {
                 .then(response => {
                   this.ePrescriptions = response.data
                 })
-                .catch(() => this.showNoPrescription = true);
+                .catch(e => {
+                  this.showNoPrescription = true;
+                  console.log(e.response);
+                  });
         },
 
         formatDate(date) {

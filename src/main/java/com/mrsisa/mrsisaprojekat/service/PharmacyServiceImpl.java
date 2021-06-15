@@ -55,6 +55,7 @@ public class PharmacyServiceImpl implements PharmacyService{
 		if (pharmacyToUpdate == null) {
 			return null;
 		}
+
 		pharmacyRepository.save(pharmacy);
 		return pharmacy;
 	}

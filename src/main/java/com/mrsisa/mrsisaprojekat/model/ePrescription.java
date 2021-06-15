@@ -37,17 +37,17 @@ public class ePrescription {
 	@Column(name = "price", unique = false, nullable = true)
 	private double price;
 
-	@Version
-	@Column(name = "version")
-	private Long version;
+//	@Version
+//	@Column(name = "version")
+//	private Long version;
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
+//	public Long getVersion() {
+//		return version;
+//	}
+//
+//	public void setVersion(Long version) {
+//		this.version = version;
+//	}
 
 	public ePrescription(Patient patient, LocalDate date, Set<PrescriptionMedicament> prescriptionMedicaments, Pharmacy pharmacy, LocalDate takenDate, double price) {
 		this.patient = patient;

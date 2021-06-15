@@ -94,8 +94,12 @@
                       Close
                     </b-button>
                   </template>
+                  
                    <b-alert v-model="showFailedReserve" dismissible fade variant="danger">
                           {{message}}
+                  </b-alert>
+                  <b-alert v-model="success" dismissible fade variant="success">
+                         Reservation successful!
                   </b-alert>
                 <b-row>
                   <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
@@ -103,7 +107,7 @@
                  
                 </b-row>
                 <b-row>
-                   <b-button variant="success" class="m-2" @click="reserveMedicament(item.pharmacy.id)"> Reserve medicament </b-button>
+                   <b-button variant="success" class="m-2" @click="reserveMedicament(item.pharmacy.id, item.price[0].value)"> Reserve medicament </b-button>
                   
                   
                 </b-row>
@@ -177,6 +181,13 @@
         <b-button class="mt-3" variant="outline-success" block @click="onCloseSuccessModal">Close</b-button>
       </b-modal>
 
+    <b-modal ref="successful-reservation-modal" hide-footer title="Success" @hide="onCloseSuccessModal">
+        <div class="d-block text-center">
+            <p>Medicine successfully prescribed</p>
+        </div>
+        <b-button class="mt-3" variant="outline-success" block @click="onCloseSuccessModal">Close</b-button>
+      </b-modal>
+
       <b-modal ref="substitute-prescription-modal" hide-footer title="Substitute medicine(s)" @hide="onCloseSubstituteModal">
         <div class="d-block text-center">
             <p>Not enough of this medicine in {{ pharmacy.name }}. Showing substitute medicines for {{ medicament.name }}.</p>
@@ -215,6 +226,7 @@ export default defineComponent({
       showFailedRating: false,
       showFailedReserve: false,
       message:"",
+      success: false
     }
   },
   computed: {
@@ -303,31 +315,36 @@ export default defineComponent({
 
     
 
-    reserveMedicament(pharmacy) {
-      console.log(this.date);
+    reserveMedicament(pharmacy, medPrice) {
+      this.success = false;
+      console.log(JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
+    
       if(this.amount !== null && this.date !== null) {
         this.axios.post(`/api/patients/reserve/`, {
           patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
           medicament: this.medicament,
           expiryDate: this.date,
           quantity: this.amount,
-          pharmacyId: pharmacy
+          pharmacyId: pharmacy,
+          price: this.amount * medPrice
         },{headers: {
             Authorization: "Bearer " + localStorage.getItem('token')
             }
-        }).then(function (response) {
+        }).then(response => {
           console.log(response);
-          alert("Rezervacija izvršena!");
+          this.success = true;
+          //this.showSuccessAlert = true;
+          console.log("Rezervacija izvršena!");
         })
         .catch((error => {
-         
+         console.log("uso sam");
           if(error.response.status == "400"){
            
-            this.message = " You have 3 penaults You can't reserve it.";
+            this.message = " You have 3 penalties. You can't reserve it.";
                this.showFailedReserve = true;
           }else{
            this.message = " You can't reserve it";
-           this.showFailedReserve= true;
+           this.showFailedReserve = true;
           }
          
         }));
@@ -404,6 +421,7 @@ export default defineComponent({
         pharmacy: this.pharmacy
       });
     },
+    
 
     showSuccessModal() {
         this.$refs['successful-prescription-modal'].show();
@@ -411,7 +429,9 @@ export default defineComponent({
 
     showSubstituteModal() {
         this.$refs['substitute-prescription-modal'].show();
-    }
+    },
+
+    
   }
 })
 </script>

@@ -1,5 +1,37 @@
 <template>
     <div id="PharmacyListPreview" class="div">
+      <!-- <b-container>
+      <div>
+  <b-input-group>
+    
+
+    <b-form-input v-model="search" placeholder="Search"></b-form-input>
+
+    <b-input-group-append>
+      <b-button variant="outline-primary" @click="doSearch()">Search</b-button>
+      <b-button variant="outline-secondary" @click="this.pharmacies = this.all">Clear</b-button>
+      
+    </b-input-group-append>
+  </b-input-group>
+  
+</div>
+      </b-container> -->
+      <b-container>
+        <div>
+        <b-row fluid>
+          <b-col cols="8">
+            <b-form-input v-model="search" placeholder="Search"></b-form-input>
+          </b-col>
+          <b-col cols="2">
+            <b-button @click="doSearch">Search</b-button>
+          </b-col>
+          <b-col cols="2">
+            <b-button @click="clearAll">Clear</b-button>
+          </b-col>
+        </b-row>
+        </div>
+      </b-container>
+      <br>
       <button type="button" class="btn btn-light m-auto" @click="filter_show=!filter_show">Filter</button>
       <div v-if="filter_show">
         <PharmacyFilter :allPharmacies="all" @childToParent="filterPharmacies"/>
@@ -40,7 +72,8 @@ export default defineComponent({
         all: [],
         query: null,
         filter_show: false,
-        success: true
+        success: true,
+        search: ""
       }
     },
 
@@ -91,6 +124,22 @@ export default defineComponent({
           }).catch(error => console.log(error));
       }
       console.log(value);
+    },
+
+    doSearch() {
+      this.axios.get(`/api/pharmacy/search/${this.search}`,{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+        .then(response => {
+            this.pharmacies = response.data;
+            //this.all = response.data;
+            console.log(this.pharmacies[0].name)
+        }).catch(error => console.log(error));
+    },
+
+    clearAll() {
+      this.pharmacies = this.all;
+      this.search = "";
     }
   }
 

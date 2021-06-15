@@ -1,14 +1,8 @@
 package com.mrsisa.mrsisaprojekat.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -29,6 +23,18 @@ public class MedicamentItem {
 	private boolean deleted;
 	
 	public MedicamentItem() {}
+
+	@Version
+	@ColumnDefault("0")
+	private short version;
+
+	public short getVersion() {
+		return version;
+	}
+
+	public void setVersion(short version) {
+		this.version = version;
+	}
 
 	public Long getId() {
 		return id;
