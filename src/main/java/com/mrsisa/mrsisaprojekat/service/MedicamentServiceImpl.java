@@ -51,6 +51,9 @@ public class MedicamentServiceImpl implements MedicamentService {
 	@Override
 	public Medicament update(Medicament medicament) {
 		Medicament temp = medicamentRepository.findById(medicament.getId()).orElse(null);
+		if(temp == null) {
+			return null;
+		}
 		temp.setDeleted(false);
 		temp.setAnnotations(medicament.getAnnotations());
 		temp.setIssuanceMode(medicament.getIssuanceMode());

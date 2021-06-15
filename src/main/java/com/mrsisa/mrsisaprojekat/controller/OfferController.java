@@ -243,7 +243,6 @@ public class OfferController {
 	@GetMapping(value = "/filter/{email},{status}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('PHARMACY_ADMIN', 'SUPPLIER')")
 	public ResponseEntity<Set<OfferDTO>> getOffers(@PathVariable("email") String email, @PathVariable("status") String status) {
-		System.out.println("status "+ status);
 		OfferStatus statusOffer = OfferStatus.valueOf(status);
 		
 		Set<Offer> offers = offerService.filterOffer(email, statusOffer);

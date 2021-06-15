@@ -407,23 +407,12 @@ public class PatientController {
 
 	@PostMapping(value="/unsubscribe")
 	@PreAuthorize("hasAnyRole('PATIENT')")
-	public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception{
-		Patient patient = patientService.findOne(pharmacyDTO.getUser());
-		Collection<Pharmacy> subscribedPharmacies = patientService.findAllSubscribed(pharmacyDTO.getUser());
-		if(subscribedPharmacies == null) {
-			return new ResponseEntity<>(pharmacyDTO, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception
+	{
+		pharmacyDTO = patientService.unsubsribe(pharmacyDTO);
+		if(pharmacyDTO == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		for(Pharmacy p: subscribedPharmacies) {
-			if(p.getId() == pharmacyDTO.getPharmacy().getId()) {
-				subscribedPharmacies.remove(p);
-				break;
-			}
-		}
-		patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
-		patient = patientService.update(patient);
-		
-		
 		return new ResponseEntity<>(pharmacyDTO, HttpStatus.OK);
 	}
 	

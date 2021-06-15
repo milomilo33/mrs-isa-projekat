@@ -1,9 +1,12 @@
 package com.mrsisa.mrsisaprojekat.service;
 
+import com.mrsisa.mrsisaprojekat.dto.SubscribedPharmacyDTO;
 import com.mrsisa.mrsisaprojekat.exceptions.ReservationQuantityException;
 import com.mrsisa.mrsisaprojekat.model.*;
 import com.mrsisa.mrsisaprojekat.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -446,6 +449,33 @@ public class PatientServiceImpl implements PatientService {
 	@Transactional
 	public Patient findOneWithLock(String email) {
 		return patientRepository.findOneWithLock(email);
+	}
+	
+	@Override
+	public SubscribedPharmacyDTO unsubsribe(SubscribedPharmacyDTO pharmacyDTO) {
+		Patient patient = this.findOne(pharmacyDTO.getUser());
+		Collection<Pharmacy> subscribedPharmacies = this.findAllSubscribed(pharmacyDTO.getUser());
+		if(subscribedPharmacies == null) {
+			return null;
+		}
+		
+		for(Pharmacy p: subscribedPharmacies) {
+			if(p.getId() == pharmacyDTO.getPharmacy().getId()) {
+				subscribedPharmacies.remove(p);
+				break;
+			}
+		}
+		
+		patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
+		
+		try {
+			patient = patientRepository.save(patient);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return pharmacyDTO;
 	}
 
 }
