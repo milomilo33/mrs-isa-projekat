@@ -231,14 +231,13 @@ export default defineComponent({
 
     var _this = this;
     this.axios
-      .get(`/api/medicaments/all`, {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/all`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
       .then(function (response) {
         _this.items = response.data;
-        console.log(_this.items);
         this.updated = this.items[0];
       })
       .catch(function (error) {
@@ -251,7 +250,7 @@ export default defineComponent({
       deleteMedicament(row){
         var _this = this;
         this.axios
-      .get(`/api/medicaments/deleteMedicament/`+row.item.id, {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/deleteMedicament/`+row.item.id, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -264,7 +263,7 @@ export default defineComponent({
         _this.items.splice(idx, 1);
       })
       .catch(function (error) {
-         _this.showFailedAlertDelete = true;
+        _this.showFailedAlertDelete = true;
         _this.showSuccessAlertDelete = false;
         console.log(error);
       });
@@ -274,7 +273,7 @@ export default defineComponent({
         var _this = this;
         this.axios
           .post(
-            `/api/medicaments/updateMedicament`,
+            process.env.VUE_APP_API_URL+`/medicaments/updateMedicament`,
             {
               name: this.updated.name,
               id: this.updated.id,

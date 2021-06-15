@@ -113,7 +113,7 @@ export default {
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
+      this.axios.get(process.env.VUE_APP_API_URL + `/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
         .then(response => 
         this.rating = response.data
         )
@@ -123,7 +123,7 @@ export default {
     postRatingEmployee(rating) {
       this.rating = rating
       this.showFailedAlert = false;
-      this.axios.post('http://localhost:8080/api/patients/rating', {
+      this.axios.post(process.env.VUE_APP_API_URL+'/patients/rating', {
         rateType: this.employee.e === "Pharmacist" ? 2 : 3,
         ratedEmployeeEmail: this.employee.email,
         rating: this.rating,
@@ -173,7 +173,7 @@ export default {
               console.log(JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
               console.log(typeof JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
 
-      this.axios.post('/api/patients/reserve_appointment', {
+      this.axios.post(process.env.VUE_APP_API_URL+'/patients/reserve_appointment', {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         appointmentId: this.appointment.id
       },

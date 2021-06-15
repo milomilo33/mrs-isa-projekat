@@ -139,7 +139,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -183,8 +183,8 @@ export default {
             (self.errorModal.content = "You cannot accept this request!");
           self.$root.$emit("bv::show::modal", self.errorModal.id);
         }else{
-            self.axios.put(
-          `/api/request/update/` + parseInt(self.selected[0].id),
+            self.axios.put(process.env.VUE_APP_API_URL +
+          `/request/update/` + parseInt(self.selected[0].id),
           {
             id: self.selected[0].id,
             accepted: true,
@@ -230,8 +230,8 @@ export default {
             (self.errorModal.content = "You cannot accept this request!");
           self.$root.$emit("bv::show::modal", self.errorModal.id);
         }else{
-            this.axios.put(
-          `/api/request/update/` + parseInt(self.selected[0].id),
+            this.axios.put(process.env.VUE_APP_API_URL +
+          `/request/update/` + parseInt(self.selected[0].id),
           {
             id: self.selected[0].id,
             accepted: false,
@@ -263,7 +263,7 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pharmacy/requests/`+ self.pharmacyId, {
+      .get(process.env.VUE_APP_API_URL +`/pharmacy/requests/`+ self.pharmacyId, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {

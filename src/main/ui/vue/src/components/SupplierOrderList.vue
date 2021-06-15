@@ -35,7 +35,7 @@ export default defineComponent({
       ).sub;
 
     this.axios
-      .get(`/api/orders/forOffer`, {
+      .get( process.env.VUE_APP_API_URL + `/orders/forOffer`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {

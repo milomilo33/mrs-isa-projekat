@@ -31,7 +31,6 @@ export default defineComponent({
         { key: "email", sortable: true, label: "Email" },
         { key: "rating", sortable: true, label: "Rating" },
         "info",
-        { key: "update", label: "Edit" },
         "delete",
       ],
       sortBy: "name",
@@ -66,7 +65,7 @@ export default defineComponent({
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -83,7 +82,7 @@ export default defineComponent({
     GetPharmacists() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/pharmacists/` + parseInt(self.pharmacyId), {
+        .get(process.env.VUE_APP_API_URL + `/pharmacy/pharmacists/` + parseInt(self.pharmacyId), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -120,7 +119,7 @@ export default defineComponent({
     DeleteOne(item, button) {
       var self = this;
       self.axios
-        .delete(`/api/pharmacist/` + item.email, {
+        .delete(process.env.VUE_APP_API_URL + `/pharmacist/` + item.email, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

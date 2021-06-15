@@ -52,7 +52,7 @@ export default defineComponent({
 
     if(this.role == "ROLE_PATIENT"){
       this.axios
-        .get(`/api/complaints/getAllUnansweredForPatient/`+this.user, {
+        .get(process.env.VUE_APP_API_URL + `/complaints/getAllUnansweredForPatient/`+this.user, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
@@ -62,7 +62,7 @@ export default defineComponent({
         .catch((error) => console.log(error.response.data));
     }else {
       this.axios
-        .get(`/api/complaints/getAllUnanswered/`, {
+        .get(process.env.VUE_APP_API_URL + `/api/complaints/getAllUnanswered/`, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {

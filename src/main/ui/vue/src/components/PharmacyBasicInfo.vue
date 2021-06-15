@@ -123,7 +123,7 @@ export default {
       if(userRole =="ROLE_PHARMACY_ADMIN" && d === undefined){
        
          _this.axios
-          .get(`/api/pharmacyAdmin/` + _this.user, {
+          .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + _this.user, {
             headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -140,7 +140,7 @@ export default {
         console.log(error);
       });
       }else{
-      this.axios.get(`/api/pharmacy/${this.$route.params.id}`, {
+      this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/${this.$route.params.id}`, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(response => {
@@ -151,7 +151,7 @@ export default {
       }
     if(userRole == "ROLE_PATIENT")
     {
-        this.axios.get(`/api/patients/subscribedPharmacies/${this.user},`+parseInt(this.$route.params.id), {
+        this.axios.get( process.env.VUE_APP_API_URL + `/patients/subscribedPharmacies/${this.user},`+parseInt(this.$route.params.id), {
         headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(response=> {
@@ -182,7 +182,7 @@ export default {
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
+      this.axios.get(process.env.VUE_APP_API_URL + `/patients/get_rating/${patientEmail}/${this.$route.params.id}/pharmacy`)
         .then(response => 
         this.rating = response.data
         )
@@ -192,7 +192,7 @@ export default {
     postRating(rating) {
       this.rating = rating
       console.log(this.rating);
-      this.axios.post('http://localhost:8080/api/patients/rating', {
+      this.axios.post(process.env.VUE_APP_API_URL + '/patients/rating', {
         rateType: 0,
         ratedEntityId: this.$route.params.id,
         rating: this.rating,
@@ -243,7 +243,7 @@ export default {
       this.showRatingAlert = false;
       let _this = this;
       this.axios
-        .post(`/api/patients/subscribe`, {
+        .post(process.env.VUE_APP_API_URL + `/patients/subscribe`, {
           pharmacy: this.pharmacy,
           user: this.user
         },{
@@ -263,7 +263,7 @@ export default {
       this.showRatingAlert = false;
       let _this = this;
       this.axios
-        .post(`/api/patients/unsubscribe`, {
+        .post(process.env.VUE_APP_API_URL + `/patients/unsubscribe`, {
           pharmacy: this.pharmacy,
           user: this.user
         },{
@@ -286,7 +286,7 @@ export default {
     },
     findPharmacy(id){
       var _this= this;
-         _this.axios.get(`/api/pharmacy/`+id, {
+         _this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/`+id, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(response => {
@@ -297,7 +297,7 @@ export default {
     },
     findRating(){
     var _this= this;
-              _this.axios.get(`/api/pharmacy/rating/`+_this.idp, {
+              _this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/rating/`+_this.idp, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(response => {

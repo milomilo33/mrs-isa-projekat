@@ -61,7 +61,7 @@ export default {
     this.nameM = this.medicament.name;
     this.axios
       .get(
-          `/api/medicaments/ratings/ `+
+          process.env.VUE_APP_API_URL+`/medicaments/ratings/ `+
           parseInt(this.medicament.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
           }
@@ -132,7 +132,7 @@ export default {
 
     addAllergy() {
       
-      this.axios.post(`/api/patients/add_allergy/`, {
+      this.axios.post(process.env.VUE_APP_API_URL+`/patients/add_allergy/`, {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         medicamentId: this.medicament.id
       }, {headers: {
@@ -151,7 +151,7 @@ export default {
 
     removeAllergy() {
       
-      this.axios.post(`/api/patients/remove_allergy/`, {
+      this.axios.post(process.env.VUE_APP_API_URL+`/patients/remove_allergy/`, {
         patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
         medicamentId: this.medicament.id
       }, {headers: {

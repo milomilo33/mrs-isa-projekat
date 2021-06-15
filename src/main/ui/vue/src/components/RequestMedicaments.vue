@@ -68,7 +68,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -100,7 +100,7 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pharmacyAdmin/requestMedicaments/`+ self.adminUser, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/requestMedicaments/`+ self.adminUser, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {

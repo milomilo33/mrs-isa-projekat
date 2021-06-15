@@ -222,7 +222,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -267,8 +267,8 @@ export default {
     },
     check(){
         var self = this;
-        self.axios.put(
-          `/api/pricelistItems/update/`+self.id,
+        self.axios.put(process.env.VUE_APP_API_URL+
+          `/pricelistItems/update/`+self.id,
           {
             price:[{
                 id :self.priceid,
@@ -289,7 +289,7 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pricelistItems/`+ self.pharmacyId, {
+      .get(process.env.VUE_APP_API_URL + `/pricelistItems/`+ self.pharmacyId, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {
@@ -338,7 +338,7 @@ export default {
     GetAllMedicamentItems() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+        .get(process.env.VUE_APP_API_URL + `/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -366,8 +366,8 @@ export default {
       if (idx != -1) {
         this.medicamentss.splice(idx, 1);
          var self = this;
-         self.axios.put(
-          `/api/pricelistItems/promotion/`+self.selected[0].medId+`/`+self.pharmacyId,
+         self.axios.put(process.env.VUE_APP_API_URL+
+          `/pricelistItems/promotion/`+self.selected[0].medId+`/`+self.pharmacyId,
           {
             price:[{
                 id :self.priceid,

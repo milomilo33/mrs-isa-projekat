@@ -117,7 +117,7 @@ export default {
         fileSelected(event){
           this.username = JSON.parse(atob(localStorage.getItem("token").split(".")[1])).sub;
           this.selectedFile = event.target.files[0].name;
-          this.axios.get(`http://localhost:8080/api/patients/uploadQRCode/${this.selectedFile},${this.username}`)
+          this.axios.get(process.env.VUE_APP_API_URL + `/patients/uploadQRCode/${this.selectedFile},${this.username}`)
                 .then(response => 
                 {
                   this.qrCodeItem = response.data
@@ -139,7 +139,7 @@ export default {
           this.qrCodeItem.qrCode.patient = this.username;
           console.log(this.qrCodeItem);
           this.axios
-          .post(`http://localhost:8080/api/patients/addEPrescription`, {
+          .post(process.env.VUE_APP_API_URL + `/patients/addEPrescription`, {
             pharmacy: row.item,
             qrCode: this.qrCodeItem.qrCode
           },{

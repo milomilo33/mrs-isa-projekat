@@ -237,13 +237,13 @@ export default {
         this.error_message = "Lozinke se ne poklapaju!";
       }
       if (this.$route.params.userRole == "SystemAdmin") {
-        role = `/api/systemAdmin`;
+        role = process.env.VUE_APP_API_URL + `/systemAdmin`;
       } else if (this.$route.params.userRole == "PharmacyAdmin") {
-        role = `/api/pharmacyAdmin`;
+        role = process.env.VUE_APP_API_URL + `/pharmacyAdmin`;
       } else if (this.$route.params.userRole == "Dermatologist") {
-        role = `/api/dermatologist`;
+        role = process.env.VUE_APP_API_URL + `/dermatologist`;
       } else if (this.$route.params.userRole == "Supplier") {
-        role = `/api/supplier`;
+        role = process.env.VUE_APP_API_URL + `/supplier`;
       }
       if (errorFound == false) {
         this.axios

@@ -258,7 +258,7 @@ export default defineComponent({
     
     this.axios
       .get(
-        `/api/medicaments/` +
+        process.env.VUE_APP_API_URL + `/medicaments/` +
           parseInt(this.$route.params.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
           }
@@ -273,7 +273,7 @@ export default defineComponent({
 
     this.axios
       .get(
-        `/api/pricelistItems/availablePharmacy/` +
+        process.env.VUE_APP_API_URL + `/pricelistItems/availablePharmacy/` +
           parseInt(this.$route.params.id),{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
           }
@@ -290,7 +290,7 @@ export default defineComponent({
 
     getRatingOfUser() {
       var patientEmail = JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub;
-      this.axios.get(`http://localhost:8080/api/patients/get_rating/${patientEmail}/${this.medicament.id}/medicament`)
+      this.axios.get(process.env.VUE_APP_API_URL + `/patients/get_rating/${patientEmail}/${this.medicament.id}/medicament`)
         .then(response => 
         this.rating = response.data
         )
@@ -301,7 +301,7 @@ export default defineComponent({
       this.showFailedRating = false;
       this.rating = rating
       console.log(this.rating);
-      this.axios.post('http://localhost:8080/api/patients/rating', {
+      this.axios.post(process.env.VUE_APP_API_URL + '/patients/rating', {
         rateType: 1,
         ratedEntityId: this.medicament.id,
         rating: this.rating,
@@ -324,7 +324,7 @@ export default defineComponent({
       console.log(JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub);
     
       if(this.amount !== null && this.date !== null) {
-        this.axios.post(`/api/patients/reserve/`, {
+        this.axios.post(process.env.VUE_APP_API_URL + `/patients/reserve/`, {
           patientEmail: JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub,
           medicament: this.medicament,
           expiryDate: this.date,
@@ -364,7 +364,7 @@ export default defineComponent({
       
     prescribeMedicament(pharmacyId) {
       if (this.amount > 0) {
-        this.axios.post(`/api/patients/prescribe/${this.appointment.medicalReportId}`, {
+        this.axios.post(process.env.VUE_APP_API_URL + `/patients/prescribe/${this.appointment.medicalReportId}`, {
           patientEmail: this.appointment.patient.email,
           medicament: this.medicament,
           expiryDate: this.date,
@@ -393,7 +393,7 @@ export default defineComponent({
       this.medicament = this.chosenMedicament;
 
       let appointmentId = this.appointment.id;
-      this.axios.get(`/api/appointments/${appointmentId}/pharmacy`, {
+      this.axios.get(process.env.VUE_APP_API_URL + `/appointments/${appointmentId}/pharmacy`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("token"),
                         },

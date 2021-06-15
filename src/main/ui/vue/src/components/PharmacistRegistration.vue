@@ -227,7 +227,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL+`/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -321,7 +321,7 @@ export default {
         this.guessCoordinatesFromLocation();
         this.axios
           .post(
-            `/api/address`,
+            process.env.VUE_APP_API_URL+`/address`,
             {
               country: this.country,
               city: this.city,
@@ -351,7 +351,7 @@ export default {
     GetAdress(posts) {
       var self = this;
       self.axios
-        .get(`/api/address/` + parseInt(posts.data.id), {
+        .get(process.env.VUE_APP_API_URL+`/address/` + parseInt(posts.data.id), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -367,7 +367,7 @@ export default {
     GetFarmacy(addressP) {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/` + parseInt(self.pharmacyId), {
+        .get(process.env.VUE_APP_API_URL+`/pharmacy/` + parseInt(self.pharmacyId), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -383,7 +383,7 @@ export default {
       var self = this;
       self.axios
         .post(
-          `/api/pharmacist/`,
+          process.env.VUE_APP_API_URL+`/pharmacist/`,
           {
             email: self.email,
             password: self.password,

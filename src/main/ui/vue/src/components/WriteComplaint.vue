@@ -91,7 +91,7 @@ export default defineComponent({
     ).sub;
 
     this.axios
-      .get(`/api/complaints/allPharmacist/` + this.patient, {
+      .get( process.env.VUE_APP_API_URL`/complaints/allPharmacist/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -101,7 +101,7 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
 
     this.axios
-      .get(`/api/complaints/allDermatologists/` + this.patient, {
+      .get(process.env.VUE_APP_API_URL +`/complaints/allDermatologists/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -110,7 +110,7 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
 
     this.axios
-      .get(`/api/complaints/allPharmacies/` + this.patient, {
+      .get( process.env.VUE_APP_API_URL +`/complaints/allPharmacies/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -136,8 +136,8 @@ export default defineComponent({
         }
 
         if(error_found == false){
-            this.axios.post(
-            `/api/complaints/save/`+this.patient,
+            this.axios.post(process.env.VUE_APP_API_URL+
+            `/complaints/save/`+this.patient,
             {
               employee: sendEmployee,
               pharmacy: sendPharmacy,
@@ -181,7 +181,7 @@ export default defineComponent({
   },
   updateData(){
     this.axios
-      .get(`/api/complaints/allPharmacist/` + this.patient, {
+      .get( process.env.VUE_APP_API_URL +`/complaints/allPharmacist/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -191,7 +191,7 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
 
     this.axios
-      .get(`/api/complaints/allDermatologists/` + this.patient, {
+      .get(process.env.VUE_APP_API_URL+`/complaints/allDermatologists/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -200,7 +200,7 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
 
     this.axios
-      .get(`/api/complaints/allPharmacies/` + this.patient, {
+      .get(process.env.VUE_APP_API_URL +`/complaints/allPharmacies/` + this.patient, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {

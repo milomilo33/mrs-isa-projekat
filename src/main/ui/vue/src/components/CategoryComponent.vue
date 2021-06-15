@@ -56,7 +56,7 @@ export default defineComponent({
       if(this.category.threshold > 0 && this.category.discount > 0){
          this.axios
         .post(
-          `/api/loyaltyProgram/updateCategory`,
+          process.env.VUE_APP_API_URL+`/loyaltyProgram/updateCategory`,
           {
             id: this.category.id,
             category: this.category.category,
@@ -87,7 +87,7 @@ export default defineComponent({
     deleteCategory(){
        this.axios
         .post(
-          `/api/loyaltyProgram/delete`,
+          process.env.VUE_APP_API_URL+`/loyaltyProgram/delete`,
           {
             id: this.category.id,
             category: this.category.category,

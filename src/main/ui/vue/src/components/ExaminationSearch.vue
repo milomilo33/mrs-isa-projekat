@@ -90,7 +90,7 @@
 
                 let searchParams = { name: this.name, lastName: this.lastName };
                 let targetApi = this.type === 'dermatologist' ? 'dermatologist/examinations' : 'pharmacist/counselings'
-                this.axios.get(`/api/${targetApi}`,  {
+                this.axios.get(process.env.VUE_APP_API_URL + `/${targetApi}`,  {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -136,7 +136,7 @@
 
             startAppointment(row) {
                 let appointmentId = row.item.id;
-                this.axios.get(`/api/appointments/${appointmentId}/start`, {
+                this.axios.get(process.env.VUE_APP_API_URL + `/appointments/${appointmentId}/start`, {
                                     headers: {
                                         Authorization: "Bearer " + localStorage.getItem("token"),
                                     },

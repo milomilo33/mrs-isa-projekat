@@ -119,7 +119,8 @@
             loadEvents(dateInfo, success, failure) {
                 let startDate = dateInfo.startStr;
                 let endDate = dateInfo.endStr;
-                this.axios.get(`/api/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
+                console.log(process.env.VUE_APP_API_URL + `/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`);
+                this.axios.get(process.env.VUE_APP_API_URL + `/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                     },
@@ -185,7 +186,7 @@
             },
 
             showReportDetails() {
-                this.axios.get(`/api/appointments/${this.chosenAppointment.appointmentId}/details`, {
+                this.axios.get(process.env.VUE_APP_API_URL + `/appointments/${this.chosenAppointment.appointmentId}/details`, {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
@@ -203,7 +204,7 @@
 
             startAppointment() {
                 let appointmentId = this.chosenAppointment.appointmentId;
-                this.axios.get(`/api/appointments/${appointmentId}/start`, {
+                this.axios.get(process.env.VUE_APP_API_URL + `/appointments/${appointmentId}/start`, {
                                     headers: {
                                         Authorization: "Bearer " + localStorage.getItem("token"),
                                     },
@@ -213,7 +214,7 @@
 
                                     let targetApi = this.type === 'dermatologist' ? 'dermatologist/examination' :
                                                                                     'pharmacist/counseling';
-                                    this.axios.get(`/api/${targetApi}/${appointmentId}/upcoming`, {
+                                    this.axios.get(process.env.VUE_APP_API_URL + `/${targetApi}/${appointmentId}/upcoming`, {
                                                         headers: {
                                                             Authorization: "Bearer " + localStorage.getItem("token"),
                                                         },

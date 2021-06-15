@@ -121,7 +121,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -156,8 +156,8 @@ export default {
     },
     check(){
         var self = this;
-        self.axios.put(
-          `/api/pricelistItems/appointments/update/`+self.id,
+        self.axios.put(process.env.VUE_APP_API_URL+
+          `/pricelistItems/appointments/update/`+self.id,
           {
             price:[{
                 id :self.priceid,
@@ -178,7 +178,7 @@ export default {
     refresh(){
         var self = this;
         self.axios
-      .get(`/api/pricelistItems/appointments/`+ self.pharmacyId, {
+      .get(process.env.VUE_APP_API_URL + `/pricelistItems/appointments/`+ self.pharmacyId, {
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
       .then(function (response) {

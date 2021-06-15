@@ -211,7 +211,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL+`/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -228,7 +228,7 @@ export default {
     GetAllMedicamentItems() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+        .get(process.env.VUE_APP_API_URL+`/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -258,7 +258,7 @@ export default {
 
       self.axios
         .get(
-          `/api/pharmacy/` + parseInt(self.pharmacyId),
+          process.env.VUE_APP_API_URL+`/pharmacy/` + parseInt(self.pharmacyId),
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
@@ -276,7 +276,7 @@ export default {
     GetAll() {
       var self = this;
       self.axios
-        .get(`/api/medicaments/all`, {
+        .get(process.env.VUE_APP_API_URL+`/medicaments/all`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -305,7 +305,7 @@ export default {
       var self = this;
       self.items.forEach((item) => {
         self.axios
-          .get(`/api/medicaments/ratings/` + parseInt(item.id), {
+          .get(process.env.VUE_APP_API_URL+`/medicaments/ratings/` + parseInt(item.id), {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -421,7 +421,7 @@ export default {
         }
         for (var o = 0; o < this.new.length; o++) {
           this.axios.post(
-            `/api/pricelistItems/`,
+            process.env.VUE_APP_API_URL+`/pricelistItems/`,
             {
               price: [{
                 value: this.price,
@@ -447,7 +447,7 @@ export default {
           this.points = 0;
         }
         this.axios.put(
-          `/api/pharmacy/updateMedicaments/` + parseInt(this.pharmacy.id),
+          process.env.VUE_APP_API_URL+`/pharmacy/updateMedicaments/` + parseInt(this.pharmacy.id),
           {
             name: this.pharmacy.name,
             id: this.pharmacy.id,
@@ -478,7 +478,7 @@ export default {
       var self = this;
       console.log(item.medicamentItemId);
       self.axios
-        .delete(`/api/medicamentItems/` + item.medicamentItemId, {
+        .delete(process.env.VUE_APP_API_URL+`/medicamentItems/` + item.medicamentItemId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },

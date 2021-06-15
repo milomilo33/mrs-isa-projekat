@@ -111,7 +111,7 @@ export default defineComponent({
                 }else if(self.role =="ROLE_SYSTEM_ADMIN"){
                   self.rolepath ="systemAdmin";
                 }
-                self.axios.put(`/api/`+self.rolepath+`/changePassword/` +
+                self.axios.put(process.env.VUE_APP_API_URL + `/`+self.rolepath+`/changePassword/` +
                   self.oldone,
               {
               email: self.username,

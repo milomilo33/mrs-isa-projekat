@@ -93,7 +93,7 @@ export default defineComponent({
     ).sub;
 
     this.axios
-      .get(`/api/offers/` + this.user, {
+      .get( process.env.VUE_APP_API_URL + `/offers/` + this.user, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -108,7 +108,7 @@ export default defineComponent({
       if(this.status=="ALL")
       {
         this.axios
-        .get(`/api/offers/` + this.user, {
+        .get(process.env.VUE_APP_API_URL + `/offers/` + this.user, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
@@ -119,7 +119,7 @@ export default defineComponent({
       }
       else{
           this.axios
-          .get(`/api/offers/filter/` + this.user + `,` + this.status, {
+          .get(process.env.VUE_APP_API_URL + `/offers/filter/` + this.user + `,` + this.status, {
             headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           })
           .then((response) => {

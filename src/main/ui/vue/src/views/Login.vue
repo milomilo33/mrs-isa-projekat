@@ -49,7 +49,7 @@ export default {
         console.log("A username and password must be present");
       }
       this.axios
-        .post("http://localhost:8080/api/auth/login", {
+        .post(process.env.VUE_APP_API_URL + "/auth/login", {
           username: this.username,
           password: this.password,
         })

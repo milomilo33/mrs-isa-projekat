@@ -107,7 +107,7 @@ export default defineComponent({
 
     var _this = this;
     this.axios
-      .get(`/api/users/getUsers/`+this.admin, {
+      .get(process.env.VUE_APP_API_URL+`/users/getUsers/`+this.admin, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -125,7 +125,7 @@ export default defineComponent({
         console.log(row.item.email);
         var _this = this;
         this.axios
-      .get(`/api/users/deleteUser/`+row.item.email, {
+      .get(process.env.VUE_APP_API_URL+`/users/deleteUser/`+row.item.email, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

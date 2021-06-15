@@ -57,7 +57,7 @@ export default defineComponent({
 
     if(this.complaint.employee == null){
       this.axios
-        .get(`/api/pharmacy/` + parseInt(this.complaint.pharmacy), {
+        .get(process.env.VUE_APP_API_URL + `/pharmacy/` + parseInt(this.complaint.pharmacy), {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
@@ -71,7 +71,7 @@ export default defineComponent({
     }
     else{
        this.axios
-        .get(`/api/pharmacist/` + this.complaint.employee, {
+        .get(process.env.VUE_APP_API_URL + `/pharmacist/` + this.complaint.employee, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((response) => {
@@ -82,7 +82,7 @@ export default defineComponent({
 
         if(this.employee == null){
           this.axios
-            .get(`/api/dermatologist/` + this.complaint.employee, {
+            .get(process.env.VUE_APP_API_URL + `/dermatologist/` + this.complaint.employee, {
               headers: { Authorization: "Bearer " + localStorage.getItem("token") },
             })
             .then((response) => {
@@ -102,7 +102,7 @@ methods: {
     }
     else{
      this.axios.post(
-          `/api/complaints/update/`,
+          process.env.VUE_APP_API_URL + `/complaints/update/`,
           {
             id: this.complaint.id,
             employee: this.complaint.employee,

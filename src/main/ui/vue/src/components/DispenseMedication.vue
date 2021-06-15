@@ -59,7 +59,7 @@
             onSearch(e) {
                 e.preventDefault();
 
-                this.axios.get(`/api/eprescriptions/` + this.reservationId + `/dispensable`,  {
+                this.axios.get(process.env.VUE_APP_API_URL + `/eprescriptions/` + this.reservationId + `/dispensable`,  {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem('token'),
                             },
@@ -79,7 +79,7 @@
             onDispense(e) {
                 e.preventDefault();
 
-                this.axios.get(`/api/eprescriptions/` + this.ePrescription.id + `/dispense`,  {
+                this.axios.get(process.env.VUE_APP_API_URL + `/eprescriptions/` + this.ePrescription.id + `/dispense`,  {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem('token'),
                         },

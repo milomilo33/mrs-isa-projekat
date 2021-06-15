@@ -248,7 +248,7 @@ export default defineComponent({
 
     loadMeds() {
       this.axios
-      .get(`/api/medicaments/all`, {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/all`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -263,7 +263,7 @@ export default defineComponent({
     loadNonAllergicMedsForPrescription() {
       let patientEmail = this.appointment.patient.email;
       let appointmentId = this.appointment.id;
-      this.axios.get(`/api/medicaments/non-allergic-in-pharmacy?patientEmail=${patientEmail}&appointmentId=${appointmentId}`, {
+      this.axios.get(process.env.VUE_APP_API_URL+`/medicaments/non-allergic-in-pharmacy?patientEmail=${patientEmail}&appointmentId=${appointmentId}`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -276,7 +276,7 @@ export default defineComponent({
     },
 
     loadAllergies() {
-      this.axios.get(`/api/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub, {
+      this.axios.get(process.env.VUE_APP_API_URL+`/patients/get_allergies/` + JSON.parse(atob(localStorage.getItem('token').split(".")[1])).sub, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
         .then(response => {
@@ -293,7 +293,7 @@ export default defineComponent({
       }
         
       this.axios
-      .get(`/api/medicaments/search/`+this.search, {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/search/`+this.search, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -309,7 +309,7 @@ export default defineComponent({
       // }
 
       this.axios
-      .get(`/api/medicaments/filter/mode=`+parseInt(this.issuanceMode)+`&form=`+parseInt(this.medicamentForm), {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/filter/mode=`+parseInt(this.issuanceMode)+`&form=`+parseInt(this.medicamentForm), {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -347,7 +347,7 @@ export default defineComponent({
       let pharmacy = payload.pharmacy;
       this.chosenMedicament = {};
 
-      this.axios.get(`/api/medicaments/${this.substitutedMedicament.id}/substitutes?` +
+      this.axios.get(process.env.VUE_APP_API_URL+`/medicaments/${this.substitutedMedicament.id}/substitutes?` +
                       `patientEmail=${this.appointment.patient.email}&quantity=${quantity}&pharmacyId=${pharmacy.id}`, {
                       headers: { Authorization: "Bearer " + localStorage.getItem("token") }
                     })

@@ -125,8 +125,8 @@ export default {
         tempUsername = null;
       }
 
-        if(this.rating != -1 || tempUsername != null) {
-          await this.axios.get(`http://localhost:8080/api/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
+        if(this.rating != -1) {
+          await this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
             headers: {Authorization: "Bearer " + localStorage.getItem('token')}
             })
             .then(response => {
@@ -155,7 +155,7 @@ export default {
         var username = JSON.parse(
             atob(localStorage.getItem('token').split(".")[1])
         ).sub;
-        await this.axios.get(`http://localhost:8080/api/patients/allSubscribed/${username}`)
+        await this.axios.get(process.env.VUE_APP_API_URL + `/patients/allSubscribed/${username}`)
             .then(response => {
             if(response.data.length === 0) {
                 this.showFailedAlert = true;

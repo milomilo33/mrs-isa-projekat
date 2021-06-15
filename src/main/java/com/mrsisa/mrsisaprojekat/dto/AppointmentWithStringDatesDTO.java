@@ -35,7 +35,7 @@ public class AppointmentWithStringDatesDTO {
 	private EmployeeDTO employee;
 
     public AppointmentWithStringDatesDTO() {
-
+    	// empty constructor
     }
 
     public String getPatientEmail() {

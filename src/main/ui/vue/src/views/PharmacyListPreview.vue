@@ -79,7 +79,7 @@ export default defineComponent({
 
     mounted() {
       if(this.query === null) {
-        this.axios.get(`/api/pharmacy`,{
+        this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
           .then(response => {
@@ -89,7 +89,7 @@ export default defineComponent({
           }).catch(error => console.log(error));
       } else {
         console.log(this.query);
-        this.axios.get(`/api/pharmacy/search/${this.query}`,{
+        this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/search/${this.query}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
         .then(response => {
@@ -103,7 +103,7 @@ export default defineComponent({
   methods: {
     onChildClick(value) {
       console.log(value);
-      this.axios.get(`/api/pharmacy/search/${value}`,{
+      this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/search/${value}`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
         .then(response => {
@@ -116,7 +116,7 @@ export default defineComponent({
       {
         this.pharmacies = value;
       } else {
-        this.axios.get(`http://localhost:8080/api/pharmacy`,{
+        this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
           .then(response => {
