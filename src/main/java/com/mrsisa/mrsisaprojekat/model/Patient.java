@@ -13,9 +13,6 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
-import java.util.Set;
-
 @Transactional
 @Entity
 public class Patient extends User {

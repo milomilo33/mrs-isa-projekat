@@ -643,28 +643,7 @@ export default {
           }
 
       }
-      console.log(this.newMeds);
-      /*  for(var j = 0;j<this.selected[0].allmeds.length;j++){
-           this.meds.forEach(element => {
-              if(element.name == this.selected[0].allmeds[j].name){
-                console.log("yes");
-          return true;
-        }else{
-          if(this.names.includes(this.selected[0].allmeds[j].name)){
-            console.log("d");
-          }else{
-         var item = {};
-          item.name =this.selected[0].allmeds[j].name;
-          this.newMeds.push(item);
-          this.names.push(this.selected[0].allmeds[j].name);
-          return false;
-          }
-        }
-      });
-        }*/
-       
-
-        
+      console.log(this.newMeds);   
       var self = this;
       var d = self.selectedOffer[0];
       console.log(d.id);
@@ -681,8 +660,6 @@ export default {
             
           ).then(function (response) {
           console.log(response);
-          //self.message = "Successfuly accepted!";
-          //self.showSuccessAlert = true;
            if(self.newMeds.length >0){
             self.$root.$emit("bv::show::modal", self.priceModal.id);
           }else{
@@ -725,7 +702,6 @@ export default {
           );
           self.allmeds =[];
           self.items = [];
-          self.refresh();
           self.refresh();
 
     },
@@ -839,9 +815,6 @@ export default {
         })
         .then(function (response) {
           for (var i = 0; i < response.data.length; i++) {
-            //var item = {};
-            //item.id = response.data[i].medicament.id;
-            //item.name = response.data[i].medicament.name;
             self.meds.push(response.data[i].medicament.name);
            
           }

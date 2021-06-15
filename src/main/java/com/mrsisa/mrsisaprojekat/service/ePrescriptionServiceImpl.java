@@ -11,7 +11,6 @@ import com.mrsisa.mrsisaprojekat.model.Pharmacist;
 import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
-import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.hibernate.Hibernate;
@@ -37,9 +36,6 @@ public class ePrescriptionServiceImpl implements ePrescriptionService {
 
 	@Autowired
 	private PharmacyRepositoryDB pharmacyRepository;
-
-	@Autowired
-	private PatientRepositoryDB patientRepository;
 
 	@Autowired
 	private EmailService emailService;

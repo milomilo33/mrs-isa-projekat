@@ -1,8 +1,5 @@
 package com.mrsisa.mrsisaprojekat.dto;
 
-
-import java.util.Set;
-
 import com.mrsisa.mrsisaprojekat.model.Medicament;
 
 public class MedicamentDTO {
