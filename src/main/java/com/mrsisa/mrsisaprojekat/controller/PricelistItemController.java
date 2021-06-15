@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,9 +105,10 @@ public class PricelistItemController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('PHARMACY_ADMIN')")
 	public ResponseEntity<PricelistItemMedicamentDTO> savePricelistItemMedicament(@RequestBody PricelistItemMedicamentDTO pricelistItem) throws Exception{
 		
-		Price price = new Price();
+		/*Price price = new Price();
 		price.setDeleted(false);
 		price.setValue(pricelistItem.getPrice().get(0).getValue());
 		price.setDateFrom(LocalDate.now());
@@ -123,8 +125,10 @@ public class PricelistItemController {
 		p.setPrice(pp);
 		p.setPharmacy(pharmacy);
 		
-		PricelistItemMedicament savedP = pricelistItemService.create(p);
-		return new ResponseEntity<>(new PricelistItemMedicamentDTO(savedP),HttpStatus.CREATED);
+		PricelistItemMedicament savedP = pricelistItemService.create(p);*/
+		
+		PricelistItemMedicament savedP = pricelistItemService.savePricelistItemMedicament(pricelistItem);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	
 	}
 	

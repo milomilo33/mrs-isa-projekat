@@ -2,6 +2,7 @@ package com.mrsisa.mrsisaprojekat.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrsisa.mrsisaprojekat.dto.PricelistItemMedicamentDTO;
+import com.mrsisa.mrsisaprojekat.model.Medicament;
+import com.mrsisa.mrsisaprojekat.model.Pharmacy;
 import com.mrsisa.mrsisaprojekat.model.Price;
 import com.mrsisa.mrsisaprojekat.model.PricelistItemMedicament;
+import com.mrsisa.mrsisaprojekat.repository.MedicamentRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PriceRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PricelistItemMedicamentRepositoryDB;
 
 @Service
@@ -18,9 +24,24 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 	
 	@Autowired
 	private PricelistItemMedicamentRepositoryDB pricelistItemRepository;
+	
+	@Autowired
+	private MedicamentRepositoryDB medicamentRepository;
+	
+	@Autowired
+	private PharmacyRepositoryDB pharmacyRepository;
 
 	@Autowired
+	private PriceRepositoryDB priceRepository;
+	@Autowired
 	private PriceService priceService;
+	
+	@Autowired
+	private MedicamentService medicamentService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
+	
 	@Override
 	public Set<PricelistItemMedicament> findAllPharmacy(Long id) {
 		Set<PricelistItemMedicament> items =  pricelistItemRepository.findAllPricelistItemMedicaments(id);
@@ -129,12 +150,6 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 	@Transactional(readOnly = false)
 	public PricelistItemMedicament makePromotion(Long id, Long pId, PricelistItemMedicamentDTO pricelistItem) {
 		PricelistItemMedicament pricelistUpdate = this.findByPharmacyAndMed(id,pId);
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		if (pricelistUpdate == null) {
 			return null;
 		}
@@ -181,6 +196,44 @@ public class PricelistItemMedicamentServiceImpl implements PricelistItemMedicame
 		}
 		
 		return pricelistUpdate;
+	}
+
+	@Override
+	@Transactional
+	public PricelistItemMedicament savePricelistItemMedicament(PricelistItemMedicamentDTO pricelistItem) {
+		if(pricelistItem.getPrice().get(0).getValue() <= 0) {
+			return null;
+		}
+		Price price = new Price();
+		price.setDeleted(false);
+		price.setValue(pricelistItem.getPrice().get(0).getValue());
+		price.setDateFrom(LocalDate.now());
+		price.setDateTo(null);
+		price.setPoints(pricelistItem.getPrice().get(0).getPoints());
+		
+		Price saved = priceRepository.save(price);
+		
+		Medicament medicament = medicamentRepository.findById(pricelistItem.getMedicament().getId()).orElse(null);
+		if(medicament == null) {
+			return null;
+		}
+		//Medicament medicament = this.medicamentService.findOne(pricelistItem.getMedicament().getId());
+		//Pharmacy pharmacy = this.pharmacyService.findOne(pricelistItem.getPharmacy().getId());
+		Pharmacy pharmacy = pharmacyRepository.getOnePharmacy(pricelistItem.getPharmacy().getId());
+		if(pharmacy == null) {
+			return null;
+		}
+		PricelistItemMedicament p = new PricelistItemMedicament();
+		p.setMedicament(medicament);
+		Set<Price> pp = new HashSet<>();
+		pp.add(saved);
+		p.setPrice(pp);
+		p.setPharmacy(pharmacy);
+		
+		PricelistItemMedicament savedP = pricelistItemRepository.save(p);
+		
+		return savedP;
+		
 	}
 
 }
