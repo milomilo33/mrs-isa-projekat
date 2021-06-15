@@ -6,5 +6,9 @@ module.exports = {
           changeOrigin: true
         },
       }
+    },
+    publicPath: '/',
+    css: {
+      extract: true
     }
   }
