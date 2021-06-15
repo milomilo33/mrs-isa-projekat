@@ -127,9 +127,18 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void cancelExamination(Appointment appointment) {
-        appointment.setPatient(null);
-        appointmentRepository.save(appointment);
+    public boolean cancelExamination(Long id) {
+        Appointment a = appointmentRepository.findById(id).orElse(null);
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+
+        if(a != null) {
+            if(now.isBefore(a.getDate().atTime(a.getTermFrom()))) {
+                a.setPatient(null);
+                appointmentRepository.save(a);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -282,7 +291,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentToReserve.setPatient(p);
 		
 		if(!isReserved) {
-			System.out.println("DAAAAAAAAAAAAAAAAA"+patient.getEmail());
+			//System.out.println("DAAAAAAAAAAAAAAAAA"+patient.getEmail());
 			//appointmentService.update(appointmentToReserve);
 			Long id = patientService.updateWithAppointment(patient, appointmentToReserve);
 			try {

@@ -286,6 +286,9 @@ public class PatientController {
 	@PostMapping(path = "/reserve", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<Object> reserveMedicament(@RequestBody PrescriptionMedicamentDTO medicament) throws Exception {
+		if(medicament.getQuantity() < 1) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 
 		Patient pp = patientService.getOneWithAddress(medicament.getPatientEmail());
 		if(pp.getPenaltyPoints() == 3) {
@@ -538,14 +541,10 @@ public class PatientController {
 	@DeleteMapping(value = "/delete_examination/{id}")
 	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> cancelExamination(@PathVariable("id") Long id) {
-		Appointment a = appointmentService.findOne(id);
-		LocalDateTime now = LocalDateTime.now().plusDays(1);
+		boolean success = appointmentService.cancelExamination(id);
 
-		if(a != null) {
-			if(now.isBefore(a.getDate().atTime(a.getTermFrom()))) {
-				appointmentService.cancelExamination(a);
-				return new ResponseEntity<>(id, HttpStatus.OK);
-			}
+		if(success) {
+			return new ResponseEntity<>(id, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
