@@ -125,7 +125,7 @@ export default {
         tempUsername = null;
       }
 
-        if(this.rating != -1) {
+        if(this.rating != -1 || tempUsername != null) {
           await this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
             headers: {Authorization: "Bearer " + localStorage.getItem('token')}
             })
