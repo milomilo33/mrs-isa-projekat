@@ -40,6 +40,8 @@ public interface PricelistItemMedicamentService {
 	
 	PricelistItemMedicament makePromotion(Long id, Long pId, PricelistItemMedicamentDTO pricelistItem);
 	
+	PricelistItemMedicament savePricelistItemMedicament(PricelistItemMedicamentDTO pricelistItem);
+	
 	
 
 }

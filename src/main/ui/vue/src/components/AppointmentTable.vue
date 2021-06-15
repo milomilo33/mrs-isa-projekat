@@ -237,11 +237,8 @@ export default {
       }
       self.axios
         .post(
-          `/api/appointments/` + parseInt(self.pharmacyId),
+          `/api/appointments/` + parseInt(self.pharmacyId)+"/"+self.e.email,
           {
-            patient: {
-              email: self.e.email,
-            },
             date: self.date,
             termFrom: self.timefrom,
             termTo: self.timeto,

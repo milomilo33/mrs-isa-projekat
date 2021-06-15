@@ -3,9 +3,12 @@ package com.mrsisa.mrsisaprojekat.service;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDTO;
 import com.mrsisa.mrsisaprojekat.dto.AppointmentDetailsDTO;
 import com.mrsisa.mrsisaprojekat.model.*;
+import com.mrsisa.mrsisaprojekat.model.Appointment.AppointmentType;
 import com.mrsisa.mrsisaprojekat.repository.AppointmentRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.DermatologistRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.MedicalReportRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.PatientRepositoryDB;
+import com.mrsisa.mrsisaprojekat.repository.PharmacyRepositoryDB;
 import com.mrsisa.mrsisaprojekat.repository.ePrescriptionRepositoryDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -32,6 +36,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     
     @Autowired
     private PatientRepositoryDB patientRepository;
+    
+    @Autowired
+    private DermatologistRepositoryDB dermatologistRepository;
+    
+    @Autowired
+    private PharmacyRepositoryDB pharmacyRepository;
     
     @Autowired
     private PatientService patientService;
@@ -296,4 +306,75 @@ public class AppointmentServiceImpl implements AppointmentService {
 			return null;
 		}
 	}
+
+	@Override
+	public Appointment makeAppointmentDermatologist(Appointment appointment,Long id, String email) {
+		Appointment a = new Appointment();
+		a.setMedicalReport(null);
+		a.setDeleted(false);
+		a.setPatient(null);
+		Dermatologist d = dermatologistRepository.getOneDermatologist(email);
+		if(d!= null) {
+			if(check(d.getWorkHour(), appointment.getDate(), appointment.getTermFrom(),appointment.getTermTo())) {
+				//return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				return null;
+			}
+			if(checkAppointment(d.getMedicalExaminations(), appointment.getDate(), appointment.getTermFrom(), appointment.getTermTo())) {
+				//return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+				return null;
+			}
+			d.setRatings(null);
+			d.setRequests(null);
+			a.setChosenEmployee(d);
+			a.setDate(appointment.getDate());
+			a.setTermFrom(appointment.getTermFrom());
+			a.setTermTo(appointment.getTermTo());
+			a.setType(AppointmentType.EXAMINATION);
+		}
+		
+	
+		Appointment savedAppointment = appointmentRepository.save(a);
+		Pharmacy p = pharmacyRepository.getOneWithAppointments(id);
+		if (p == null) {
+			return null;
+		}
+		p.getAppointments().add(savedAppointment);
+		pharmacyRepository.save(p);
+		
+		return savedAppointment;
+	}
+	
+	
+	@Override
+	 public boolean check(Set<WorkHour> workHours, LocalDate date, LocalTime time1, LocalTime time2) {
+	    	for(WorkHour w : workHours) {
+	    		if(w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() && time1.compareTo(w.getWorkHourFrom())<0 &&
+	    				w.getWorkHourTo().compareTo(time2) >0 || time2.compareTo(w.getWorkHourFrom()) <0 ||
+	    				w.getDay().ordinal()+1 == date.getDayOfWeek().getValue() &&  w.getWorkHourFrom().compareTo(time1)>0 && w.getWorkHourTo().compareTo(time2)>0 && time2.compareTo(w.getWorkHourFrom())>0 ||	
+	    				w.getDay().ordinal()+1 == date.getDayOfWeek().getValue()  && time1.compareTo(w.getWorkHourFrom())>0 && time2.compareTo(w.getWorkHourTo())>0 && time1.compareTo(w.getWorkHourTo())<0 || 
+	    				w.getDay().ordinal()+1 != date.getDayOfWeek().getValue() ) {
+					
+	    			return true;
+				}
+	    	}
+				
+							
+	    	return  false;
+	    }
+	@Override
+	    public boolean checkAppointment(Set<Appointment> appointments, LocalDate date, LocalTime time1, LocalTime time2) {
+	    	for(Appointment a : appointments) {
+	    		if(!a.isDeleted()) {
+	    		if(a.getDate().equals(date) && time1.compareTo(a.getTermFrom()) == 0
+	    				&& time2.compareTo(a.getTermTo()) == 0 ||a.getDate().equals(date) && a.getTermFrom().compareTo(time1)<=0 && a.getTermTo().compareTo(time2) >=0 && time2.compareTo(a.getTermFrom())<=0
+	    				|| a.getDate().equals(date) && a.getTermFrom().compareTo(time1)>=0 && a.getTermTo().compareTo(time2)>=0 && time2.compareTo(a.getTermFrom()) >=0 ||
+	    				a.getDate().equals(date)  && time1.compareTo(a.getTermFrom())>=0 &&  time2.compareTo(a.getTermTo())>=0 && time1.compareTo(a.getTermTo())<=0) {
+					return true;
+				}
+	    	}
+	    	
+	    	}
+	    	return  false;
+	    }
+	
 }

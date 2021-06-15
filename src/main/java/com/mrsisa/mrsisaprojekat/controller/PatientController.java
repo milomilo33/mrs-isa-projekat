@@ -392,7 +392,7 @@ public class PatientController {
 		return new ResponseEntity<>(pharmacyDTO, HttpStatus.CREATED);
 	} 
 
-	@PostMapping(value="/unsubscribe")
+	/*@PostMapping(value="/unsubscribe")
 	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception{
 		Patient patient = patientService.findOne(pharmacyDTO.getUser());
@@ -412,7 +412,17 @@ public class PatientController {
 		
 		
 		return new ResponseEntity<>(pharmacyDTO, HttpStatus.OK);
-	}
+	}*/
+	@PostMapping(value="/unsubscribe")
+    @PreAuthorize("hasAnyRole('PATIENT')")
+    public ResponseEntity<SubscribedPharmacyDTO> unsubscrubeToPharmacy(@RequestBody SubscribedPharmacyDTO pharmacyDTO) throws Exception
+    {
+        pharmacyDTO = patientService.unsubsribe(pharmacyDTO);
+        if(pharmacyDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(pharmacyDTO, HttpStatus.OK);
+    }
 	
 	@GetMapping(value="/subscribedPharmacies/{id},{pharmacy}")
 	public ResponseEntity<String> getSubscribedPharmacies(@PathVariable("id") String id, @PathVariable("pharmacy") Long pharmacy){
