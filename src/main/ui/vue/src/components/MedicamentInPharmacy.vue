@@ -102,8 +102,8 @@
                          Reservation successful!
                   </b-alert>
                 <b-row>
-                  <input type="number" placeholder="Quantity" class="m-2" :value="amount" @input="amount = $event.target.value">
-                  <datepicker class="m-2" placeholder="Date" v-model="date" @selected="date = $event.target.value"></datepicker>
+                  <input type="number" placeholder="Quantity" class="m-2" :min="1" pattern="^[+]?\d+([.]\d+)?$" :value="amount" @input="amount = $event.target.value">
+                  <datepicker class="m-2" placeholder="Date" v-model="date" :disabledDates="disabledDates" @selected="date = $event.target.value"></datepicker>
                  
                 </b-row>
                 <b-row>
@@ -226,6 +226,10 @@ export default defineComponent({
       showFailedRating: false,
       showFailedReserve: false,
       message:"",
+      disabledDates: {
+          to: new Date(Date.now() - 8640000)
+        }
+
       success: false
     }
   },

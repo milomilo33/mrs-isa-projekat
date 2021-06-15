@@ -23,7 +23,7 @@ public interface AppointmentService {
 
     AppointmentDetailsDTO getAppointmentDetails(Long appointmentId);
 
-    void cancelExamination(Appointment appointment);
+    boolean cancelExamination(Long id);
 
     Long startAppointment(Long appointmentId, String employeeEmail);
 
