@@ -7,8 +7,8 @@ module.exports = {
         },
       }
     },
-    publicPath: '/',
-    css: {
-      extract: true
-    }
+    // publicPath: '/',
+    // css: {
+    //   extract: true
+    // }
   }
