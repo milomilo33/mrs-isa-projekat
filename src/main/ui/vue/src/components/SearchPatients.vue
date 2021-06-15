@@ -54,7 +54,7 @@
                 e.preventDefault();
 
                 let params = { name: this.name, lastName: this.lastName };
-                this.axios.get(`/api/patients/search`, { params ,
+                this.axios.get(process.env.VUE_APP_API_URL + `/patients/search`, { params ,
                             headers: {Authorization: "Bearer " + localStorage.getItem("token")}
                             })
                           .then(response => {

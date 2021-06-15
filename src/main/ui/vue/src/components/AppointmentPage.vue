@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     onPatientAbsent() {
-        this.axios.get(`/api/appointments/` + this.appointment.id + `/absent`,  {
+        this.axios.get(process.env.VUE_APP_API_URL + `/appointments/` + this.appointment.id + `/absent`,  {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -201,7 +201,7 @@ export default {
         reportText
       };
       
-      this.axios.post(`/api/appointments/` + this.appointment.id + `/finish`, body, {
+      this.axios.post(process.env.VUE_APP_API_URL + `/appointments/` + this.appointment.id + `/finish`, body, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -220,7 +220,7 @@ export default {
 
     onScheduleAnotherAppointment() {
         let targetApi = this.type === 'dermatologist' ? 'dermatologist/examinations' : 'pharmacist/counselings';
-        this.axios.get(`/api/${targetApi}/existing`, {
+        this.axios.get(process.env.VUE_APP_API_URL + `/${targetApi}/existing`, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -262,7 +262,7 @@ export default {
             appointmentId: existingAppointmentId
         };
 
-        this.axios.post('/api/patients/reserve_appointment', body, {
+        this.axios.post(process.env.VUE_APP_API_URL + '/patients/reserve_appointment', body, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('token'),
             }
@@ -293,11 +293,11 @@ export default {
             termTo: this.timeTo
         };
         let medicalReportId = this.appointment.medicalReportId;
-        this.axios.post(`/api/${this.type}/appointments/schedule-new/` + medicalReportId, body, {
+        this.axios.post(process.env.VUE_APP_API_URL + `/${this.type}/appointments/schedule-new/` + medicalReportId, body, {
                             headers: {
                                 Authorization: "Bearer " + localStorage.getItem("token"),
                             },
-                        })
+                        })  
                         .then(response => {
                             console.log(response);
                             this.successMessage = "Successfully created and scheduled appointment!";
@@ -374,7 +374,7 @@ export default {
     },
 
     loadPrescriptionTable() {
-        this.axios.get(`/api/eprescriptions/medical-report/${this.medicalReportId}/prescription-medicaments`, {
+        this.axios.get(process.env.VUE_APP_API_URL + `/eprescriptions/medical-report/${this.medicalReportId}/prescription-medicaments`, {
                         headers: {
                             Authorization: "Bearer " + localStorage.getItem("token"),
                         },

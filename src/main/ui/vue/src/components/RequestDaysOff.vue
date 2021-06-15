@@ -112,7 +112,7 @@ export default {
 
     methods: {
         loadRequests() {
-            this.axios.get(`/api/request/${this.type}`,  {
+            this.axios.get(process.env.VUE_APP_API_URL + `/request/${this.type}`,  {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('token'),
                 },
@@ -156,7 +156,7 @@ export default {
                 description: this.description
             };
 
-            this.axios.post(`/api/request/${this.type}`, body, {
+            this.axios.post(process.env.VUE_APP_API_URL + `/request/${this.type}`, body, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem('token'),
                     },

@@ -99,10 +99,10 @@
                 let searchParams = { name: this.name, lastName: this.lastName };
                 let url = '';
                 if (this.type === 'dermatologist') {
-                    url = '/api/dermatologist/examinations/done/patient';
+                    url = process.env.VUE_APP_API_URL + '/dermatologist/examinations/done/patient';
                 }
                 else if (this.type === 'pharmacist') {
-                    url = '/api/pharmacist/counselings/done/patient';
+                    url = process.env.VUE_APP_API_URL + '/pharmacist/counselings/done/patient';
                 }
                 else {
                     console.log("Invalid type in appointment history.");
@@ -158,7 +158,7 @@
             },
 
             showExaminationDetails(row) {
-                this.axios.get(`/api/appointments/${row.item.id}/details`, {
+                this.axios.get(process.env.VUE_APP_API_URL + `/appointments/${row.item.id}/details`, {
                                 headers: {
                                     Authorization: "Bearer " + localStorage.getItem("token"),
                                 },
