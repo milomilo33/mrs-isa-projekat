@@ -119,7 +119,8 @@
             loadEvents(dateInfo, success, failure) {
                 let startDate = dateInfo.startStr;
                 let endDate = dateInfo.endStr;
-                this.axios.get(`/api/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
+                console.log(process.env.VUE_APP_API_URL + `/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`);
+                this.axios.get(process.env.VUE_APP_API_URL + `/${this.type}/appointments/calendar?startDateStr=${encodeURIComponent(startDate)}&endDateStr=${encodeURIComponent(endDate)}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                     },
