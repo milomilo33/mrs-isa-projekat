@@ -16,8 +16,10 @@ Tehnologije:
 Prilikom pokretanja projekta potrebno je imati instalirano Java SDK, Apache Maven, PostgreSQL
 
 Pokretanje aplikacije:
-
+	
 	I način:
+		Pozicionirati se na develop granu
+		
 		back-end
 		1) Importovati projekat u workspace: Import -> Maven -> Existing Maven Project
 		2) Instalirati sve dependency-je iz pom.xml
