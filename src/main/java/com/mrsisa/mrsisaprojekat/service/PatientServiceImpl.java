@@ -122,6 +122,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public PrescriptionMedicament updateWithReservation(Patient p, PrescriptionMedicament medicamentToReserve) {
 		Patient patientToUpdate = patientRepository.getPatientWithReservedMedicaments(p.getEmail());
 
@@ -135,6 +136,7 @@ public class PatientServiceImpl implements PatientService {
 		patientToUpdate.getReservedMedicaments().add(medicamentToReserve);
 		PrescriptionMedicament pm = prescriptionRepository.save(medicamentToReserve);
 		patientRepository.save(p);
+
 		prescriptionRepository.updatePatientReservation(p.getEmail(), medicamentToReserve.getId());
 
 		return medicamentToReserve;
@@ -242,15 +244,30 @@ public class PatientServiceImpl implements PatientService {
 		MedicamentItem medicamentItem = pharmacy.getMedicamentItems().stream().filter(m -> m.getMedicament().getId()
 				.equals(medicament.getMedicament().getId())).findFirst().orElse(null);
 
+		try {
+			if (medicamentItem != null) {
+				if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
+					try {
+						throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
+					} catch (ReservationQuantityException e) {
+						e.printStackTrace();
+					}
+				} else {
+					//medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+					medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+					medicamentItemRepository.save(medicamentItem);
 
-		if (medicamentItem != null) {
-			if (medicamentItem.getQuantity() - medicament.getQuantity() < 0) {
-				throw new ReservationQuantityException(medicamentItem.getQuantity(), "Not enough chosen medicament");
-			} else {
-				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
-				medicamentItemRepository.save(medicamentItem);
+
+//				medicamentItem.setQuantity(medicamentItem.getQuantity() - medicament.getQuantity());
+//				medicamentItemRepository.save(medicamentItem);
+
+
+				}
 			}
-		} 
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 
 	@Override
@@ -377,6 +394,11 @@ public class PatientServiceImpl implements PatientService {
 	public Patient getOneWithePrescriptions(String email) {
 
 		return patientRepository.getPatientWithePrescriptions(email);
+	}
+
+	@Override
+	public Patient getOneOnlyePrescription(String email) {
+		return patientRepository.getOneOnlyePrescription(email);
 	}
 
 	@Override

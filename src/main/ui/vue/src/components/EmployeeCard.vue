@@ -135,6 +135,7 @@ export default {
       }}).then(() => this.showRatingAlert = true)
         .catch(() => {
           this.showFailedAlert = true;
+          this.message = "You never visited this employee, you cannot rate it!"
           this.rating = -1;
           });
     },

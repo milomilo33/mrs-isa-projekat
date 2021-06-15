@@ -263,7 +263,6 @@ public class PharmacyAdminController {
 	@PostMapping(value = "/firePharmacyAdmin")
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<AdminPharmacyDTO> firePharmacyAdin(@RequestBody PharmacyDTO pharmacyDTO){
-		System.out.println("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
 		AdminPharmacy admin = adminService.firePharmacyAdmin(pharmacyDTO);
 		if(admin == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

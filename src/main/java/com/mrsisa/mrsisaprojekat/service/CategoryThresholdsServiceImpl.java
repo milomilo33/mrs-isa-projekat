@@ -39,7 +39,7 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 		if(thresholds == null) {
 			return null;
 		}
-		
+
 		thresholds.setCategory(category.getCategory());
 		thresholds.setDiscount(category.getDiscount());
 		thresholds.setThreshold(category.getThreshold());

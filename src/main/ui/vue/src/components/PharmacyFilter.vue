@@ -117,6 +117,7 @@ export default {
 
       var tempUsername;
       if(this.isSubscribed) {
+        console.log("only sub")
         tempUsername = JSON.parse(
             atob(localStorage.getItem('token').split(".")[1])
         ).sub;
@@ -124,11 +125,12 @@ export default {
         tempUsername = null;
       }
 
-        if(this.rating != -1) {
+        if(this.rating != -1 || tempUsername != null) {
           await this.axios.get(`http://localhost:8080/api/pharmacy/filter/rating=${this.rating}&subscribed=${tempUsername}`, {
             headers: {Authorization: "Bearer " + localStorage.getItem('token')}
             })
             .then(response => {
+              console.log("REPSONSOE: ", response.data);
               if(response.data.length === 0) {
                 this.showFailedAlert = true;
                 this.pharmacies = this.allPharmacies;

@@ -17,6 +17,4 @@ public interface PrescriptionRepositoryDB extends JpaRepository<PrescriptionMedi
     @Transactional
     @Query(value = "insert into patient_reserved_medicaments (patient_email, reserved_medicaments_id) values (:email, :id)", nativeQuery = true)
     void updatePatientReservation(@Param("email") String email, @Param("id") Long id);
-    
-
 }
