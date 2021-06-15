@@ -39,12 +39,7 @@ public class CategoryThresholdsServiceImpl implements CategoryThresholdsService{
 		if(thresholds == null) {
 			return null;
 		}
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 		thresholds.setCategory(category.getCategory());
 		thresholds.setDiscount(category.getDiscount());
 		thresholds.setThreshold(category.getThreshold());

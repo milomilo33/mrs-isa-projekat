@@ -167,6 +167,9 @@ public class MedicamentController {
 	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN')")
 	public ResponseEntity<MedicamentDTO> updateMedicament(@RequestBody Medicament medicament){
 		medicament = service.update(medicament);
+		if(medicament == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
