@@ -3,6 +3,7 @@ package com.mrsisa.mrsisaprojekat.service;
 import com.mrsisa.mrsisaprojekat.dto.PrescriptionMedicamentDTO;
 import com.mrsisa.mrsisaprojekat.dto.QRCodePharmacyDTO;
 import com.mrsisa.mrsisaprojekat.model.Pharmacist;
+import com.mrsisa.mrsisaprojekat.model.PrescriptionMedicament;
 import com.mrsisa.mrsisaprojekat.model.ePrescription;
 
 import java.util.Collection;
@@ -29,4 +30,8 @@ public interface ePrescriptionService {
 	Set<ePrescription> findAllePrescriptionsInPharmacy(Long id);
 
 	QRCodePharmacyDTO createePrescription(QRCodePharmacyDTO dto);
+
+    boolean createePrescriptionPatient(PrescriptionMedicamentDTO medicament);
+
+	ePrescription returnToPharmacyStock(PrescriptionMedicament medicament, int quantity);
 }

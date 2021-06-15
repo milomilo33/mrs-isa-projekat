@@ -50,6 +50,8 @@ public interface PatientService {
 
 	Patient getOneWithePrescriptions(String email);
 
+	Patient getOneOnlyePrescription(String email);
+
 	Patient findAllWithPurchasedMedicamentsAndAppointments(String email);
 
 	Patient getOneWithAddress(String email);

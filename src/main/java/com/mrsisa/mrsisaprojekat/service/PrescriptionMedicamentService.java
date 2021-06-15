@@ -14,7 +14,7 @@ public interface PrescriptionMedicamentService {
 
     PrescriptionMedicament update(PrescriptionMedicament medicamentItem) throws Exception;
 
-    void delete(Long id);
+    void delete(Long id, int amount);
     
     
     Set<PrescriptionMedicament> findInePrescrition(Long id);

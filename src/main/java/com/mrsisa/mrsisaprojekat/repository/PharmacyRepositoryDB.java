@@ -66,4 +66,7 @@ public interface PharmacyRepositoryDB extends JpaRepository<Pharmacy, Long>{
 
 	@Query("select p from Pharmacy p join fetch p.ratings")
 	Collection<Pharmacy> findWithRating();
-}
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select p from Pharmacy p join fetch p.medicamentItems where p.id=?1")
+	Pharmacy getOneWithMedicamentsPatient(Long id);}
