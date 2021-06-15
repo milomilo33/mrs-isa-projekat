@@ -50,7 +50,7 @@ export default defineComponent({
   },
   mounted() {
     this.axios
-      .get(`/api/loyaltyProgram/getCategories`, {
+      .get(process.env.VUE_APP_API_URL+`/loyaltyProgram/getCategories`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {
@@ -59,7 +59,7 @@ export default defineComponent({
       .catch((error) => console.log(error.response.data));
 
     this.axios
-      .get(`/api/loyaltyProgram/getPoints`, {
+      .get(process.env.VUE_APP_API_URL+`/loyaltyProgram/getPoints`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {

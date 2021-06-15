@@ -47,7 +47,7 @@
 
     methods: {
         initMap() {
-            console.log('alo');
+            //console.log('alo');
             console.log(this.coordinates);
            
             this.markerFeature = new Feature({

@@ -225,16 +225,16 @@ export default {
         !this.street
       ) {
         errorFound = true;
-        this.error_message = "Niste uneli validne podatke!";
+        this.error_message = "Enter valid data!";
       }
       if (this.password2 !== this.password1) {
         errorFound = true;
-        this.error_message = "Lozinke se ne poklapaju!";
+        this.error_message = "Passwords don't match!";
       }
      
       if (errorFound == false) {
         this.axios
-          .post(`/api/patients`, {
+          .post(process.env.VUE_APP_API_URL+`/patients`, {
             name: this.name,
             lastName: this.lastName,
             email: this.email,
@@ -259,7 +259,7 @@ export default {
             currentObj.output = error;
             console.log(error);
           });
-        this.success_message = "Uspesno ste registrovali korisnika.";
+        this.success_message = "Succes. You have been registered.";
       }
     },
   },

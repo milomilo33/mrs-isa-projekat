@@ -172,7 +172,7 @@ components: {
     ).sub;
     var self = this;
     self.axios
-      .get(`http://localhost:8080/api/patients/appointment_history/` + username, {
+      .get(process.env.VUE_APP_API_URL+`/patients/appointment_history/` + username, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -217,7 +217,7 @@ components: {
 
         this.showFailedAlert = false;
         this.showMedicalReport = false;
-        this.axios.get(`http://localhost:8080/api/patients/medical_report/`+ this.selectedAppointment.id,  {
+        this.axios.get(process.env.VUE_APP_API_URL+`/patients/medical_report/`+ this.selectedAppointment.id,  {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },

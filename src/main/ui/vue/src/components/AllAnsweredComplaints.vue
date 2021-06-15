@@ -46,7 +46,7 @@ export default defineComponent({
     ).sub;
 
     this.axios
-      .get(`/api/complaints/getAllAnswered/` + this.user, {
+      .get(process.env.VUE_APP_API_URL + `/complaints/getAllAnswered/` + this.user, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((response) => {

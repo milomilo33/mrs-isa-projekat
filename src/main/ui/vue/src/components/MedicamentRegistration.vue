@@ -158,7 +158,7 @@ export default {
   mounted() {
     var _this = this;
     this.axios
-      .get(`/api/medicaments/all`, {
+      .get(process.env.VUE_APP_API_URL+`/medicaments/all`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -190,7 +190,7 @@ export default {
       if (error_found == false) {
         this.axios
           .post(
-            `/api/medicaments`,
+            process.env.VUE_APP_API_URL+`/medicaments`,
             {
               name: this.name,
               id: this.id,

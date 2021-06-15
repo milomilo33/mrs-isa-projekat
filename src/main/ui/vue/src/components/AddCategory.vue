@@ -86,7 +86,7 @@ export default {
       if (error_found == false) {
         this.axios
           .post(
-            `/api/loyaltyProgram/add`,
+           process.env.VUE_APP_API_URL+`/loyaltyProgram/add`,
             {
               category: this.category,
               threshold: this.threshold,

@@ -169,7 +169,7 @@ export default {
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL+`/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -237,7 +237,7 @@ export default {
       }
       self.axios
         .post(
-          `/api/appointments/` + parseInt(self.pharmacyId),
+          process.env.VUE_APP_API_URL+`/appointments/` + parseInt(self.pharmacyId),
           {
             patient: {
               email: self.e.email,
@@ -277,7 +277,7 @@ export default {
     refresh() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/appointments/` + self.pharmacyId, {
+        .get(process.env.VUE_APP_API_URL+`/pharmacy/appointments/` + self.pharmacyId, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then(function (response) {
@@ -300,7 +300,7 @@ export default {
     GetAllEmployees() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/dermatologists/` + parseInt(self.pharmacyId), {
+        .get(process.env.VUE_APP_API_URL+`/pharmacy/dermatologists/` + parseInt(self.pharmacyId), {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

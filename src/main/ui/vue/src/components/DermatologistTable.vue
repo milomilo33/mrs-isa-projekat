@@ -38,7 +38,6 @@ export default defineComponent({
         { key: "email", sortable: true, label: "Email" },
         { key: "rating", sortable: true, label: "Rating" },
         "info",
-        { key: "update", label: "Edit" },
         "delete",
       ],
       sortBy: "name",
@@ -94,7 +93,7 @@ export default defineComponent({
     ).sub;
     var self = this;
     self.axios
-      .get(`/api/pharmacyAdmin/` + AdminUsername, {
+      .get(process.env.VUE_APP_API_URL+`/pharmacyAdmin/` + AdminUsername, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem('token'),
         },
@@ -111,7 +110,7 @@ export default defineComponent({
     GetDermatologists() {
       var self = this;
       self.axios
-        .get(`/api/pharmacy/dermatologists/` +
+        .get(process.env.VUE_APP_API_URL+`/pharmacy/dermatologists/` +
             parseInt(self.pharmacyId),
           {
             headers: {
@@ -154,7 +153,7 @@ export default defineComponent({
     getAll() {
       var self = this;
       self.axios
-        .get(`/api/dermatologist/all`, {
+        .get(process.env.VUE_APP_API_URL+`/dermatologist/all`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem('token'),
           },
@@ -196,7 +195,7 @@ export default defineComponent({
       const idx = this.dermatologistss.indexOf(self.selected);
       if (idx != -1) {
         //self.dermatologistss.splice(idx, 1);
-        self.axios.put(`/api/dermatologist/updateDermatologist/` +
+        self.axios.put(process.env.VUE_APP_API_URL + `/dermatologist/updateDermatologist/` +
             self.selected.email,
           {
             email: self.selected.email,
@@ -298,7 +297,7 @@ export default defineComponent({
           
 
         });
-       self.axios.get(`/api/dermatologist/ratings/` + self.selected.email, {
+       self.axios.get(process.env.VUE_APP_API_URL+`/dermatologist/ratings/` + self.selected.email, {
             headers: {
               Authorization: "Bearer " + localStorage.getItem('token'),
             },
@@ -312,7 +311,7 @@ export default defineComponent({
     DeleteOne(item, button) {
       var self = this;
       self.axios
-        .delete(`/api/dermatologist/` +
+        .delete(process.env.VUE_APP_API_URL+`/dermatologist/` +
             item.email +
             "/" +
             parseInt(self.pharmacyId),

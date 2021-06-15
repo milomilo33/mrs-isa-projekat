@@ -113,7 +113,7 @@ export default {
     methods: {
         loadPatient() {
             let targetApi = this.type === "patient" ? "patients" : this.type;
-            this.axios.get(`http://localhost:8080/api/${targetApi}/${this.username}`, {
+            this.axios.get(process.env.VUE_APP_API_URL+`/${targetApi}/${this.username}`, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                     },
@@ -127,7 +127,7 @@ export default {
         },
 
         loadLoyalty() {
-            this.axios.get(`http://localhost:8080/api/patients/loyalty/${this.username}`)
+            this.axios.get(process.env.VUE_APP_API_URL+`/patients/loyalty/${this.username}`)
                 .then((response) => {
                     this.loyalty = response.data  
                     this.loyalty.category 
@@ -168,7 +168,7 @@ export default {
                 alert(this.addressToString(this.patient.address))
 
             let targetApi = this.type === "patient" ? "patients" : this.type + "/update";
-            this.axios.post(`http://localhost:8080/api/${targetApi}`, this.patient, {
+            this.axios.post(process.env.VUE_APP_API_URL+`/${targetApi}`, this.patient, {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                     },
