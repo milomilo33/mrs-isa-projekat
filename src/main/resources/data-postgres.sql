@@ -314,6 +314,8 @@ insert into rating (value, patient_email) values (4, 'teodorabatinica@gmail.com'
 insert into rating (value, patient_email) values (4, 'anasimic@gmail.com')
 insert into rating (value, patient_email) values (2, 'anasimic@gmail.com')
 insert into rating (value, patient_email) values (3, 'anasimic@gmail.com')
+insert into rating (value, patient_email) values (1, 'anasimic@gmail.com')
+
 
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 1)
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (2, 2)
@@ -395,6 +397,7 @@ insert into medicament_ratings (medicament_id, ratings_id) values (2, 5)
 insert into medicament_ratings (medicament_id, ratings_id) values (3, 6)
 insert into medicament_ratings (medicament_id, ratings_id) values (4, 7)
 insert into medicament_ratings (medicament_id, ratings_id) values (4, 8)
+insert into medicament_ratings (medicament_id, ratings_id) values (1, 15)
 
 
 insert into employee_ratings (employee_email, ratings_id ) values ('janatot@gmail.com', 9)
