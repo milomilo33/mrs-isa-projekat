@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 @Entity
 public class CategoryThresholds {
@@ -24,6 +25,7 @@ public class CategoryThresholds {
 	
 	@Column(name = "deleted", unique = false, nullable = false)
 	private boolean deleted;
+	
 	
 	public CategoryThresholds() {}
 	

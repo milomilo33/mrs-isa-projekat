@@ -47,13 +47,11 @@ insert into admin_pharmacy (email, deleted, active, last_name, name, password, p
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('sarajovic@gmail.com','false','true','Jović','Sara','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0645515823', 4, 2)
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('markoperic@gmail.com','false','true','Perić','Marko','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0654123692', 14, 3)
 insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('filipovic.dada@gmail.com','false','true','Dragana','Filipovic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0654123692', 25, null)
-insert into admin_pharmacy (email, deleted, active, last_name, name, password, phone_number, address_id, pharmacy_id) values ('tijanajovic@gmail.com','false','true','Jović','Tijana','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0645515823', 4, 2)
 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('jovanpetrovic@gmail.com', 2) 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('sarajovic@gmail.com', 2) 
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('markoperic@gmail.com', 2)
 INSERT INTO USER_ROLE (user_id, role_id) VALUES ('filipovic.dada@gmail.com', 2)
-INSERT INTO USER_ROLE (user_id, role_id) VALUES ('tijanajovic@gmail.com', 2)
 
 insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('milicamaric@gmail.com','false','true','Marić','Milica','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0635124793', 10)
 insert into admin_system (email, deleted, active, last_name, name, password, phone_number, address_id ) values ('petarsavic@gmail.com','false','true','Savić','Petar','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra','0693206589', 5)
@@ -111,23 +109,23 @@ insert into pharmacist (email, deleted, active, last_name, name, password, phone
 insert into pharmacist (email, deleted, active, last_name, name, password, phone_number, address_id, calendar_id, pharmacy_id) values ('micicmilica@gmail.com', false,'true', 'Micić', 'Milica', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '0609879879', 24, 3, 3)
 
 
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-25 10:00','anasimic@gmail.com', false, false, 2, '2021-04-23', 2500.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-06-30 10:00','anasimic@gmail.com', false, false, 1, null, 3000.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-07 10:00','anasimic@gmail.com', false, false, 2, '2021-04-07', 1000.00)
+-- insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-04-25 10:00','anasimic@gmail.com', false, false, 2, '2021-04-23', 2500.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-04-25 10:00' },'anasimic@gmail.com', false, true, 2, '2021-04-23', 2500.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-06-30 10:00'},'anasimic@gmail.com', false, false, 1, null, 3000.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-04-07 10:00'},'anasimic@gmail.com', false, true, 2, '2021-04-07', 1000.00)
+
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-07-08 10:00'},'anjastupar@gmail.com', false, false, 3, null, 700.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-07-09 10:00'},'teodorabatinica@gmail.com', false, false, 3, null, 1800.00)
+insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ({ ts '2021-07-10 10:00'},'peraperic@gmail.com', false, false, 3, null, 650.00)
 
 
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-08 10:00','anjastupar@gmail.com', false, false, 3, null, 700.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-09 10:00','teodorabatinica@gmail.com', false, false, 3, null, 1800.00)
-insert into e_prescription (date, patient_email, deleted, done, pharmacy_id, taken_date, price) values ('2021-07-10 10:00','peraperic@gmail.com', false, false, 3, null, 650.00)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-01 14:28'}, 'false','Izvestaj..' ,1)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-05 10:35'},'false','Pacijent pokazuje znake oporavka.', 2)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-06 19:40'},'false','Na pregledu je rađeno xyz. Pacijentu se preporučuje da pored prepisanog konzumira i vitamin C.' ,3)
 
-
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-01 14:28', 'false','Izvestaj..' ,1)
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-05 10:35','false','Pacijent pokazuje znake oporavka.', 2)
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:40','false','Na pregledu je rađeno xyz. Pacijentu se preporučuje da pored prepisanog konzumira i vitamin C.' ,3)
-
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:50','false','Izvestaj...' ,4)
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:10','false','Izvestaj...' ,5)
-insert into medical_report (date, deleted, description, eprescription_id) values ('2021-04-06 19:20','false','Izvestaj...' ,6)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-06 19:50'},'false','Izvestaj...' ,4)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-06 19:10'},'false','Izvestaj...' ,5)
+insert into medical_report (date, deleted, description, eprescription_id) values ({ ts '2021-04-06 19:20'},'false','Izvestaj...' ,6)
 
 -- 0 - counseling, 1 - examination
 insert into appointment (date, deleted, term_from, term_to, type, medical_report_id, chosen_employee_email, patient_email) values ('2021-06-06',false,'14:00','14:30', 1, null, 'janatot@gmail.com', 'teodorabozic@gmail.com')
@@ -219,9 +217,7 @@ insert into patient_complaints (patient_email, complaints_id) values ('lukamarko
 
 
 insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('anasimic@gmail.com', 1)
-insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('anasimic@gmail.com', 2)
-insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('anasimic@gmail.com', 3)
-insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('teodorabatinica@gmail.com', 4)
+insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('teodorabatinica@gmail.com', 3)
 insert into patient_e_prescriptions (patient_email, e_prescriptions_id) values ('lukamarkovic@gmail.com', 5)
 
 insert into vacation (date_from, date_to, deleted, employee_email) values ('2021-04-04', '2021-04-20', false, 'janatot@gmail.com')

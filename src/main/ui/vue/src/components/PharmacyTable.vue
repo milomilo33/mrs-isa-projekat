@@ -247,7 +247,7 @@ export default defineComponent({
               var idx = 0;
               for(let i = 0; i < self.allAdmins.length; i++){
                 
-                if(self.admins[i].email== self.fired){
+                if(self.allAdmins[i].email== self.fired){
                   break;
                 }
                 idx++;
@@ -259,7 +259,40 @@ export default defineComponent({
           .catch(function (error) {
             console.log(error);
             self.showAlert = true;
+            this.refreshData();
           }); 
+    },
+    refreshData(){
+      var self = this;
+    self.axios
+      .get(`/api/pharmacy/getAllWithAdmins`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(function (response) {
+        self.items = response.data;
+        self.totalRows = self.items.length;
+        console.log(self.items);
+        
+      })
+      .catch(function (error) {
+        console.log(error);
+       
+      });
+
+      self.axios
+      .get(`/api/pharmacyAdmin/getUnemployedAdmins`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(function (response){
+        self.admins = response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     },
     setAdmins(){
       var self = this;

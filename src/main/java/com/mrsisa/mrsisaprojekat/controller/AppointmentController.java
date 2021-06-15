@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -42,8 +43,16 @@ public class AppointmentController {
 	@GetMapping(value = "/{id}/start")
 	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST')")
 	public ResponseEntity<Long> startAppointment(@PathVariable("id") Long appointmentId) {
-		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
-		Long medicalReportId = appointmentService.startAppointment(appointmentId, employee.getEmail());
+//		Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String currentEmployeeEmail;
+		if (principal instanceof UserDetails) {
+			currentEmployeeEmail = ((UserDetails)principal).getUsername();
+		} else {
+			currentEmployeeEmail = principal.toString();
+		}
+
+		Long medicalReportId = appointmentService.startAppointment(appointmentId, currentEmployeeEmail);
 
 		if (medicalReportId == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
