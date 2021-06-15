@@ -228,7 +228,7 @@ export default defineComponent({
       message:"",
       disabledDates: {
           to: new Date(Date.now() - 8640000)
-        }
+        },
 
       success: false
     }

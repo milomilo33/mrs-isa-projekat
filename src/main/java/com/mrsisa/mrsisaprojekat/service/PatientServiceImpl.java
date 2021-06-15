@@ -450,33 +450,6 @@ public class PatientServiceImpl implements PatientService {
 	public Patient findOneWithLock(String email) {
 		return patientRepository.findOneWithLock(email);
 	}
-	
-	@Override
-	public SubscribedPharmacyDTO unsubsribe(SubscribedPharmacyDTO pharmacyDTO) {
-		Patient patient = this.findOne(pharmacyDTO.getUser());
-		Collection<Pharmacy> subscribedPharmacies = this.findAllSubscribed(pharmacyDTO.getUser());
-		if(subscribedPharmacies == null) {
-			return null;
-		}
-		
-		for(Pharmacy p: subscribedPharmacies) {
-			if(p.getId() == pharmacyDTO.getPharmacy().getId()) {
-				subscribedPharmacies.remove(p);
-				break;
-			}
-		}
-		
-		patient.setSubscribedPharmacies(new HashSet<Pharmacy>(subscribedPharmacies));
-		
-		try {
-			patient = patientRepository.save(patient);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		return pharmacyDTO;
-	}
 
 	@Override
     public SubscribedPharmacyDTO unsubsribe(SubscribedPharmacyDTO pharmacyDTO) {
