@@ -44,8 +44,8 @@ export default defineComponent({
       console.log(this.point);
       if(this.point.points > 0){
          this.axios
-        .post(
-          `/api/loyaltyProgram/updatePoints`,
+        .post(process.env.VUE_APP_API_URL+
+          `/loyaltyProgram/updatePoints`,
           {
             id: this.point.id,
             points: this.point.points,

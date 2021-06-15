@@ -203,7 +203,7 @@
 export default {
   name: "PharmacyAdminRegistration",
   mounted() {
-    this.axios.get(`/api/pharmacy`,{
+    this.axios.get(process.env.VUE_APP_API_URL + `/pharmacy`,{
           headers: {Authorization: "Bearer " + localStorage.getItem('token')}
         })
           .then(response => {
@@ -259,7 +259,7 @@ export default {
         this.error_message = "Lozinke se ne poklapaju!";
       }
       
-      role = `/api/pharmacyAdmin`;
+      role = process.env.VUE_APP_API_URL + `/pharmacyAdmin`;
 
       this.guessCoordinatesFromLocation();
       if (errorFound == false) {

@@ -107,7 +107,7 @@ export default {
 
       if(errorFound==false && locationFound==true){
          this.axios
-        .post(`/api/pharmacy`, {
+        .post(process.env.VUE_APP_API_URL + `/pharmacy`, {
           name: this.name,
           description: this.description,
           address: {
