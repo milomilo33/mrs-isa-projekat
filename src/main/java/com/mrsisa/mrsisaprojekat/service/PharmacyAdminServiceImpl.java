@@ -102,7 +102,7 @@ public class PharmacyAdminServiceImpl implements PharmacyAdminService{
 	@Override
 	@Transactional
 	public AdminPharmacy updatePharmacy(AdminPharmacyDTO adminDTO) {
-		AdminPharmacy admin = adminRepository.getOneLogin(adminDTO.getEmail());
+		AdminPharmacy admin = adminRepository.getOneForConcurrent(adminDTO.getEmail());
 
 		if(admin == null) {
 			return null;
