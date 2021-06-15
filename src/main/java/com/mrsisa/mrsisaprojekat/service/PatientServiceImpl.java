@@ -238,6 +238,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	@Override
+	@Transactional
 	public void checkMedicamentReservationQuantity(PrescriptionMedicament medicament, Long pharmacyId) throws ReservationQuantityException {
 		Pharmacy pharmacy = pharmacyRepository.findMedicamentItem(pharmacyId);
 
