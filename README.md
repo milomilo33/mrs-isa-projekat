@@ -27,7 +27,7 @@ Pokretanje aplikacije:
 		
 		front-end
 		1) Pozicionirati se u folderu vue
-		2) Uneti komandu npm run serve
+		2) Uneti komande npm install i npm run serve
 		
 	II način: 
 		Apliakciju možete pokrenuti unošenjem linka koji je dat u prilogu, u pretraživaču browser-a 
