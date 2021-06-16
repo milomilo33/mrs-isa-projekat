@@ -828,8 +828,5 @@ public class PatientController {
 				patientService.update(p);
 			}
 		}
-		
-		
-		
 	}
 }

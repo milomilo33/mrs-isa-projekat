@@ -120,7 +120,9 @@ public class EmailService {
 		mail.setFrom(env.getProperty("spring.mail.username"));
 		mail.setSubject("Account activation");
 		mail.setText("To confirm your account, please click here : "
-	            +"http://localhost:8080/api/patients/confirm-account?token="+token.getConfirmationToken());
+	            +"http://localhost:8080/api/patients/confirm-account?token="+token.getConfirmationToken()
+				+"\n or with this link \n " +"https://mrs-isa-projekat-frontend.herokuapp.com/api/patients/confirm-account?token="+token.getConfirmationToken());
+		
 		javaMailSender.send(mail);
 		System.out.println("Email poslat!");
 	}
