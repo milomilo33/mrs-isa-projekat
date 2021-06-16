@@ -148,9 +148,9 @@ public class PatientController {
 	}
 
 	@PostMapping(consumes = "application/json")
-	@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
+	//@PreAuthorize("hasAnyRole('DERMATOLOGIST', 'PHARMACIST', 'PATIENT')")
 	public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) throws Exception{
-		try {
+		/*try {
 			AdminPharmacy savedAdmin = adminService.findOne(patientDTO.getEmail());
 			if(savedAdmin != null) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -197,7 +197,7 @@ public class PatientController {
 		}
 		catch(NullPointerException e) {
 
-		}
+		}*/
 
 
 		Address address = new Address();
@@ -231,7 +231,7 @@ public class PatientController {
 			System.out.println(e.getMessage());
 		}
 
-		return new ResponseEntity<>(new PatientDTO(patient), HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value="/confirm-account")
