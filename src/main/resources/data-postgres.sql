@@ -290,10 +290,10 @@ insert into user_role(user_id, role_id) values ('svetlanaraznatovic@gmail.com', 
 insert into user_role(user_id, role_id) values ('lupulovb@gmail.com', 5)
 insert into user_role(user_id, role_id) values ('nikolinatosic999@gmail.com', 5)
 
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-04-04','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
-insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-08','false', 1,'sarajovic@gmail.com', 'nikolinatosic999@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-06-27','false', 0,'jovanpetrovic@gmail.com' , 'mikaantic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-08-08','false', 1,'sarajovic@gmail.com', 'svetlanaraznatovic@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-10-11','false', 0,'markoperic@gmail.com', 'lupulovb@gmail.com')
+insert into order_t (deadline, deleted, status, admin_email, supplier_email) values ('2021-08-08','false', 1,'sarajovic@gmail.com', 'nikolinatosic999@gmail.com')
 
 insert into pharmacy_orders (pharmacy_id, orders_id) values (1, 1)
 insert into pharmacy_orders (pharmacy_id, orders_id) values (2, 2)
@@ -322,9 +322,9 @@ insert into pharmacy_ratings (pharmacy_id, ratings_id) values (2, 2)
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (1, 3)
 insert into pharmacy_ratings (pharmacy_id, ratings_id) values (3, 13)
 
-insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-03-03', '2021-04-03', false, 'Zahtev za godisnji odmor', '', 'janatot@gmail.com')
-insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (false, '2021-04-03', '2021-05-04', false, 'Zahtev za odsustvo', '', 'svetozartodorovic@gmail.com')
-insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-04-03', '2021-05-04', false, 'Zahtev za bolovanje', '', 'micicmilica@gmail.com')
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-08-03', '2021-08-23', false, 'Zahtev za godisnji odmor', '', 'janatot@gmail.com')
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (false, '2021-07-03', '2021-07-04', false, 'Zahtev za odsustvo', '', 'svetozartodorovic@gmail.com')
+insert into request (accepted, date_from, date_to, deleted, description, rejection_reason, employee_email) values (true, '2021-07-10', '2021-07-14', false, 'Zahtev za bolovanje', '', 'micicmilica@gmail.com')
 
 insert into pharmacy_requests (pharmacy_id, requests_id) values (1, 1)
 insert into pharmacy_requests (pharmacy_id, requests_id) values (2, 2)
@@ -340,17 +340,17 @@ insert into prescription_medicament (deleted, expiry_date, purchased, quantity, 
 insert into prescription_medicament (deleted, expiry_date, purchased, quantity, medicament_id) values (false, '2022-06-12', false, 130, 3)
 
 
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 5, 899.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-05', false, 5, 899.99, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 6, 1199.99, false)
 
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 7, 999.99, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 1500.00, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 1, 99.99, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 1, 129.99, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 2000.00, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 2500.00, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 1700.00, false)
-insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', '2022-01-01', false, 0, 2200.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 7, 999.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 1500.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 1, 99.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 1, 129.99, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 2000.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 2500.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 1700.00, false)
+insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 2200.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-05-24', null, false, 0, 550.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 500.00, false)
 insert into price (date_from, date_to, deleted, points, value, promotion) values ('2021-01-01', null, false, 0, 350.00, false)
@@ -409,13 +409,13 @@ insert into e_prescription_prescription_medicaments (e_prescription_id, prescrip
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (2, 2)
 insert into e_prescription_prescription_medicaments (e_prescription_id, prescription_medicaments_id) values (3, 3)
 
-insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-05', 2, 10000, 1, 'mikaantic@gmail.com', null)
-insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 100000, 3, 'lupulovb@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-06-28', 2, 10000, 1, 'mikaantic@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-10-12', 2, 100000, 3, 'lupulovb@gmail.com', null)
 
-insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 100000, 4, 'nikolinatosic999@gmail.com', null)
-insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 500, 4, 'mikaantic@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-08-09', 2, 100000, 4, 'nikolinatosic999@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-08-10', 2, 500, 4, 'mikaantic@gmail.com', null)
 
-insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-01-10', 2, 500, 2, 'nikolinatosic999@gmail.com', null)
+insert into offer (deadline, status, total_price, order_id, supplier_email, accepted_date) values ('2021-08-10', 2, 500, 2, 'nikolinatosic999@gmail.com', null)
 
 
 insert into order_t_medicament_items (order_id, medicament_items_id) values (1, 6)
