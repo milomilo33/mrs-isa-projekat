@@ -1,0 +1,408 @@
+<template>
+          <div class="my-form">
+            <div class="card-header">Pricelist</div>
+            <b-row>
+              <b-col lg="4" class="my-1">
+                <b-form-group
+                  label-for="filter-input"
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+                >
+                  <b-input-group size="sm">
+                    <b-form-input
+                      id="filter-input"
+                      v-model="filter"
+                      type="search"
+                      placeholder="Search"
+                    >
+                    </b-form-input>
+                    <b-input-group-append>
+                      <b-button :disabled="!filter" @click="filter = ''"
+                        >Clear</b-button
+                      >
+                    </b-input-group-append>
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+               <b-col lg="8" class="my-1">
+                <b-form-group
+                  label-cols-sm="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+                >
+                  <b-button
+                    @click="AddPromotion($event.target)"
+                    variant="success"
+                    >Add promotion</b-button
+                  >
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-table
+              ref="table"
+              :items="items"
+              :fields="fields"
+              responsive="sm"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
+              :filter="filter"
+              striped hover
+              :filter-included-fields="filterOn"
+              small
+              @filtered="onFiltered">
+             <template v-slot:cell(edit)="data">
+                <b-button
+                  size="sm"
+                  @click="Edit(data.item, $event.target)"
+                  class="mr-1"
+                  variant="info">
+                  Edit
+                </b-button>
+              </template>
+              <template v-slot:cell(promotion)="data">
+                <div v-if="data.item.promotion === true">
+                  <fa icon="check"/>
+                </div>
+              </template>
+            </b-table>
+            <b-modal
+              :id="errorModal.id"
+              :title="errorModal.title"
+              ok-only
+              @ended="errModal"
+            
+            >
+              <pre>{{ errorModal.content }}</pre>
+            </b-modal>
+            
+             <b-modal
+              size="sm"
+              :id="editModal.id"
+              :title="editModal.title"
+              @ok= "check"
+              @ended="resetInfoModal"
+              >
+              <pre> 
+              <b-form inline>
+              <label> Price:     </label>
+              <b-form-input
+              id="inline-form-input-price"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="price"
+              ></b-form-input>
+              </b-form>
+              <b-form inline>
+              <label> Points:    </label>
+              <b-form-input
+              id="inline-form-input-points"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="points"
+              ></b-form-input>
+              </b-form>
+            </pre>
+            </b-modal>
+            <b-modal
+              size="lg"
+              :id="addModal.id"
+              :title="addModal.title"
+              ok-only
+              @ended="resetInfoModal"
+              
+            >
+              <pre> 
+                  <b-table
+                  :items="medicamentss" 
+                  :fields="fields2" 
+                  responsive="sm" 
+                  small
+                  :select-mode="selectMode"
+                    ref="selectableTable"
+                    selectable
+                    @row-selected="onRowSelected"></b-table>
+              <b-form inline>
+              <label> Price:     </label>
+              <b-form-input
+              id="inline-form-input-price"
+              class="mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              v-model="price"
+              ></b-form-input>
+              </b-form>
+              <b-form inline>
+              <label> Date from: </label>
+              <b-form-datepicker  v-model="tf" :min="min" class="mb-2"></b-form-datepicker>
+              <label> Date to: </label>
+              <b-form-datepicker  v-model="tt" :min="min" class="mb-2"></b-form-datepicker>
+              </b-form>
+              <b-button
+                  size="sm"
+                  @click="AddOne()"
+                  variant="success"
+                >   Add
+                </b-button>
+              
+            </pre>
+            </b-modal>
+          </div>
+</template>
+
+<script>
+import moment from 'moment'
+
+
+export default {
+  data() {
+    return {
+      fields: [
+        { key: "name", sortable: true, label: "Medicament" },
+        { key: "price", sortable: true, label: "Price" },
+        { key: "points", sortable: true, label: "Points" },
+        { key: "date1", sortable: true, label: "Date from" },
+        { key: "date2", sortable: true, label: "Date to" },
+        { key: "promotion", label: "Promotion" },
+        {key :"edit", label:""},
+      ],
+      fields2: [
+        { key: "id", label: "Id" },
+        { key: "name", label: "Name" },
+        { key: "type", label: "Type" },
+        { key: "medicamentForm", label: "Medicament form" },
+        { key: "manufacturer", label: "Manufacturer" },
+      ],
+      items: [],
+      selectMode: "single",
+      sortBy: "name",
+      sortDesc: false,
+      filter: null,
+      filterOn: [],
+      totalRows: 1,
+      totalRows1: 1,
+      new: [],
+      errorModal: {
+        id: "error-modal",
+        title: "",
+        content: "",
+      },
+      addModal: {
+        id: "add-modal",
+        title: "",
+        content: "",
+      },
+      editModal: {
+        id: "edit-modal",
+        title: "",
+        content: "",
+      },
+      all: [],
+      medicamentss: [],
+      old: [],
+      quantity: 0,
+      pharmacy: {},
+      selected: [],
+      medicamentItems: [],
+      price: 0,
+      tf:"",
+      tt:"",
+      datefrom :"",
+      points:0,
+      id : 0,
+      priceid :0,
+      pharmacyId:0,
+      min: Date,
+    };
+  },
+  mounted() {
+      var AdminUsername = JSON.parse(
+      atob(localStorage.getItem('token').split(".")[1])
+    ).sub;
+    var self = this;
+    self.axios
+      .get(process.env.VUE_APP_API_URL + `/pharmacyAdmin/` + AdminUsername, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      })
+      .then(function (response) {
+         const now = new Date()
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        self.min = new Date(today)
+        self.pharmacyId = response.data.pharmacy.id;
+        self.refresh(); 
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+       
+  },
+  methods: {
+    onFiltered(filteredItems) {
+      self.totalRows = filteredItems.length;
+    },
+
+    resetInfoModal() {
+      this.infoModal.title = "";
+      this.infoModal.content = "";
+    },
+
+    errModal() {
+      this.errorModal.title = "";
+      this.errorModal.content = "";
+    },
+    Edit(data, button) {
+        this.id = data.id;
+        this.price = data.price;
+        this.points = data.points;
+        this.datefrom = data.date; 
+        this.priceid = data.priceid;
+      (this.editModal.title = "Edit pricelist"),
+        this.$root.$emit("bv::show::modal", this.editModal.id, button);
+    },
+     datum: function(date){
+      return moment(date,"YYYY-MM-DD").format("DD/MM/YYYY");
+    },
+    check(){
+        var self = this;
+        self.axios.put(process.env.VUE_APP_API_URL+
+          `/pricelistItems/update/`+self.id,
+          {
+            price:[{
+                id :self.priceid,
+                value: self.price,
+                points: self.points,},
+            ]
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        }
+        ).then(function(response){
+          console.log(response);
+          self.items = [];
+          self.refresh();
+        });
+        
+    }
+    ,
+    refresh(){
+        var self = this;
+        self.axios
+      .get(process.env.VUE_APP_API_URL + `/pricelistItems/`+ self.pharmacyId, {
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        })
+      .then(function (response) {
+        for (var i = 0; i < response.data.length; i++) {
+          console.log(response.data[i]);
+          var item = {};
+          item.id = response.data[i].id;
+          item.medicamentId = response.data[i].medicament.id
+          item.name = response.data[i].medicament.name;
+          item.type = response.data[i].medicament.type;
+          item.medicamentForm = response.data[i].medicament.form;
+          item.manufacturer = response.data[i].medicament.manufacturer;
+          item.structure = response.data[i].medicament.structure;
+          item.issuanceMode = response.data[i].medicament.mode;
+          item.annotation = response.data[i].medicament.annotation;
+          item.medicamentRating = 0;
+          item.pharmacyId = response.data[i].pharmacy.id;
+          item.date1 = self.datum(response.data[i].price[0].dateFrom);
+          if(response.data[i].price[0].dateTo == null){
+            item.date2 = "";
+          }else{
+            item.date2 = self.datum(response.data[i].price[0].dateTo);
+          }
+          if(response.data[i].price[0].promotion == true){
+            item.promotion = true;
+          }else{
+            item.promotion = false;
+          }
+
+          item.points =  response.data[i].price[0].points;
+          item.price =  response.data[i].price[0].value;
+          item.priceid =  response.data[i].price[0].id;
+          self.items.push(item);
+        }
+         self.totalRows = self.items.length;
+         self.GetAllMedicamentItems();
+    });
+    },
+     onRowSelected(item) {
+      this.selected = item;
+    },
+    AddPromotion(button) {
+      (this.addModal.title = "Add promotion"),
+        this.$root.$emit("bv::show::modal", this.addModal.id, button);
+    },
+    GetAllMedicamentItems() {
+      var self = this;
+      self.axios
+        .get(process.env.VUE_APP_API_URL + `/pharmacy/medicamentItems/` + parseInt(self.pharmacyId), {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem('token'),
+          },
+        })
+        .then(function (response) {
+          for (var i = 0; i < response.data.length; i++) {
+              var item = {};
+              item.id = response.data[i].id;
+              item.name = response.data[i].medicament.name;
+              item.medId = response.data[i].medicament.id;
+              item.type = response.data[i].medicament.type;
+              item.annotation = response.data[i].medicament.annotation;
+              item.structure = response.data[i].medicament.structure;
+              item.manufacturer = response.data[i].medicament.manufacturer;
+              item.medicamentForm = response.data[i].medicament.form;
+              item.issuanceMode = response.data[i].medicament.mode;
+              self.medicamentss.push(item);
+          }
+          self.totalRows = self.items.length;
+        });
+    },
+    AddOne() {
+      var d = this.selected[0];
+      const idx = this.medicamentss.indexOf(d);
+      if (idx != -1) {
+        this.medicamentss.splice(idx, 1);
+         var self = this;
+         self.axios.put(process.env.VUE_APP_API_URL+
+          `/pricelistItems/promotion/`+self.selected[0].medId+`/`+self.pharmacyId,
+          {
+            price:[{
+                id :self.priceid,
+                value: self.price,
+                dateFrom: self.tf,
+                dateTo:self.tt},
+            ]
+          },{
+          headers: {Authorization: "Bearer " + localStorage.getItem('token')}
+        }
+        ).then(function(response){
+          console.log(response);
+          self.selected = [];
+          self.items = [];
+          self.medicamentss = [];
+          self.refresh();
+        }).catch((error => {
+         
+          if(error.response.status == "400"){
+           this.errorModal.title = "Error";
+           this.errorModal.content = "You can't make promotion for this medicament! "
+
+          this.$root.$emit("bv::show::modal", this.errorModal.id);
+          }
+         
+        }));
+        
+      }
+    },
+   
+  },
+};
+</script>
+<style scoped>
+.my-form .card-header {
+  background-color:#ccffbc;
+}
+</style>

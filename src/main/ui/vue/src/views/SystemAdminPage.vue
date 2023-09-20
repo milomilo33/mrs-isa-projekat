@@ -1,0 +1,82 @@
+<template>
+  <div>
+    <b-navbar fixed="top" toggleable="lg" type="light" variant="light">
+    <b-navbar-brand href="/SystemAdminPage/MedicamentList">Home Page</b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="/SystemAdminPage/MedicamentList">Medicaments</b-nav-item>
+        <b-nav-item href="/SystemAdminPage/PharmacyList"> Pharmacies</b-nav-item>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+            Loyalty Program
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/LoyaltyProgram">Categories Review</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/AddCategory">Add Category</b-dropdown-item>
+        </b-nav-item-dropdown>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+            User Registration
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/PharmacyAdminRegistration">Pharmacy Admin</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/SystemAdmin">System Admin</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/Dermatologist">Dermatologist</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/userRegister/Supplier">Supplier</b-dropdown-item>
+        </b-nav-item-dropdown>
+          <b-nav-item-dropdown right>
+           <template #button-content>
+           Complaints
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/answeredComplaints">See all complaints</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/unansweredComplaints">Write answer</b-dropdown-item>
+        </b-nav-item-dropdown>
+        <b-nav-item-dropdown right>
+           <template #button-content>
+           Medicament CRUD
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/MedicamentRegistration">Medicament Registration</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/CrudMedicament">Change and delete medicament</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown right>
+          <template #button-content>
+           Pharmacy CRUD
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/pharmacyRegistration">Pharmacy Registration</b-dropdown-item>
+          <b-dropdown-item href="/SystemAdminPage/deletePharmacy">View and delete pharmacy</b-dropdown-item>
+        </b-nav-item-dropdown>
+        <b-nav-item href="/SystemAdminPage/Users">System users</b-nav-item>
+      </b-navbar-nav>
+      
+      <!-- Right aligned nav items -->
+      <b-navbar-nav class="ml-auto">
+        <!--<Search :path="'/SystemAdminPage'" /> -->
+
+        <b-nav-item-dropdown right>
+          <!-- Using 'button-content' slot -->
+          
+          <template #button-content>
+            <em class="pl-2">User</em>
+          </template>
+          <b-dropdown-item href="/SystemAdminPage/PatientProfile?type=systemAdmin">Profile</b-dropdown-item>
+           <b-dropdown-item href="/SystemAdminPage/ChangePassword">Change password</b-dropdown-item>
+          <b-dropdown-item href="/Logout">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+    </b-navbar>
+    <router-view>
+
+    </router-view>
+  </div>
+</template>
+
+<script>
+//import Search from '../components/Search'
+
+export default {
+  components: {
+    //Search
+  }
+}
+</script>

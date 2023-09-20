@@ -1,0 +1,121 @@
+package com.mrsisa.mrsisaprojekat.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Version;
+
+@Entity
+public class Complaint {
+	
+	@Column(name = "description", unique = false, nullable = false)
+	private String description;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	private Pharmacy pharmacy;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	private Employee employee;
+	
+	@Column(name = "deleted", unique = false, nullable = false)
+	private boolean deleted;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	private AdminSystem responder;
+	
+	@Column(name="response", unique=false, nullable = true)
+	private String response;
+	
+	@ManyToOne(fetch=FetchType.LAZY, optional = true)
+	private Patient patient;
+	
+	@Version
+	@Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
+	
+	
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	public Complaint() {}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Pharmacy getPharmacy() {
+		return pharmacy;
+	}
+
+	public void setPharmacy(Pharmacy pharmacy) {
+		this.pharmacy = pharmacy;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public AdminSystem getResponder() {
+		return responder;
+	}
+
+	public void setResponder(AdminSystem responder) {
+		this.responder = responder;
+	}
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
+
+	
+}
